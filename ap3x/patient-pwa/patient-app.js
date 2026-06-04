@@ -1489,9 +1489,9 @@ function renderPathway() {
       '<div style="padding:32px 16px;text-align:center;color:var(--muted)">' +
         '<div style="font-size:40px;margin-bottom:12px">&#x1F5FA;</div>' +
         '<div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px">No employee profile active</div>' +
-        '<div style="font-size:13px;line-height:1.6">' + (isPwaDemoMode && isPwaDemoMode() ? 'Demo employee profiles appear when Demo Mode is active.' : 'Live Mode is active. No live employee record is connected yet. Configure a backend provider in the Control Dashboard Settings to connect live employees.') + '</div>' +
+        '<div style="font-size:13px;line-height:1.6">' + (isPwaDemoMode && isPwaDemoMode() ? 'Demo employee profiles appear when Demo Mode is active.' : 'Live Mode is active. Employee records and training assignments are loaded from the configured backend when available. If no live profile is found, ask a training manager to assign training. (Employee PWA live write-sync is completed in Run 11.)') + '</div>' +
       '</div>' +
-      '<div class="safety-notice" style="margin:0 0 16px">Your progress is saved locally first. Live backend sync is not active yet. Progress is saved locally until sync is connected in Run 7.</div>';
+      '<div class="safety-notice" style="margin:0 0 16px">Your progress is saved locally first. Employee PWA live write-sync is completed in Run 11. Local-first mode active until live sync is enabled.</div>';
     return;
   }
 
@@ -1549,7 +1549,7 @@ function renderPathway() {
       '</div>' +
     '</div>' +
     empPathHtml +
-    '<div class="safety-notice" style="margin-top:4px">Your progress is saved locally first. Live backend sync is not active yet. Progress is saved locally until sync is connected in Run 7.</div>';
+    '<div class="safety-notice" style="margin-top:4px">Your progress is saved locally first. Employee PWA live write-sync is completed in Run 11. Local-first mode active.</div>';
 }
 
 // ── SAFETY CHECKS TAB ──────────────────────────────────────────────
@@ -1709,10 +1709,18 @@ function renderProgress() {
   var evidenceCount = emp ? evidence.filter(function(e) { return e.employeeId === emp.id; }).length : 0;
   var pathPct = emp ? (emp.progressPercent || Math.round((totalL / 15) * 100)) : Math.round((totalL / 15) * 100);
   var syncQ   = status.syncQueue;
+  // Run 10: live data source label for progress view
+  var r10mode = (window.r10_getActiveDataMode ? window.r10_getActiveDataMode() : (status.isDemo ? 'demo' : 'local'));
+  var r10label= (window.r10_getActiveDataSourceLabel ? window.r10_getActiveDataSourceLabel() : (status.isDemo ? '🎭 Demo' : '🖥️ Local'));
   var lastSaved = sGet('ap3x_last_checkin_date', null);
 
   el.innerHTML =
     '<div class="section-title">&#x1F4C8; My Progress</div>' +
+    '<div style="font-size:11px;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px">' +
+      '<span>Data source:</span>' +
+      '<span style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:1px 8px;font-size:11px">' + r10label + '</span>' +
+      (r10mode !== 'demo' ? '<span style="color:var(--muted)"> — Employee PWA live write-sync: Run 11</span>' : '') +
+    '</div>' + +
     '<div class="section-sub">Your personal training journey at a glance</div>' +
     '<div class="prog-grid">' +
       '<div class="prog-stat"><div class="prog-val">' + totalL + '/15</div><div class="prog-lbl">Lessons Done</div></div>' +
@@ -1794,3 +1802,41 @@ function showToast(msg) {
   t.textContent = msg; t.classList.remove('hidden');
   setTimeout(() => t.classList.add('hidden'), 2800);
 }
+
+// ════════════════════════════════════════════════════════════════════════════
+// AutoSkill OS™ — Run 10: PWA Data Mode Awareness Layer
+// ────────────────────────────────────────────────────────────────────────────
+// These helpers bridge the PWA with the Run 10 connector layer.
+// The dashboard connector functions (r10_*) are available if loaded.
+// PWA stays local-first — live sync comes in Run 11.
+
+function pwa_r10_getDataMode() {
+  if (window.r10_getActiveDataMode) return window.r10_getActiveDataMode();
+  var demoOn = (typeof sGet === 'function') ? sGet('4p3x_demo_mode', true) : true;
+  return demoOn ? 'demo' : 'live';
+}
+
+function pwa_r10_getDataSourceLabel() {
+  if (window.r10_getActiveDataSourceLabel) return window.r10_getActiveDataSourceLabel();
+  var mode = pwa_r10_getDataMode();
+  return mode === 'demo' ? '🎭 Demo' : '🖥️ Local';
+}
+
+function pwa_r10_getStatusSummary() {
+  var mode  = pwa_r10_getDataMode();
+  var label = pwa_r10_getDataSourceLabel();
+  var msgs = {
+    demo:  'Demo Mode — local demo data active. Demo Mode shows the product. Live Mode runs the product.',
+    live:  'Live Mode active. Employee PWA live write-sync is completed in Run 11. Progress saved locally until then.',
+    local: 'Local-only mode. No remote backend active. AutoSkill OS™ remains local-first.'
+  };
+  return { mode: mode, label: label, message: msgs[mode] || msgs['local'] };
+}
+
+function pwa_r10_isLiveMode() { return pwa_r10_getDataMode() === 'live'; }
+function pwa_r10_isDemoMode() { return pwa_r10_getDataMode() === 'demo'; }
+
+// AutoSkill OS™ supports training awareness, supervisor review, and evidence
+// capture. It does not replace workplace safety procedures, legal duties,
+// qualified supervision, employer responsibility, or site-specific training.
+// ════════════════════════════════════════════════════════════════════════════

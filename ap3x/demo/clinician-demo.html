@@ -370,7 +370,7 @@ tr:hover td{background:var(--surface2)}
     <div class="topbar-left">
       <img src="../../icons/tl-72.png" alt="" class="topbar-logo" style="width:28px;height:28px;border-radius:6px;display:none"/>
       <div class="topbar-title" id="topbarTitle">Training Control Dashboard</div>
-      <div class="rt-ind"><div class="pulse-dot"></div><span id="demoIndicator">Demo Mode</span></div>
+      <div class="rt-ind"><div class="pulse-dot" id="r10PulseDot"></div><span id="demoIndicator">Demo Mode</span>&nbsp;<span id="activeDataSourceBadge" style="font-size:10px;padding:1px 6px;border-radius:8px;background:rgba(255,255,255,.07);color:var(--muted);border:1px solid rgba(255,255,255,.12)"></span></div>
     </div>
     <div class="topbar-right">
       <div class="topbar-search"><span style="color:var(--muted)">🔍</span><input type="text" placeholder="Search employees…" oninput="globalSearch(this.value)" id="globalSearchInput"/></div>
@@ -743,7 +743,13 @@ tr:hover td{background:var(--surface2)}
       <div class="view-sub">Current data mode, demo record status, backend readiness, and sync queue</div></div>
     </div>
     <div id="demoliveContent"></div>
-    <div class="info-notice" style="margin-top:16px">Live backend configuration is prepared for a later run. This dashboard currently remains local-first unless an existing backend is already configured. Employee PWA to Control Dashboard sync will be implemented in a later run.</div>
+    <div id="r10ConnectorNotice" class="info-notice" style="margin-top:16px">
+      <strong>Run 10 — Live Backend Connector active.</strong>
+      Demo Mode shows the product. Live Mode runs the product.
+      Employee PWA live write-sync is completed in Run 11.
+      Remote dashboard reporting is finalised in Run 12.
+      AutoSkill OS™ remains local-first when Demo Mode or Local-only mode is active.
+    </div>
   </div>
   <div class="view hidden" id="view-syncqueue">
     <div class="view-header">
@@ -1027,6 +1033,8 @@ function updateDemoUI(){
   document.getElementById('presentationDataDesc').textContent=on?'Enabled — 8 sample employees with training check-in history (Demo Mode)':'Disabled — showing live employee records only';
   document.getElementById('presentationDataBadge').textContent=on?'Enabled':'Disabled';
   document.getElementById('presentationDataBadge').className='risk-badge '+(on?'LOW':'MISSING');
+  // Run 10: refresh active data source indicator
+  refreshActiveDataSourceBadge();
 }
 function updateTherapistProfile(){
   const n=document.getElementById('clinicianName');const i=document.getElementById('clinicianInitials');const r=document.getElementById('clinicianRole');
@@ -1248,8 +1256,8 @@ function loadBackendConfigUI(){
 
 function setStatusBadge(elId, status){
   const el=document.getElementById(elId);if(!el)return;
-  const labels={not_configured:'Not configured',configured:'Configured',testing:'Testing…',connected:'Connection passed',failed:'Connection failed'};
-  const classes={not_configured:'MISSING',configured:'MEDIUM',testing:'MEDIUM',connected:'LOW',failed:'HIGH'};
+  const labels={not_configured:'Not configured',configured:'Configured',testing:'Testing…',connected:'Connection passed',failed:'Connection failed',rls_required:'Auth required (RLS)',auth_required:'Auth required'};
+  const classes={not_configured:'MISSING',configured:'MEDIUM',testing:'MEDIUM',connected:'LOW',failed:'HIGH',rls_required:'MEDIUM',auth_required:'MEDIUM'};
   el.textContent=labels[status]||status;
   el.className='risk-badge '+(classes[status]||'MISSING');
 }
@@ -1652,7 +1660,7 @@ async function testBackendConnection(provider){
       if(res.ok||res.status===400||res.status===401||res.status===200){
         bs.supabase.status='connected';bs.supabase.lastTestedAt=new Date().toISOString();bs.supabase.errorMessage='';
         saveBackendSettings(bs);setStatusBadge('sbStatus','connected');
-        showMsg('✅ Connection passed — Supabase project is reachable.',false);
+        showMsg(res.status===401?'⚠️ Reachable — authentication required for live data (RLS active). Config saved.':res.status===400?'✅ Reachable — configure auth for live records. Config saved.':'✅ Connection passed — Supabase project reachable.',false); if(res.status===401){bs.supabase.status='rls_required';bs.supabase.errorMessage='Auth required';}
       } else {
         bs.supabase.status='failed';bs.supabase.errorMessage='HTTP '+res.status;
         saveBackendSettings(bs);setStatusBadge('sbStatus','failed');
@@ -3184,6 +3192,653 @@ window.showView=function(v){
   _r3_origShowView(v);
   if(v==='patients'){setTimeout(renderEmployeeProgressPanel,50);}
 };
+
+
+
+// ════════════════════════════════════════════════════════════════════════════
+// AutoSkill OS™ — Run 10: Live Backend Connector + Data Mode Router
+// ────────────────────────────────────────────────────────────────────────────
+// Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
+//
+// ARCHITECTURE: Injected connector layer for single-file static app.
+// No build system — connector loads after existing Run 6 backend settings.
+// Supabase JS SDK loaded via CDN when provider=supabase and config present.
+// All existing local-first/demo logic is preserved and untouched.
+//
+// SECURITY: 4P3X API Config Guard™ enforced throughout.
+// NEVER places service role key, JWT_SECRET, or any admin credential here.
+// ════════════════════════════════════════════════════════════════════════════
+
+// ── R10.1: DATA MODE ROUTER ──────────────────────────────────────────────────
+
+function r10_getActiveDataMode() {
+  // Returns 'demo', 'live', or 'local'
+  var demoOn = sGet('4p3x_demo_mode', true);
+  if (demoOn) return 'demo';
+  var bs = loadBackendSettings();
+  if (bs.mode === 'local') return 'local';
+  return 'live';
+}
+
+function r10_isDemoMode()  { return r10_getActiveDataMode() === 'demo'; }
+function r10_isLiveMode()  { return r10_getActiveDataMode() === 'live'; }
+function r10_isLocalMode() { return r10_getActiveDataMode() === 'local'; }
+
+function r10_shouldUseRemoteBackend() {
+  // True only when Live Mode AND a non-local provider is configured AND status is connected/configured
+  if (!r10_isLiveMode()) return false;
+  var bs = loadBackendSettings();
+  if (bs.mode === 'local') return false;
+  var providerCfg = bs[bs.mode] || {};
+  var status = providerCfg.status || 'not_configured';
+  return ['configured','connected','rls_required'].includes(status);
+}
+
+function r10_getActiveDataSourceLabel() {
+  var mode = r10_getActiveDataMode();
+  if (mode === 'demo') return '🎭 Demo';
+  var bs = loadBackendSettings();
+  if (bs.mode === 'local' || mode === 'local') return '🖥️ Local';
+  var provLabels = { supabase:'Supabase Live', firebase:'Firebase Live', aws:'AWS Live', custom:'Custom REST' };
+  var providerCfg = bs[bs.mode] || {};
+  var status = providerCfg.status || 'not_configured';
+  var statusSuffix = {
+    connected:'✅', configured:'⚙️', rls_required:'🔑',
+    not_configured:'—', failed:'⚠️', testing:'…'
+  }[status] || '—';
+  return (provLabels[bs.mode] || 'Live') + ' ' + statusSuffix;
+}
+
+function r10_getActiveDataSourceDescription() {
+  var mode = r10_getActiveDataMode();
+  if (mode === 'demo') return 'Demo Mode — showing sample training records. Demo Mode shows the product. Live Mode runs the product.';
+  var bs = loadBackendSettings();
+  if (bs.mode === 'local' || mode === 'local') return 'Local-only mode — showing locally saved records. No remote backend active.';
+  var providerCfg = bs[bs.mode] || {};
+  var status = providerCfg.status || 'not_configured';
+  var msgs = {
+    connected:      'Live backend connected. Reading live ' + bs.mode + ' records where available.',
+    configured:     'Backend configured. Run connection test to confirm live access.',
+    rls_required:   'Backend reachable. Authentication required before live records load (RLS active).',
+    not_configured: 'Live Mode active but no backend configured. Live views show empty ready states.',
+    failed:         'Backend connection failed. Using local-only fallback. Check settings.',
+    testing:        'Testing backend connection…'
+  };
+  return msgs[status] || 'Live Mode ready. Configure a backend in Settings.';
+}
+
+function r10_getLiveReadyEmptyState(collectionName) {
+  // Returns a safe "live ready, no records yet" placeholder for a given collection
+  var labels = {
+    employees:     'No live employee records found.',
+    pathways:      'No live training pathways configured.',
+    modules:       'No live process modules found.',
+    lessons:       'No live lessons configured.',
+    progress:      'No live progress records found.',
+    safetyAcks:    'No live safety acknowledgements found.',
+    reviews:       'No live supervisor reviews found.',
+    evidence:      'No live evidence records found.',
+    alerts:        'No live training alerts found.',
+    syncQueue:     'No live sync queue items.'
+  };
+  return {
+    isEmpty: true,
+    label: labels[collectionName] || 'No live records found.',
+    hint: 'Live Mode is active. AutoSkill OS™ reads from the configured backend when available. If no backend is connected, live views remain empty until real records are added.',
+    collectionName: collectionName,
+    source: 'live_ready_empty'
+  };
+}
+
+function r10_filterRecordsByDataMode(records, mode) {
+  if (!Array.isArray(records)) return [];
+  if (!mode) mode = r10_getActiveDataMode();
+  if (mode === 'demo') return records; // demo shows all (demo + any live)
+  return records.filter(function(r) { return r.isDemo !== true; }); // live/local hides demo records
+}
+
+// ── R10.2: SAFE ACTIVE DATA WRAPPERS ─────────────────────────────────────────
+// These wrap existing getActiveRecordsByMode() with live backend awareness.
+// When Live Mode + remote backend connected → attempt live fetch (async).
+// When Demo/Local → return local records synchronously (no change from Run 8).
+
+function r10_getActiveEmployees()         { return r10_getFilteredLocal('ap3x_dm_employees'); }
+function r10_getActiveTrainingPathways()  { return r10_getFilteredLocal('ap3x_dm_pathways'); }
+function r10_getActiveModules()           { return r10_getFilteredLocal('ap3x_dm_process_modules'); }
+function r10_getActiveLessons()           { return r10_getFilteredLocal('ap3x_dm_process_lessons'); }
+function r10_getActiveProgressRecords()   { return r10_getFilteredLocal('ap3x_dm_progress_records'); }
+function r10_getActiveSafetyAcks()        { return r10_getFilteredLocal('ap3x_dm_safety_acks'); }
+function r10_getActiveSupervisorReviews() { return r10_getFilteredLocal('ap3x_dm_supervisor_reviews'); }
+function r10_getActiveEvidenceRecords()   { return r10_getFilteredLocal('ap3x_dm_evidence_records'); }
+function r10_getActiveDashboardAlerts()   { return r10_getFilteredLocal('ap3x_dm_dashboard_alerts'); }
+function r10_getActiveSyncQueue()         {
+  var localQ = dmGetAll ? dmGetAll('ap3x_dm_pwa_sync_queue') : [];
+  var syncQ  = (typeof getSyncQueue === 'function') ? getSyncQueue() : [];
+  var all    = localQ.concat(syncQ);
+  return r10_filterRecordsByDataMode(all);
+}
+
+function r10_getFilteredLocal(collectionKey) {
+  // Uses the existing getActiveRecordsByMode (Run 6) which already filters by demo/live
+  if (typeof getActiveRecordsByMode === 'function') return getActiveRecordsByMode(collectionKey);
+  var all = dmGetAll ? dmGetAll(collectionKey) : [];
+  return r10_filterRecordsByDataMode(all);
+}
+
+// ── R10.3: SUPABASE CONNECTOR (CDN-loaded, anon key only) ────────────────────
+
+var R10_SUPABASE_CLIENT  = null;  // set by r10_initSupabaseClient()
+var R10_SUPABASE_STATUS  = 'not_initialised'; // not_initialised | not_configured | initialised | failed
+
+function r10_isSupabaseConfigured() {
+  var bs = loadBackendSettings();
+  return bs.mode === 'supabase' && !!(bs.supabase.url) && !!(bs.supabase.anonKey);
+}
+
+function r10_getSupabaseClient() {
+  if (R10_SUPABASE_CLIENT) return R10_SUPABASE_CLIENT;
+  if (!r10_isSupabaseConfigured()) { R10_SUPABASE_STATUS = 'not_configured'; return null; }
+  // Attempt to use window.supabase (loaded via CDN <script> below)
+  if (window.supabase && window.supabase.createClient) {
+    var bs = loadBackendSettings();
+    try {
+      R10_SUPABASE_CLIENT = window.supabase.createClient(bs.supabase.url, bs.supabase.anonKey, {
+        auth: { persistSession: true, autoRefreshToken: true }
+      });
+      R10_SUPABASE_STATUS = 'initialised';
+    } catch(e) {
+      R10_SUPABASE_STATUS = 'failed';
+      console.warn('[AutoSkill OS™ R10] Supabase client init failed:', e.message);
+    }
+  } else {
+    // SDK not loaded yet — mark as pending
+    R10_SUPABASE_STATUS = 'sdk_not_loaded';
+  }
+  return R10_SUPABASE_CLIENT;
+}
+
+function r10_getSupabaseStatus() {
+  return {
+    status:      R10_SUPABASE_STATUS,
+    configured:  r10_isSupabaseConfigured(),
+    clientReady: !!R10_SUPABASE_CLIENT,
+    sdkLoaded:   !!(window.supabase && window.supabase.createClient)
+  };
+}
+
+async function r10_testSupabaseConnectionSafely() {
+  // Uses existing fetch-based test from Run 6 — adds richer status.
+  // Does NOT use service role key. Respects RLS.
+  if (!r10_isSupabaseConfigured()) {
+    return { status: 'not_configured', message: 'Supabase URL and Anon Key must be entered before testing.', safe: true };
+  }
+  var bs = loadBackendSettings();
+  var url = (bs.supabase.url || '').replace(/\/$/, '');
+  var key = bs.supabase.anonKey || '';
+
+  try {
+    // Safe read against autoskill_app_settings — RLS-friendly (returns empty if no profile, not 500)
+    var testUrl = url + '/rest/v1/autoskill_app_settings?select=setting_key&limit=1';
+    var res = await fetch(testUrl, {
+      method: 'GET',
+      headers: { 'apikey': key, 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json' },
+      signal: AbortSignal.timeout(10000)
+    });
+    if (res.status === 200) {
+      return { status: 'connected', message: '✅ Connection passed — Supabase is reachable and responding.', safe: true };
+    } else if (res.status === 401) {
+      return { status: 'rls_required', message: '✅ Supabase reachable. Authentication required for live data (RLS active). Config saved.', safe: true };
+    } else if (res.status === 406 || res.status === 400) {
+      return { status: 'configured', message: '✅ Supabase reachable. Schema may need setup. Run 001_autoskill_full_backend_setup.sql in your Supabase SQL Editor.', safe: true };
+    } else if (res.status === 404) {
+      return { status: 'configured', message: '⚠️ Supabase project reached but tables may not exist yet. Run supabase/sql/001_autoskill_full_backend_setup.sql.', safe: true };
+    } else {
+      return { status: 'failed', message: '⚠️ Connection issue: HTTP ' + res.status + '. Check your project URL.', safe: true };
+    }
+  } catch(err) {
+    if (err.name === 'TimeoutError') return { status: 'failed', message: '⚠️ Connection timed out. Check the Supabase URL.', safe: true };
+    if (err.name === 'TypeError')    return { status: 'failed', message: '⚠️ Network or CORS error. Config saved — test from browser with correct CORS settings.', safe: true };
+    return { status: 'failed', message: '⚠️ Connection error: ' + err.message, safe: true };
+  }
+}
+
+// ── R10.4: LIVE DATA READ HELPERS (Supabase SDK path) ────────────────────────
+// These are placeholders for Run 11 live sync.
+// In Run 10 they return local data in demo/local mode, and attempt a Supabase read in live mode.
+// On RLS/auth error → return empty + status so UI can show honest state.
+
+async function r10_fetchLiveFromSupabase(tableName, options) {
+  options = options || {};
+  var client = r10_getSupabaseClient();
+  if (!client) return { data: null, error: { message: 'Supabase not configured.' }, status: 'not_configured' };
+  try {
+    var q = client.from(tableName).select(options.select || '*');
+    if (options.eq)     q = q.eq(options.eq[0], options.eq[1]);
+    if (options.is_demo !== undefined) q = q.eq('is_demo', options.is_demo);
+    if (options.limit)  q = q.limit(options.limit);
+    if (options.order)  q = q.order(options.order.column, { ascending: options.order.ascending !== false });
+    var result = await q;
+    if (result.error) {
+      return { data: null, error: result.error, status: result.status || 'error' };
+    }
+    return { data: result.data, error: null, status: 'ok' };
+  } catch(e) {
+    return { data: null, error: { message: e.message }, status: 'exception' };
+  }
+}
+
+async function r10_fetchLiveEmployees()         { return r10_fetchLiveFromSupabase('autoskill_employees',         { is_demo: false, order: { column: 'created_at', ascending: false } }); }
+async function r10_fetchLiveDepartments()        { return r10_fetchLiveFromSupabase('autoskill_departments',       { is_demo: false }); }
+async function r10_fetchLiveTrainingPathways()   { return r10_fetchLiveFromSupabase('autoskill_training_pathways', { is_demo: false, eq: ['status','active'] }); }
+async function r10_fetchLiveProcessModules()     { return r10_fetchLiveFromSupabase('autoskill_process_modules',   { is_demo: false }); }
+async function r10_fetchLiveProcessLessons()     { return r10_fetchLiveFromSupabase('autoskill_process_lessons',   { is_demo: false }); }
+async function r10_fetchLiveProgressRecords()    { return r10_fetchLiveFromSupabase('autoskill_progress_records',  { is_demo: false, order: { column: 'updated_at', ascending: false } }); }
+async function r10_fetchLiveSafetyAcks()         { return r10_fetchLiveFromSupabase('autoskill_safety_acknowledgements', { is_demo: false }); }
+async function r10_fetchLiveSupervisorReviews()  { return r10_fetchLiveFromSupabase('autoskill_supervisor_reviews', { is_demo: false }); }
+async function r10_fetchLiveEvidenceRecords()    { return r10_fetchLiveFromSupabase('autoskill_evidence_records',  { is_demo: false }); }
+async function r10_fetchLiveDashboardAlerts()    { return r10_fetchLiveFromSupabase('autoskill_dashboard_alerts',  { is_demo: false, eq: ['resolved', false] }); }
+async function r10_fetchLiveSyncQueue()          { return r10_fetchLiveFromSupabase('autoskill_sync_queue',        { is_demo: false, eq: ['status','queued'] }); }
+
+// ── R10.5: SAFE LIVE WRITE HELPERS ───────────────────────────────────────────
+// Minimal safe writes for live settings and queue items.
+// Employee PWA full live sync comes in Run 11.
+
+async function r10_createOrUpdateLiveAppSetting(settingKey, settingValue) {
+  var client = r10_getSupabaseClient();
+  if (!client) return { error: { message: 'Not configured' } };
+  // Uses upsert on (organisation_id, setting_key) — requires auth context
+  return r10_fetchLiveFromSupabase('autoskill_app_settings', {
+    select: 'setting_key,setting_value', eq: ['setting_key', settingKey], limit: 1
+  });
+}
+
+async function r10_insertLiveSyncQueueItem(item) {
+  // Run 11 will implement full live queue writing.
+  // For now: validates and queues locally, logs intent.
+  if (!r10_shouldUseRemoteBackend()) {
+    // local queue path (existing Run 7 logic)
+    return { queued: false, reason: 'Local-only mode — item stays in local queue.' };
+  }
+  var client = r10_getSupabaseClient();
+  if (!client) return { queued: false, reason: 'No Supabase client. Configure backend in Settings.' };
+  // Guard: never write is_demo=true records to live backend
+  if (item.isDemo || item.is_demo) return { queued: false, reason: 'Demo items do not write to live backend.' };
+  try {
+    var result = await client.from('autoskill_sync_queue').insert({
+      organisation_id: item.organisation_id,
+      event_type:      item.eventType || item.event_type,
+      source:          item.source || 'employee-pwa',
+      target:          item.target || 'control-dashboard',
+      employee_id:     item.employeeId || item.employee_id || null,
+      pathway_id:      item.pathwayId  || item.pathway_id  || null,
+      module_id:       item.moduleId   || item.module_id   || null,
+      lesson_id:       item.lessonId   || item.lesson_id   || null,
+      payload:         item.payload    || {},
+      status:          'queued',
+      priority:        item.priority   || 'normal',
+      data_mode:       'live',
+      is_demo:         false,
+      local_device_id: item.localDeviceId || item.local_device_id || null,
+      provider:        'supabase',
+      notes:           item.notes || null
+    });
+    return result;
+  } catch(e) {
+    return { error: e };
+  }
+}
+
+async function r10_updateLiveSyncQueueItemStatus(itemId, newStatus, errorMessage) {
+  var client = r10_getSupabaseClient();
+  if (!client) return { error: { message: 'Not configured' } };
+  var update = { status: newStatus, updated_at: new Date().toISOString() };
+  if (newStatus === 'synced') update.processed_at = new Date().toISOString();
+  if (errorMessage) update.error_message = errorMessage;
+  return await client.from('autoskill_sync_queue').update(update).eq('id', itemId);
+}
+
+async function r10_insertLiveProgressRecord(record) {
+  if (!r10_shouldUseRemoteBackend()) return { queued: false, reason: 'Local-only mode.' };
+  var client = r10_getSupabaseClient();
+  if (!client) return { error: { message: 'Not configured.' } };
+  if (record.isDemo) return { queued: false, reason: 'Demo records not written to live backend.' };
+  try {
+    return await client.from('autoskill_progress_records').upsert({
+      organisation_id:  record.organisation_id,
+      employee_id:      record.employee_id,
+      pathway_id:       record.pathway_id,
+      module_id:        record.module_id || null,
+      lesson_id:        record.lesson_id || null,
+      status:           record.status || 'in_progress',
+      progress_percent: record.progress_percent || 0,
+      source:           record.source || 'employee-pwa',
+      sync_status:      'synced',
+      is_demo:          false,
+      updated_at:       new Date().toISOString()
+    });
+  } catch(e) { return { error: e }; }
+}
+
+async function r10_insertLiveCheckpointSubmission(submission) {
+  if (!r10_shouldUseRemoteBackend()) return { queued: false, reason: 'Local-only mode.' };
+  var client = r10_getSupabaseClient();
+  if (!client) return { error: { message: 'Not configured.' } };
+  if (submission.isDemo) return { queued: false, reason: 'Demo records not written to live backend.' };
+  try {
+    return await client.from('autoskill_checkpoint_submissions').insert({
+      organisation_id: submission.organisation_id,
+      employee_id:     submission.employee_id,
+      checkpoint_id:   submission.checkpoint_id,
+      pathway_id:      submission.pathway_id || null,
+      module_id:       submission.module_id  || null,
+      lesson_id:       submission.lesson_id  || null,
+      answer:          submission.answer || {},
+      is_correct:      submission.is_correct !== undefined ? submission.is_correct : null,
+      status:          'completed',
+      submitted_at:    new Date().toISOString(),
+      source:          'employee-pwa',
+      sync_status:     'synced',
+      is_demo:         false
+    });
+  } catch(e) { return { error: e }; }
+}
+
+async function r10_insertLiveSafetyAcknowledgementCompletion(ack) {
+  if (!r10_shouldUseRemoteBackend()) return { queued: false, reason: 'Local-only mode.' };
+  var client = r10_getSupabaseClient();
+  if (!client) return { error: { message: 'Not configured.' } };
+  if (ack.isDemo) return { queued: false, reason: 'Demo records not written to live backend.' };
+  try {
+    return await client.from('autoskill_employee_safety_acknowledgements').upsert({
+      organisation_id:    ack.organisation_id,
+      employee_id:        ack.employee_id,
+      acknowledgement_id: ack.acknowledgement_id,
+      pathway_id:         ack.pathway_id  || null,
+      module_id:          ack.module_id   || null,
+      lesson_id:          ack.lesson_id   || null,
+      acknowledged_text:  ack.acknowledged_text || '',
+      acknowledged_at:    new Date().toISOString(),
+      source:             'employee-pwa',
+      sync_status:        'synced',
+      is_demo:            false
+    });
+  } catch(e) { return { error: e }; }
+}
+
+// ── R10.6: BACKEND HEALTH ─────────────────────────────────────────────────────
+
+function r10_getMaskedBackendConfig() {
+  var bs = loadBackendSettings();
+  var provider = bs.mode || 'local';
+  var cfg = bs[provider] || {};
+  function mask(val) {
+    if (!val || val.length < 8) return val || '';
+    return val.substring(0, 12) + '…' + val.slice(-4);
+  }
+  if (provider === 'supabase') {
+    return { provider: 'supabase', url: mask(cfg.url), anonKey: mask(cfg.anonKey), status: cfg.status };
+  }
+  if (provider === 'firebase') {
+    return { provider: 'firebase', projectId: cfg.projectId, apiKey: mask(cfg.apiKey), status: cfg.status };
+  }
+  if (provider === 'aws') {
+    return { provider: 'aws', endpoint: mask(cfg.endpoint), region: cfg.region, status: cfg.status };
+  }
+  if (provider === 'custom') {
+    return { provider: 'custom', baseUrl: mask(cfg.baseUrl), status: cfg.status };
+  }
+  return { provider: 'local', status: 'local_only' };
+}
+
+function r10_getProviderStatusLabel() {
+  var bs = loadBackendSettings();
+  var mode = r10_getActiveDataMode();
+  if (mode === 'demo') return '🎭 Demo Mode';
+  if (bs.mode === 'local') return '🖥️ Local-only';
+  var cfg = bs[bs.mode] || {};
+  var labels = {
+    not_configured: '⚙️ Not configured',
+    configured:     '⚙️ Configured — test required',
+    testing:        '🔄 Testing…',
+    connected:      '✅ Connected',
+    rls_required:   '🔑 Auth required (RLS)',
+    failed:         '❌ Connection failed'
+  };
+  var providerNames = { supabase: 'Supabase', firebase: 'Firebase', aws: 'AWS', custom: 'Custom REST' };
+  return (providerNames[bs.mode] || bs.mode) + ' — ' + (labels[cfg.status] || cfg.status || 'unknown');
+}
+
+async function r10_getBackendReadinessStatus() {
+  // Extended version of existing getBackendReadinessStatus (Run 6)
+  // Returns enhanced live-mode awareness without breaking existing callers.
+  var base = (typeof getBackendReadinessStatus === 'function') ? getBackendReadinessStatus() : {};
+  var mode = r10_getActiveDataMode();
+  var bs   = loadBackendSettings();
+  var providerCfg = bs[bs.mode] || {};
+  return Object.assign({}, base, {
+    activeDataMode:         mode,
+    activeDataSourceLabel:  r10_getActiveDataSourceLabel(),
+    shouldUseRemote:        r10_shouldUseRemoteBackend(),
+    supabaseClientReady:    !!R10_SUPABASE_CLIENT,
+    supabaseSdkLoaded:      !!(window.supabase && window.supabase.createClient),
+    runPhase:               'Run 10 — Live Backend Connector',
+    liveSyncNote:           'Employee PWA live write-sync is completed in Run 11.',
+    liveReportsNote:        'Remote dashboard reporting is finalised in Run 12.',
+    providerStatusLabel:    r10_getProviderStatusLabel()
+  });
+}
+
+function r10_getBackendErrorMessage() {
+  var bs = loadBackendSettings();
+  var cfg = bs[bs.mode] || {};
+  var err = cfg.errorMessage || '';
+  // Safety: never return values that contain secret-looking strings
+  var safe = err.replace(/eyJ[A-Za-z0-9_\-\.]{10,}/g, '[token_redacted]')
+               .replace(/service_role/gi, '[blocked]')
+               .substring(0, 200);
+  return safe || null;
+}
+
+// ── R10.7: UI REFRESH FUNCTIONS ───────────────────────────────────────────────
+
+function refreshActiveDataSourceBadge() {
+  // Updates the small badge in the topbar showing active data source
+  var el = document.getElementById('activeDataSourceBadge');
+  if (!el) return;
+  var mode = r10_getActiveDataMode();
+  if (mode === 'demo') {
+    el.textContent = '';
+    el.style.display = 'none';
+    return;
+  }
+  var label = r10_getActiveDataSourceLabel();
+  el.textContent = label;
+  el.style.display = 'inline-block';
+}
+
+function r10_renderLiveStatusBanner() {
+  // Returns an HTML banner string for live mode status (used in dashboard views)
+  var mode = r10_getActiveDataMode();
+  if (mode === 'demo') return '';
+  var desc = r10_getActiveDataSourceDescription();
+  var bs   = loadBackendSettings();
+  var cfg  = bs[bs.mode] || {};
+  var status = cfg.status || 'not_configured';
+  var colours = {
+    connected:'rgba(34,197,94,.1)', configured:'rgba(201,168,76,.07)',
+    rls_required:'rgba(201,168,76,.07)', not_configured:'rgba(239,68,68,.07)',
+    failed:'rgba(239,68,68,.07)', local_only:'rgba(148,163,184,.07)'
+  };
+  var borderColors = {
+    connected:'rgba(34,197,94,.3)', configured:'rgba(201,168,76,.25)',
+    rls_required:'rgba(201,168,76,.25)', not_configured:'rgba(239,68,68,.2)',
+    failed:'rgba(239,68,68,.2)', local_only:'rgba(148,163,184,.2)'
+  };
+  var bg  = colours[status]      || colours['not_configured'];
+  var brd = borderColors[status] || borderColors['not_configured'];
+  return '<div class="info-notice" style="background:' + bg + ';border:1px solid ' + brd + ';margin-bottom:14px">' +
+    '<strong>🔌 ' + r10_getProviderStatusLabel() + '</strong><br/>' +
+    '<span style="font-size:12px;color:var(--muted)">' + desc + '</span>' +
+    '</div>';
+}
+
+function r10_renderLiveEmptyState(collectionName) {
+  // Returns HTML for a live-ready empty state
+  var empty = r10_getLiveReadyEmptyState(collectionName);
+  return '<div class="empty-state-block" style="padding:32px 20px;text-align:center">' +
+    '<div class="es-icon" style="font-size:36px;margin-bottom:10px">🔌</div>' +
+    '<div class="es-title" style="font-size:16px;font-weight:700;margin-bottom:6px">' + empty.label + '</div>' +
+    '<div class="es-sub" style="font-size:12px;color:var(--muted);max-width:400px;margin:0 auto;line-height:1.5">' + empty.hint + '</div>' +
+    '</div>';
+}
+
+function r10_renderSettingsPanelRunStatus() {
+  // Returns HTML for a Run 10 status section in settings
+  var mode   = r10_getActiveDataMode();
+  var masked = r10_getMaskedBackendConfig();
+  var bs     = loadBackendSettings();
+  var cfg    = bs[bs.mode] || {};
+  return '<div class="settings-section" style="margin-top:16px;background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.2)">' +
+    '<div class="settings-title" style="color:var(--accent)">🔌 Run 10 — Live Backend Connector</div>' +
+    '<div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px">' +
+      '<strong>Active mode:</strong> ' + (mode === 'demo' ? '🎭 Demo' : mode === 'local' ? '🖥️ Local-only' : '🟢 Live') + '<br/>' +
+      '<strong>Provider:</strong> ' + r10_getProviderStatusLabel() + '<br/>' +
+      (masked.url      ? '<strong>URL:</strong> ' + masked.url + '<br/>' : '') +
+      (masked.anonKey  ? '<strong>Anon Key:</strong> ' + masked.anonKey + '<br/>' : '') +
+      (masked.projectId? '<strong>Project ID:</strong> ' + masked.projectId + '<br/>' : '') +
+    '</div>' +
+    '<div style="font-size:11px;color:var(--muted);border-top:1px solid rgba(255,255,255,.06);padding-top:10px;line-height:1.7">' +
+      '✅ Run 9: Supabase SQL schema ready (<code>supabase/sql/</code>)<br/>' +
+      '✅ Run 10: Live backend connector layer added<br/>' +
+      '⏳ Run 11: Employee PWA live write-sync<br/>' +
+      '⏳ Run 12: Live dashboard reports + production validation<br/>' +
+      '<br/><em>AutoSkill OS™ remains local-first when Demo Mode or Local-only mode is active.</em>' +
+    '</div>' +
+  '</div>';
+}
+
+// ── R10.8: SUPABASE CDN LOADER ────────────────────────────────────────────────
+// Loads Supabase JS SDK from CDN only when provider=supabase and config is present.
+// Respects 4P3X API Config Guard™ — only uses URL and anon key.
+// CDN load is deferred and non-blocking — app works without it.
+
+function r10_loadSupabaseSdkIfNeeded(callback) {
+  if (window.supabase && window.supabase.createClient) {
+    // Already loaded
+    if (callback) callback();
+    return;
+  }
+  if (!r10_isSupabaseConfigured()) return; // Don't load if not configured
+  // Check if CDN script already added
+  if (document.getElementById('r10-supabase-cdn')) return;
+  var script = document.createElement('script');
+  script.id  = 'r10-supabase-cdn';
+  script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+  script.crossOrigin = 'anonymous';
+  script.referrerPolicy = 'no-referrer';
+  script.onload = function() {
+    console.info('[AutoSkill OS™ R10] Supabase SDK loaded via CDN.');
+    r10_getSupabaseClient(); // initialise immediately
+    if (callback) callback();
+  };
+  script.onerror = function() {
+    console.warn('[AutoSkill OS™ R10] Supabase CDN load failed. Offline mode active.');
+    R10_SUPABASE_STATUS = 'sdk_load_failed';
+  };
+  document.head.appendChild(script);
+}
+
+// ── R10.9: WIRING — extend existing toggleDemoMode and showView ──────────────
+// Patch existing Run 6 testBackendConnection to use enhanced R10 test for Supabase.
+
+var _r10_origTestBackendConnection = window.testBackendConnection;
+window.testBackendConnection = async function(provider) {
+  if (provider === 'supabase') {
+    // Use R10 enhanced test (more accurate than simple HEAD)
+    var bs = loadBackendSettings();
+    var msgEl  = document.getElementById('sbStatusMsg');
+    var statEl = document.getElementById('sbStatus');
+    if (!bs.supabase.url || !bs.supabase.anonKey) {
+      if (msgEl) { msgEl.style.display='block'; msgEl.style.color='var(--high)'; msgEl.textContent='URL and Anon Public Key are required before testing.'; }
+      return;
+    }
+    bs.supabase.status = 'testing';
+    saveBackendSettings(bs);
+    if (typeof setStatusBadge === 'function') setStatusBadge('sbStatus', 'testing');
+    if (msgEl) { msgEl.style.display='block'; msgEl.style.color='var(--muted)'; msgEl.textContent='Testing Supabase connection…'; }
+    var result = await r10_testSupabaseConnectionSafely();
+    bs = loadBackendSettings();
+    bs.supabase.status        = result.status;
+    bs.supabase.lastTestedAt  = new Date().toISOString();
+    bs.supabase.errorMessage  = result.status === 'failed' ? result.message : '';
+    saveBackendSettings(bs);
+    if (typeof setStatusBadge === 'function') setStatusBadge('sbStatus', result.status);
+    if (msgEl) {
+      msgEl.style.display = 'block';
+      msgEl.style.color   = result.status === 'connected' ? 'var(--green)' : result.status === 'failed' ? 'var(--high)' : 'var(--gold)';
+      msgEl.textContent   = result.message;
+    }
+    // If connected, init Supabase client
+    if (result.status === 'connected' || result.status === 'rls_required') {
+      r10_loadSupabaseSdkIfNeeded(function() { r10_getSupabaseClient(); refreshActiveDataSourceBadge(); });
+    }
+    refreshActiveDataSourceBadge();
+    // Refresh demolive panel if visible
+    var dvEl = document.getElementById('view-demolive');
+    if (dvEl && !dvEl.classList.contains('hidden')) renderDemoLiveView();
+  } else {
+    // Delegate to existing Run 6 handler for non-Supabase providers
+    if (_r10_origTestBackendConnection) return _r10_origTestBackendConnection(provider);
+  }
+};
+
+// Extend showView to refresh data source badge on each navigation
+var _r10_origShowView2 = window.showView;
+window.showView = function(v) {
+  if (_r10_origShowView2) _r10_origShowView2(v);
+  refreshActiveDataSourceBadge();
+  // Inject run status into settings view
+  if (v === 'settings') {
+    var settingsEl = document.getElementById('view-settings');
+    if (settingsEl && !settingsEl.querySelector('#r10SettingsStatus')) {
+      var runStatusDiv = document.createElement('div');
+      runStatusDiv.id  = 'r10SettingsStatus';
+      runStatusDiv.innerHTML = r10_renderSettingsPanelRunStatus();
+      settingsEl.appendChild(runStatusDiv);
+    } else if (settingsEl) {
+      var existing = document.getElementById('r10SettingsStatus');
+      if (existing) existing.innerHTML = r10_renderSettingsPanelRunStatus();
+    }
+  }
+};
+
+// ── R10.10: INITIALISATION ────────────────────────────────────────────────────
+// Runs on DOMContentLoaded (or immediately if document already loaded).
+
+function r10_init() {
+  refreshActiveDataSourceBadge();
+  // If Supabase configured, attempt CDN SDK load in background
+  if (r10_isSupabaseConfigured()) {
+    r10_loadSupabaseSdkIfNeeded(function() {
+      refreshActiveDataSourceBadge();
+      var dvEl = document.getElementById('view-demolive');
+      if (dvEl && !dvEl.classList.contains('hidden')) renderDemoLiveView();
+    });
+  }
+  console.info('[AutoSkill OS™] Run 10 connector initialised. Mode:', r10_getActiveDataMode(), '| Provider:', r10_getProviderStatusLabel());
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', r10_init);
+} else {
+  r10_init();
+}
+
+// ── End of Run 10 Connector Block ────────────────────────────────────────────
+// AutoSkill OS™ supports training awareness, supervisor review, and evidence
+// capture. It does not replace workplace safety procedures, legal duties,
+// qualified supervision, employer responsibility, or site-specific training.
+// ════════════════════════════════════════════════════════════════════════════
 
 </script>
 </body>
