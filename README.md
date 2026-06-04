@@ -131,7 +131,8 @@ When you are ready for live deployment, connect one of:
 
 > **NEVER** place `SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `JWT_SECRET`, `PRIVATE_KEY`, `WEBHOOK_SECRET`, service account JSON, or admin tokens in any frontend `.env` file or browser-accessible config.
 
-Full Supabase schema SQL is in `docs/AUTOSKILL_SUPABASE_SETUP_SQL.txt` — for server-side use only.
+Full Supabase schema SQL is in `supabase/sql/` — for server-side / Supabase Dashboard use only.
+> See `supabase/docs/` for schema docs, frontend mapping, and RLS policy notes.
 
 ---
 
@@ -163,7 +164,17 @@ Reports, safety acknowledgements, supervisor reviews, and competency records pro
 │       ├── lesson-content.js
 │       └── sync-service.js
 ├── docs/
-│   └── AUTOSKILL_SUPABASE_SETUP_SQL.txt  ← Server-side schema (backend-ready)
+│   └── AUTOSKILL_SUPABASE_SETUP_SQL.txt  ← Legacy (superseded by supabase/)
+├── supabase/
+│   ├── sql/
+│   │   ├── 001_autoskill_full_backend_setup.sql
+│   │   ├── 002_autoskill_seed_demo_live_data.sql
+│   │   ├── 099_autoskill_verification_queries.sql
+│   │   └── 999_autoskill_rollback_notes.sql
+│   └── docs/
+│       ├── autoskill_backend_schema.md
+│       ├── autoskill_frontend_mapping.md
+│       └── autoskill_rls_policy_notes.md
 ├── icons/                           ← PWA icons (72–512px)
 ├── .env.example                     ← Public-safe env template
 ├── vercel.json                      ← Deployment config
@@ -276,7 +287,7 @@ The `vercel.json` handles SPA routing. Netlify users add a `_redirects` file if 
 
 | Run | Focus |
 |---|---|
-| Run 9 | Full Supabase Backend SQL + Live Sync Implementation |
+| Run 9 | Supabase Backend Schema + SQL Setup Pack | ✅ Complete |
 | Run 10 | Embedded 4P3X Intelligent AI™ Training Assistants |
 | Run 11 | Certificates / Employer Sign-Off / Role-Based Admin |
 | Run 12 | Portfolio Case Study Polish + Screenshot / Investor Demo Pack |
