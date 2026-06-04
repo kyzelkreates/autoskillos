@@ -1769,18 +1769,11 @@ function renderProgress() {
           (sqStats.safetyCritical > 0 ? '&#x26A0;&#xFE0F; ' + sqStats.safetyCritical + ' safety-critical update(s) in queue<br>' : '') +
           'Last queued: ' + lastQStr + '<br>' +
           'Progress saved locally. Dashboard queue prepared.<br>' +
-          '<span style="color:var(--muted)">Remote backend not connected. Configure a live backend in Settings when ready.</span>' +
+          '<span style="color:var(--muted)">Remote backend not connected. Live sync connects in Run 8.</span>' +
         '</div>' +
       '</div>';
     })() +
-    '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px">' +
-    '<span style="font-size:18px">&#x1F4F2;</span>' +
-    '<div style="flex:1">' +
-      '<div style="font-size:12px;font-weight:700;color:var(--gold)">Install AutoSkill OS&#x2122;</div>' +
-      '<div style="font-size:11px;color:var(--muted)">Tap your browser menu and select <strong>“Add to Home Screen”</strong> to install this app and use it offline.</div>' +
-    '</div>' +
-  '</div>' +
-  '<button onclick="submitCheckin()" aria-label="Log training check-in" style="width:100%;padding:13px;background:var(--gold);color:#000;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px">&#x1F4CB; Log Training Check-In (+10 XP)</button>' +
+    '<button onclick="submitCheckin()" aria-label="Log training check-in" style="width:100%;padding:13px;background:var(--gold);color:#000;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px">&#x1F4CB; Log Training Check-In (+10 XP)</button>' +
     '<button onclick="requestSupervisorReview()" aria-label="Request supervisor review" style="width:100%;padding:12px;background:rgba(201,168,76,.12);color:var(--gold);border:1.5px solid rgba(201,168,76,.3);border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:14px">&#x1F464; Request Supervisor Review — Queued Locally</button>' +
     '<div class="safety-notice">' +
       '<div style="font-weight:700;margin-bottom:4px">&#x26A0;&#xFE0F; AutoSkill OS&#x2122; Notice</div>' +

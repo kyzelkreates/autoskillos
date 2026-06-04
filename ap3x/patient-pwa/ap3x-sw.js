@@ -2,7 +2,7 @@
 // Offline-first caching for Employee Learning Portal
 // v3 — force reload lesson content
 
-const CACHE_NAME   = 'autoskill-employee-v4';
+const CACHE_NAME   = 'autoskill-employee-v5';
 const OFFLINE_PAGE = './index.html';
 
 const PRECACHE_ASSETS = [

@@ -1,160 +1,310 @@
 # AutoSkill OS™
 
-**Training Control Dashboard + Employee Learning PWA**
+**Manufacturing Training Control Dashboard + Employee Learning PWA**
 
 > Powered by 4P3X Intelligent AI™ · Created by Kyzel Kreates™
 
 ---
 
-## Overview
+## Project Identity
 
-AutoSkill OS™ is a local-first, offline-capable manufacturing workforce training platform consisting of:
+| Field | Value |
+|---|---|
+| **Product Name** | AutoSkill OS™ |
+| **Type** | Local-first manufacturing training platform |
+| **Dashboard** | Control Dashboard — supervisor, trainer, manager |
+| **PWA** | Employee Learning PWA — employee, trainee |
+| **AI Engine** | Powered by 4P3X Intelligent AI™ |
+| **Creator** | Kyzel Kreates™ |
+| **Data Model** | Local-first SSOT (IndexedDB / localStorage) |
+| **Sync** | Local queue → Control Dashboard → future backend |
+| **Build Plan** | 8-run refactor completed |
 
-- **Training Control Dashboard** — supervisor monitoring, employee competency flags, trainer notes, analytics
-- **Employee Learning PWA** — daily training check-ins, Manufacturing Training Pathway (3 modules / 15 process modules), skill practices, competency tracking
+---
 
-**Demo Mode shows the product. Live Mode runs the product.**
+## Short Description
+
+Local-first manufacturing training dashboard and employee learning PWA for process learning, safety checks, competency tracking, supervisor review, demo/live mode switching, and backend-ready workflows.
+
+---
+
+## The Product Phrase
+
+> **Demo Mode shows the product. Live Mode runs the product.**
+
+---
+
+## Main Features
+
+### Control Dashboard
+- Manufacturing Training Centre overview
+- Employee progress table (by employee, department, pathway)
+- Training Pathways panel
+- Department & Manufacturing Stations panel
+- Safety Acknowledgement panel
+- Supervisor Review Queue
+- Training Evidence panel
+- Dashboard Alerts panel
+- **Reports & Evidence Centre** (7 report types — local-first, SSOT-driven)
+- **Employee PWA Sync Queue** (local queue processing)
+- Demo / Live Mode status panel
+- Backend Provider Settings (with 4P3X API Config Guard™)
+
+### Employee Learning PWA
+- Installs as a PWA (Add to Home Screen)
+- Offline-first local storage
+- 3 manufacturing training modules (15 lessons total)
+- Module 1 — Site Orientation & Induction
+- Module 2 — Quality Control & PPE
+- Module 3 — Competency Assessment & Final Check
+- Interactive skill checkpoints per lesson
+- Safety acknowledgement flow
+- Training progress tracker with XP
+- Supervisor review request button
+- Local sync queue (queues activity for Control Dashboard)
+- Demo Mode / Live Mode awareness
+- Install guidance in-app
+
+### Sync Queue
+- Employee PWA actions generate local queue records
+- Control Dashboard reads, displays, and processes queue items
+- Event types: lesson_started, lesson_completed, checkpoint_submitted, safety_acknowledged, supervisor_review_requested
+- Conflict-safe local merge
+- Demo items ignored in Live Mode
+- Backend-ready payload shape for future Supabase / Firebase / REST
+
+### Reports & Evidence Centre (7 reports)
+1. Training Overview Report
+2. Employee Training Summary Report
+3. Pathway Completion Report
+4. Safety Acknowledgement Report
+5. Supervisor Review Report
+6. Employee PWA Sync Queue Report
+7. Demo / Live Readiness Report
+
+All reports: local-first, SSOT-driven, printable, copyable, JSON-exportable.
+
+### Backend Settings Layer
+- Local-only mode (default)
+- Supabase (public-safe anon key only)
+- Firebase (public web config only)
+- AWS / Amplify (public endpoint only)
+- Custom REST endpoint
+- 4P3X API Config Guard™ — blocks all forbidden backend-only secrets
+
+### 4P3X API Config Guard™
+Blocks the following terms from being saved in frontend settings:
+
+```
+SUPABASE_SERVICE_ROLE_KEY  OPENAI_API_KEY  GROQ_API_KEY
+STRIPE_SECRET_KEY  DATABASE_URL  JWT_SECRET  PRIVATE_KEY
+WEBHOOK_SECRET  service_role  service account  private_key
+AWS_SECRET_ACCESS_KEY  secretAccessKey  client_secret
+admin token
+```
+
+---
+
+## Demo / Live Mode
+
+| Mode | Behaviour |
+|---|---|
+| **Demo Mode ON** | Shows sample manufacturing training records (marked `isDemo: true`). All dashboard panels and reports are populated. No backend needed. |
+| **Demo Mode OFF (Live)** | Hides demo records. Shows live-ready empty states. Real records must come from live employee sessions or a configured backend. |
+
+Demo data can be reset safely from the Demo / Live panel in the dashboard.
+
+---
+
+## Backend Configuration
+
+Demo/local mode works completely without a backend.
+
+When you are ready for live deployment, connect one of:
+
+| Provider | Config needed in frontend |
+|---|---|
+| **Supabase** *(recommended)* | `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` (public only) |
+| **Firebase** | Public web app config (no service account) |
+| **AWS / Amplify** | Public API Gateway endpoint + region |
+| **Custom REST** | API base URL + optional public token |
+
+> **NEVER** place `SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `JWT_SECRET`, `PRIVATE_KEY`, `WEBHOOK_SECRET`, service account JSON, or admin tokens in any frontend `.env` file or browser-accessible config.
+
+Full Supabase schema SQL is in `docs/AUTOSKILL_SUPABASE_SETUP_SQL.txt` — for server-side use only.
+
+---
+
+## Safety & Legal Disclaimer
+
+> AutoSkill OS™ supports training awareness, supervisor review, and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, employer responsibility, or site-specific training.
+
+Reports, safety acknowledgements, supervisor reviews, and competency records produced by AutoSkill OS™ are training management tools only. They do not constitute legal compliance records, official certifications, or safety approvals.
 
 ---
 
 ## Project Structure
 
 ```
-AutoSkill OS/
-├── index.html                              # Hub landing page (redirects to demo)
+4p3x_carelink/
 ├── ap3x/
 │   ├── demo/
-│   │   ├── index.html                      # Demo hub landing page
-│   │   ├── clinician-demo.html             # Training Control Dashboard (full)
-│   │   ├── patient-demo.html               # Employee Learning PWA (demo)
-│   │   ├── manifest.json                   # PWA manifest
-│   │   └── sw.js                           # Service worker
+│   │   └── clinician-demo.html      ← Control Dashboard (single-file app)
 │   ├── patient-pwa/
-│   │   ├── index.html                      # Installable Employee Learning PWA shell
-│   │   ├── patient-app.js                  # Full PWA app logic
-│   │   ├── patient.css                     # Styles (black/gold/purple theme)
-│   │   ├── manifest.json                   # PWA manifest
-│   │   ├── ap3x-sw.js                      # Service worker (offline-first)
-│   │   └── chart.js                        # Charting utility
-│   ├── clinician-dashboard/
-│   │   └── index.html                      # Redirect to Control Dashboard
-│   ├── shared/
-│   │   ├── constants.js                    # SSOT: keys, thresholds, brand identity
-│   │   ├── auth.js                         # Local-first auth (SHA-256, localStorage)
-│   │   └── sync-service.js                 # Sync queue utility (ready for Live Mode)
-│   └── anxietycore/
-│       ├── engine/rules-engine.js          # Competency scoring rules engine
-│       └── module/streak-tracker.js        # Check-in streak tracker
-├── bco/
-│   └── core/                               # BCO storage engine (SSOT)
-├── icons/                                  # PWA icons (192px, 512px, etc.)
-├── docs/                                   # Setup docs (Live Mode backend SQL)
-└── README.md
+│   │   ├── index.html               ← PWA shell
+│   │   ├── patient-app.js           ← PWA logic (~1800 lines)
+│   │   ├── patient.css              ← PWA styles
+│   │   ├── manifest.json            ← PWA manifest
+│   │   └── ap3x-sw.js               ← Service worker (v5)
+│   └── shared/
+│       ├── data-model.js            ← SSOT / manufacturing data model
+│       ├── constants.js
+│       ├── auth.js
+│       ├── lesson-content.js
+│       └── sync-service.js
+├── docs/
+│   └── AUTOSKILL_SUPABASE_SETUP_SQL.txt  ← Server-side schema (backend-ready)
+├── icons/                           ← PWA icons (72–512px)
+├── .env.example                     ← Public-safe env template
+├── vercel.json                      ← Deployment config
+├── index.html                       ← Root redirect
+└── README.md                        ← This file
 ```
 
 ---
 
-## Features
+## Local Development
 
-### Training Control Dashboard
-- Employee overview grid with competency status levels (Low / Medium / High / Critical / Missing)
-- Training score, readiness, and trend charts
-- Supervisor flags & alert system
-- Supervisor notes (per employee, saved to localStorage)
-- Demo Mode ON/OFF toggle (isolated from real training data)
-- Dark / Light theme
-- Responsive — sidebar on desktop, hamburger on mobile
+This is a static HTML/JS project — no bundler or Node.js build step required for the core app.
 
-### Employee Learning PWA
-- Onboarding flow (3 steps: profile, goals, experience level)
-- 10-question daily training check-in
-- Manufacturing Training Pathway — 3 modules, 15 process modules:
-  - Module 1: Manufacturing Site Orientation
-  - Module 2: Quality Control and Process Standards
-  - Module 3: Competency Assessment and Development
-- 10 skill practice cards (process checks, safety drills, etc.)
-- Progress tracking — streak, XP, check-in history, score/readiness averages
-- Installable PWA (offline-first via service worker)
-- Dark / Light theme
+**To run locally:**
 
----
+```bash
+# Option 1: Python local server (no install needed)
+cd 4p3x_carelink
+python3 -m http.server 8080
 
-## Demo / Live Mode
+# Option 2: Node.js serve (install once)
+npx serve .
 
-- **Demo Mode** shows the product with sample manufacturing training data. No backend required.
-- **Live Mode** will connect to a backend in a future run to sync real employee data.
-- Employee PWA check-ins and module progress are saved locally first, then synced when backend is configured.
+# Option 3: VS Code Live Server extension
+# Right-click index.html → Open with Live Server
+```
+
+**Access:**
+- Root: `http://localhost:8080/` → redirects to demo
+- Control Dashboard: `http://localhost:8080/ap3x/demo/clinician-demo.html`
+- Employee Learning PWA: `http://localhost:8080/ap3x/patient-pwa/`
+
+> PWA install and service worker require HTTPS or localhost. Use `localhost` for local testing.
 
 ---
 
-## Platform Notice
+## Deployment — Vercel / Netlify / Static Host
 
-AutoSkill OS™ supports manufacturing workforce training, competency tracking, and supervisor-guided progress monitoring.
-It does not provide emergency safety response or a replacement for site-specific safety protocols.
-All competency indicators are informational only and must be reviewed by a qualified supervisor or training manager.
-For on-site emergencies, follow your site emergency procedure immediately.
+### Vercel (recommended)
+
+1. Push project to GitHub.
+2. Connect repo to Vercel.
+3. Framework preset: **Other** (static site).
+4. Output directory: `.` (root) or leave blank.
+5. Add public environment variables only:
+
+```
+VITE_AUTOSKILL_APP_NAME=AutoSkill OS
+VITE_AUTOSKILL_DATA_MODE=demo
+VITE_SUPABASE_URL=your_public_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_public_anon_key
+```
+
+6. Deploy.
+7. Verify demo/live toggle works after deployment.
+8. Verify PWA install prompt appears on HTTPS.
+9. Confirm no backend secrets appear in any frontend config.
+
+### Netlify
+
+1. Drag the `4p3x_carelink` folder into Netlify Drop, or connect GitHub repo.
+2. Build command: *(leave blank — static site)*
+3. Publish directory: `.`
+4. Add public env vars as above.
+
+### Routing
+
+The `vercel.json` handles SPA routing. Netlify users add a `_redirects` file if needed.
 
 ---
 
-## Tech Stack
+## Post-Deployment Validation Checklist
 
-- Vanilla HTML / CSS / JavaScript (no framework, no build step)
-- localStorage SSOT (Single Source of Truth)
-- PWA: Web App Manifest + Service Worker
-- Offline-first cache strategy
+- [ ] Control Dashboard loads at `/ap3x/demo/clinician-demo.html`
+- [ ] Employee Learning PWA loads at `/ap3x/patient-pwa/`
+- [ ] Demo Mode ON — demo employee/pathway/lesson data appears
+- [ ] Demo Mode OFF — live-ready empty states appear
+- [ ] Backend settings panel opens
+- [ ] Forbidden secrets are blocked by 4P3X API Config Guard™
+- [ ] At least one lesson opens and completes
+- [ ] Checkpoint appears in lesson
+- [ ] Safety acknowledgement can be accepted
+- [ ] PWA Sync Queue shows queue items after PWA actions
+- [ ] Process Local Queue processes demo items
+- [ ] Reports & Evidence Centre loads all 7 reports
+- [ ] Print/Copy/Export actions work
+- [ ] PWA install prompt appears on HTTPS (Android Chrome / Safari iOS)
+- [ ] App works offline after install
+- [ ] No backend-only secrets in browser network tab or local storage
+- [ ] Console has no critical errors
 
 ---
 
-## License
+## 8-Run Refactor — Completed
 
-© Kyzel Kreates™. All rights reserved.
-Powered by 4P3X Intelligent AI™.
+| Run | Focus | Status |
+|---|---|---|
+| Run 1 | Branding + language refactor | ✅ Complete |
+| Run 2 | Manufacturing SSOT / data model | ✅ Complete |
+| Run 3 | Control Dashboard upgrade | ✅ Complete |
+| Run 4 | Employee Learning PWA upgrade | ✅ Complete |
+| Run 5 | Lesson content + checkpoints + safety | ✅ Complete |
+| Run 6 | Demo / Live Mode + backend settings + 4P3X Guard | ✅ Complete |
+| Run 7 | Employee PWA → Dashboard sync queue | ✅ Complete |
+| Run 8 | Reports, validation, PWA polish, deployment readiness | ✅ Complete |
 
 ---
 
-## Run 2 — Manufacturing Training Data Model + SSOT Layer
+## Optional Future Runs
 
-**File added:** `ap3x/shared/data-model.js` (1,644 lines)
+| Run | Focus |
+|---|---|
+| Run 9 | Full Supabase Backend SQL + Live Sync Implementation |
+| Run 10 | Embedded 4P3X Intelligent AI™ Training Assistants |
+| Run 11 | Certificates / Employer Sign-Off / Role-Based Admin |
+| Run 12 | Portfolio Case Study Polish + Screenshot / Investor Demo Pack |
 
-### Entity schemas prepared
-| Entity | Records | isDemo |
-|--------|---------|--------|
-| employees | 4 | ✅ |
-| trainers | 1 | ✅ |
-| departments | 4 | ✅ |
-| manufacturingStations | 6 | ✅ |
-| trainingPathways | 4 | ✅ |
-| processModules | 7 | ✅ |
-| processLessons | 7 | ✅ |
-| skillCheckpoints | 5 | ✅ |
-| competencies | 6 | ✅ |
-| safetyAcknowledgements | 4 | ✅ |
-| progressRecords | 5 | ✅ |
-| supervisorReviews | 2 | ✅ |
-| evidenceRecords | 2 | ✅ |
-| dashboardAlerts | 3 | ✅ |
-| backendConfigPlaceholder | — | N/A |
+---
 
-### Storage keys added (ap3x_dm_ prefix)
-All new keys use `ap3x_dm_*` prefix — no existing `ap3x_*` or `4p3x_*` keys modified.
+## Environment Variables
 
-### Helper functions added
-- `initAutoSkillOS()` — boot initialiser
-- `seedDemoManufacturingData()` / `resetDemoManufacturingData()`
-- `getEmployees()`, `getTrainingPathways()`, `getEmployeeProgress(id)`
-- `getDashboardTrainingStats()`, `getPwaAssignedPathway(id)`
-- `createProgressRecord()`, `queuePwaProgressUpdate()`
-- `createSupervisorReview()`, `createDashboardAlert()`
-- `recordLessonStarted()`, `recordLessonCompleted()`, `recordSafetyAckCompleted()`
-- `getLegacyPatients()` — compatibility bridge to existing dashboard
+See `.env.example` for the full template.
 
-### Legacy keys preserved
-| Old key | Kept? | Reason |
-|---------|-------|--------|
-| `ap3x_patient_profile` | ✅ | PWA uses it for employee identity |
-| `ap3x_patient_checkins` | ✅ | PWA check-in history |
-| `ap3x_lesson_progress` | ✅ | PWA lesson completion |
-| `ap3x_sync_queue` | ✅ | Existing sync queue preserved |
-| `4p3x_demo_mode` | ✅ | Dashboard demo toggle |
-| `ap3x_clinician_notes` | ✅ | Supervisor notes |
+**Public-safe variables (frontend):**
 
+```env
+VITE_AUTOSKILL_APP_NAME=AutoSkill OS
+VITE_AUTOSKILL_DATA_MODE=demo
+VITE_SUPABASE_URL=your_public_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_public_supabase_anon_key
+```
+
+**NEVER in frontend:**
+
+```
+SUPABASE_SERVICE_ROLE_KEY  DATABASE_URL  JWT_SECRET
+PRIVATE_KEY  WEBHOOK_SECRET  OPENAI_API_KEY
+GROQ_API_KEY  STRIPE_SECRET_KEY  admin tokens
+service account JSON  private keys
+```
+
+---
+
+*AutoSkill OS™ — Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™*
