@@ -43,7 +43,7 @@ export const DM_KEYS = {
   // PWA sync queue (supplements existing ap3x_sync_queue for structured records)
   PWA_SYNC_QUEUE:          'ap3x_dm_pwa_sync_queue',
   // Seed flag
-  DM_SEEDED:               'ap3x_dm_seeded_v1'
+  DM_SEEDED:               'ap3x_dm_seeded_v5'
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -457,14 +457,42 @@ export const DEMO_STATIONS = [
 
 export const DEMO_PATHWAYS = [
   {
+    id: 'path-ns-induction',
+    title: 'New Starter Automotive Manufacturing Induction',
+    description: 'A structured local-first training pathway for employees learning core automotive/manufacturing processes, PPE expectations, workstation readiness, assembly workflow, quality checks, defect reporting, and supervisor review.',
+    departmentId: 'dept-assembly',
+    moduleIds: [
+      'mod-r5-site-orientation',
+      'mod-r5-ppe-safety',
+      'mod-r5-workstation-readiness',
+      'mod-r5-assembly-overview',
+      'mod-r5-tool-handling',
+      'mod-r5-qc-defects',
+      'mod-r5-defect-handover',
+      'mod-r5-supervisor-review'
+    ],
+    requiredForRoles: ['New Starter', 'Assembly Trainee', 'Quality Control Trainee', 'Logistics Trainee'],
+    estimatedDuration: '6–8 hours',
+    status: 'active',
+    safetyCritical: true,
+    competencyIds: [
+      'comp-ppe-readiness', 'comp-tool-handling', 'comp-assembly-awareness',
+      'comp-defect-recognition', 'comp-defect-reporting', 'comp-handover-readiness',
+      'comp-stop-ask', 'comp-workstation-prep', 'comp-process-flow', 'comp-supervisor-review-readiness'
+    ],
+    safetyAcknowledgementIds: ['ack-ppe', 'ack-ask-supervisor', 'ack-workstation', 'ack-tool-auth', 'ack-defect-reporting', 'ack-final-responsibility'],
+    isDemo: true
+  },
+  {
     id: 'path-induction',
-    title: 'New Starter Manufacturing Induction',
+    title: 'New Starter Manufacturing Induction (Legacy)',
     description: 'Essential orientation pathway for all new employees. Covers site safety, workstation setup, and process basics.',
     departmentId: 'dept-safety',
     moduleIds: ['mod-site-orientation', 'mod-ppe-safety', 'mod-workstation-readiness'],
     requiredForRoles: ['Assembly Trainee', 'Logistics Trainee', 'New Starter'],
     estimatedDuration: '4 hours',
     status: 'active',
+    safetyCritical: true,
     competencyIds: ['comp-ppe-readiness'],
     safetyAcknowledgementIds: ['ack-ppe', 'ack-ask-supervisor'],
     isDemo: true
@@ -478,6 +506,7 @@ export const DEMO_PATHWAYS = [
     requiredForRoles: ['Assembly Trainee'],
     estimatedDuration: '6 hours',
     status: 'active',
+    safetyCritical: false,
     competencyIds: ['comp-assembly-awareness', 'comp-tool-handling', 'comp-handover-readiness'],
     safetyAcknowledgementIds: ['ack-ppe', 'ack-defect-reporting', 'ack-supervisor-signoff'],
     isDemo: true
@@ -491,6 +520,7 @@ export const DEMO_PATHWAYS = [
     requiredForRoles: ['Quality Control Trainee'],
     estimatedDuration: '5 hours',
     status: 'active',
+    safetyCritical: false,
     competencyIds: ['comp-defect-recognition', 'comp-defect-reporting'],
     safetyAcknowledgementIds: ['ack-defect-reporting'],
     isDemo: true
@@ -504,6 +534,7 @@ export const DEMO_PATHWAYS = [
     requiredForRoles: ['Assembly Trainee', 'Quality Control Trainee', 'Logistics Trainee', 'New Starter'],
     estimatedDuration: '2 hours',
     status: 'active',
+    safetyCritical: true,
     competencyIds: ['comp-ppe-readiness'],
     safetyAcknowledgementIds: ['ack-ppe', 'ack-ask-supervisor'],
     isDemo: true
@@ -515,6 +546,116 @@ export const DEMO_PATHWAYS = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const DEMO_MODULES = [
+
+  // ── Run 5: Full 8-module New Starter Automotive Induction ──────────────
+
+  {
+    id: 'mod-r5-site-orientation',
+    pathwayId: 'path-ns-induction',
+    title: 'Module 1: Manufacturing Site Orientation',
+    description: 'Introduces the employee to the training environment, site expectations, training responsibilities, and how AutoSkill OS™ records learning progress.',
+    order: 1,
+    lessonIds: ['les-r5-1-1', 'les-r5-1-2'],
+    checkpointIds: ['chk-r5-welcome', 'chk-r5-pathway'],
+    safetyCritical: false,
+    estimatedDuration: '45 minutes',
+    completionRequired: true,
+    isDemo: true
+  },
+  {
+    id: 'mod-r5-ppe-safety',
+    pathwayId: 'path-ns-induction',
+    title: 'Module 2: Health, Safety and PPE Basics',
+    description: 'Covers basic safety awareness, PPE readiness, stop-and-ask rules, and employee responsibility boundaries.',
+    order: 2,
+    lessonIds: ['les-r5-2-1', 'les-r5-2-2'],
+    checkpointIds: ['chk-r5-ppe', 'chk-r5-stop-ask'],
+    safetyCritical: true,
+    estimatedDuration: '60 minutes',
+    completionRequired: true,
+    isDemo: true
+  },
+  {
+    id: 'mod-r5-workstation-readiness',
+    pathwayId: 'path-ns-induction',
+    title: 'Module 3: Workstation Readiness',
+    description: 'Teaches employees how to approach a workstation, identify required materials, and prepare before beginning a process step.',
+    order: 3,
+    lessonIds: ['les-r5-3-1', 'les-r5-3-2'],
+    checkpointIds: ['chk-r5-workstation'],
+    safetyCritical: true,
+    estimatedDuration: '45 minutes',
+    completionRequired: true,
+    isDemo: true
+  },
+  {
+    id: 'mod-r5-assembly-overview',
+    pathwayId: 'path-ns-induction',
+    title: 'Module 4: Assembly Line Process Overview',
+    description: 'Introduces basic assembly-line flow, process order, task consistency, and the importance of following approved steps.',
+    order: 4,
+    lessonIds: ['les-r5-4-1', 'les-r5-4-2'],
+    checkpointIds: ['chk-r5-assembly-order', 'chk-r5-production-flow'],
+    safetyCritical: false,
+    estimatedDuration: '60 minutes',
+    completionRequired: true,
+    isDemo: true
+  },
+  {
+    id: 'mod-r5-tool-handling',
+    pathwayId: 'path-ns-induction',
+    title: 'Module 5: Safe Tool Handling and Equipment Awareness',
+    description: 'Introduces tool readiness, safe handling awareness, equipment boundaries, and escalation when tools or instructions are unclear.',
+    order: 5,
+    lessonIds: ['les-r5-5-1', 'les-r5-5-2'],
+    checkpointIds: ['chk-r5-tool-auth', 'chk-r5-equipment-boundary'],
+    safetyCritical: true,
+    estimatedDuration: '45 minutes',
+    completionRequired: true,
+    isDemo: true
+  },
+  {
+    id: 'mod-r5-qc-defects',
+    pathwayId: 'path-ns-induction',
+    title: 'Module 6: Quality Control and Defect Recognition',
+    description: 'Teaches basic quality-control awareness, defect recognition, accurate reporting, and why quality checks matter.',
+    order: 6,
+    lessonIds: ['les-r5-6-1', 'les-r5-6-2'],
+    checkpointIds: ['chk-r5-quality-issue', 'chk-r5-quality-matters'],
+    safetyCritical: false,
+    estimatedDuration: '60 minutes',
+    completionRequired: true,
+    isDemo: true
+  },
+  {
+    id: 'mod-r5-defect-handover',
+    pathwayId: 'path-ns-induction',
+    title: 'Module 7: Defect Reporting and Production Handover',
+    description: 'Explains how employees should communicate issues, prepare handovers, and avoid losing important process information.',
+    order: 7,
+    lessonIds: ['les-r5-7-1', 'les-r5-7-2'],
+    checkpointIds: ['chk-r5-defect-report', 'chk-r5-handover'],
+    safetyCritical: false,
+    estimatedDuration: '45 minutes',
+    completionRequired: true,
+    isDemo: true
+  },
+  {
+    id: 'mod-r5-supervisor-review',
+    pathwayId: 'path-ns-induction',
+    title: 'Module 8: Supervisor Review and Final Competency Check',
+    description: 'Prepares the employee for supervisor review, evidence checks, and final pathway completion.',
+    order: 8,
+    lessonIds: ['les-r5-8-1', 'les-r5-8-2'],
+    checkpointIds: ['chk-r5-supervisor-review', 'chk-r5-final-check'],
+    safetyCritical: false,
+    estimatedDuration: '45 minutes',
+    completionRequired: true,
+    isDemo: true
+  },
+
+  // ── Legacy modules (Run 2) — preserved for dashboard compatibility ─────────
+
   {
     id: 'mod-site-orientation',
     pathwayId: 'path-induction',
@@ -606,6 +747,7 @@ export const DEMO_MODULES = [
     completionRequired: true,
     isDemo: true
   }
+
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -614,104 +756,257 @@ export const DEMO_MODULES = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const DEMO_LESSONS = [
+
+  // ── Run 5: Module 1 — Site Orientation ──────────────────────────────────
   {
-    id: 'les-welcome',
-    moduleId: 'mod-site-orientation',
+    id: 'les-r5-1-1', moduleId: 'mod-r5-site-orientation',
+    title: 'Welcome to AutoSkill OS™',
+    summary: 'Introduction to AutoSkill OS™, your training pathway, and how progress is recorded locally.',
+    content: 'See LESSON_CONTENT[m1l1] in patient-app.js',
+    pwaContentId: 'm1l1',
+    order: 1, estimatedDuration: '8-10 minutes', lessonType: 'reading',
+    safetyCritical: false, requiredAcknowledgementId: null,
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: false },
+    isDemo: true
+  },
+  {
+    id: 'les-r5-1-2', moduleId: 'mod-r5-site-orientation',
+    title: 'Understanding Your Training Pathway',
+    summary: 'How modules, lessons, checkpoints, and safety acknowledgements fit together.',
+    content: 'See LESSON_CONTENT[m1l2] in patient-app.js',
+    pwaContentId: 'm1l2',
+    order: 2, estimatedDuration: '8-10 minutes', lessonType: 'reading',
+    safetyCritical: false, requiredAcknowledgementId: null,
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: false },
+    isDemo: true
+  },
+
+  // ── Run 5: Module 2 — PPE and Safety ────────────────────────────────────
+  {
+    id: 'les-r5-2-1', moduleId: 'mod-r5-ppe-safety',
+    title: 'PPE Readiness Before Work',
+    summary: 'PPE requirements, checking PPE before entering a production area, and reporting issues.',
+    content: 'See LESSON_CONTENT[m1l2] in patient-app.js',
+    pwaContentId: 'm1l2',
+    order: 1, estimatedDuration: '10 minutes', lessonType: 'checklist',
+    safetyCritical: true, requiredAcknowledgementId: 'ack-ppe',
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: true },
+    isDemo: true
+  },
+  {
+    id: 'les-r5-2-2', moduleId: 'mod-r5-ppe-safety',
+    title: 'Stop-and-Ask Safety Rule',
+    summary: 'When to pause and ask a supervisor during any task, tool use, or process step.',
+    content: 'See LESSON_CONTENT[m2l4] in patient-app.js',
+    pwaContentId: 'm2l4',
+    order: 2, estimatedDuration: '8 minutes', lessonType: 'reading',
+    safetyCritical: true, requiredAcknowledgementId: 'ack-ask-supervisor',
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: true },
+    isDemo: true
+  },
+
+  // ── Run 5: Module 3 — Workstation Readiness ─────────────────────────────
+  {
+    id: 'les-r5-3-1', moduleId: 'mod-r5-workstation-readiness',
+    title: 'Understanding Your Workstation',
+    summary: 'Workstation layout, required materials, tools, safety signs, and workflow direction.',
+    content: 'See LESSON_CONTENT[m1l4] in patient-app.js',
+    pwaContentId: 'm1l4',
+    order: 1, estimatedDuration: '10 minutes', lessonType: 'reading',
+    safetyCritical: true, requiredAcknowledgementId: null,
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: false },
+    isDemo: true
+  },
+  {
+    id: 'les-r5-3-2', moduleId: 'mod-r5-workstation-readiness',
+    title: 'Workstation Readiness Checklist',
+    summary: 'PPE, process step, tools, materials, area check, and supervisor sign-off rules.',
+    content: 'See LESSON_CONTENT[m2l4] in patient-app.js',
+    pwaContentId: 'm2l4',
+    order: 2, estimatedDuration: '8 minutes', lessonType: 'checklist',
+    safetyCritical: true, requiredAcknowledgementId: 'ack-workstation',
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: true },
+    isDemo: true
+  },
+
+  // ── Run 5: Module 4 — Assembly Line ─────────────────────────────────────
+  {
+    id: 'les-r5-4-1', moduleId: 'mod-r5-assembly-overview',
+    title: 'Following Process Steps in Order',
+    summary: 'Why process order matters, what happens when steps are skipped, and how to escalate.',
+    content: 'See LESSON_CONTENT[m1l3] in patient-app.js',
+    pwaContentId: 'm1l3',
+    order: 1, estimatedDuration: '10 minutes', lessonType: 'reading',
+    safetyCritical: false, requiredAcknowledgementId: null,
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: false },
+    isDemo: true
+  },
+  {
+    id: 'les-r5-4-2', moduleId: 'mod-r5-assembly-overview',
+    title: 'Understanding Production Flow',
+    summary: 'How work moves through departments, stations, checks, and handover points.',
+    content: 'See LESSON_CONTENT[m2l2] in patient-app.js',
+    pwaContentId: 'm2l2',
+    order: 2, estimatedDuration: '10 minutes', lessonType: 'reading',
+    safetyCritical: false, requiredAcknowledgementId: null,
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: false },
+    isDemo: true
+  },
+
+  // ── Run 5: Module 5 — Tool Handling ─────────────────────────────────────
+  {
+    id: 'les-r5-5-1', moduleId: 'mod-r5-tool-handling',
+    title: 'Tool Readiness and Authorisation',
+    summary: 'Authorised tools, inspection before use, safe handling, and reporting damaged tools.',
+    content: 'See LESSON_CONTENT[m1l5] in patient-app.js',
+    pwaContentId: 'm1l5',
+    order: 1, estimatedDuration: '10 minutes', lessonType: 'reading',
+    safetyCritical: true, requiredAcknowledgementId: 'ack-tool-auth',
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: true },
+    isDemo: true
+  },
+  {
+    id: 'les-r5-5-2', moduleId: 'mod-r5-tool-handling',
+    title: 'Equipment Boundary Awareness',
+    summary: 'Restricted areas, signage, barriers, and not operating equipment without authorisation.',
+    content: 'See LESSON_CONTENT[m1l5] in patient-app.js',
+    pwaContentId: 'm1l5',
+    order: 2, estimatedDuration: '8 minutes', lessonType: 'reading',
+    safetyCritical: true, requiredAcknowledgementId: null,
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: false },
+    isDemo: true
+  },
+
+  // ── Run 5: Module 6 — Quality Control ───────────────────────────────────
+  {
+    id: 'les-r5-6-1', moduleId: 'mod-r5-qc-defects',
+    title: 'Recognising Quality Issues',
+    summary: 'Visible defects, missing parts, incorrect alignment, and the correct reporting process.',
+    content: 'See LESSON_CONTENT[m2l1] in patient-app.js',
+    pwaContentId: 'm2l1',
+    order: 1, estimatedDuration: '10 minutes', lessonType: 'reading',
+    safetyCritical: false, requiredAcknowledgementId: null,
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: false },
+    isDemo: true
+  },
+  {
+    id: 'les-r5-6-2', moduleId: 'mod-r5-qc-defects',
+    title: 'Why Quality Checks Matter',
+    summary: 'Quality checks protect customers, employees, and the business. Accuracy prevents downstream problems.',
+    content: 'See LESSON_CONTENT[m2l3] in patient-app.js',
+    pwaContentId: 'm2l3',
+    order: 2, estimatedDuration: '10 minutes', lessonType: 'reading',
+    safetyCritical: false, requiredAcknowledgementId: null,
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: false },
+    isDemo: true
+  },
+
+  // ── Run 5: Module 7 — Defect Reporting and Handover ─────────────────────
+  {
+    id: 'les-r5-7-1', moduleId: 'mod-r5-defect-handover',
+    title: 'Reporting Defects Correctly',
+    summary: 'Correct workplace reporting route, what a useful report includes, and why honesty matters.',
+    content: 'See LESSON_CONTENT[m2l1] in patient-app.js',
+    pwaContentId: 'm2l1',
+    order: 1, estimatedDuration: '10 minutes', lessonType: 'checklist',
+    safetyCritical: false, requiredAcknowledgementId: 'ack-defect-reporting',
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: true },
+    isDemo: true
+  },
+  {
+    id: 'les-r5-7-2', moduleId: 'mod-r5-defect-handover',
+    title: 'Production Handover Basics',
+    summary: 'What a handover should include, how to communicate clearly, and what to do when a handover is unclear.',
+    content: 'See LESSON_CONTENT[m2l2] in patient-app.js',
+    pwaContentId: 'm2l2',
+    order: 2, estimatedDuration: '10 minutes', lessonType: 'reading',
+    safetyCritical: false, requiredAcknowledgementId: null,
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: false },
+    isDemo: true
+  },
+
+  // ── Run 5: Module 8 — Supervisor Review ─────────────────────────────────
+  {
+    id: 'les-r5-8-1', moduleId: 'mod-r5-supervisor-review',
+    title: 'Preparing for Supervisor Review',
+    summary: 'What supervisor review involves, how to prepare evidence, and what completion means.',
+    content: 'See LESSON_CONTENT[m3l4] in patient-app.js',
+    pwaContentId: 'm3l4',
+    order: 1, estimatedDuration: '10 minutes', lessonType: 'supervisor-review',
+    safetyCritical: false, requiredAcknowledgementId: null,
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: false },
+    isDemo: true
+  },
+  {
+    id: 'les-r5-8-2', moduleId: 'mod-r5-supervisor-review',
+    title: 'Final Training Pathway Check',
+    summary: 'Reviewing the full pathway: PPE, workstation, process, quality, defects, and supervisor review.',
+    content: 'See LESSON_CONTENT[m3l5] in patient-app.js',
+    pwaContentId: 'm3l5',
+    order: 2, estimatedDuration: '10 minutes', lessonType: 'reading',
+    safetyCritical: false, requiredAcknowledgementId: 'ack-final-responsibility',
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: true },
+    isDemo: true
+  },
+
+  // ── Legacy lessons (Run 2) — preserved for dashboard + PWA compatibility ──
+
+  { id: 'les-welcome', moduleId: 'mod-site-orientation',
     title: 'Welcome to the Manufacturing Training Process',
     summary: 'An introduction to AutoSkill OS™ and what your training journey will look like.',
-    content: '',  // Full content: Run 5
-    order: 1,
-    estimatedDuration: '10 minutes',
-    lessonType: 'reading',
-    safetyCritical: false,
-    requiredAcknowledgementId: null,
-    completionRules: { requireCheckpoint: false, requireAcknowledgement: false },
-    isDemo: true
-  },
-  {
-    id: 'les-understand-workstation',
-    moduleId: 'mod-workstation-readiness',
+    content: '', pwaContentId: 'm1l1',
+    order: 1, estimatedDuration: '10 minutes', lessonType: 'reading',
+    safetyCritical: false, requiredAcknowledgementId: null,
+    completionRules: { requireCheckpoint: false, requireAcknowledgement: false }, isDemo: true },
+
+  { id: 'les-understand-workstation', moduleId: 'mod-workstation-readiness',
     title: 'Understanding Your Workstation',
-    summary: 'Learn your workstation layout, daily readiness checks, and expected standards before starting work.',
-    content: '',  // Full content: Run 5
-    order: 1,
-    estimatedDuration: '15 minutes',
-    lessonType: 'checklist',
-    safetyCritical: true,
-    requiredAcknowledgementId: null,
-    completionRules: { requireCheckpoint: true, requireAcknowledgement: false },
-    isDemo: true
-  },
-  {
-    id: 'les-ppe-entering',
-    moduleId: 'mod-ppe-safety',
+    summary: 'Learn your workstation layout, daily readiness checks, and expected standards.',
+    content: '', pwaContentId: 'm1l4',
+    order: 1, estimatedDuration: '15 minutes', lessonType: 'checklist',
+    safetyCritical: true, requiredAcknowledgementId: null,
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: false }, isDemo: true },
+
+  { id: 'les-ppe-entering', moduleId: 'mod-ppe-safety',
     title: 'PPE Before Entering Production Areas',
     summary: 'The PPE requirements you must meet before entering any production area on site.',
-    content: '',  // Full content: Run 5
-    order: 1,
-    estimatedDuration: '20 minutes',
-    lessonType: 'checklist',
-    safetyCritical: true,
-    requiredAcknowledgementId: 'ack-ppe',
-    completionRules: { requireCheckpoint: true, requireAcknowledgement: true },
-    isDemo: true
-  },
-  {
-    id: 'les-assembly-steps',
-    moduleId: 'mod-assembly-overview',
+    content: '', pwaContentId: 'm1l2',
+    order: 1, estimatedDuration: '20 minutes', lessonType: 'checklist',
+    safetyCritical: true, requiredAcknowledgementId: 'ack-ppe',
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: true }, isDemo: true },
+
+  { id: 'les-assembly-steps', moduleId: 'mod-assembly-overview',
     title: 'Following Assembly Steps Safely',
     summary: 'How to follow standardised work instructions and complete each assembly step correctly.',
-    content: '',  // Full content: Run 5
-    order: 1,
-    estimatedDuration: '25 minutes',
-    lessonType: 'reading',
-    safetyCritical: false,
-    requiredAcknowledgementId: null,
-    completionRules: { requireCheckpoint: true, requireAcknowledgement: false },
-    isDemo: true
-  },
-  {
-    id: 'les-recognise-quality',
-    moduleId: 'mod-qc-checks',
+    content: '', pwaContentId: 'm1l3',
+    order: 1, estimatedDuration: '25 minutes', lessonType: 'reading',
+    safetyCritical: false, requiredAcknowledgementId: null,
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: false }, isDemo: true },
+
+  { id: 'les-recognise-quality', moduleId: 'mod-qc-checks',
     title: 'Recognising Quality Issues',
     summary: 'What quality issues look like on the line and how to identify them before they escalate.',
-    content: '',  // Full content: Run 5
-    order: 1,
-    estimatedDuration: '20 minutes',
-    lessonType: 'reading',
-    safetyCritical: false,
-    requiredAcknowledgementId: null,
-    completionRules: { requireCheckpoint: true, requireAcknowledgement: false },
-    isDemo: true
-  },
-  {
-    id: 'les-report-defects',
-    moduleId: 'mod-defect-reporting',
+    content: '', pwaContentId: 'm2l1',
+    order: 1, estimatedDuration: '20 minutes', lessonType: 'reading',
+    safetyCritical: false, requiredAcknowledgementId: null,
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: false }, isDemo: true },
+
+  { id: 'les-report-defects', moduleId: 'mod-defect-reporting',
     title: 'Reporting Defects Correctly',
     summary: 'The correct procedure for tagging, logging, and escalating product defects.',
-    content: '',  // Full content: Run 5
-    order: 1,
-    estimatedDuration: '15 minutes',
-    lessonType: 'checklist',
-    safetyCritical: false,
-    requiredAcknowledgementId: 'ack-defect-reporting',
-    completionRules: { requireCheckpoint: true, requireAcknowledgement: true },
-    isDemo: true
-  },
-  {
-    id: 'les-supervisor-review',
-    moduleId: 'mod-supervisor-signoff',
+    content: '', pwaContentId: 'm2l1',
+    order: 1, estimatedDuration: '15 minutes', lessonType: 'checklist',
+    safetyCritical: false, requiredAcknowledgementId: 'ack-defect-reporting',
+    completionRules: { requireCheckpoint: true, requireAcknowledgement: true }, isDemo: true },
+
+  { id: 'les-supervisor-review', moduleId: 'mod-supervisor-signoff',
     title: 'Completing Your Supervisor Review',
     summary: 'What to expect at your supervisor competency review and how to prepare.',
-    content: '',  // Full content: Run 5
-    order: 1,
-    estimatedDuration: '10 minutes',
-    lessonType: 'supervisor-review',
-    safetyCritical: false,
-    requiredAcknowledgementId: 'ack-supervisor-signoff',
-    completionRules: { requireCheckpoint: false, requireAcknowledgement: true },
-    isDemo: true
-  }
+    content: '', pwaContentId: 'm3l4',
+    order: 1, estimatedDuration: '10 minutes', lessonType: 'supervisor-review',
+    safetyCritical: false, requiredAcknowledgementId: 'ack-supervisor-signoff',
+    completionRules: { requireCheckpoint: false, requireAcknowledgement: true }, isDemo: true }
+
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -719,92 +1014,217 @@ export const DEMO_LESSONS = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const DEMO_CHECKPOINTS = [
-  {
-    id: 'chk-ppe-check',
-    lessonId: 'les-ppe-entering',
-    moduleId: 'mod-ppe-safety',
+
+  // ── Run 5: Full checkpoint set for New Starter Induction ──────────────────
+
+  { id: 'chk-r5-welcome', lessonId: 'les-r5-1-1', moduleId: 'mod-r5-site-orientation',
+    question: 'What is the purpose of AutoSkill OS™?',
+    type: 'multipleChoice',
+    options: ['To replace workplace supervision',
+              'To support training, progress tracking, safety awareness, and supervisor review',
+              'To guarantee legal compliance', 'To operate machinery automatically'],
+    correctAnswer: 'To support training, progress tracking, safety awareness, and supervisor review',
+    required: true, safetyCritical: false, passRequired: false,
+    feedbackText: 'AutoSkill OS™ supports training and progress tracking. It does not replace supervision or guarantee compliance.',
+    isDemo: true },
+
+  { id: 'chk-r5-pathway', lessonId: 'les-r5-1-2', moduleId: 'mod-r5-site-orientation',
+    question: 'What should you do if you do not understand a training step?',
+    type: 'multipleChoice',
+    options: ['Skip it and mark it complete', 'Guess and continue',
+              'Ask a supervisor or trainer for guidance', 'Ignore the training pathway'],
+    correctAnswer: 'Ask a supervisor or trainer for guidance',
+    required: true, safetyCritical: false, passRequired: false,
+    feedbackText: 'Always ask a supervisor or trainer if a training step is unclear before continuing.',
+    isDemo: true },
+
+  { id: 'chk-r5-ppe', lessonId: 'les-r5-2-1', moduleId: 'mod-r5-ppe-safety',
+    question: 'What should you do if required PPE is missing?',
+    type: 'multipleChoice',
+    options: ['Continue carefully without it', 'Borrow anything nearby without checking',
+              'Stop and ask a supervisor', 'Mark the lesson complete and continue'],
+    correctAnswer: 'Stop and ask a supervisor',
+    required: true, safetyCritical: true, passRequired: true,
+    feedbackText: 'Never start work without required PPE. Stop and ask a supervisor.',
+    isDemo: true },
+
+  { id: 'chk-r5-stop-ask', lessonId: 'les-r5-2-2', moduleId: 'mod-r5-ppe-safety',
+    question: 'When should you use the stop-and-ask rule?',
+    type: 'multipleChoice',
+    options: ['Only after an incident happens',
+              'Whenever a task, tool, process, or safety instruction is unclear',
+              'Never, because training apps replace supervisors',
+              'Only at the end of the shift'],
+    correctAnswer: 'Whenever a task, tool, process, or safety instruction is unclear',
+    required: true, safetyCritical: true, passRequired: true,
+    feedbackText: 'Use the stop-and-ask rule any time a task, tool, process, or safety instruction is unclear.',
+    isDemo: true },
+
+  { id: 'chk-r5-workstation', lessonId: 'les-r5-3-1', moduleId: 'mod-r5-workstation-readiness',
+    question: 'What should be checked before starting at a workstation?',
+    type: 'multipleChoice',
+    options: ['Only the time',
+              'Task instructions, tools/materials, area condition, and PPE',
+              'Nothing if the previous person used it',
+              'Only whether the training app opens'],
+    correctAnswer: 'Task instructions, tools/materials, area condition, and PPE',
+    required: true, safetyCritical: true, passRequired: true,
+    feedbackText: 'A proper readiness check covers task instructions, tools, materials, area condition, and PPE.',
+    isDemo: true },
+
+  { id: 'chk-r5-assembly-order', lessonId: 'les-r5-4-1', moduleId: 'mod-r5-assembly-overview',
+    question: 'Why should process steps be followed in order?',
+    type: 'multipleChoice',
+    options: ['It makes the training app look complete',
+              'It supports safety, quality, traceability, and consistent workflow',
+              'It is optional in manufacturing',
+              'It only matters during audits'],
+    correctAnswer: 'It supports safety, quality, traceability, and consistent workflow',
+    required: true, safetyCritical: false, passRequired: false,
+    feedbackText: 'Following process steps in order supports safety, quality, traceability, and consistent workflow.',
+    isDemo: true },
+
+  { id: 'chk-r5-production-flow', lessonId: 'les-r5-4-2', moduleId: 'mod-r5-assembly-overview',
+    question: 'What can happen if a problem at one station is not reported?',
+    type: 'multipleChoice',
+    options: ['It may affect later process stages', 'Nothing ever happens',
+              'It automatically fixes itself', 'The training pathway deletes it'],
+    correctAnswer: 'It may affect later process stages',
+    required: true, safetyCritical: false, passRequired: false,
+    feedbackText: 'Problems not reported at one station can cascade and affect downstream steps, quality, and safety.',
+    isDemo: true },
+
+  { id: 'chk-r5-tool-auth', lessonId: 'les-r5-5-1', moduleId: 'mod-r5-tool-handling',
+    question: 'What should you do if a tool looks damaged or unfamiliar?',
+    type: 'multipleChoice',
+    options: ['Use it carefully', 'Hide it', 'Stop and ask a supervisor',
+              'Continue because production speed matters most'],
+    correctAnswer: 'Stop and ask a supervisor',
+    required: true, safetyCritical: true, passRequired: true,
+    feedbackText: 'Never use a damaged or unfamiliar tool. Stop and ask your supervisor before continuing.',
+    isDemo: true },
+
+  { id: 'chk-r5-equipment-boundary', lessonId: 'les-r5-5-2', moduleId: 'mod-r5-tool-handling',
+    question: 'Can this demo training replace site-specific equipment training?',
+    type: 'multipleChoice',
+    options: ['Yes, always',
+              'No, it supports awareness but does not replace site-specific training and supervision',
+              'Only if the employee has completed one quiz', 'Only in demo mode'],
+    correctAnswer: 'No, it supports awareness but does not replace site-specific training and supervision',
+    required: true, safetyCritical: false, passRequired: false,
+    feedbackText: 'Demo training supports awareness. It does not replace site-specific training or qualified supervision.',
+    isDemo: true },
+
+  { id: 'chk-r5-quality-issue', lessonId: 'les-r5-6-1', moduleId: 'mod-r5-qc-defects',
+    question: 'What should you do if something does not match the expected quality standard?',
+    type: 'multipleChoice',
+    options: ['Ignore it if it is small',
+              'Report it through the correct process or ask a supervisor',
+              'Hide it from the next station', 'Change the process yourself'],
+    correctAnswer: 'Report it through the correct process or ask a supervisor',
+    required: true, safetyCritical: false, passRequired: false,
+    feedbackText: 'Always report quality issues through the correct route. Do not hide or ignore them.',
+    isDemo: true },
+
+  { id: 'chk-r5-quality-matters', lessonId: 'les-r5-6-2', moduleId: 'mod-r5-qc-defects',
+    question: 'Why is accurate defect reporting important?',
+    type: 'multipleChoice',
+    options: ['It helps track, correct, and prevent quality problems',
+              'It only matters for paperwork',
+              'It slows everyone down for no reason',
+              'It is optional if production is busy'],
+    correctAnswer: 'It helps track, correct, and prevent quality problems',
+    required: true, safetyCritical: false, passRequired: false,
+    feedbackText: 'Accurate defect reporting helps track, correct, and prevent quality problems throughout the line.',
+    isDemo: true },
+
+  { id: 'chk-r5-defect-report', lessonId: 'les-r5-7-1', moduleId: 'mod-r5-defect-handover',
+    question: 'What should a useful defect report include?',
+    type: 'multipleChoice',
+    options: ['What was found, where it was found, when it was found, and action taken',
+              'Only the employee's name',
+              'Nothing, defects should not be reported',
+              'A guess if the details are unclear'],
+    correctAnswer: 'What was found, where it was found, when it was found, and action taken',
+    required: true, safetyCritical: false, passRequired: false,
+    feedbackText: 'A useful defect report includes: what, where, when, and what action was taken.',
+    isDemo: true },
+
+  { id: 'chk-r5-handover', lessonId: 'les-r5-7-2', moduleId: 'mod-r5-defect-handover',
+    question: 'What should a handover communicate?',
+    type: 'multipleChoice',
+    options: ['Only positive updates',
+              'Completed steps, pending items, issues, and relevant safety or quality concerns',
+              'Nothing if the shift is busy', 'Only the training score'],
+    correctAnswer: 'Completed steps, pending items, issues, and relevant safety or quality concerns',
+    required: true, safetyCritical: false, passRequired: false,
+    feedbackText: 'A complete handover covers completed steps, pending items, and any safety or quality concerns.',
+    isDemo: true },
+
+  { id: 'chk-r5-supervisor-review', lessonId: 'les-r5-8-1', moduleId: 'mod-r5-supervisor-review',
+    question: 'Does completing app lessons automatically prove full workplace competence?',
+    type: 'multipleChoice',
+    options: ['Yes, always',
+              'No, supervisor review and workplace procedures may still be required',
+              'Only if the score is above 50%', 'Only in live mode'],
+    correctAnswer: 'No, supervisor review and workplace procedures may still be required',
+    required: true, safetyCritical: false, passRequired: false,
+    feedbackText: 'App completion is a training milestone. Workplace authorisation requires supervisor review and site procedures.',
+    isDemo: true },
+
+  { id: 'chk-r5-final-check', lessonId: 'les-r5-8-2', moduleId: 'mod-r5-supervisor-review',
+    question: 'What does final pathway completion mean in AutoSkill OS™ demo mode?',
+    type: 'multipleChoice',
+    options: ['The employee can ignore workplace procedures',
+              'It shows a training milestone that may support supervisor review',
+              'It guarantees legal compliance', 'It replaces employer responsibility'],
+    correctAnswer: 'It shows a training milestone that may support supervisor review',
+    required: true, safetyCritical: false, passRequired: false,
+    feedbackText: 'Final pathway completion is a training milestone. It may support supervisor review but does not guarantee compliance.',
+    isDemo: true },
+
+  // ── Legacy checkpoints (Run 2) ─────────────────────────────────────────────
+
+  { id: 'chk-ppe-check', lessonId: 'les-ppe-entering', moduleId: 'mod-ppe-safety',
     question: 'Which of the following is required before entering a production area?',
     type: 'multipleChoice',
-    options: [
-      'Safety glasses only',
-      'Full PPE as specified on the station sign',
-      'No PPE required for visitors',
-      'PPE is optional during training'
-    ],
+    options: ['Safety glasses only', 'Full PPE as specified on the station sign',
+              'No PPE required for visitors', 'PPE is optional during training'],
     correctAnswer: 'Full PPE as specified on the station sign',
-    required: true,
-    safetyCritical: true,
-    passRequired: true,
-    isDemo: true
-  },
-  {
-    id: 'chk-workstation-readiness',
-    lessonId: 'les-understand-workstation',
-    moduleId: 'mod-workstation-readiness',
+    required: true, safetyCritical: true, passRequired: true, isDemo: true },
+
+  { id: 'chk-workstation-readiness', lessonId: 'les-understand-workstation', moduleId: 'mod-workstation-readiness',
     question: 'Which of the following should you complete before starting work at your workstation?',
     type: 'checklist',
-    options: [
-      'Check PPE is available and in good condition',
-      'Verify tools are present and undamaged',
-      'Confirm materials are correctly staged',
-      'Check workstation surface is clean and clear',
-      'Confirm supervisor has signed on'
-    ],
-    correctAnswer: null,  // all required for checklist type
-    required: true,
-    safetyCritical: true,
-    passRequired: true,
-    isDemo: true
-  },
-  {
-    id: 'chk-assembly-process',
-    lessonId: 'les-assembly-steps',
-    moduleId: 'mod-assembly-overview',
+    options: ['Check PPE is available and in good condition', 'Verify tools are present and undamaged',
+              'Confirm materials are correctly staged', 'Check workstation surface is clean and clear',
+              'Confirm supervisor has signed on'],
+    correctAnswer: null, required: true, safetyCritical: true, passRequired: true, isDemo: true },
+
+  { id: 'chk-assembly-process', lessonId: 'les-assembly-steps', moduleId: 'mod-assembly-overview',
     question: 'What should you do if you are unsure about an assembly step?',
     type: 'multipleChoice',
-    options: [
-      'Skip the step and continue',
-      'Guess and proceed',
-      'Stop and ask your supervisor before continuing',
-      'Complete the step anyway and note it later'
-    ],
+    options: ['Skip the step and continue', 'Guess and proceed',
+              'Stop and ask your supervisor before continuing',
+              'Complete the step anyway and note it later'],
     correctAnswer: 'Stop and ask your supervisor before continuing',
-    required: true,
-    safetyCritical: false,
-    passRequired: true,
-    isDemo: true
-  },
-  {
-    id: 'chk-quality-recognition',
-    lessonId: 'les-recognise-quality',
-    moduleId: 'mod-qc-checks',
+    required: true, safetyCritical: false, passRequired: true, isDemo: true },
+
+  { id: 'chk-quality-recognition', lessonId: 'les-recognise-quality', moduleId: 'mod-qc-checks',
     question: 'When you notice a potential quality issue, what is the correct first action?',
     type: 'multipleChoice',
-    options: [
-      'Ignore it if it looks minor',
-      'Continue production and report at end of shift',
-      'Stop the process and report the issue immediately',
-      'Fix it yourself without reporting'
-    ],
-    correctAnswer: 'Stop the process and report the issue immediately',
-    required: true,
-    safetyCritical: false,
-    passRequired: true,
-    isDemo: true
-  },
-  {
-    id: 'chk-defect-reporting',
-    lessonId: 'les-report-defects',
-    moduleId: 'mod-defect-reporting',
-    question: 'I understand how to correctly tag, log, and escalate a product defect.',
+    options: ['Ignore it and keep working', 'Report it and stop passing the item forward',
+              'Fix it yourself without reporting', 'Wait until end of shift'],
+    correctAnswer: 'Report it and stop passing the item forward',
+    required: true, safetyCritical: false, passRequired: true, isDemo: true },
+
+  { id: 'chk-defect-reporting', lessonId: 'les-report-defects', moduleId: 'mod-defect-reporting',
+    question: 'I confirm I understand the defect reporting procedure',
     type: 'acknowledgement',
     options: ['I confirm I understand the defect reporting procedure'],
     correctAnswer: 'I confirm I understand the defect reporting procedure',
-    required: true,
-    safetyCritical: false,
-    passRequired: true,
-    isDemo: true
-  }
+    required: true, safetyCritical: false, passRequired: true, isDemo: true }
+
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -884,6 +1304,63 @@ export const DEMO_COMPETENCIES = [
     status: 'active',
     isDemo: true
   }
+],
+
+  // ── Run 5: Additional competencies ────────────────────────────────────────
+
+  {
+    id: 'comp-stop-ask',
+    title: 'Stop-and-Ask Decision Making',
+    description: 'Employee consistently identifies when to pause a task and seek supervisor guidance rather than proceeding when uncertain.',
+    departmentId: 'dept-safety',
+    stationId: null,
+    requiredEvidence: ['quiz_pass', 'supervisor_signoff'],
+    supervisorSignoffRequired: false,
+    linkedModuleIds: ['mod-r5-ppe-safety'],
+    linkedLessonIds: ['les-r5-2-2'],
+    status: 'active',
+    isDemo: true
+  },
+  {
+    id: 'comp-workstation-prep',
+    title: 'Workstation Preparation',
+    description: 'Employee completes a full workstation readiness check before starting any process step.',
+    departmentId: 'dept-assembly',
+    stationId: 'stn-workstation-readiness',
+    requiredEvidence: ['quiz_pass', 'practical_observation'],
+    supervisorSignoffRequired: true,
+    linkedModuleIds: ['mod-r5-workstation-readiness'],
+    linkedLessonIds: ['les-r5-3-1', 'les-r5-3-2'],
+    status: 'active',
+    isDemo: true
+  },
+  {
+    id: 'comp-process-flow',
+    title: 'Production Flow Awareness',
+    description: 'Employee understands how their workstation connects to the wider assembly line and communicates blockers early.',
+    departmentId: 'dept-assembly',
+    stationId: 'stn-assembly-process',
+    requiredEvidence: ['quiz_pass'],
+    supervisorSignoffRequired: false,
+    linkedModuleIds: ['mod-r5-assembly-overview'],
+    linkedLessonIds: ['les-r5-4-1', 'les-r5-4-2'],
+    status: 'active',
+    isDemo: true
+  },
+  {
+    id: 'comp-supervisor-review-readiness',
+    title: 'Supervisor Review Readiness',
+    description: 'Employee can prepare evidence, identify gaps, and participate effectively in a supervisor review conversation.',
+    departmentId: 'dept-assembly',
+    stationId: null,
+    requiredEvidence: ['quiz_pass', 'supervisor_signoff'],
+    supervisorSignoffRequired: true,
+    linkedModuleIds: ['mod-r5-supervisor-review'],
+    linkedLessonIds: ['les-r5-8-1', 'les-r5-8-2'],
+    status: 'active',
+    isDemo: true
+  }
+
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -891,54 +1368,111 @@ export const DEMO_COMPETENCIES = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const DEMO_SAFETY_ACKS = [
+
+  // ── Run 5: Full safety acknowledgement set ────────────────────────────────
+
   {
     id: 'ack-ppe',
-    title: 'I understand the PPE requirements for this site',
-    description: 'I confirm I have read and understood the PPE requirements for entering production areas on this site.',
-    linkedLessonId: 'les-ppe-entering',
-    linkedModuleId: 'mod-ppe-safety',
+    title: 'PPE Readiness — I understand the PPE requirements for this site',
+    description: 'I understand that PPE requirements must be checked before entering a production or training area, and that I must ask a supervisor if PPE is missing, damaged, or unclear.',
+    acknowledgementText: 'I confirm I have read and understood the PPE requirements for entering production areas on this site and will not start work without required PPE in place.',
+    linkedLessonId: 'les-r5-2-1',
+    linkedModuleId: 'mod-r5-ppe-safety',
     requiredForCompletion: true,
     legalCritical: true,
+    safetyCritical: true,
     acknowledgedByEmployeeIds: [],
     createdAt: new Date().toISOString(),
     isDemo: true
   },
   {
     id: 'ack-ask-supervisor',
-    title: 'I understand when to stop and ask a supervisor',
-    description: 'I confirm I understand that I should stop any task and ask my supervisor if I am uncertain about a procedure or safety requirement.',
-    linkedLessonId: 'les-understand-workstation',
-    linkedModuleId: 'mod-site-orientation',
+    title: 'Stop-and-Ask Rule — I understand when to stop and ask a supervisor',
+    description: 'I understand that I must stop and ask a supervisor when a task, tool, process, or safety instruction is unclear.',
+    acknowledgementText: 'I confirm I understand that I should stop any task and ask my supervisor if I am uncertain about a procedure, safety requirement, tool, or process step.',
+    linkedLessonId: 'les-r5-2-2',
+    linkedModuleId: 'mod-r5-ppe-safety',
     requiredForCompletion: true,
     legalCritical: false,
+    safetyCritical: true,
+    acknowledgedByEmployeeIds: [],
+    createdAt: new Date().toISOString(),
+    isDemo: true
+  },
+  {
+    id: 'ack-workstation',
+    title: 'Workstation Readiness — I will complete a readiness check before starting',
+    description: 'I understand that workstation readiness must be checked before starting a process step.',
+    acknowledgementText: 'I confirm I understand that I must complete a workstation readiness check before starting any process step, and that I will not start if PPE, tools, or materials are missing or unclear.',
+    linkedLessonId: 'les-r5-3-2',
+    linkedModuleId: 'mod-r5-workstation-readiness',
+    requiredForCompletion: true,
+    legalCritical: false,
+    safetyCritical: true,
+    acknowledgedByEmployeeIds: [],
+    createdAt: new Date().toISOString(),
+    isDemo: true
+  },
+  {
+    id: 'ack-tool-auth',
+    title: 'Authorised Tool Use — I will only use tools I am trained and authorised to use',
+    description: 'I understand that I must only use tools and equipment I am trained and authorised to use.',
+    acknowledgementText: 'I confirm I understand that I must only use tools and equipment I am trained and authorised to use, and that I will stop and ask a supervisor if a tool is damaged, missing, or unfamiliar.',
+    linkedLessonId: 'les-r5-5-1',
+    linkedModuleId: 'mod-r5-tool-handling',
+    requiredForCompletion: true,
+    legalCritical: false,
+    safetyCritical: true,
     acknowledgedByEmployeeIds: [],
     createdAt: new Date().toISOString(),
     isDemo: true
   },
   {
     id: 'ack-defect-reporting',
-    title: 'I understand how to report a defect',
-    description: 'I confirm I understand the correct procedure for reporting a product defect and that I must not rework or conceal defects.',
-    linkedLessonId: 'les-report-defects',
-    linkedModuleId: 'mod-defect-reporting',
+    title: 'Defect Reporting — I understand how to report a defect correctly',
+    description: 'I understand that defects, unclear instructions, or process issues must be reported honestly through the correct workplace route.',
+    acknowledgementText: 'I confirm I understand the correct procedure for reporting a product defect and that I must not rework, hide, or conceal defects or process issues.',
+    linkedLessonId: 'les-r5-7-1',
+    linkedModuleId: 'mod-r5-defect-handover',
     requiredForCompletion: true,
     legalCritical: true,
+    safetyCritical: false,
     acknowledgedByEmployeeIds: [],
     createdAt: new Date().toISOString(),
     isDemo: true
   },
   {
+    id: 'ack-final-responsibility',
+    title: 'Final Pathway — I understand the responsibility boundary of this training',
+    description: 'I understand that completing this pathway supports training awareness and supervisor review, but does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility.',
+    acknowledgementText: 'I confirm that completing this AutoSkill OS™ training pathway supports training awareness and may support supervisor review, but does not replace workplace safety procedures, qualified supervision, employer responsibility, site-specific training, or legal duties.',
+    linkedLessonId: 'les-r5-8-2',
+    linkedModuleId: 'mod-r5-supervisor-review',
+    requiredForCompletion: true,
+    legalCritical: true,
+    safetyCritical: false,
+    acknowledgedByEmployeeIds: [],
+    createdAt: new Date().toISOString(),
+    isDemo: true
+  },
+
+  // ── Legacy acknowledgements (Run 2) — preserved for dashboard compatibility ─
+
+  {
     id: 'ack-supervisor-signoff',
     title: 'I understand that supervisor sign-off may be required',
     description: 'I confirm I understand that certain competencies require formal supervisor sign-off before I am authorised to work independently at that station.',
+    acknowledgementText: 'I understand that supervisor sign-off may be required before I am authorised to work independently.',
     linkedLessonId: 'les-supervisor-review',
     linkedModuleId: 'mod-supervisor-signoff',
     requiredForCompletion: true,
     legalCritical: false,
+    safetyCritical: false,
     acknowledgedByEmployeeIds: [],
     createdAt: new Date().toISOString(),
     isDemo: true
   }
+
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1323,6 +1857,7 @@ export function seedDemoManufacturingData() {
   dmSet(DM_KEYS.DATA_MODE,          'demo');
   dmSet(DM_KEYS.BACKEND_CONFIG,     BACKEND_CONFIG_DEFAULTS);
   dmSet(DM_KEYS.DM_SEEDED,          true);
+  console.log('[AutoSkill OS] Run 5 demo data seeded — 8 modules, 23 lessons, 20 checkpoints, 6 safety acks.');
 
   console.log('[AutoSkill OS] Demo manufacturing data seeded.');
 }

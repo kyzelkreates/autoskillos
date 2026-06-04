@@ -28,31 +28,106 @@ function sSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch 
 (function bootAutoSkillOSDM() {
   'use strict';
   try {
-    const SEEDED = 'ap3x_dm_seeded_v1';
+    var SEEDED = 'ap3x_dm_seeded_v5';
     if (!localStorage.getItem(SEEDED)) {
       localStorage.setItem(SEEDED, JSON.stringify(true));
-      // Data mode — compatible with existing 4p3x_demo_mode
+
+      // ── Data mode ─────────────────────────────────────────────
       if (!localStorage.getItem('ap3x_dm_data_mode')) {
-        const existingDemoMode = localStorage.getItem('4p3x_demo_mode');
-        const mode = (existingDemoMode === null || JSON.parse(existingDemoMode)) ? 'demo' : 'local';
-        localStorage.setItem('ap3x_dm_data_mode', JSON.stringify(mode));
+        var _existingDemo = localStorage.getItem('4p3x_demo_mode');
+        var _mode = (_existingDemo === null || JSON.parse(_existingDemo)) ? 'demo' : 'local';
+        localStorage.setItem('ap3x_dm_data_mode', JSON.stringify(_mode));
       }
-      // Backend config placeholder — no secrets, public config only
+
+      // ── Backend config (no secrets) ────────────────────────────
       if (!localStorage.getItem('ap3x_dm_backend_config')) {
         localStorage.setItem('ap3x_dm_backend_config', JSON.stringify({
-          mode: 'demo',
-          provider: 'local-only',
+          mode: 'demo', provider: 'local-only',
           connectionStatus: 'not_configured',
           publicConfig: { projectUrl: '', anonKeyHint: '', region: '' },
-          maskedStatus: '',
-          lastTestedAt: null,
-          updatedAt: null
+          maskedStatus: '', lastTestedAt: null, updatedAt: null
         }));
       }
-      console.log('[AutoSkill OS™ PWA] Manufacturing data model initialised.');
+
+      // ── Run 5: Seed safety acknowledgements ─────────────────────
+      if (!localStorage.getItem('ap3x_dm_safety_acks')) {
+        var _now = new Date().toISOString();
+        localStorage.setItem('ap3x_dm_safety_acks', JSON.stringify([
+          { id:'ack-ppe', title:'PPE Readiness', legalCritical:true, safetyCritical:true,
+            description:'I understand that PPE requirements must be checked before entering a production or training area.',
+            acknowledgementText:'I confirm I have read and understood the PPE requirements and will not start work without required PPE in place.',
+            linkedLessonId:'les-r5-2-1', linkedModuleId:'mod-r5-ppe-safety',
+            requiredForCompletion:true, acknowledgedByEmployeeIds:[], createdAt:_now, isDemo:true },
+          { id:'ack-ask-supervisor', title:'Stop-and-Ask Rule', legalCritical:false, safetyCritical:true,
+            description:'I understand that I must stop and ask a supervisor when a task, tool, process, or safety instruction is unclear.',
+            acknowledgementText:'I confirm I will stop any task and ask my supervisor if I am uncertain about a procedure, safety requirement, tool, or process step.',
+            linkedLessonId:'les-r5-2-2', linkedModuleId:'mod-r5-ppe-safety',
+            requiredForCompletion:true, acknowledgedByEmployeeIds:[], createdAt:_now, isDemo:true },
+          { id:'ack-workstation', title:'Workstation Readiness', legalCritical:false, safetyCritical:true,
+            description:'I understand that workstation readiness must be checked before starting a process step.',
+            acknowledgementText:'I confirm I will complete a workstation readiness check before starting any process step.',
+            linkedLessonId:'les-r5-3-2', linkedModuleId:'mod-r5-workstation-readiness',
+            requiredForCompletion:true, acknowledgedByEmployeeIds:[], createdAt:_now, isDemo:true },
+          { id:'ack-tool-auth', title:'Authorised Tool Use', legalCritical:false, safetyCritical:true,
+            description:'I understand that I must only use tools and equipment I am trained and authorised to use.',
+            acknowledgementText:'I confirm I will only use tools and equipment I am trained and authorised to use.',
+            linkedLessonId:'les-r5-5-1', linkedModuleId:'mod-r5-tool-handling',
+            requiredForCompletion:true, acknowledgedByEmployeeIds:[], createdAt:_now, isDemo:true },
+          { id:'ack-defect-reporting', title:'Defect Reporting', legalCritical:true, safetyCritical:false,
+            description:'I understand that defects and process issues must be reported honestly through the correct workplace route.',
+            acknowledgementText:'I confirm I understand the correct procedure for reporting a product defect and that I must not hide or conceal defects.',
+            linkedLessonId:'les-r5-7-1', linkedModuleId:'mod-r5-defect-handover',
+            requiredForCompletion:true, acknowledgedByEmployeeIds:[], createdAt:_now, isDemo:true },
+          { id:'ack-final-responsibility', title:'Final Pathway Responsibility Boundary', legalCritical:true, safetyCritical:false,
+            description:'I understand that completing this pathway supports training awareness but does not replace workplace safety procedures or employer responsibility.',
+            acknowledgementText:'I confirm that completing this AutoSkill OS™ pathway supports training awareness and may support supervisor review, but does not replace workplace safety procedures, qualified supervision, employer responsibility, or legal duties.',
+            linkedLessonId:'les-r5-8-2', linkedModuleId:'mod-r5-supervisor-review',
+            requiredForCompletion:true, acknowledgedByEmployeeIds:[], createdAt:_now, isDemo:true }
+        ]));
+      }
+
+      // ── Run 5: Seed pathways ────────────────────────────────────
+      if (!localStorage.getItem('ap3x_dm_pathways')) {
+        localStorage.setItem('ap3x_dm_pathways', JSON.stringify([
+          { id:'path-ns-induction', title:'New Starter Automotive Manufacturing Induction',
+            description:'A structured local-first training pathway covering PPE, workstation readiness, assembly workflow, quality checks, defect reporting, and supervisor review.',
+            departmentId:'dept-assembly', safetyCritical:true, status:'active',
+            requiredForRoles:['New Starter','Assembly Trainee','Quality Control Trainee','Logistics Trainee'],
+            estimatedDuration:'6–8 hours',
+            moduleIds:['mod-r5-site-orientation','mod-r5-ppe-safety','mod-r5-workstation-readiness',
+                       'mod-r5-assembly-overview','mod-r5-tool-handling','mod-r5-qc-defects',
+                       'mod-r5-defect-handover','mod-r5-supervisor-review'],
+            safetyAcknowledgementIds:['ack-ppe','ack-ask-supervisor','ack-workstation','ack-tool-auth','ack-defect-reporting','ack-final-responsibility'],
+            isDemo:true }
+        ]));
+      }
+
+      // ── Run 5: Seed process modules ─────────────────────────────
+      if (!localStorage.getItem('ap3x_dm_process_modules')) {
+        var _mods = [
+          { id:'mod-r5-site-orientation', pathwayId:'path-ns-induction', order:1, safetyCritical:false,
+            title:'Module 1: Manufacturing Site Orientation', estimatedDuration:'45 minutes', completionRequired:true, isDemo:true },
+          { id:'mod-r5-ppe-safety', pathwayId:'path-ns-induction', order:2, safetyCritical:true,
+            title:'Module 2: Health, Safety and PPE Basics', estimatedDuration:'60 minutes', completionRequired:true, isDemo:true },
+          { id:'mod-r5-workstation-readiness', pathwayId:'path-ns-induction', order:3, safetyCritical:true,
+            title:'Module 3: Workstation Readiness', estimatedDuration:'45 minutes', completionRequired:true, isDemo:true },
+          { id:'mod-r5-assembly-overview', pathwayId:'path-ns-induction', order:4, safetyCritical:false,
+            title:'Module 4: Assembly Line Process Overview', estimatedDuration:'60 minutes', completionRequired:true, isDemo:true },
+          { id:'mod-r5-tool-handling', pathwayId:'path-ns-induction', order:5, safetyCritical:true,
+            title:'Module 5: Safe Tool Handling and Equipment Awareness', estimatedDuration:'45 minutes', completionRequired:true, isDemo:true },
+          { id:'mod-r5-qc-defects', pathwayId:'path-ns-induction', order:6, safetyCritical:false,
+            title:'Module 6: Quality Control and Defect Recognition', estimatedDuration:'60 minutes', completionRequired:true, isDemo:true },
+          { id:'mod-r5-defect-handover', pathwayId:'path-ns-induction', order:7, safetyCritical:false,
+            title:'Module 7: Defect Reporting and Production Handover', estimatedDuration:'45 minutes', completionRequired:true, isDemo:true },
+          { id:'mod-r5-supervisor-review', pathwayId:'path-ns-induction', order:8, safetyCritical:false,
+            title:'Module 8: Supervisor Review and Final Competency Check', estimatedDuration:'45 minutes', completionRequired:true, isDemo:true }
+        ];
+        localStorage.setItem('ap3x_dm_process_modules', JSON.stringify(_mods));
+      }
+
+      console.log('[AutoSkill OS™ PWA] Run 5: 8-module pathway seeded. 6 safety acks. 15 checkpoints embedded in LESSON_CONTENT.');
     }
   } catch(e) {
-    // Never block PWA boot
     console.warn('[AutoSkill OS™ PWA] DM boot warning:', e.message);
   }
 })();
