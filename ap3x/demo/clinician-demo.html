@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="../../icons/tl-180.png"/>
+  <link rel="apple-touch-icon" sizes="152x152" href="../../icons/tl-152.png"/>
+  <link rel="apple-touch-icon" sizes="144x144" href="../../icons/tl-144.png"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="../../icons/tl-96.png"/>
+  <link rel="icon" type="image/png" sizes="192x192" href="../../icons/tl-192.png"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="AutoSkill OS™"/>
+  <meta name="msapplication-TileImage" content="../../icons/tl-144.png"/>
+  <meta name="msapplication-TileColor" content="#0a0a0a"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="manifest" href="manifest.json"/>
+<title>AutoSkill OS™ — Control Dashboard</title>
+<style>
+:root{
+  --bg:#0a0a0a;--surface:#111111;--surface2:#1a1a1a;--surface3:#222;
+  --sidebar:#0d0d0d;--sidebar-txt:#888;
+  --border:#2a2a2a;--border2:#333;
+  --gold:#c9a84c;--gold-l:#e2c97e;--gold-d:#9a7a30;
+  --silver:#b0b8c8;
+  --green:#22c55e;--green-d:#16a34a;
+  --purple:#a855f7;--purple-d:#7c3aed;--purple-xl:#2e1065;
+  --warn:#f59e0b;--high:#ef4444;--critical:#a855f7;--missing:#64748b;
+  --text:#f0f0f0;--muted:#888;--light:#444;
+  --r:10px;--rs:6px;--shadow:0 2px 8px rgba(0,0,0,.5);--shadow-md:0 4px 16px rgba(0,0,0,.6);
+  --sw:224px;--t:.18s ease;
+}
+[data-theme=light]{--bg:#f0f4f8;--surface:#fff;--surface2:#e8f0fe;--surface3:#f4f6fa;--sidebar:#0f2d52;--sidebar-txt:#c8d8f0;--border:#d1dce8;--border2:#c0ccd8;--text:#1e293b;--muted:#64748b;--light:#94a3b8;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);display:block;min-height:100vh;font-size:14px;line-height:1.5}
+.layout{display:flex;width:100%;min-height:100vh}
+.sidebar{width:var(--sw);min-height:100vh;background:var(--sidebar);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;z-index:200;transition:transform var(--t)}
+.sb-brand{display:flex;align-items:center;gap:10px;padding:20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-dot{width:10px;height:10px;border-radius:50%;background:var(--gold);flex-shrink:0;animation:pulse 2.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.2)}}
+.sb-name{color:#fff;font-size:13px;font-weight:800;letter-spacing:-.3px}
+.sb-sub{color:var(--sidebar-txt);font-size:10px;line-height:1.3}
+.sb-section{padding:10px 16px 4px;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.25);font-weight:700}
+.sb-nav{flex:1;padding:8px;display:flex;flex-direction:column;gap:2px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rs);background:none;border:none;color:var(--sidebar-txt);font-size:13px;font-weight:500;cursor:pointer;transition:all var(--t);text-align:left;width:100%;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-item.active{background:rgba(201,168,76,.15);color:var(--gold);border-left:3px solid var(--gold)}
+.nav-badge{margin-left:auto;background:var(--high);color:#fff;font-size:10px;font-weight:700;border-radius:99px;padding:1px 7px;min-width:18px;text-align:center}
+.nav-badge.warn{background:var(--warn)}.nav-badge.green{background:var(--green)}
+.sb-footer{padding:14px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:8px}
+.clin-chip{display:flex;align-items:center;gap:8px}
+.clin-avatar{width:32px;height:32px;border-radius:50%;background:var(--gold-d);color:#000;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.clin-name{color:#fff;font-size:12px;font-weight:600}.clin-role{color:var(--sidebar-txt);font-size:11px}
+.sb-footer-btns{display:flex;gap:6px}
+.back-btn{flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:var(--sidebar-txt);border-radius:var(--rs);padding:5px 10px;font-size:11px;cursor:pointer;text-decoration:none;text-align:center;transition:all var(--t)}
+.back-btn:hover{color:#fff;background:rgba(255,255,255,.15)}
+.hamburger{display:none;position:fixed;top:14px;left:14px;z-index:1000;background:var(--gold);border:none;border-radius:var(--rs);padding:8px 10px;cursor:pointer;flex-direction:column;gap:5px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
+.hamburger span{display:block;width:20px;height:2px;background:#000;border-radius:2px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900}
+.main-area{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--shadow);position:sticky;top:0;z-index:50}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-title{font-size:17px;font-weight:700}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.rt-ind{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--green);font-weight:600}
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.topbar-search{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rs);padding:7px 12px;min-width:200px}
+.topbar-search input{background:none;border:none;font-size:13px;color:var(--text);outline:none;width:100%}
+.topbar-search input::placeholder{color:var(--muted)}
+.btn-icon-top{background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px;border-radius:6px;transition:all var(--t)}
+.btn-icon-top:hover{background:var(--surface2);color:var(--text)}
+.notif-btn{position:relative}
+.notif-count{position:absolute;top:-3px;right:-3px;width:16px;height:16px;background:var(--high);color:#fff;font-size:9px;font-weight:700;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.view{padding:24px;animation:fadeIn .2s ease;flex:1}
+.view.hidden{display:none!important}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.view-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.view-title{font-size:20px;font-weight:800}
+.view-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px}
+.stat-card{background:var(--surface);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow);border-left:4px solid var(--gold);transition:box-shadow var(--t)}
+.stat-card:hover{box-shadow:var(--shadow-md)}
+.stat-card.w{border-left-color:var(--warn)}.stat-card.d{border-left-color:var(--high)}.stat-card.m{border-left-color:var(--missing)}.stat-card.c{border-left-color:var(--critical)}.stat-card.g{border-left-color:var(--green)}
+.stat-val{font-size:26px;font-weight:800}.stat-lbl{font-size:11px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.05em}
+.analytics-row{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:20px}
+.analytics-card{background:var(--surface);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.ac-title{font-size:13px;font-weight:700;margin-bottom:12px}
+.patient-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.pc{background:var(--surface);border-radius:var(--r);padding:15px;box-shadow:var(--shadow);border-top:3px solid var(--border);cursor:pointer;transition:all var(--t)}
+.pc:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.pc.HIGH{border-top-color:var(--high)}.pc.CRITICAL{border-top-color:var(--critical)}.pc.MEDIUM{border-top-color:var(--warn)}.pc.LOW{border-top-color:var(--green)}.pc.MISSING,.pc.MISSING_DATA{border-top-color:var(--missing)}
+.pc-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.pc-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0}
+.pc-info{flex:1;margin-left:10px}.pc-name{font-size:14px;font-weight:700}.pc-id{font-size:11px;color:var(--muted);margin-top:1px}
+.pc-score{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex-shrink:0}
+.pc-score.sl{background:rgba(34,197,94,.15);color:var(--green)}.pc-score.sm{background:rgba(245,158,11,.15);color:var(--warn)}.pc-score.sh{background:rgba(239,68,68,.15);color:var(--high)}.pc-score.sc{background:rgba(168,85,247,.15);color:var(--purple)}.pc-score.sn{background:var(--surface2);color:var(--muted);font-size:12px}
+.pc-metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px}
+.pc-metric{background:var(--surface2);border-radius:5px;padding:6px 8px;text-align:center}
+.pcm-val{font-size:13px;font-weight:700}.pcm-lbl{font-size:10px;color:var(--muted)}
+.pc-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.pc-flags{display:flex;flex-wrap:wrap;gap:4px}
+.pc-flag{font-size:10px;padding:2px 7px;border-radius:99px;border:1px solid;font-weight:600}
+.pc-flag.warn{border-color:var(--warn);color:var(--warn);background:rgba(245,158,11,.1)}
+.pc-flag.info{border-color:var(--purple);color:var(--purple);background:rgba(168,85,247,.1)}
+.trend-up{color:var(--high)}.trend-down{color:var(--green)}.trend-flat{color:var(--muted)}
+.risk-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700}
+.risk-badge.LOW{background:rgba(34,197,94,.15);color:var(--green)}
+.risk-badge.MEDIUM{background:rgba(245,158,11,.15);color:var(--warn)}
+.risk-badge.HIGH{background:rgba(239,68,68,.15);color:var(--high)}
+.risk-badge.CRITICAL{background:rgba(168,85,247,.15);color:var(--purple)}
+.risk-badge.MISSING,.risk-badge.MISSING_DATA{background:rgba(100,116,139,.15);color:var(--missing)}
+.tbl-wrap{overflow-x:auto;border-radius:var(--r);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;background:var(--surface)}
+thead{background:var(--surface2)}
+th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--border)}
+td{padding:11px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface2)}
+.empty-state-block{text-align:center;padding:48px 24px;background:var(--surface);border-radius:var(--r);border:1.5px dashed var(--border)}
+.backend-panel{transition:all .18s ease}
+.backend-panel input{font-family:inherit}
+.btn-primary.sm,.btn-secondary.sm{padding:7px 14px;font-size:12px;border-radius:var(--rs)}
+.es-icon{font-size:40px;margin-bottom:12px}
+.es-title{font-size:16px;font-weight:700;margin-bottom:8px}
+.es-sub{font-size:13px;color:var(--muted);line-height:1.6;max-width:480px;margin:0 auto}
+.tbl-toolbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.search-input{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rs);padding:8px 14px;font-size:13px;color:var(--text);outline:none;flex:1;min-width:180px}
+.search-input:focus{border-color:var(--gold)}
+.filter-sel{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rs);padding:7px 12px;font-size:13px;color:var(--text);outline:none;cursor:pointer}
+.filter-sel:focus{border-color:var(--gold)}
+.detail-panel{position:fixed;top:0;right:0;width:420px;height:100vh;background:var(--surface);box-shadow:-4px 0 24px rgba(0,0,0,.5);z-index:400;overflow-y:auto;transition:transform var(--t)}
+.detail-panel.hidden{transform:translateX(100%)}
+.detail-inner{padding:24px}
+.detail-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.detail-name{font-size:20px;font-weight:800}
+.detail-meta{font-size:12px;color:var(--muted);margin-top:3px}
+.btn-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);padding:4px;border-radius:var(--rs)}
+.btn-close:hover{background:var(--surface2);color:var(--text)}
+.detail-risk-row{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.detail-last-seen{font-size:12px;color:var(--muted)}
+.detail-section{margin-bottom:20px}
+.detail-section-title{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.06em}
+.detail-chart-wrap{background:var(--surface2);border-radius:var(--rs);padding:12px}
+.detail-list{display:flex;flex-direction:column;gap:8px;max-height:180px;overflow-y:auto}
+.detail-note{background:var(--surface2);border-radius:var(--rs);padding:10px 12px;font-size:12px}
+.note-by{font-weight:600;color:var(--gold);font-size:11px}
+.note-date{color:var(--muted);font-size:11px}
+.flag-list{display:flex;flex-wrap:wrap;gap:6px}
+.form-textarea{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--text);font-family:inherit;resize:none;min-height:70px;margin-top:8px}
+.form-textarea:focus{outline:none;border-color:var(--gold)}
+.note-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.alert-card{background:var(--surface);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow);border-left:4px solid var(--border);display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.alert-card.HIGH{border-left-color:var(--high)}.alert-card.CRITICAL{border-left-color:var(--critical)}.alert-card.MEDIUM{border-left-color:var(--warn)}.alert-card.MISSING{border-left-color:var(--missing)}
+.alert-card.acked{opacity:.5}
+.alert-icon{font-size:22px;flex-shrink:0}
+.alert-body{flex:1}.alert-title{font-size:13px;font-weight:700}.alert-sub{font-size:12px;color:var(--muted);margin-top:2px}.alert-time{font-size:11px;color:var(--muted);margin-top:4px}
+.alert-actions{display:flex;gap:6px;margin-top:8px}
+.note-card{background:var(--surface);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow);border-left:3px solid var(--gold);margin-bottom:12px}
+.nc-patient{font-size:12px;color:var(--gold);font-weight:700}.nc-text{font-size:13px;margin-top:4px;line-height:1.5}.nc-meta{font-size:11px;color:var(--muted);margin-top:6px}
+.donut-wrap{display:flex;align-items:center;gap:16px;padding-top:8px}
+.donut-legend{display:flex;flex-direction:column;gap:6px}
+.dl-item{display:flex;align-items:center;gap:6px;font-size:12px}
+.dl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.settings-section{background:var(--surface);border-radius:var(--r);padding:20px;margin-bottom:16px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.settings-title{font-size:14px;font-weight:700;margin-bottom:14px;color:var(--gold)}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.setting-row:last-child{border-bottom:none}
+.setting-label{font-size:13px;font-weight:600}.setting-desc{font-size:11px;color:var(--muted);margin-top:2px}
+.toggle-wrap{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toggle{width:44px;height:24px;border-radius:99px;position:relative;transition:background var(--t);cursor:pointer;border:none;flex-shrink:0}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left var(--t)}
+.toggle.on{background:var(--green)}.toggle.off{background:var(--border2,#333)}
+.toggle.on::after{left:23px}
+.toggle-state{font-size:12px;font-weight:700;min-width:32px}
+.crisis-field{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rs);padding:9px 12px;font-size:13px;color:var(--text)}
+.crisis-field:focus{outline:none;border-color:var(--gold)}
+.btn-save-settings{margin-top:12px;padding:10px 22px;background:var(--gold);color:#000;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer}
+.btn-save-settings:hover{opacity:.85}
+.btn-primary{padding:8px 18px;background:var(--gold);color:#000;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;transition:all var(--t)}
+.btn-primary:hover{opacity:.85}.btn-primary.sm{padding:6px 14px;font-size:12px}
+.btn-secondary{padding:7px 14px;background:var(--surface2);color:var(--text);border:1.5px solid var(--border);border-radius:var(--rs);font-size:12px;font-weight:600;cursor:pointer;transition:all var(--t)}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold)}
+.btn-view{padding:5px 12px;background:none;border:1.5px solid var(--border);border-radius:var(--rs);font-size:11px;cursor:pointer;color:var(--muted);transition:all var(--t)}
+.btn-view:hover{border-color:var(--gold);color:var(--gold)}
+.btn-ack{padding:4px 12px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rs);font-size:11px;font-weight:600;cursor:pointer}
+.btn-ack:hover{border-color:var(--gold);color:var(--gold)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;padding:10px 18px;border-radius:var(--rs);font-size:13px;font-weight:600;z-index:600;animation:toastIn .3s ease;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+.toast.hidden{display:none!important}
+@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.empty-state{color:var(--muted);font-size:13px;padding:24px;text-align:center}
+.hidden{display:none!important}
+.cli-footer{padding:12px 24px;font-size:11px;color:var(--light);border-top:1px solid var(--border);background:var(--surface);line-height:1.4;margin-top:auto}
+.demo-banner{background:rgba(201,168,76,.1);border:1px solid var(--gold-d);border-radius:var(--rs);padding:8px 16px;font-size:12px;color:var(--gold);font-weight:600;display:flex;align-items:center;gap:8px;margin:12px 24px 0}
+.demo-banner.hidden{display:none!important}
+@media(max-width:900px){.stats-row{grid-template-columns:repeat(3,1fr)}.analytics-row{grid-template-columns:1fr}}
+@media(max-width:768px){
+  .hamburger{display:flex}.sidebar{position:fixed;left:0;top:0;height:100%;height:100dvh;transform:translateX(-100%);z-index:950}.sidebar.open{transform:translateX(0)}.overlay.open{display:block}
+  .topbar{padding:14px 14px 14px 58px}.topbar-search{display:none}.topbar-logo{display:block!important}.view{padding:16px}
+  .stats-row{grid-template-columns:repeat(2,1fr)}.detail-panel{width:100%;max-width:100%}
+}
+@media(max-width:520px){.stats-row{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<button class="hamburger" id="hamburger" type="button" onclick="toggleSidebar()" aria-label="Menu" aria-expanded="false" aria-controls="sidebar">
+  <span></span><span></span><span></span>
+</button>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+<div class="layout">
+
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <img src="../../icons/tl-72.png" alt="AutoSkill OS™" style="width:36px;height:36px;border-radius:8px;flex-shrink:0"/>
+    <div><div class="sb-name">AutoSkill OS™</div><div class="sb-sub">Control Dashboard<br/>Powered by 4P3X Intelligent AI™</div></div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Overview</div>
+    <button class="nav-item active" id="nav-overview" onclick="showView('overview')"><span>🏠</span><span>Dashboard</span></button>
+    <button class="nav-item" id="nav-alerts" onclick="showView('alerts')"><span>🔔</span><span>Alerts</span><span class="nav-badge" id="alertBadge">3</span></button>
+    <div class="sb-section">Patients</div>
+    <button class="nav-item" id="nav-patients" onclick="showView('patients')"><span>👥</span><span>All Patients</span></button>
+    <button class="nav-item" id="nav-highrisk" onclick="showView('highrisk')"><span>⚠️</span><span>Support Flags</span><span class="nav-badge warn" id="hrBadge">2</span></button>
+    <button class="nav-item" id="nav-checkins" onclick="showView('checkins')"><span>📋</span><span>Check-Ins</span><span class="nav-badge green" id="ciBadge">7</span></button>
+    <div class="sb-section">Analytics</div>
+    <button class="nav-item" id="nav-analytics" onclick="showView('analytics')"><span>📊</span><span>Analytics</span></button>
+    <button class="nav-item" id="nav-timeline" onclick="showView('timeline')"><span>📅</span><span>Timeline</span></button>
+    <div class="sb-section">Tools</div>
+    <button class="nav-item" id="nav-notes" onclick="showView('notes')"><span>📝</span><span>Notes</span></button>
+    <button class="nav-item" id="nav-settings" onclick="showView('settings')"><span>⚙️</span><span>Settings</span><span class="nav-badge warn" id="syncNavBadge" style="display:none">!</span></button>
+  </nav>
+  <div class="sb-footer">
+    <div class="clin-chip">
+      <div class="clin-avatar" id="clinicianInitials">DR</div>
+      <div><div class="clin-name" id="clinicianName">Dr. Reyes</div><div class="clin-role" id="clinicianRole">Training Manager</div></div>
+    </div>
+    <div class="sb-footer-btns">
+      <a href="index.html" class="back-btn">← Home</a>
+      <button class="back-btn" onclick="toggleTheme()">🌙</button>
+    </div>
+  </div>
+</aside>
+
+<div class="main-area">
+  <div class="topbar">
+    <div class="topbar-left">
+      <img src="../../icons/tl-72.png" alt="" class="topbar-logo" style="width:28px;height:28px;border-radius:6px;display:none"/>
+      <div class="topbar-title" id="topbarTitle">Training Control Dashboard</div>
+      <div class="rt-ind"><div class="pulse-dot"></div><span id="demoIndicator">Demo Mode</span></div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-search"><span style="color:var(--muted)">🔍</span><input type="text" placeholder="Search patients…" oninput="globalSearch(this.value)" id="globalSearchInput"/></div>
+      <button class="btn-icon-top notif-btn" onclick="showView('alerts')">🔔<span class="notif-count" id="notifCount">3</span></button>
+      <button class="btn-icon-top" onclick="toggleTheme()">🌙</button>
+      <span style="font-size:12px;color:var(--muted)" id="clockEl"></span>
+    </div>
+  </div>
+
+  <div class="demo-banner" id="demoBanner">🎭 Demo Mode Active — showing sample training data. Toggle off in Settings to connect to Live Mode.</div>
+
+  <!-- OVERVIEW -->
+  <div class="view" id="view-overview">
+    <div class="view-header">
+      <div><div class="view-title" id="overviewGreeting">Good morning 👋</div><div class="view-sub">Track employee training check-ins, competency pathway progress, and supervisor flags.</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-secondary" onclick="showView('checkins')">📋 Check-Ins</button>
+        <button class="btn-primary" onclick="showView('alerts')">🔔 Support Flags</button>
+      </div>
+    </div>
+    <div class="stats-row" id="statsRow"></div>
+    <div id="overviewEmpty" style="display:none;margin-bottom:20px">
+      <div class="empty-state-block">
+        <div class="es-icon">📊</div>
+        <div class="es-title">No live training data yet.</div>
+        <div class="es-sub">Demo Mode is off. Connect a backend or add real employees to start using AutoSkill OS™ in Live Mode. Demo Mode shows the product. Live Mode runs the product.</div>
+      </div>
+    </div>
+    <div class="analytics-row">
+      <div class="analytics-card"><div class="ac-title">📈 Weekly Anxiety/Stress Trends (All Patients)</div><canvas id="overviewChart" height="110"></canvas></div>
+      <div class="analytics-card"><div class="ac-title">🎯 Risk Distribution</div><div class="donut-wrap"><canvas id="donutChart" width="90" height="90"></canvas><div class="donut-legend" id="donutLegend"></div></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+        <div class="analytics-card" id="syncOverviewCard">
+          <div class="ac-title">🔄 Sync Status</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:13px">
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Mode</span><span id="syncOverviewMode">Local-only</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Pending</span><span id="syncOverviewPending">0 records</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Last synced</span><span id="syncOverviewLast">Never</span></div>
+          </div>
+        </div>
+        <div class="analytics-card">
+          <div class="ac-title">📤 Quick Share</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Share Employee Learning PWA with a team member</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn-secondary sm" onclick="sharePwa('copy')">📋 Copy</button>
+            <button class="btn-secondary sm" onclick="sharePwa('whatsapp')">💬 WhatsApp</button>
+            <button class="btn-secondary sm" onclick="sharePwa('email')">📧 Email</button>
+          </div>
+        </div>
+      </div>
+      <div class="view-header" style="margin-bottom:12px"><div style="font-size:15px;font-weight:700">⚠️ Patients Needing Attention</div><button class="btn-secondary" onclick="showView('patients')">View All →</button></div>
+    <div class="patient-grid" id="urgentGrid"></div>
+  </div>
+
+  <!-- ALERTS -->
+  <div class="view hidden" id="view-alerts">
+    <div class="view-header"><div><div class="view-title">🔔 Support Flags</div><div class="view-sub">Employee-reported concerns and competency indicators — informational only</div></div><button class="btn-secondary" onclick="ackAll()">✓ Acknowledge All</button></div>
+    <div id="alertsList"></div>
+  </div>
+
+  <!-- PATIENTS -->
+  <div class="view hidden" id="view-patients">
+    <div class="view-header">
+      <div><div class="view-title">👥 All Patients</div><div class="view-sub" id="patientCount"></div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <select class="filter-sel" id="riskFilter" onchange="renderPatientsTable()"><option value="">All Risk Levels</option><option value="CRITICAL">Critical</option><option value="HIGH">High</option><option value="MEDIUM">Medium</option><option value="LOW">Low</option><option value="MISSING">Missing Data</option></select>
+        <select class="filter-sel" id="sortFilter" onchange="renderPatientsTable()"><option value="risk">Sort: Risk</option><option value="name">Sort: Name</option><option value="score">Sort: Score</option><option value="lastSeen">Sort: Last Check-In</option></select>
+      </div>
+    </div>
+    <div class="tbl-toolbar"><input class="search-input" placeholder="Search by name or ID…" oninput="renderPatientsTable(this.value)" id="ptSearch"/></div>
+    <div class="tbl-wrap"><table><thead><tr><th>Employee</th><th>Status</th><th>Score</th><th>Readiness</th><th>Streak</th><th>Last Check-In</th><th>Trend</th><th>Flags</th><th>Actions</th></tr></thead><tbody id="patientsTableBody"></tbody></table></div>
+  </div>
+
+  <!-- SUPPORT FLAGS -->
+  <div class="view hidden" id="view-highrisk">
+    <div class="view-header"><div><div class="view-title">⚠️ Patients with Support Flags</div><div class="view-sub">Employees requiring supervisor review — all indicators are informational only</div></div></div>
+    <div id="highRiskContent"></div>
+  </div>
+
+  <!-- CHECK-INS -->
+  <div class="view hidden" id="view-checkins">
+    <div class="view-header"><div><div class="view-title">📋 Training Check-Ins</div><div class="view-sub">Employee training check-ins — newest first</div></div><select class="filter-sel" id="ciFilter" onchange="renderCheckins()"><option value="all">All</option><option value="today">Today</option><option value="HIGH">High</option><option value="CRITICAL">Critical</option></select></div>
+    <div class="tbl-wrap"><table><thead><tr><th>Employee</th><th>Time</th><th>Score</th><th>Readiness</th><th>Status</th><th>Flags</th><th>Note</th><th>Action</th></tr></thead><tbody id="checkinsTableBody"></tbody></table></div>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div class="view hidden" id="view-analytics">
+    <div class="view-header"><div><div class="view-title">📊 Analytics</div><div class="view-sub">Workforce-level competency insights</div></div><select class="filter-sel" id="anaRange" onchange="renderAnalytics()"><option value="7">Last 7 days</option><option value="14">Last 14 days</option><option value="30">Last 30 days</option></select></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" class="analytics-row">
+      <div class="analytics-card"><div class="ac-title">📈 Average Anxiety Score</div><canvas id="anaAnxiousChart" height="120"></canvas></div>
+      <div class="analytics-card"><div class="ac-title">😴 Average Sleep Quality</div><canvas id="anaSleepChart" height="120"></canvas></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" class="analytics-row">
+      <div class="analytics-card"><div class="ac-title">🏋️ Common Stressors</div><canvas id="anaTriggersChart" height="130"></canvas></div>
+      <div class="analytics-card"><div class="ac-title">📅 Check-In Completion (7-day)</div><canvas id="anaEngChart" height="130"></canvas></div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="view hidden" id="view-timeline">
+    <div class="view-header"><div class="view-title">📅 Activity Timeline</div><div class="view-sub">All employee check-ins and supervisor notes — chronological order</div></div>
+    <div id="timelineContent"></div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="view hidden" id="view-notes">
+    <div class="view-header"><div><div class="view-title">📝 Supervisor Notes</div><div class="view-sub">All notes across all employees — most recent first</div></div></div>
+    <div id="notesList"></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="view hidden" id="view-settings">
+    <div class="view-header"><div class="view-title">⚙️ Settings</div><div class="view-sub">Configure your dashboard preferences</div></div>
+    <div class="settings-section">
+      <div class="settings-title">🎭 Presentation Mode</div>
+      <div class="setting-row">
+        <div><div class="setting-label">Demo Mode</div><div class="setting-desc">Show realistic sample training data for presentations and testing. Demo Mode shows the product. Live Mode runs the product.</div></div>
+        <div class="toggle-wrap" onclick="toggleDemoMode()">
+          <span class="toggle-state" id="demoStateLabel">ON</span>
+          <button class="toggle on" id="demoToggle" aria-label="Demo mode toggle"></button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Presentation Data</div><div class="setting-desc" id="presentationDataDesc">Enabled — 8 sample patients with realistic check-in history</div></div>
+        <span class="risk-badge LOW" id="presentationDataBadge">Enabled</span>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">👤 Supervisor Profile</div>
+      <div class="setting-row"><div><div class="setting-label">Display Name</div></div><input id="settingName" type="text" class="crisis-field" style="width:180px" placeholder="Dr. Reyes"/></div>
+      <div class="setting-row"><div><div class="setting-label">Role / Speciality</div></div><input id="settingRole" type="text" class="crisis-field" style="width:180px" placeholder="Training Manager"/></div>
+      <button class="btn-save-settings" onclick="saveProfileSettings()">Save Profile</button>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">🆘 Crisis Support Configuration</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">Configure crisis support information shown to patients. This does not replace emergency services.</div>
+      <div class="setting-row"><div><div class="setting-label">Crisis Line Name</div></div><input id="crisisName" type="text" class="crisis-field" style="width:200px" placeholder="e.g. Samaritans"/></div>
+      <div class="setting-row"><div><div class="setting-label">Crisis Line Number / URL</div></div><input id="crisisContact" type="text" class="crisis-field" style="width:200px" placeholder="e.g. 116 123"/></div>
+      <button class="btn-save-settings" onclick="saveCrisisSettings()">Save Crisis Settings</button>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">⚠️ Safety Notice</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7;padding:8px;background:var(--surface2);border-radius:var(--rs)">AutoSkill OS™ supports manufacturing workforce training, competency tracking, and supervisor-guided progress monitoring. It does not provide emergency support, medical diagnosis, or a replacement for professional care. All risk indicators are informational only. If a patient is in immediate danger, contact emergency services immediately.</div>
+    </div>
+
+    <!-- ── PART 2: BACKEND CONFIGURATION ── -->
+    <div class="settings-section" id="backendConfigSection">
+      <div class="settings-title">🔌 Backend Configuration</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">Prepare AutoSkill OS™ for Live Mode backend sync. Demo Mode works without any backend configuration. Demo Mode shows the product. Live Mode runs the product.</div>
+      <div style="background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.25);border-radius:var(--rs);padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--high);line-height:1.6">
+        <strong>🛡️ 4P3X API Config Guard™</strong><br/>Only public/client-safe configuration should be entered here. Never paste service role keys, database passwords, private keys, API secrets, JWT secrets, webhook secrets, or backend-only credentials into the frontend.
+      </div>
+      <div class="setting-row" style="align-items:flex-start">
+        <div><div class="setting-label">Backend Provider</div><div class="setting-desc">Choose your backend platform or keep local-only mode</div></div>
+        <select class="filter-sel" id="backendModeSelect" onchange="onBackendModeChange()" style="min-width:160px">
+          <option value="local">Local-only mode</option>
+          <option value="supabase">Supabase</option>
+          <option value="firebase">Firebase</option>
+          <option value="aws">AWS / Amplify</option>
+          <option value="custom">Custom REST API</option>
+        </select>
+      </div>
+
+      <!-- Local only -->
+      <div id="backend-local" class="backend-panel">
+        <div style="padding:12px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);font-size:13px;color:var(--muted);margin-top:8px">
+          ✅ <strong>Local-only mode active.</strong> AutoSkill OS™ is using existing local storage. No backend connection required for Demo Mode. Training data stays on this device.
+        </div>
+      </div>
+
+      <!-- Supabase -->
+      <div id="backend-supabase" class="backend-panel" style="display:none">
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">
+          <div class="setting-row"><div><div class="setting-label">Project URL</div><div class="setting-desc">e.g. https://your-project.supabase.co</div></div><input id="sbUrl" type="url" class="crisis-field" style="width:260px" placeholder="https://xxxx.supabase.co"/></div>
+          <div class="setting-row"><div><div class="setting-label">Anon Public Key</div><div class="setting-desc">Safe to use in frontend — not your service role key</div></div><input id="sbKey" type="text" class="crisis-field" style="width:260px" placeholder="eyJhbGci…"/></div>
+          <div class="setting-row"><div><div class="setting-label">Connection Status</div></div><span class="risk-badge" id="sbStatus">Not configured</span></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn-primary sm" onclick="saveBackendConfig('supabase')">💾 Save Configuration</button>
+            <button class="btn-secondary sm" onclick="testBackendConnection('supabase')">🔌 Test Connection</button>
+            <button class="btn-secondary sm" onclick="clearBackendConfig('supabase')">🗑️ Clear</button>
+          </div>
+          <div id="sbStatusMsg" style="font-size:12px;color:var(--muted);display:none;padding:8px;background:var(--surface2);border-radius:var(--rs)"></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">📄 <a href="#" onclick="showToast('Live Mode setup file: /docs/THERAPYLINK_SUPABASE_SETUP_SQL.txt — available for backend integration in a future run');return false;" style="color:var(--gold)">View Supabase SQL Setup File →</a></div>
+        </div>
+      </div>
+
+      <!-- Firebase -->
+      <div id="backend-firebase" class="backend-panel" style="display:none">
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">
+          <div class="setting-row"><div><div class="setting-label">Project ID</div></div><input id="fbProjectId" type="text" class="crisis-field" style="width:240px" placeholder="your-project-id"/></div>
+          <div class="setting-row"><div><div class="setting-label">API Key</div><div class="setting-desc">Public client API key only</div></div><input id="fbApiKey" type="text" class="crisis-field" style="width:240px" placeholder="AIzaSy…"/></div>
+          <div class="setting-row"><div><div class="setting-label">Auth Domain</div></div><input id="fbAuthDomain" type="text" class="crisis-field" style="width:240px" placeholder="your-project.firebaseapp.com"/></div>
+          <div class="setting-row"><div><div class="setting-label">Connection Status</div></div><span class="risk-badge" id="fbStatus">Not configured</span></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn-primary sm" onclick="saveBackendConfig('firebase')">💾 Save Configuration</button>
+            <button class="btn-secondary sm" onclick="testBackendConnection('firebase')">🔌 Test Connection</button>
+            <button class="btn-secondary sm" onclick="clearBackendConfig('firebase')">🗑️ Clear</button>
+          </div>
+          <div id="fbStatusMsg" style="font-size:12px;color:var(--muted);display:none;padding:8px;background:var(--surface2);border-radius:var(--rs)"></div>
+        </div>
+      </div>
+
+      <!-- AWS -->
+      <div id="backend-aws" class="backend-panel" style="display:none">
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">
+          <div class="setting-row"><div><div class="setting-label">API Endpoint</div></div><input id="awsEndpoint" type="url" class="crisis-field" style="width:260px" placeholder="https://api.your-domain.com"/></div>
+          <div class="setting-row"><div><div class="setting-label">Region</div></div><input id="awsRegion" type="text" class="crisis-field" style="width:160px" placeholder="eu-west-2"/></div>
+          <div class="setting-row"><div><div class="setting-label">Public Client Key</div><div class="setting-desc">If required — public key only</div></div><input id="awsClientKey" type="text" class="crisis-field" style="width:240px" placeholder="Optional"/></div>
+          <div class="setting-row"><div><div class="setting-label">Connection Status</div></div><span class="risk-badge" id="awsStatus">Not configured</span></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn-primary sm" onclick="saveBackendConfig('aws')">💾 Save Configuration</button>
+            <button class="btn-secondary sm" onclick="testBackendConnection('aws')">🔌 Test Connection</button>
+            <button class="btn-secondary sm" onclick="clearBackendConfig('aws')">🗑️ Clear</button>
+          </div>
+          <div id="awsStatusMsg" style="font-size:12px;color:var(--muted);display:none;padding:8px;background:var(--surface2);border-radius:var(--rs)"></div>
+        </div>
+      </div>
+
+      <!-- Custom REST -->
+      <div id="backend-custom" class="backend-panel" style="display:none">
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">
+          <div class="setting-row"><div><div class="setting-label">Base API URL</div></div><input id="customUrl" type="url" class="crisis-field" style="width:260px" placeholder="https://api.your-domain.com"/></div>
+          <div class="setting-row"><div><div class="setting-label">Public Client Token</div><div class="setting-desc">Public token only — never use backend-only secrets</div></div><input id="customToken" type="text" class="crisis-field" style="width:240px" placeholder="Optional"/></div>
+          <div class="setting-row"><div><div class="setting-label">Connection Status</div></div><span class="risk-badge" id="customStatus">Not configured</span></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn-primary sm" onclick="saveBackendConfig('custom')">💾 Save Configuration</button>
+            <button class="btn-secondary sm" onclick="testBackendConnection('custom')">🔌 Test Connection</button>
+            <button class="btn-secondary sm" onclick="clearBackendConfig('custom')">🗑️ Clear</button>
+          </div>
+          <div id="customStatusMsg" style="font-size:12px;color:var(--muted);display:none;padding:8px;background:var(--surface2);border-radius:var(--rs)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PART 5: PATIENT PWA SHARING ── -->
+    <div class="settings-section">
+      <div class="settings-title">📤 Share Employee Learning PWA</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">Send this Employee Learning PWA link to the team member so they can complete training check-ins, process modules, and compery progress updates.</div>
+      <div style="background:var(--surface2);border-radius:var(--rs);padding:12px 14px;margin-bottom:14px;border:1px solid var(--border)">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:6px">Employee Learning PWA Link</div>
+        <div style="font-size:13px;word-break:break-all;color:var(--gold);margin-bottom:10px" id="sharePwaUrl">Loading…</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Invite Code: <span id="shareInviteCode" style="font-weight:700;color:var(--text);background:var(--surface3);padding:2px 8px;border-radius:4px;font-family:monospace">—</span></div>
+        <div style="font-size:11px;color:var(--muted)">Status: <span id="shareLinkStatus" class="risk-badge LOW" style="font-size:10px">Active</span></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+        <button class="btn-primary sm" onclick="sharePwa('copy')">📋 Copy Link</button>
+        <button class="btn-secondary sm" onclick="sharePwa('whatsapp')">💬 WhatsApp</button>
+        <button class="btn-secondary sm" onclick="sharePwa('email')">📧 Email</button>
+        <button class="btn-secondary sm" onclick="sharePwa('sms')">💬 SMS</button>
+        <button class="btn-secondary sm" onclick="sharePwa('native')" id="nativeShareBtn" style="display:none">📤 Share</button>
+      </div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5">In demo/local mode a safe local link is used. For live use, configure your backend URL above and the real link will update automatically.</div>
+    </div>
+
+    <!-- ── PART 6: SYNC STATUS ── -->
+    <div class="settings-section">
+      <div class="settings-title">🔄 Sync Status</div>
+      <div id="syncStatusPanel">
+        <div class="setting-row"><div><div class="setting-label">Mode</div></div><span id="syncModeBadge" class="risk-badge MISSING">Local-only</span></div>
+        <div class="setting-row"><div><div class="setting-label">Pending records</div></div><span id="syncPendingCount" style="font-size:13px;font-weight:700">0</span></div>
+        <div class="setting-row"><div><div class="setting-label">Last synced</div></div><span id="syncLastAt" style="font-size:12px;color:var(--muted)">Never</span></div>
+        <div class="setting-row"><div><div class="setting-label">Connection</div></div><span id="syncConnStatus" class="risk-badge MISSING">Not configured</span></div>
+        <div id="syncErrorMsg" style="display:none;font-size:12px;color:var(--high);padding:8px;background:rgba(239,68,68,.08);border-radius:var(--rs);margin-top:6px"></div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn-primary sm" onclick="manualSync()">🔄 Manual Sync</button>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5">Employee training check-ins and module progress are saved locally first. If a backend is configured in Live Mode, records will be queued for sync. Failed syncs preserve all patient data.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Detail panel -->
+  <div class="detail-panel hidden" id="detailPanel">
+    <div class="detail-inner">
+      <div class="detail-header"><div><h2 class="detail-name" id="detailName">—</h2><div class="detail-meta" id="detailMeta">—</div></div><button class="btn-close" onclick="closeDetail()">✕</button></div>
+      <div class="detail-risk-row"><span class="risk-badge" id="detailRiskBadge">—</span><span class="detail-last-seen" id="detailLastSeen">—</span></div>
+      <div class="detail-section"><div class="detail-section-title">Anxiety / Stress Timeline</div><div class="detail-chart-wrap"><canvas id="detailChart" height="100"></canvas></div></div>
+      <div class="detail-section"><div class="detail-section-title">Employee Metrics</div><div id="detailMetrics"></div></div>
+      <div class="detail-section"><div class="detail-section-title">Recent Mood Notes</div><div id="detailMoodList" class="detail-list"><p class="empty-state">No notes.</p></div></div>
+      <div class="detail-section"><div class="detail-section-title">Support Flags</div><div id="detailFlags" class="flag-list"></div></div>
+      <div class="detail-section"><div class="detail-section-title">Coping Strategies</div><div id="detailCoping" class="flag-list"></div></div>
+      <div class="detail-section">
+        <div class="detail-section-title">Supervisor Notes</div>
+        <div id="detailNotesList" class="detail-list"></div>
+        <textarea id="newNoteInput" class="form-textarea" placeholder="Add a supervisor note…" rows="3"></textarea>
+        <div class="note-actions">
+          <select id="followUpStatus" class="filter-sel"><option value="">No follow-up action</option><option value="MONITOR">Monitor closely</option><option value="REVIEW">Schedule review</option><option value="URGENT">Urgent contact needed</option></select>
+          <button class="btn-primary sm" onclick="addNote(currentPatient&&currentPatient.id)">Save Note</button>
+        </div>
+      </div>
+      <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:var(--rs);padding:10px 12px;font-size:11px;color:var(--muted);line-height:1.6">⚠️ Competency indicators are based on patient self-report and are <strong>not a clinical diagnosis</strong>. Always apply clinical judgement. If a patient is in immediate danger, contact emergency services.</div>
+    </div>
+  </div>
+  <footer class="cli-footer"><img src="../../icons/tl-72.png" alt="" style="width:20px;height:20px;border-radius:4px;vertical-align:middle;margin-right:8px"/>AutoSkill OS™ — Powered by 4P3X Intelligent AI™ · Created by Kyzel Kreates™ · Training monitoring and therapist-guided workflows. Does not provide emergency support, medical diagnosis, or clinical treatment. Created by Kyzel Kreates · Powered by 4P3X Intelligent AI™</footer>
+</div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<script>
+'use strict';
+// ── Demo patient data ──────────────────────────────────────────────
+const DEMO_PATIENTS = [
+  {id:'P001',name:'Jordan M.',age:24,condition:'Assembly Line',avatar:'#ef4444',initials:'JM',scores:[7,6,8,5,7,6,9],sleep:[5,6,4,7,5,6,4],streak:5,triggers:['Workstation Setup','Assembly Process','Time Pressure'],coping:['Breathing Exercises','Music'],flags:['HIGH_ANXIETY_SCORE','MISSED_CHECK_INS'],risk:'CRITICAL',pathway:'Module 2 — Coping Skills',pathwayPct:45,notes:[{text:'Patient reports increased work pressure. Recommended breathing exercises 3× daily.',date:Date.now()-86400000*2,by:'Dr. Reyes'},{text:'Phone check-in — patient sounded calmer. Continue current plan.',date:Date.now()-86400000*5,by:'Dr. Reyes'}],checkins:[{date:Date.now()-3600000*2,anxiety:9,sleep:4,risk:'CRITICAL',triggers:['Work/Study Stress','Poor Sleep'],note:'Panic episode this morning',coping:[]},{date:Date.now()-86400000,anxiety:7,sleep:5,risk:'HIGH',triggers:['Work/Study Stress'],note:'Very stressed about deadline',coping:['Breathing Exercises']},{date:Date.now()-86400000*2,anxiety:6,sleep:6,risk:'MEDIUM',triggers:['Team Communication'],note:'Overwhelmed in team meeting',coping:['Music']},{date:Date.now()-86400000*3,anxiety:5,sleep:7,risk:'MEDIUM',triggers:[],note:'Better day. Used grounding.',coping:['Breathing Exercises']}]},
+  {id:'P002',name:'Alex T.',age:31,condition:'Quality Control',avatar:'#f59e0b',initials:'AT',scores:[4,5,3,6,5,4,7],sleep:[7,6,8,5,7,7,5],streak:12,triggers:['Process Complexity','Tool Handling'],coping:['Exercise','Meditation'],flags:['TRENDING_UP'],risk:'HIGH',pathway:'Module 2 — Coping Skills',pathwayPct:60,notes:[{text:'Showing good progress with CBT techniques. Scores trending downward overall.',date:Date.now()-86400000*3,by:'Dr. Reyes'}],checkins:[{date:Date.now()-3600000*5,anxiety:7,sleep:5,risk:'HIGH',triggers:['Financial Worries'],note:'Bills arrived — very anxious',coping:[]},{date:Date.now()-86400000,anxiety:5,sleep:7,risk:'MEDIUM',triggers:['Health Anxiety'],note:'GP appointment tomorrow',coping:['Meditation']},{date:Date.now()-86400000*2,anxiety:4,sleep:8,risk:'LOW',triggers:[],note:'Good session today',coping:['Exercise']}]},
+  {id:'P003',name:'Sam K.',age:19,condition:'Workstation Safety',avatar:'#10b981',initials:'SK',scores:[3,2,4,3,2,3,2],sleep:[8,7,8,7,8,8,7],streak:21,triggers:['Team Communication'],coping:['Journaling','Deep Breathing'],flags:[],risk:'LOW',pathway:'Module 3 — Progress & Reflection',pathwayPct:80,notes:[{text:'Excellent engagement. 21-day streak. Considering reducing session frequency.',date:Date.now()-86400000*4,by:'Dr. Reyes'}],checkins:[{date:Date.now()-3600000*1,anxiety:2,sleep:8,risk:'LOW',triggers:['Team Communication'],note:'Group project went well',coping:['Deep Breathing']},{date:Date.now()-86400000,anxiety:3,sleep:7,risk:'LOW',triggers:[],note:'Feeling confident this week',coping:['Journaling']}]},
+  {id:'P004',name:'Morgan L.',age:27,condition:'Process Onboarding',avatar:'#7c3aed',initials:'ML',scores:[6,7,5,8,6,7,8],sleep:[5,4,6,4,5,5,4],streak:3,triggers:['Quality Standards','Production Deadlines'ress'],coping:['Music','Talking to Someone'],flags:['HIGH_ANXIETY_SCORE','LOW_SLEEP_QUALITY'],risk:'HIGH',pathway:'Module 1 — Understanding Your Mental Health',pathwayPct:30,notes:[{text:'Patient disclosed relationship difficulties. Referred to couples counselling.',date:Date.now()-86400000,by:'Dr. Reyes'}],checkins:[{date:Date.now()-3600000*3,anxiety:8,sleep:4,risk:'HIGH',triggers:['Relationship Difficulties'],note:'Argument last night, could not sleep',coping:['Music']},{date:Date.now()-86400000,anxiety:7,sleep:5,risk:'HIGH',triggers:['Work/Study Stress'],note:'Work and home both overwhelming',coping:[]}]},
+  {id:'P005',name:'Riley C.',age:35,condition:'PPE Compliance',avatar:'#2563eb',initials:'RC',scores:[5,4,5,4,5,4,4],sleep:[6,7,6,7,6,7,7],streak:9,triggers:['PPE Compliance','Safety Protocols'],coping:['Exercise','Deep Breathing'],flags:[],risk:'MEDIUM',pathway:'Module 2 — Coping Skills',pathwayPct:70,notes:[{text:'EMDR sessions progressing well. Fewer intrusive episodes reported.',date:Date.now()-86400000*6,by:'Dr. Reyes'}],checkins:[{date:Date.now()-3600000*4,anxiety:4,sleep:7,risk:'MEDIUM',triggers:['News/Media Exposure'],note:'Watched news — triggered. Used breathing.',coping:['Deep Breathing']},{date:Date.now()-86400000,anxiety:5,sleep:6,risk:'MEDIUM',triggers:[],note:'Okay day',coping:['Exercise']}]},
+  {id:'P006',name:'Dana W.',age:22,condition:'Assembly Line',avatar:'#64748b',initials:'DW',scores:[],sleep:[],streak:0,triggers:[],coping:[],flags:['NO_CHECK_IN_5_DAYS'],risk:'MISSING',pathway:'Module 1 — Understanding Your Mental Health',pathwayPct:10,notes:[{text:'No check-in for 5 days. Attempted contact — no response. Welfare check may be needed.',date:Date.now()-86400000,by:'Dr. Reyes'}],checkins:[]},
+  {id:'P007',name:'Chris B.',age:28,condition:'Equipment Handling',avatar:'#0891b2',initials:'CB',scores:[3,3,2,4,3,2,3],sleep:[7,8,7,8,7,8,8],streak:15,triggers:['Equipment Calibration'],coping:['Meditation','Journaling'],flags:[],risk:'LOW',pathway:'Module 3 — Progress & Reflection',pathwayPct:65,notes:[],checkins:[{date:Date.now()-3600000*6,anxiety:3,sleep:8,risk:'LOW',triggers:['Equipment Calibration'],note:'Read something worrying online — used grounding.',coping:['Meditation']}]},
+  {id:'P008',name:'Taylor N.',age:41,condition:'Production Workflow',avatar:'#dc2626',initials:'TN',scores:[6,5,7,6,5,6,7],sleep:[5,6,5,6,6,5,5],streak:7,triggers:['Work/Study Stress','Financial Worries'],coping:['Exercise','Talking to Someone'],flags:['TRENDING_UP'],risk:'MEDIUM',pathway:'Module 2 — Coping Skills',pathwayPct:40,notes:[{text:'Redundancy situation ongoing. Supporting patient through career transition stress.',date:Date.now()-86400000*2,by:'Dr. Reyes'}],checkins:[{date:Date.now()-3600000*1,anxiety:7,sleep:5,risk:'HIGH',triggers:['Work/Study Stress','Financial Worries'],note:'Interview went badly',coping:[]},{date:Date.now()-86400000,anxiety:6,sleep:6,risk:'MEDIUM',triggers:['Financial Worries'],note:'Bills building up',coping:['Exercise']}]}
+];
+
+let ALERTS=[
+  {id:'a1',pid:'P001',title:'Critical competency flag — Jordan M.',sub:'Employee scored 9/10 on difficulty rating. Supervisor review recommended.',time:Date.now()-3600000*2,risk:'CRITICAL',acked:false},
+  {id:'a2',pid:'P006',title:'No check-in for 5 days — Dana W.',sub:'Employee has not completed a training check-in. Follow-up may be needed.',time:Date.now()-86400000,risk:'MISSING',acked:false},
+  {id:'a3',pid:'P008',title:'Anxiety trend increasing — Taylor N.',sub:'Anxiety scores have risen for 3 consecutive check-ins.',time:Date.now()-3600000,risk:'HIGH',acked:false}
+];
+
+let PATIENTS=[],ALL_CHECKINS=[],currentPatient=null,dark=true,demoMode=true,therapistName='Dr. Reyes',therapistRole='Training Manager';
+
+function sGet(k,d){try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):d;}catch{return d;}}
+function sSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+
+function loadState(){
+  dark=sGet('4p3x_theme','dark')==='dark';
+  demoMode=sGet('4p3x_demo_mode',true);
+  therapistName=sGet('4p3x_therapist_name','Dr. Reyes');
+  therapistRole=sGet('4p3x_therapist_role','Training Manager');
+  const savedNotes=sGet('4p3x_clinician_notes',{});
+  if(demoMode){
+    PATIENTS=JSON.parse(JSON.stringify(DEMO_PATIENTS));
+  } else {
+    PATIENTS=sGet('4p3x_real_patients',[]);
+  }
+  PATIENTS.forEach(p=>{if(savedNotes[p.id]){p.notes=[...savedNotes[p.id],...p.notes.filter(n=>!n._saved)];}});
+  ALL_CHECKINS=PATIENTS.flatMap(p=>p.checkins.map(ci=>({...ci,patient:p}))).sort((a,b)=>b.date-a.date);
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  loadState();applyTheme();updateClock();setInterval(updateClock,30000);
+  renderAll();updateDemoUI();updateTherapistProfile();
+  document.getElementById('settingName').value=therapistName;
+  document.getElementById('settingRole').value=therapistRole;
+  loadCrisisSettings();
+  loadBackendConfigUI();
+  loadShareUI();
+  updateSyncUI();
+  const hr=new Date().getHours();
+  document.getElementById('overviewGreeting').textContent=(hr<12?'Good morning':hr<17?'Good afternoon':'Good evening')+', '+therapistName+' 👋';
+});
+
+function renderAll(){renderStats();renderOverviewChart();renderDonut();renderUrgentGrid();renderPatientsTable();renderHighRisk();renderCheckins();renderAlerts();renderAllNotes();renderAnalytics();renderTimeline();}
+
+function updateClock(){const n=new Date();document.getElementById('clockEl').textContent=n.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+function toggleTheme(){dark=!dark;sSet('4p3x_theme',dark?'dark':'light');applyTheme();}
+function applyTheme(){document.body.dataset.theme=dark?'':'light';}
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  const ov=document.getElementById('overlay');
+  const hb=document.getElementById('hamburger');
+  const isOpen=sb.classList.toggle('open');
+  ov.classList.toggle('open',isOpen);
+  if(hb)hb.setAttribute('aria-expanded',isOpen?'true':'false');
+  // Prevent body scroll when sidebar open on mobile
+  document.body.style.overflow=isOpen?'hidden':'';
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+  const hb=document.getElementById('hamburger');
+  if(hb)hb.setAttribute('aria-expanded','false');
+  document.body.style.overflow='';
+}
+
+function showView(v){
+  document.querySelectorAll('.view').forEach(el=>el.classList.add('hidden'));
+  document.getElementById('view-'+v).classList.remove('hidden');
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  const nb=document.getElementById('nav-'+v);if(nb)nb.classList.add('active');
+  const titles={overview:'Training Control Dashboard',alerts:'Training Flags',patients:'All Employees',highrisk:'Employees Requiring Attention',checkins:'Training Check-Ins',analytics:'Analytics',timeline:'Activity Timeline',notes:'Supervisor Notes',settings:'Settings'};
+  document.getElementById('topbarTitle').textContent=titles[v]||'Dashboard';
+  if(v==='settings'){loadBackendConfigUI();loadShareUI();updateSyncUI();}
+  closeSidebar();
+}
+
+function toggleDemoMode(){
+  demoMode=!demoMode;sSet('4p3x_demo_mode',demoMode);loadState();updateDemoUI();renderAll();
+  showToast(demoMode?'Demo Mode enabled — showing sample training data':'Demo Mode disabled — Live Mode ready');
+}
+function updateDemoUI(){
+  const on=demoMode;
+  document.getElementById('demoToggle').className='toggle '+(on?'on':'off');
+  document.getElementById('demoStateLabel').textContent=on?'ON':'OFF';
+  document.getElementById('demoBanner').classList[on?'remove':'add']('hidden');
+  document.getElementById('demoIndicator').textContent=on?'Demo Mode':'Live';
+  document.getElementById('presentationDataDesc').textContent=on?'Enabled — 8 sample employees (Demo Mode)':'Disabled — Live Mode data only';
+  document.getElementById('presentationDataBadge').textContent=on?'Enabled':'Disabled';
+  document.getElementById('presentationDataBadge').className='risk-badge '+(on?'LOW':'MISSING');
+}
+function updateTherapistProfile(){
+  const n=document.getElementById('clinicianName');const i=document.getElementById('clinicianInitials');const r=document.getElementById('clinicianRole');
+  if(n)n.textContent=therapistName;if(r)r.textContent=therapistRole;
+  const initials=therapistName.split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  if(i)i.textContent=initials||'DR';
+}
+
+function renderStats(){
+  const total=PATIENTS.length,critical=PATIENTS.filter(p=>p.risk==='CRITICAL').length,high=PATIENTS.filter(p=>p.risk==='HIGH').length,missing=PATIENTS.filter(p=>p.risk==='MISSING'||p.risk==='MISSING_DATA').length;
+  const withScores=PATIENTS.filter(p=>p.scores.length);
+  const avgAnx=withScores.length?(withScores.reduce((a,p)=>a+(p.scores[p.scores.length-1]||0),0)/withScores.length).toFixed(1):'—';
+  document.getElementById('statsRow').innerHTML=`<div class="stat-card"><div class="stat-val">${total}</div><div class="stat-lbl">Active Patients</div></div><div class="stat-card d"><div class="stat-val">${critical}</div><div class="stat-lbl">Critical</div></div><div class="stat-card w"><div class="stat-val">${high}</div><div class="stat-lbl">High</div></div><div class="stat-card m"><div class="stat-val">${missing}</div><div class="stat-lbl">Missing Data</div></div><div class="stat-card g"><div class="stat-val">${avgAnx}</div><div class="stat-lbl">Avg Anxiety</div></div>`;
+  document.getElementById('hrBadge').textContent=high+critical;
+  document.getElementById('ciBadge').textContent=ALL_CHECKINS.length;
+}
+
+function renderOverviewChart(){
+  const canvas=document.getElementById('overviewChart');if(!canvas)return;
+  const days=7,labels=Array.from({length:days},(_,i)=>{const d=new Date(Date.now()-86400000*(days-1-i));return d.toLocaleDateString([],{weekday:'short'});});
+  const vals=labels.map((_,d)=>{const pts=PATIENTS.filter(p=>p.scores.length>d).map(p=>p.scores[d]||0);return pts.length?(pts.reduce((a,b)=>a+b,0)/pts.length).toFixed(1):0;});
+  drawLine(canvas,labels,vals,'#c9a84c',true,10);
+}
+
+function renderDonut(){
+  const canvas=document.getElementById('donutChart');if(!canvas)return;
+  const counts={LOW:0,MEDIUM:0,HIGH:0,CRITICAL:0,MISSING:0};
+  PATIENTS.forEach(p=>counts[p.risk==='MISSING_DATA'?'MISSING':p.risk]=(counts[p.risk==='MISSING_DATA'?'MISSING':p.risk]||0)+1);
+  const colors={LOW:'#22c55e',MEDIUM:'#f59e0b',HIGH:'#ef4444',CRITICAL:'#a855f7',MISSING:'#64748b'};
+  const total=PATIENTS.length||1;const ctx=canvas.getContext('2d');ctx.clearRect(0,0,90,90);
+  let start=-Math.PI/2;
+  Object.entries(counts).forEach(([k,v])=>{if(!v)return;const sl=(v/total)*Math.PI*2;ctx.beginPath();ctx.moveTo(45,45);ctx.arc(45,45,40,start,start+sl);ctx.closePath();ctx.fillStyle=colors[k];ctx.fill();start+=sl;});
+  ctx.beginPath();ctx.arc(45,45,25,0,Math.PI*2);ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--surface').trim()||'#111';ctx.fill();
+  document.getElementById('donutLegend').innerHTML=Object.entries(counts).filter(([,v])=>v>0).map(([k,v])=>`<div class="dl-item"><div class="dl-dot" style="background:${colors[k]}"></div>${k} (${v})</div>`).join('');
+}
+
+function renderUrgentGrid(){
+  const urgent=PATIENTS.filter(p=>['CRITICAL','HIGH','MISSING','MISSING_DATA'].includes(p.risk));
+  const grid=document.getElementById('urgentGrid');
+  if(!urgent.length){grid.innerHTML='<p class="empty-state">✅ No patients currently flagged for attention.</p>';return;}
+  grid.innerHTML=urgent.map(p=>patCard(p)).join('');
+  grid.querySelectorAll('.pc').forEach(el=>el.addEventListener('click',()=>openDetail(el.dataset.pid)));
+}
+
+function patCard(p){
+  const last=p.scores[p.scores.length-1];const sc=last==null?'sn':last<=3?'sl':last<=5?'sm':last<=7?'sh':'sc';
+  const lastCI=p.checkins[0]?tAgo(p.checkins[0].date):'No data';
+  const td=_trend(p.scores),tI=td==='up'?'↑':td==='down'?'↓':'→',tC=td==='up'?'trend-up':td==='down'?'trend-down':'trend-flat';
+  const spark=miniSpark(p.scores);
+  return `<div class="pc ${p.risk}" data-pid="${p.id}">
+    <div class="pc-hdr"><div class="pc-avatar" style="background:${p.avatar}">${p.initials}</div><div class="pc-info"><div class="pc-name">${p.name}</div><div class="pc-id">${p.condition} · Age ${p.age}</div><div class="pc-id">Pathway: ${p.pathway||'Not started'}</div></div><div class="pc-score ${sc}">${last!=null?last:'—'}</div></div>
+    <div class="pc-metrics"><div class="pc-metric"><div class="pcm-val">${p.sleep.length?p.sleep[p.sleep.length-1]+'h':'—'}</div><div class="pcm-lbl">Sleep</div></div><div class="pc-metric"><div class="pcm-val">${p.streak}</div><div class="pcm-lbl">Streak</div></div><div class="pc-metric"><div class="pcm-val">${p.pathwayPct||0}%</div><div class="pcm-lbl">Pathway</div></div></div>
+    ${spark?`<div style="margin-bottom:8px">${spark}</div>`:''}
+    <div class="pc-footer"><span class="risk-badge ${p.risk}">${rLbl(p.risk)}</span><span>Last: ${lastCI}</span><span class="${tC}">${tI}</span>${p.flags.length?`<div class="pc-flags">${p.flags.slice(0,2).map(f=>`<span class="pc-flag warn">${f.replace(/_/g,' ')}</span>`).join('')}</div>`:''}</div>
+  </div>`;
+}
+
+function miniSpark(s){if(!s||s.length<2)return'';const w=100,h=28,mx=Math.max(...s,1);const pts=s.slice(-7).map((v,i,a)=>`${(i/(a.length-1))*w},${h-(v/mx)*h}`).join(' ');return`<svg viewBox="0 0 100 28" style="width:100%;height:28px"><polyline points="${pts}" fill="none" stroke="var(--gold)" stroke-width="1.5"/></svg>`;}
+function _trend(s){if(s.length<2)return'flat';const d=s[s.length-1]-s[s.length-2];return d>=2?'up':d<=-2?'down':'flat';}
+function rLbl(r){return{LOW:'Low',MEDIUM:'Medium',HIGH:'High',CRITICAL:'Critical',MISSING:'Missing Data',MISSING_DATA:'Missing Data'}[r]||r;}
+
+function renderPatientsTable(search=''){
+  if(!search)search=(document.getElementById('ptSearch')||{}).value||'';
+  const riskF=(document.getElementById('riskFilter')||{}).value||'',sortF=(document.getElementById('sortFilter')||{}).value||'risk';
+  let pts=[...PATIENTS];
+  if(search){const q=search.toLowerCase();pts=pts.filter(p=>p.name.toLowerCase().includes(q)||p.id.toLowerCase().includes(q)||p.condition.toLowerCase().includes(q));}
+  if(riskF)pts=pts.filter(p=>p.risk===riskF||(riskF==='MISSING'&&p.risk==='MISSING_DATA'));
+  const ro={CRITICAL:0,HIGH:1,MEDIUM:2,MISSING_DATA:3,MISSING:3,LOW:4};
+  if(sortF==='risk')pts.sort((a,b)=>(ro[a.risk]||9)-(ro[b.risk]||9));
+  else if(sortF==='name')pts.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(sortF==='score')pts.sort((a,b)=>(b.scores[b.scores.length-1]||0)-(a.scores[a.scores.length-1]||0));
+  else pts.sort((a,b)=>(b.checkins[0]?.date||0)-(a.checkins[0]?.date||0));
+  document.getElementById('patientCount').textContent=!demoMode&&PATIENTS.length===0?'No patients added yet':`${pts.length} of ${PATIENTS.length} patients`;
+  const tbody=document.getElementById('patientsTableBody');
+  if(!demoMode&&PATIENTS.length===0){tbody.innerHTML='<tr><td colspan="9"><div class="empty-state-block"><div class="es-icon">👥</div><div class="es-title">No patients have been added yet.</div><div class="es-sub">Demo Mode is off. Add real patients or connect a backend to start monitoring.</div></div></td></tr>';return;}
+  if(!pts.length){tbody.innerHTML='<tr><td colspan="9" class="empty-state">No patients match.</td></tr>';return;}
+  tbody.innerHTML=pts.map(p=>{const td=_trend(p.scores),tI=td==='up'?'↑':td==='down'?'↓':'→',tC=td==='up'?'trend-up':td==='down'?'trend-down':'trend-flat';return`<tr data-pid="${p.id}" style="cursor:pointer"><td><strong>${p.name}</strong><br/><span style="font-size:11px;color:var(--muted)">${p.condition}</span></td><td><span class="risk-badge ${p.risk}">${rLbl(p.risk)}</span></td><td>${p.scores.length?p.scores[p.scores.length-1]+'/10':'—'}</td><td>${p.sleep.length?p.sleep[p.sleep.length-1]+'h':'—'}</td><td>${p.streak}d</td><td>${p.checkins[0]?tAgo(p.checkins[0].date):'Never'}</td><td class="${tC}">${tI}</td><td>${p.flags.length?p.flags.map(f=>`<span class="pc-flag warn" style="font-size:9px">${f.replace(/_/g,' ')}</span>`).join(' '):'None'}</td><td><button class="btn-view" onclick="event.stopPropagation();openDetail('${p.id}')">Review →</button></td></tr>`;}).join('');
+  tbody.querySelectorAll('tr').forEach(row=>row.addEventListener('click',()=>openDetail(row.dataset.pid)));
+}
+
+function renderHighRisk(){const hrs=PATIENTS.filter(p=>['CRITICAL','HIGH','MISSING','MISSING_DATA'].includes(p.risk));const el=document.getElementById('highRiskContent');if(!hrs.length){el.innerHTML='<p class="empty-state">✅ No patients with active support flags.</p>';return;}el.innerHTML=`<div class="patient-grid">${hrs.map(p=>patCard(p)).join('')}</div>`;el.querySelectorAll('.pc').forEach(c=>c.addEventListener('click',()=>openDetail(c.dataset.pid)));}
+
+function renderCheckins(){
+  const f=(document.getElementById('ciFilter')||{}).value||'all';let cis=[...ALL_CHECKINS];
+  const today=new Date();today.setHours(0,0,0,0);
+  if(f==='today')cis=cis.filter(c=>new Date(c.date)>=today);else if(f==='HIGH')cis=cis.filter(c=>c.risk==='HIGH');else if(f==='CRITICAL')cis=cis.filter(c=>c.risk==='CRITICAL');
+  const tbody=document.getElementById('checkinsTableBody');
+  if(!cis.length){tbody.innerHTML='<tr><td colspan="8" class="empty-state">No check-ins match.</td></tr>';return;}
+  tbody.innerHTML=cis.slice(0,50).map(c=>`<tr><td><strong>${c.patient.name}</strong></td><td>${tAgo(c.date)}</td><td>${c.anxiety}/10</td><td>${c.sleep}h</td><td><span class="risk-badge ${c.risk}">${rLbl(c.risk)}</span></td><td>${(c.triggers||[]).join(', ')||'None'}</td><td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c.note||''}">${c.note||'—'}</td><td><button class="btn-view" onclick="openDetail('${c.patient.id}')">View →</button></td></tr>`).join('');
+}
+
+function renderAnalytics(){
+  const days=parseInt((document.getElementById('anaRange')||{}).value||7);
+  const labels=Array.from({length:days},(_,i)=>{const d=new Date(Date.now()-86400000*(days-1-i));return d.toLocaleDateString([],{month:'short',day:'numeric'});});
+  const anxV=labels.map((_,d)=>{const pts=PATIENTS.filter(p=>p.scores.length>d).map(p=>p.scores[d%p.scores.length]||0);return pts.length?(pts.reduce((a,b)=>a+b,0)/pts.length).toFixed(1):0;});
+  const slpV=labels.map((_,d)=>{const pts=PATIENTS.filter(p=>p.sleep.length>d).map(p=>p.sleep[d%p.sleep.length]||0);return pts.length?(pts.reduce((a,b)=>a+b,0)/pts.length).toFixed(1):0;});
+  drawLine(document.getElementById('anaAnxiousChart'),labels,anxV,'#ef4444',true,10);
+  drawLine(document.getElementById('anaSleepChart'),labels,slpV,'#22c55e',true,10);
+  const trigC={};PATIENTS.flatMap(p=>p.triggers).forEach(t=>{trigC[t]=(trigC[t]||0)+1;});
+  const topT=Object.entries(trigC).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  drawBar(document.getElementById('anaTriggersChart'),topT.map(t=>t[0]),topT.map(t=>t[1]),'#a855f7');
+  drawBar(document.getElementById('anaEngChart'),PATIENTS.map(p=>p.name.split(' ')[0]),PATIENTS.map(p=>Math.min(p.checkins.length,7)),'#c9a84c');
+}
+
+function renderTimeline(){
+  const el=document.getElementById('timelineContent');
+  const events=[];PATIENTS.forEach(p=>{p.checkins.forEach(c=>events.push({...c,type:'checkin',patient:p}));p.notes.forEach(n=>events.push({date:n.date,type:'note',patient:p,text:n.text,by:n.by}));});
+  events.sort((a,b)=>b.date-a.date);
+  if(!events.length){el.innerHTML='<p class="empty-state">No activity yet.</p>';return;}
+  el.innerHTML=events.slice(0,40).map(ev=>{
+    if(ev.type==='checkin')return`<div class="note-card" style="border-left-color:${ev.risk==='CRITICAL'?'var(--critical)':ev.risk==='HIGH'?'var(--high)':ev.risk==='MEDIUM'?'var(--warn)':'var(--green)'}"><div class="nc-patient">📋 Check-In — ${ev.patient.name}</div><div class="nc-text">Anxiety: ${ev.anxiety}/10 · Sleep: ${ev.sleep}h · ${ev.note||'No note'}</div><div class="nc-meta">${new Date(ev.date).toLocaleString()} · <span class="risk-badge ${ev.risk}">${rLbl(ev.risk)}</span></div></div>`;
+    return`<div class="note-card"><div class="nc-patient">📝 Supervisor Note — ${ev.patient.name}</div><div class="nc-text">${ev.text}</div><div class="nc-meta">${new Date(ev.date).toLocaleString()} · ${ev.by}</div></div>`;
+  }).join('');
+}
+
+function renderAlerts(){
+  const el=document.getElementById('alertsList');
+  if(!ALERTS.length){el.innerHTML='<p class="empty-state">No alerts.</p>';return;}
+  el.innerHTML=ALERTS.map(a=>`<div class="alert-card ${a.risk} ${a.acked?'acked':''}" id="alert-${a.id}"><div class="alert-icon">${a.risk==='CRITICAL'?'🚨':a.risk==='MISSING'?'❓':'⚠️'}</div><div class="alert-body"><div class="alert-title">${a.title}</div><div class="alert-sub">${a.sub}</div><div class="alert-time">${tAgo(a.time)}</div><div class="alert-actions"><button class="btn-ack" onclick="ackAlert('${a.id}')">✓ Acknowledge</button><button class="btn-primary sm" onclick="openDetail('${a.pid}')">Review Patient</button></div></div></div>`).join('');
+  const u=ALERTS.filter(a=>!a.acked).length;document.getElementById('alertBadge').textContent=u||'';document.getElementById('notifCount').textContent=u||'';
+}
+function ackAlert(id){const a=ALERTS.find(x=>x.id===id);if(a)a.acked=true;renderAlerts();showToast('Alert acknowledged');}
+function ackAll(){ALERTS.forEach(a=>a.acked=true);renderAlerts();showToast('All alerts acknowledged ✓');}
+
+function renderAllNotes(){
+  if(!demoMode&&PATIENTS.length===0){const el=document.getElementById('notesList');if(el)el.innerHTML='<div class="empty-state-block"><div class="es-icon">📝</div><div class="es-title">No live training progress has been recorded yet.</div><div class="es-sub">Demo Mode is off. Patient notes and progress will appear here when real patients are active.</div></div>';return;}
+  const all=PATIENTS.flatMap(p=>p.notes.map(n=>({...n,patient:p}))).sort((a,b)=>b.date-a.date);
+  const el=document.getElementById('notesList');
+  if(!all.length){el.innerHTML='<p class="empty-state">No supervisor notes yet.</p>';return;}
+  el.innerHTML=all.slice(0,30).map(n=>`<div class="note-card"><div class="nc-patient">📝 ${n.patient.name} <span style="color:var(--muted);font-weight:400">— ${n.patient.condition}</span></div><div class="nc-text">${n.text}</div><div class="nc-meta">${new Date(n.date).toLocaleString()} · ${n.by} ${n.followUp?`· <strong>${n.followUp}</strong>`:''}</div></div>`).join('');
+}
+
+function globalSearch(q){if(!q)return;const p=PATIENTS.find(x=>x.name.toLowerCase().includes(q.toLowerCase())||x.id.toLowerCase().includes(q.toLowerCase()));if(p)openDetail(p.id);}
+
+// ════════════════════════════════════════════════════════════════════
+// BACKEND CONFIGURATION — PART 2 + 3
+// ════════════════════════════════════════════════════════════════════
+
+const BACKEND_SETTINGS_KEY = '4p3x_backend_settings';
+
+function getDefaultBackendSettings(){
+  return {
+    mode: 'local',
+    supabase:{ url:'', anonKey:'', status:'not_configured', lastTestedAt:null, errorMessage:'' },
+    firebase:{ projectId:'', apiKey:'', authDomain:'', status:'not_configured', lastTestedAt:null, errorMessage:'' },
+    aws:{ endpoint:'', region:'', publicClientKey:'', status:'not_configured', lastTestedAt:null, errorMessage:'' },
+    custom:{ baseUrl:'', publicToken:'', status:'not_configured', lastTestedAt:null, errorMessage:'' }
+  };
+}
+
+function loadBackendSettings(){
+  return sGet(BACKEND_SETTINGS_KEY, getDefaultBackendSettings());
+}
+
+function saveBackendSettings(bs){
+  sSet(BACKEND_SETTINGS_KEY, bs);
+}
+
+function onBackendModeChange(){
+  const mode = document.getElementById('backendModeSelect').value;
+  document.querySelectorAll('.backend-panel').forEach(p=>p.style.display='none');
+  const panel = document.getElementById('backend-'+mode);
+  if(panel) panel.style.display='block';
+  const bs = loadBackendSettings();
+  bs.mode = mode;
+  saveBackendSettings(bs);
+  updateSyncUI();
+}
+
+function loadBackendConfigUI(){
+  const bs = loadBackendSettings();
+  const sel = document.getElementById('backendModeSelect');
+  if(sel) sel.value = bs.mode||'local';
+  // Show correct panel
+  document.querySelectorAll('.backend-panel').forEach(p=>p.style.display='none');
+  const panel = document.getElementById('backend-'+(bs.mode||'local'));
+  if(panel) panel.style.display='block';
+  // Populate Supabase
+  const sbUrl=document.getElementById('sbUrl');const sbKey=document.getElementById('sbKey');
+  if(sbUrl) sbUrl.value=bs.supabase.url||'';
+  if(sbKey) sbKey.value=bs.supabase.anonKey||'';
+  setStatusBadge('sbStatus', bs.supabase.status);
+  // Populate Firebase
+  const fbPid=document.getElementById('fbProjectId');const fbKey=document.getElementById('fbApiKey');const fbAuth=document.getElementById('fbAuthDomain');
+  if(fbPid) fbPid.value=bs.firebase.projectId||'';
+  if(fbKey) fbKey.value=bs.firebase.apiKey||'';
+  if(fbAuth) fbAuth.value=bs.firebase.authDomain||'';
+  setStatusBadge('fbStatus', bs.firebase.status);
+  // Populate AWS
+  const awsEp=document.getElementById('awsEndpoint');const awsReg=document.getElementById('awsRegion');const awsCk=document.getElementById('awsClientKey');
+  if(awsEp) awsEp.value=bs.aws.endpoint||'';
+  if(awsReg) awsReg.value=bs.aws.region||'';
+  if(awsCk) awsCk.value=bs.aws.publicClientKey||'';
+  setStatusBadge('awsStatus', bs.aws.status);
+  // Populate Custom
+  const cuUrl=document.getElementById('customUrl');const cuTok=document.getElementById('customToken');
+  if(cuUrl) cuUrl.value=bs.custom.baseUrl||'';
+  if(cuTok) cuTok.value=bs.custom.publicToken||'';
+  setStatusBadge('customStatus', bs.custom.status);
+}
+
+function setStatusBadge(elId, status){
+  const el=document.getElementById(elId);if(!el)return;
+  const labels={not_configured:'Not configured',configured:'Configured',testing:'Testing…',connected:'Connection passed',failed:'Connection failed'};
+  const classes={not_configured:'MISSING',configured:'MEDIUM',testing:'MEDIUM',connected:'LOW',failed:'HIGH'};
+  el.textContent=labels[status]||status;
+  el.className='risk-badge '+(classes[status]||'MISSING');
+}
+
+function saveBackendConfig(provider){
+  const bs=loadBackendSettings();
+  if(provider==='supabase'){
+    bs.supabase.url=(document.getElementById('sbUrl')||{}).value||'';
+    bs.supabase.anonKey=(document.getElementById('sbKey')||{}).value||'';
+    bs.supabase.status=bs.supabase.url&&bs.supabase.anonKey?'configured':'not_configured';
+    bs.supabase.errorMessage='';
+    setStatusBadge('sbStatus',bs.supabase.status);
+  } else if(provider==='firebase'){
+    bs.firebase.projectId=(document.getElementById('fbProjectId')||{}).value||'';
+    bs.firebase.apiKey=(document.getElementById('fbApiKey')||{}).value||'';
+    bs.firebase.authDomain=(document.getElementById('fbAuthDomain')||{}).value||'';
+    bs.firebase.status=bs.firebase.projectId&&bs.firebase.apiKey?'configured':'not_configured';
+    setStatusBadge('fbStatus',bs.firebase.status);
+  } else if(provider==='aws'){
+    bs.aws.endpoint=(document.getElementById('awsEndpoint')||{}).value||'';
+    bs.aws.region=(document.getElementById('awsRegion')||{}).value||'';
+    bs.aws.publicClientKey=(document.getElementById('awsClientKey')||{}).value||'';
+    bs.aws.status=bs.aws.endpoint?'configured':'not_configured';
+    setStatusBadge('awsStatus',bs.aws.status);
+  } else if(provider==='custom'){
+    bs.custom.baseUrl=(document.getElementById('customUrl')||{}).value||'';
+    bs.custom.publicToken=(document.getElementById('customToken')||{}).value||'';
+    bs.custom.status=bs.custom.baseUrl?'configured':'not_configured';
+    setStatusBadge('customStatus',bs.custom.status);
+  }
+  saveBackendSettings(bs);
+  showToast('Configuration saved ✓');
+  updateSyncUI();
+}
+
+function clearBackendConfig(provider){
+  const bs=loadBackendSettings();
+  if(provider==='supabase'){bs.supabase={url:'',anonKey:'',status:'not_configured',lastTestedAt:null,errorMessage:''};
+    const u=document.getElementById('sbUrl');const k=document.getElementById('sbKey');if(u)u.value='';if(k)k.value='';setStatusBadge('sbStatus','not_configured');
+  } else if(provider==='firebase'){bs.firebase={projectId:'',apiKey:'',authDomain:'',status:'not_configured',lastTestedAt:null,errorMessage:''};
+    const p=document.getElementById('fbProjectId');const a=document.getElementById('fbApiKey');const d=document.getElementById('fbAuthDomain');if(p)p.value='';if(a)a.value='';if(d)d.value='';setStatusBadge('fbStatus','not_configured');
+  } else if(provider==='aws'){bs.aws={endpoint:'',region:'',publicClientKey:'',status:'not_configured',lastTestedAt:null,errorMessage:''};
+    const e=document.getElementById('awsEndpoint');const r=document.getElementById('awsRegion');const c=document.getElementById('awsClientKey');if(e)e.value='';if(r)r.value='';if(c)c.value='';setStatusBadge('awsStatus','not_configured');
+  } else if(provider==='custom'){bs.custom={baseUrl:'',publicToken:'',status:'not_configured',lastTestedAt:null,errorMessage:''};
+    const u=document.getElementById('customUrl');const t=document.getElementById('customToken');if(u)u.value='';if(t)t.value='';setStatusBadge('customStatus','not_configured');
+  }
+  saveBackendSettings(bs);
+  showToast('Configuration cleared');
+  updateSyncUI();
+}
+
+async function testBackendConnection(provider){
+  const bs=loadBackendSettings();
+  const msgEl=document.getElementById(provider.substring(0,2)+'StatusMsg')||document.getElementById({supabase:'sbStatusMsg',firebase:'fbStatusMsg',aws:'awsStatusMsg',custom:'customStatusMsg'}[provider]);
+  const statusEl=document.getElementById({supabase:'sbStatus',firebase:'fbStatus',aws:'awsStatus',custom:'customStatus'}[provider]);
+
+  function showMsg(txt, isError){ if(!msgEl)return; msgEl.style.display='block'; msgEl.style.color=isError?'var(--high)':'var(--green)'; msgEl.textContent=txt; }
+
+  if(provider==='supabase'){
+    if(!bs.supabase.url||!bs.supabase.anonKey){showMsg('URL and Anon Public Key are required before testing.',true);return;}
+    bs.supabase.status='testing';saveBackendSettings(bs);setStatusBadge('sbStatus','testing');
+    showMsg('Testing connection…',false);
+    try{
+      // Safe lightweight test — attempt to fetch the project URL head
+      const testUrl=bs.supabase.url.replace(/\/$/, '')+'/rest/v1/';
+      const res=await fetch(testUrl,{method:'GET',headers:{'apikey':bs.supabase.anonKey,'Authorization':'Bearer '+bs.supabase.anonKey},signal:AbortSignal.timeout(8000)});
+      if(res.ok||res.status===400||res.status===401||res.status===200){
+        bs.supabase.status='connected';bs.supabase.lastTestedAt=new Date().toISOString();bs.supabase.errorMessage='';
+        saveBackendSettings(bs);setStatusBadge('sbStatus','connected');
+        showMsg('✅ Connection passed — Supabase project is reachable.',false);
+      } else {
+        bs.supabase.status='failed';bs.supabase.errorMessage='HTTP '+res.status;
+        saveBackendSettings(bs);setStatusBadge('sbStatus','failed');
+        showMsg('⚠️ Connection failed: HTTP '+res.status+'. Check your project URL.',true);
+      }
+    } catch(err){
+      const msg=err.name==='TimeoutError'?'Connection timed out.':err.name==='TypeError'?'Supabase client not installed or CORS blocked. Configuration saved for setup.':'Error: '+err.message;
+      bs.supabase.status='failed';bs.supabase.errorMessage=msg;saveBackendSettings(bs);
+      setStatusBadge('sbStatus','failed');showMsg('⚠️ '+msg,true);
+    }
+  } else if(provider==='custom'){
+    const url=bs.custom.baseUrl;
+    if(!url){showMsg('Base API URL is required.',true);return;}
+    bs.custom.status='testing';saveBackendSettings(bs);setStatusBadge('customStatus','testing');
+    showMsg('Testing connection…',false);
+    try{
+      const res=await fetch(url.replace(/\/$/, '')+'/health',{method:'GET',signal:AbortSignal.timeout(8000)});
+      bs.custom.status=res.ok?'connected':'failed';bs.custom.lastTestedAt=new Date().toISOString();
+      saveBackendSettings(bs);setStatusBadge('customStatus',bs.custom.status);
+      showMsg(res.ok?'✅ Health endpoint reachable.':'⚠️ Health endpoint returned HTTP '+res.status+'. CORS may be blocking.',!res.ok);
+    } catch(err){
+      bs.custom.status='failed';saveBackendSettings(bs);setStatusBadge('customStatus','failed');
+      showMsg('⚠️ Configuration saved. Live connector may not be installed yet or CORS is blocking.',true);
+    }
+  } else {
+    // Firebase / AWS — save and advise
+    saveBackendConfig(provider);
+    if(msgEl){msgEl.style.display='block';msgEl.style.color='var(--muted)';msgEl.textContent='Configuration saved. Live connector SDK not installed yet. Set up the SDK in your project to enable full sync.';}
+    showToast('Configuration saved for setup ✓');
+  }
+  updateSyncUI();
+}
+
+// ════════════════════════════════════════════════════════════════════
+// SYNC SYSTEM — PART 6
+// ════════════════════════════════════════════════════════════════════
+
+const SYNC_QUEUE_KEY = 'ap3x_sync_queue';
+
+function getSyncQueue(){ return sGet(SYNC_QUEUE_KEY,[]); }
+
+function enqueueSyncEvent(type,data){
+  const q=getSyncQueue();
+  q.push({id:Date.now()+'_'+Math.random().toString(36).slice(2),type,data,queued_at:new Date().toISOString(),status:'pending'});
+  sSet(SYNC_QUEUE_KEY,q);
+  updateSyncUI();
+}
+
+async function manualSync(){
+  const bs=loadBackendSettings();
+  const q=getSyncQueue();
+  if(q.length===0){showToast('No pending records to sync.');return;}
+  if(bs.mode==='local'||!bs[bs.mode]||bs[bs.mode].status!=='connected'){
+    showToast('No backend configured or connected. Records remain saved locally.');
+    return;
+  }
+  showToast('Sync started — '+q.length+' record(s) queued…');
+  // In backend-ready mode, records stay queued (no live SDK installed)
+  // Data is preserved — never deleted on failed sync
+  const syncErr=document.getElementById('syncErrorMsg');
+  if(syncErr){syncErr.style.display='block';syncErr.textContent='Backend-ready sync: records are queued. Install backend SDK to enable live sync.';}
+  updateSyncUI();
+}
+
+function updateSyncUI(){
+  const bs=loadBackendSettings();
+  const q=getSyncQueue();
+  const modeLbl={local:'Local-only',supabase:'Supabase',firebase:'Firebase',aws:'AWS / Amplify',custom:'Custom REST'}[bs.mode]||'Local-only';
+  const modeClass={local:'MISSING',supabase:bs.supabase.status==='connected'?'LOW':'MEDIUM',firebase:bs.firebase.status==='connected'?'LOW':'MEDIUM',aws:bs.aws.status==='connected'?'LOW':'MEDIUM',custom:bs.custom.status==='connected'?'LOW':'MEDIUM'}[bs.mode]||'MISSING';
+  const connStatus=bs.mode==='local'?'Local-only':((bs[bs.mode]&&bs[bs.mode].status)||'not_configured');
+  const connClass={not_configured:'MISSING',configured:'MEDIUM',testing:'MEDIUM',connected:'LOW',failed:'HIGH',local_only:'MISSING'}[connStatus]||'MISSING';
+  const lastSynced=bs.mode!=='local'&&bs[bs.mode]&&bs[bs.mode].lastTestedAt?new Date(bs[bs.mode].lastTestedAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'Never';
+
+  const setEl=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val;};
+  const setClass=(id,cls)=>{const e=document.getElementById(id);if(e)e.className='risk-badge '+cls;};
+
+  setEl('syncModeBadge',modeLbl);setClass('syncModeBadge',modeClass);
+  setEl('syncPendingCount',q.length);
+  setEl('syncLastAt',lastSynced);
+  setEl('syncConnStatus',connStatus.replace('_',' '));setClass('syncConnStatus',connClass);
+  setEl('syncOverviewMode',modeLbl);
+  setEl('syncOverviewPending',q.length+' record'+(q.length!==1?'s':''));
+  setEl('syncOverviewLast',lastSynced);
+
+  const badge=document.getElementById('syncNavBadge');
+  if(badge)badge.style.display=q.length>0?'inline':'none';
+}
+
+// ════════════════════════════════════════════════════════════════════
+// SHARING — PART 5
+// ════════════════════════════════════════════════════════════════════
+
+function getPwaUrl(){
+  const bs=loadBackendSettings();
+  let base='';
+  if(bs.mode==='supabase'&&bs.supabase.url) base=bs.supabase.url;
+  else if(bs.mode==='custom'&&bs.custom.baseUrl) base=bs.custom.baseUrl;
+  else if(bs.mode==='aws'&&bs.aws.endpoint) base=bs.aws.endpoint;
+  else base=window.location.origin+window.location.pathname.replace(/[^/]+$/,'')+'..'+'/../ap3x/patient-pwa/index.html';
+  // Safe fallback to GitHub Pages or current deployment
+  if(!base||base==='local') base=window.location.href.replace(/clinician-demo\.html.*/,'')+'patient-pwa/index.html';
+  return base;
+}
+
+function getInviteCode(){
+  let code=sGet('4p3x_invite_code','');
+  if(!code){code='TL-'+Math.random().toString(36).slice(2,8).toUpperCase();sSet('4p3x_invite_code',code);}
+  return code;
+}
+
+function loadShareUI(){
+  const url=getPwaUrl();
+  const code=getInviteCode();
+  const urlEl=document.getElementById('sharePwaUrl');
+  if(urlEl)urlEl.textContent=url;
+  const codeEl=document.getElementById('shareInviteCode');
+  if(codeEl)codeEl.textContent=code;
+  const nativeBtn=document.getElementById('nativeShareBtn');
+  if(nativeBtn&&navigator.share)nativeBtn.style.display='inline-block';
+}
+
+function sharePwa(method){
+  const url=getPwaUrl();
+  const code=getInviteCode();
+  const msg='Hi, here is your AutoSkill OS™ Employee Learning PWA access link. You can use it to complete training check-ins, process modules, and competency progress updates between sessions: '+url+' (Code: '+code+')';
+  const emailSubject='Your AutoSkill OS™ Employee Learning PWA Access';
+  const emailBody=`Hi,
+
+Here is your AutoSkill OS™ Employee Learning PWA access link:
+
+${url}
+
+Invite Code: ${code}
+
+You can use this to complete daily training check-ins, process modules, skill checks, and competency progress updates.
+
+AutoSkill OS™ supports manufacturing workforce training. For on-site emergencies, follow your site emergency procedure., contact local emergency services or a crisis support line immediately.
+
+Powered by 4P3X Intelligent AI™ Created by Kyzel Kreates™`;
+  const smsTxt='Your AutoSkill OS™ Employee Learning PWA access link: '+url+' (Code: '+code+')';
+
+  if(method==='copy'){
+    if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>showToast('PWA link copied ✓')).catch(()=>{prompt('Copy this link:',url);});}
+    else{prompt('Copy this link:',url);}
+  } else if(method==='whatsapp'){
+    window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+  } else if(method==='email'){
+    window.open('mailto:?subject='+encodeURIComponent(emailSubject)+'&body='+encodeURIComponent(emailBody));
+  } else if(method==='sms'){
+    window.open('sms:?body='+encodeURIComponent(smsTxt));
+  } else if(method==='native'){
+    if(navigator.share){navigator.share({title:'AutoSkill OS™ Employee Learning PWA',text:msg,url}).catch(()=>{});}
+  }
+}
+
+function openDetail(id){
+  currentPatient=PATIENTS.find(p=>p.id===id);if(!currentPatient)return;const p=currentPatient;
+  document.getElementById('detailName').textContent=p.name;
+  document.getElementById('detailMeta').textContent=`${p.condition} · Age ${p.age} · ID: ${p.id}`;
+  const b=document.getElementById('detailRiskBadge');b.className=`risk-badge ${p.risk}`;b.textContent=rLbl(p.risk);
+  document.getElementById('detailLastSeen').textContent=p.checkins[0]?`Last check-in: ${tAgo(p.checkins[0].date)}`:'No check-in data';
+  setTimeout(()=>drawLine(document.getElementById('detailChart'),p.scores.map((_,i)=>`Day ${i+1}`),p.scores,'#c9a84c',false,10),50);
+  document.getElementById('detailMetrics').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="pc-metric"><div class="pcm-val">${p.streak}d</div><div class="pcm-lbl">Streak</div></div><div class="pc-metric"><div class="pcm-val">${p.pathwayPct||0}%</div><div class="pcm-lbl">Pathway</div></div><div class="pc-metric"><div class="pcm-val">${p.checkins.length}</div><div class="pcm-lbl">Check-Ins</div></div></div><div style="font-size:12px;color:var(--muted);margin-top:8px">Recovery Pathway: <strong style="color:var(--text)">${p.pathway||'Not started'}</strong></div>`;
+  const ml=document.getElementById('detailMoodList'),nc=p.checkins.filter(c=>c.note).slice(0,5);
+  ml.innerHTML=nc.length?nc.map(c=>`<div class="detail-note"><div class="note-by">${tAgo(c.date)} · Anxiety: ${c.anxiety}/10</div><div>${c.note}</div></div>`).join(''):'<p class="empty-state">No notes.</p>';
+  const fl=document.getElementById('detailFlags');fl.innerHTML=p.flags.length?p.flags.map(f=>`<span class="pc-flag warn">${f.replace(/_/g,' ')}</span>`).join(''):'<span style="font-size:12px;color:var(--muted)">No active flags</span>';
+  document.getElementById('detailCoping').innerHTML=p.coping.length?p.coping.map(c=>`<span class="pc-flag info">${c}</span>`).join(''):'<span style="font-size:12px;color:var(--muted)">None recorded</span>';
+  document.getElementById('detailNotesList').innerHTML=p.notes.map(n=>`<div class="detail-note"><span class="note-by">${n.by}</span> <span class="note-date">· ${new Date(n.date).toLocaleDateString()}</span><div style="margin-top:4px">${n.text}</div></div>`).join('');
+  document.getElementById('detailPanel').classList.remove('hidden');
+}
+function closeDetail(){document.getElementById('detailPanel').classList.add('hidden');currentPatient=null;}
+function addNote(pid){
+  if(!pid)return;const text=document.getElementById('newNoteInput').value.trim();if(!text)return showToast('Please enter a note.');
+  const followUp=document.getElementById('followUpStatus').value;
+  const saved=sGet('4p3x_clinician_notes',{});if(!saved[pid])saved[pid]=[];
+  const note={text,date:Date.now(),by:therapistName,followUp,_saved:true};saved[pid].unshift(note);sSet('4p3x_clinician_notes',saved);
+  const p=PATIENTS.find(x=>x.id===pid);if(p)p.notes.unshift(note);
+  enqueueSyncEvent('therapist_note',{patientId:pid,note:note.text,date:note.date});
+  document.getElementById('newNoteInput').value='';openDetail(pid);renderAllNotes();renderTimeline();showToast('Note saved ✓');
+}
+
+function saveProfileSettings(){
+  therapistName=document.getElementById('settingName').value.trim()||'Dr. Reyes';
+  therapistRole=document.getElementById('settingRole').value.trim()||'Training Manager';
+  sSet('4p3x_therapist_name',therapistName);sSet('4p3x_therapist_role',therapistRole);updateTherapistProfile();showToast('Profile saved ✓');
+}
+function saveCrisisSettings(){sSet('4p3x_crisis_name',document.getElementById('crisisName').value.trim());sSet('4p3x_crisis_contact',document.getElementById('crisisContact').value.trim());showToast('Crisis settings saved ✓');}
+function loadCrisisSettings(){document.getElementById('crisisName').value=sGet('4p3x_crisis_name','');document.getElementById('crisisContact').value=sGet('4p3x_crisis_contact','');}
+
+function drawLine(canvas,labels,data,color,fill,maxY){
+  if(!canvas)return;const W=canvas.offsetWidth||300,H=canvas.height||120;canvas.width=W;
+  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,H);if(!data.length)return;
+  const pad=10,iW=W-pad*2,iH=H-pad*2,xS=iW/(data.length-1||1);
+  const pts=data.map((v,i)=>({x:pad+i*xS,y:pad+iH-(v/maxY)*iH}));
+  if(fill){ctx.beginPath();ctx.moveTo(pts[0].x,H);pts.forEach(p=>ctx.lineTo(p.x,p.y));ctx.lineTo(pts[pts.length-1].x,H);ctx.closePath();ctx.fillStyle=color+'22';ctx.fill();}
+  ctx.beginPath();pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#888';ctx.font='9px sans-serif';ctx.textAlign='center';
+  if(labels.length<=8)labels.forEach((l,i)=>ctx.fillText(l,pts[i].x,H));else{ctx.fillText(labels[0],pts[0].x,H);ctx.fillText(labels[labels.length-1],pts[pts.length-1].x,H);}
+}
+
+function drawBar(canvas,labels,data,color){
+  if(!canvas)return;const W=canvas.offsetWidth||300,H=canvas.height||130;canvas.width=W;
+  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,W,H);if(!data.length)return;
+  const maxV=Math.max(...data,1),pad=24,iW=W-pad,iH=H-pad-4;
+  const bw=Math.max(6,(iW/data.length)*0.6),gap=(iW-bw*data.length)/(data.length+1);
+  data.forEach((v,i)=>{const x=pad/2+gap+i*(bw+gap),bh=(v/maxV)*iH,y=4+iH-bh;ctx.fillStyle=color+'88';ctx.fillRect(x,y,bw,bh);ctx.fillStyle=color;ctx.fillRect(x,y,bw,3);ctx.fillStyle='#888';ctx.font='9px sans-serif';ctx.textAlign='center';if(labels[i]){const l=labels[i].length>8?labels[i].slice(0,7)+'…':labels[i];ctx.fillText(l,x+bw/2,H-2);}ctx.fillStyle=color;ctx.fillText(v,x+bw/2,y-2);});
+}
+
+function tAgo(ts){const s=Math.floor((Date.now()-ts)/1000);if(s<60)return'Just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),2500);}
+</script>
+</body>
+</html>

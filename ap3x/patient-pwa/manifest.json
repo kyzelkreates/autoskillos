@@ -1,0 +1,87 @@
+{
+  "name": "AutoSkill OS™",
+  "short_name": "AutoSkill",
+  "description": "Employee Learning PWA — manufacturing training, process modules, safety checks, and competency tracking. Powered by 4P3X Intelligent AI™. Created by Kyzel Kreates™.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0a0a",
+  "theme_color": "#c9a84c",
+  "categories": [
+    "business",
+    "education",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "../../icons/tl-72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "../../icons/tl-96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "../../icons/tl-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "../../icons/tl-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "../../icons/tl-152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "../../icons/tl-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "../../icons/tl-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../../icons/tl-384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "../../icons/tl-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Training Check-In",
+      "short_name": "Check-In",
+      "description": "Complete today's training check-in",
+      "url": "./index.html?tab=checkin",
+      "icons": [{"src": "../../icons/tl-96.png", "sizes": "96x96"}]
+    },
+    {
+      "name": "Training Pathway",
+      "short_name": "Pathway",
+      "description": "Continue your assigned training pathway",
+      "url": "./index.html?tab=lessons",
+      "icons": [{"src": "../../icons/tl-96.png", "sizes": "96x96"}]
+    },
+    {
+      "name": "My Progress",
+      "short_name": "Progress",
+      "description": "View your competency progress",
+      "url": "./index.html?tab=progress",
+      "icons": [{"src": "../../icons/tl-96.png", "sizes": "96x96"}]
+    }
+  ]
+}

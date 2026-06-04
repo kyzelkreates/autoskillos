@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="../../icons/tl-180.png"/>
+  <link rel="apple-touch-icon" sizes="152x152" href="../../icons/tl-152.png"/>
+  <link rel="apple-touch-icon" sizes="144x144" href="../../icons/tl-144.png"/>
+  <link rel="icon" type="image/png" sizes="32x32" href="../../icons/tl-96.png"/>
+  <link rel="icon" type="image/png" sizes="192x192" href="../../icons/tl-192.png"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="TherapyLink™"/>
+  <meta name="msapplication-TileImage" content="../../icons/tl-144.png"/>
+  <meta name="msapplication-TileColor" content="#0a0a0a"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<meta name="theme-color" content="#c9a84c"/>
+<title>TherapyLink™ — My Recovery Support</title>
+<link rel="manifest" href="../patient-pwa/manifest.json"/>
+<style>
+:root{
+  --bg:#0a0a0a;--surface:#111;--surface2:#1a1a1a;--border:#2a2a2a;
+  --gold:#c9a84c;--gold-d:#9a7a30;--gold-xl:#1a1200;
+  --green:#22c55e;--green-d:#16a34a;
+  --purple:#a855f7;--purple-d:#7c3aed;
+  --warn:#f59e0b;--high:#ef4444;--critical:#a855f7;
+  --text:#f0f0f0;--muted:#888;--light:#444;
+  --r:14px;--rs:9px;--shadow:0 2px 10px rgba(0,0,0,.5);--t:.2s ease;
+}
+[data-theme=light]{--bg:#f0f6ff;--surface:#fff;--surface2:#e8f0fe;--border:#c8d8f0;--text:#1e293b;--muted:#64748b;--light:#94a3b8;--gold-xl:#fffbeb;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overscroll-behavior:none}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;max-width:480px;margin:0 auto;padding-bottom:82px;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* Header */
+.ap3x-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--shadow)}
+.header-brand{display:flex;align-items:center;gap:7px;font-weight:700}
+.brand-dot{width:10px;height:10px;border-radius:50%;background:var(--gold);animation:pulse 2.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.2)}}
+.brand-name{font-size:16px;color:var(--gold)}
+.brand-sub{font-size:12px;color:var(--muted);font-weight:400}
+.header-right{display:flex;align-items:center;gap:6px}
+.btn-icon{background:none;border:none;cursor:pointer;font-size:19px;padding:5px;border-radius:8px;transition:background var(--t)}
+.btn-icon:hover{background:var(--surface2)}
+.back-link{font-size:12px;color:var(--muted);text-decoration:none;padding:5px 10px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border)}
+.back-link:hover{color:var(--gold)}
+
+/* Streak */
+.streak-banner{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#000;font-size:14px}
+.streak-left{display:flex;align-items:center;gap:8px;font-weight:700}
+.streak-xp{font-size:12px;background:rgba(0,0,0,.15);border-radius:99px;padding:2px 10px;font-weight:600}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:flex;background:var(--surface);border-top:1px solid var(--border);box-shadow:0 -2px 8px rgba(0,0,0,.3);z-index:100}
+.nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;background:none;border:none;color:var(--muted);font-size:10px;cursor:pointer;transition:color var(--t);position:relative}
+.nav-tab.active{color:var(--gold)}
+.nav-tab .notif-dot{position:absolute;top:7px;right:calc(50% - 14px);width:7px;height:7px;border-radius:50%;background:var(--high);border:2px solid var(--surface)}
+
+/* Tab pages */
+.tab-page{padding:18px 16px;animation:fadeIn .2s ease}
+.tab-page.hidden{display:none!important}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.section-title{font-size:22px;font-weight:700;margin-bottom:3px}
+.section-sub{font-size:14px;color:var(--muted);margin-bottom:18px}
+
+/* Home */
+.home-greeting{background:linear-gradient(135deg,var(--gold-d),var(--gold));border-radius:var(--r);padding:20px;color:#000;margin-bottom:16px;position:relative;overflow:hidden}
+.home-greeting::after{content:'🧠';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:48px;opacity:.18}
+.hg-title{font-size:19px;font-weight:700;margin-bottom:4px}
+.hg-sub{font-size:13px;opacity:.75}
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.qa-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 12px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;cursor:pointer;transition:all var(--t);text-align:left}
+.qa-btn:hover{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.1)}
+.qa-icon{font-size:22px}.qa-label{font-size:13px;font-weight:700}.qa-desc{font-size:11px;color:var(--muted)}
+.insight-strip{background:var(--surface);border-radius:var(--r);padding:14px;margin-bottom:16px;box-shadow:var(--shadow);border-left:4px solid var(--gold)}
+.insight-strip h4{font-size:13px;font-weight:700;margin-bottom:4px;color:var(--gold)}
+.insight-strip p{font-size:13px;color:var(--text);line-height:1.5}
+
+/* Mood ring */
+.mood-row{display:flex;gap:8px;justify-content:space-between;margin-bottom:16px}
+.mood-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--surface);border:2px solid transparent;border-radius:var(--r);padding:12px 4px;cursor:pointer;transition:all var(--t)}
+.mood-btn:hover{border-color:var(--border);transform:translateY(-2px)}
+.mood-btn.selected{border-color:var(--gold);background:var(--gold-xl)}
+.mood-emoji{font-size:26px}.mood-label{font-size:10px;color:var(--muted);font-weight:600}
+
+/* Scale */
+.scale-wrap{background:var(--surface);border-radius:var(--r);padding:18px 14px;margin-bottom:16px;box-shadow:var(--shadow)}
+.scale-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.scale-title{font-size:14px;font-weight:700}
+.scale-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:10px}
+.scale-track{display:flex;gap:3px}
+.scale-btn{flex:1;aspect-ratio:1;border-radius:7px;border:2px solid transparent;font-size:12px;font-weight:700;cursor:pointer;transition:all var(--t)}
+.scale-btn:hover{transform:scale(1.1)}
+.scale-btn[data-v="0"],.scale-btn[data-v="1"]{background:rgba(34,197,94,.2);color:var(--green)}
+.scale-btn[data-v="2"],.scale-btn[data-v="3"]{background:rgba(34,197,94,.12);color:var(--green)}
+.scale-btn[data-v="4"],.scale-btn[data-v="5"]{background:rgba(245,158,11,.15);color:var(--warn)}
+.scale-btn[data-v="6"],.scale-btn[data-v="7"]{background:rgba(239,68,68,.12);color:var(--high)}
+.scale-btn[data-v="8"],.scale-btn[data-v="9"],.scale-btn[data-v="10"]{background:rgba(239,68,68,.2);color:var(--high)}
+.scale-btn.selected{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.25);transform:scale(1.14)}
+.score-display{text-align:center;margin-top:10px;font-size:30px;font-weight:800;color:var(--gold);min-height:38px}
+.score-label{text-align:center;font-size:13px;color:var(--muted);margin-top:2px;min-height:18px}
+
+/* Form */
+.form-card{background:var(--surface);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.form-card-title{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.form-textarea{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rs);padding:10px 12px;font-size:14px;color:var(--text);font-family:inherit;resize:none;min-height:70px}
+.form-textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.12)}
+.tag-group{display:flex;flex-wrap:wrap;gap:7px}
+.tag{padding:5px 12px;border-radius:99px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);font-size:13px;cursor:pointer;transition:all var(--t)}
+.tag.active{background:var(--gold);border-color:var(--gold);color:#000}
+.yn-row{display:flex;gap:10px}
+.yn-btn{flex:1;padding:10px;border-radius:var(--rs);border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;transition:all var(--t);text-align:center}
+.yn-btn.yes.selected{background:var(--green);border-color:var(--green);color:#fff}
+.yn-btn.no.selected{background:var(--high);border-color:var(--high);color:#fff}
+
+/* Step indicator */
+.step-progress{height:4px;background:var(--border);border-radius:99px;margin-bottom:20px;overflow:hidden}
+.step-progress-bar{height:100%;background:var(--gold);border-radius:99px;transition:width .4s ease}
+.step-indicator{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--border)}
+.step-dot.active{background:var(--gold)}.step-dot.done{background:var(--green)}
+.checkin-step{animation:fadeIn .2s ease}.checkin-step.hidden{display:none!important}
+.ci-question{font-size:17px;font-weight:700;margin-bottom:6px;line-height:1.4}
+.ci-sub{font-size:13px;color:var(--muted);margin-bottom:16px}
+
+/* Buttons */
+.btn-primary{width:100%;padding:14px;background:var(--gold);color:#000;border:none;border-radius:var(--r);font-size:16px;font-weight:700;cursor:pointer;transition:background var(--t),transform var(--t)}
+.btn-primary:hover{background:var(--gold-d)}
+.btn-primary:active{transform:scale(.98)}
+.btn-secondary{width:100%;padding:12px;background:var(--surface2);color:var(--text);border:1.5px solid var(--border);border-radius:var(--r);font-size:15px;font-weight:600;cursor:pointer;transition:all var(--t)}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold)}
+.btn-row{display:flex;gap:10px;margin-top:12px}
+.btn-row .btn-primary,.btn-row .btn-secondary{flex:1;width:auto}
+.btn-emergency{width:100%;padding:14px;background:none;border:2px solid var(--high);color:var(--high);border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;margin-top:20px;transition:all var(--t)}
+.btn-emergency:hover{background:var(--high);color:#fff}
+.btn-sm{padding:7px 14px;font-size:13px;font-weight:600;border-radius:var(--rs);cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--text);transition:all var(--t)}
+.btn-sm:hover{border-color:var(--gold);color:var(--gold)}
+.btn-sm.filled{background:var(--gold);color:#000;border-color:var(--gold)}
+
+/* Feedback card */
+.feedback-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:18px;margin-top:16px;animation:fadeIn .3s ease}
+.feedback-card.risk-high{border-color:var(--high);background:rgba(239,68,68,.05)}
+.feedback-card.risk-critical{border-color:var(--critical);background:rgba(168,85,247,.05)}
+.risk-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700}
+.risk-badge.LOW,.risk-badge.low{background:rgba(34,197,94,.15);color:var(--green)}
+.risk-badge.MEDIUM,.risk-badge.medium{background:rgba(245,158,11,.15);color:var(--warn)}
+.risk-badge.HIGH,.risk-badge.high{background:rgba(239,68,68,.15);color:var(--high)}
+.risk-badge.CRITICAL,.risk-badge.critical{background:rgba(168,85,247,.15);color:var(--purple)}
+.fcard-title{font-size:16px;font-weight:700;margin-bottom:6px}
+.fcard-sub{font-size:13px;color:var(--muted);line-height:1.5}
+.fcard-tips{margin-top:14px;display:flex;flex-direction:column;gap:6px}
+.fcard-tip{font-size:13px;padding:8px 12px;background:var(--surface2);border-radius:var(--rs);line-height:1.4}
+
+/* Lesson cards */
+.module-card{background:var(--surface);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.module-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.module-icon{font-size:24px}.module-name{font-size:15px;font-weight:700}
+.module-prog{height:6px;background:var(--border);border-radius:99px;margin-bottom:14px;overflow:hidden}
+.module-prog-bar{height:100%;border-radius:99px;transition:width .4s ease}
+.lesson-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:10px}
+.lesson-item:last-child{border-bottom:none}
+.lesson-info{flex:1}
+.lesson-name{font-size:13px;font-weight:600}
+.lesson-desc{font-size:11px;color:var(--muted);margin-top:2px}
+.lesson-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:all var(--t)}
+.lesson-check.done{background:var(--green);border-color:var(--green);color:#fff}
+
+/* ── Lesson detail panel ─────────────────────────────────────── */
+.lesson-detail{position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;animation:slideUp .22s ease}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.ld-header{position:sticky;top:0;background:var(--surface);border-bottom:1.5px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;z-index:10}
+.ld-back{background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px;line-height:1;flex-shrink:0}
+.ld-header-info{flex:1}
+.ld-module-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.ld-title{font-size:15px;font-weight:800;line-height:1.3}
+.ld-body{padding:16px 16px 100px}
+.ld-meta{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.ld-time{font-size:12px;color:var(--muted);background:var(--surface2);padding:4px 10px;border-radius:99px;border:1px solid var(--border)}
+.ld-num{font-size:12px;color:var(--gold);background:var(--gold-xl);padding:4px 10px;border-radius:99px;border:1px solid var(--gold-d);font-weight:700}
+.ld-summary{font-size:14px;color:var(--text);line-height:1.7;margin-bottom:20px;padding:14px;background:var(--surface);border-radius:var(--r);border-left:4px solid var(--gold)}
+.ld-goals{margin-bottom:20px}
+.ld-goals h3{font-size:13px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.ld-goal{font-size:13px;padding:8px 12px;background:var(--surface);border-radius:var(--rs);margin-bottom:6px;border:1px solid var(--border);display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.ld-goal::before{content:'✦';color:var(--gold);font-size:10px;margin-top:3px;flex-shrink:0}
+.ld-section{margin-bottom:18px}
+.ld-section h3{font-size:14px;font-weight:700;margin-bottom:6px;color:var(--text)}
+.ld-section p{font-size:14px;color:var(--text);line-height:1.75;background:var(--surface);padding:12px 14px;border-radius:var(--rs);border:1px solid var(--border)}
+.ld-block{background:var(--surface);border-radius:var(--r);padding:14px;margin-bottom:14px;border:1px solid var(--border)}
+.ld-block h3{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.ld-block p{font-size:14px;line-height:1.7;color:var(--text)}
+.ld-safety{background:rgba(239,68,68,.06);border:1.5px solid rgba(239,68,68,.2);border-radius:var(--r);padding:14px;margin-bottom:14px}
+.ld-safety h3{font-size:12px;font-weight:700;color:var(--high);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.ld-safety p{font-size:12px;color:var(--muted);line-height:1.6}
+.ld-complete-bar{position:fixed;bottom:0;left:0;right:0;padding:14px 16px;background:var(--surface);border-top:1.5px solid var(--border);box-shadow:0 -4px 16px rgba(0,0,0,.3);z-index:20;max-width:480px;margin:0 auto}
+.ld-note-area{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--text);font-family:inherit;resize:none;min-height:60px;margin-bottom:10px}
+.ld-note-area:focus{outline:none;border-color:var(--gold)}
+.lesson-item{cursor:pointer}
+.lesson-item:hover .lesson-name{color:var(--gold)}
+.lesson-item:hover{background:rgba(201,168,76,.04);border-radius:var(--rs);padding-left:6px;margin-left:-6px}
+
+
+/* Coping strategy cards */
+.coping-card{background:var(--surface);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid var(--border);display:flex;align-items:flex-start;gap:12px}
+.coping-icon{font-size:28px;flex-shrink:0}
+.coping-body{flex:1}
+.coping-name{font-size:14px;font-weight:700;margin-bottom:4px}
+.coping-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.coping-tag{font-size:10px;padding:2px 8px;border-radius:99px;background:var(--gold-xl);color:var(--gold);font-weight:600;margin-top:6px;display:inline-block;border:1px solid var(--gold-d)}
+
+/* Progress */
+.prog-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.prog-stat{background:var(--surface);border-radius:var(--r);padding:14px;box-shadow:var(--shadow);text-align:center;border:1px solid var(--border)}
+.prog-stat-val{font-size:28px;font-weight:800;color:var(--gold)}
+.prog-stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.history-item{background:var(--surface);border-radius:var(--rs);padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.hi-score{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex-shrink:0}
+.hi-info{flex:1}
+.hi-date{font-size:12px;color:var(--muted)}
+.hi-note{font-size:12px;margin-top:2px}
+
+/* Safety notice */
+.safety-notice{background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.25);border-radius:var(--r);padding:16px;margin-bottom:16px}
+.safety-notice h4{font-size:14px;font-weight:700;color:var(--high);margin-bottom:8px}
+.safety-notice p{font-size:12px;color:var(--muted);line-height:1.6}
+.safety-notice .crisis-btn{display:block;width:100%;margin-top:12px;padding:10px;background:var(--high);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;text-align:center}
+
+/* Toast */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 20px;border-radius:var(--rs);font-size:13px;font-weight:600;z-index:500;box-shadow:0 4px 16px rgba(0,0,0,.4);white-space:nowrap}
+.toast.hidden{display:none!important}
+.hidden{display:none!important}
+
+/* Onboarding */
+.ob-wrap{position:fixed;inset:0;background:var(--bg);z-index:500;overflow-y:auto}
+.ob-inner{max-width:480px;margin:0 auto;padding:32px 24px 40px}
+.ob-logo{text-align:center;margin-bottom:24px}
+.ob-brand{font-size:22px;font-weight:800;color:var(--gold);margin-top:8px}
+.ob-brand-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.ob-title{font-size:26px;font-weight:800;margin-bottom:12px;line-height:1.2}
+.ob-desc{font-size:15px;color:var(--muted);line-height:1.6;margin-bottom:24px}
+.ob-feature-list{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.ob-feat{display:flex;align-items:center;gap:10px;font-size:14px;padding:10px 14px;background:var(--surface);border-radius:var(--rs);border:1px solid var(--border)}
+.ob-feat span{font-size:20px}
+.ob-step{display:none}
+.ob-step.active{display:block}
+.ob-step-num{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}
+.ob-step-title{font-size:22px;font-weight:800;margin-bottom:8px}
+.ob-step-sub{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.5}
+.ob-field{margin-bottom:16px}
+.ob-label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.ob-input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rs);padding:12px 14px;font-size:15px;color:var(--text);outline:none}
+.ob-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.12)}
+.ob-goals-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+.ob-goal-btn{padding:10px 12px;border-radius:var(--rs);border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:13px;cursor:pointer;transition:all var(--t);text-align:left}
+.ob-goal-btn.active{background:var(--gold);border-color:var(--gold);color:#000;font-weight:600}
+.ob-back{background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;margin-bottom:16px;padding:0}
+.ob-skip-btn{width:100%;margin-top:10px;padding:10px;background:none;border:1.5px solid var(--border);border-radius:var(--r);color:var(--muted);font-size:14px;cursor:pointer}
+.ob-ready-icon{font-size:56px;text-align:center;margin-bottom:16px}
+.ob-ready-title{font-size:26px;font-weight:800;text-align:center;margin-bottom:8px}
+.ob-ready-sub{font-size:14px;color:var(--muted);text-align:center;margin-bottom:20px}
+</style>
+</head>
+<body data-theme="dark">
+
+<!-- ══ ONBOARDING ══ -->
+<div id="onboarding" class="ob-wrap" style="display:none">
+  <div class="ob-inner">
+    <!-- Step 1 -->
+    <div class="ob-step active" id="ob-step-1">
+      <div class="ob-logo"><div style="font-size:48px">🧠</div><div class="ob-brand">TherapyLink™</div><div class="ob-brand-sub">My Recovery Support</div></div>
+      <h1 class="ob-title">Welcome to your Mental Health Recovery Portal</h1>
+      <p class="ob-desc">Guided daily check-ins, wellbeing lessons, coping strategies, and progress tracking — all built around your recovery. Let's set up your profile.</p>
+      <div class="ob-feature-list">
+        <div class="ob-feat"><span>📋</span>Daily wellbeing check-in (10 questions)</div>
+        <div class="ob-feat"><span>🎓</span>Mental Health Recovery Pathway — 3 modules</div>
+        <div class="ob-feat"><span>📈</span>Mood, anxiety &amp; sleep tracking</div>
+        <div class="ob-feat"><span>🧘</span>Coping strategies &amp; wellbeing exercises</div>
+      </div>
+      <button class="btn-primary" onclick="obNext(1)">Set up my recovery profile →</button>
+      <button class="ob-skip-btn" onclick="obSkip()">Skip — already set up</button>
+    </div>
+    <!-- Step 2 -->
+    <div class="ob-step" id="ob-step-2">
+      <button class="ob-back" onclick="obBack(2)">‹ Back</button>
+      <div class="ob-step-num">Step 1 of 3</div>
+      <h2 class="ob-step-title">Tell us about yourself</h2>
+      <p class="ob-step-sub">This personalises your recovery pathway and check-in experience. Only stored on this device.</p>
+      <div class="ob-field"><label class="ob-label">Your first name or nickname</label><input type="text" id="ob-pname" class="ob-input" placeholder="e.g. Alex, Jordan, Sam…" autocomplete="off"/></div>
+      <div class="ob-field"><label class="ob-label">Age range</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px" id="ob-age">
+          <button class="ob-goal-btn" data-age="Under 18">Under 18</button>
+          <button class="ob-goal-btn" data-age="18–24">18–24</button>
+          <button class="ob-goal-btn" data-age="25–34">25–34</button>
+          <button class="ob-goal-btn" data-age="35–44">35–44</button>
+          <button class="ob-goal-btn" data-age="45+">45+</button>
+        </div>
+      </div>
+      <button class="btn-primary" style="margin-top:16px" onclick="obNext(2)">Next →</button>
+    </div>
+    <!-- Step 3 -->
+    <div class="ob-step" id="ob-step-3">
+      <button class="ob-back" onclick="obBack(3)">‹ Back</button>
+      <div class="ob-step-num">Step 2 of 3</div>
+      <h2 class="ob-step-title">What are your wellbeing goals?</h2>
+      <p class="ob-step-sub">Select everything relevant — we'll personalise your Recovery Pathway</p>
+      <div class="ob-goals-grid" id="ob-goals">
+        <button class="ob-goal-btn" data-g="Managing anxiety">😌 Managing anxiety</button>
+        <button class="ob-goal-btn" data-g="Improving mood">🌤 Improving mood</button>
+        <button class="ob-goal-btn" data-g="Better sleep">😴 Better sleep</button>
+        <button class="ob-goal-btn" data-g="Reducing stress">🧘 Reducing stress</button>
+        <button class="ob-goal-btn" data-g="Building coping skills">🛠 Coping skills</button>
+        <button class="ob-goal-btn" data-g="Processing difficult feelings">💭 Processing feelings</button>
+        <button class="ob-goal-btn" data-g="Improving relationships">🤝 Relationships</button>
+        <button class="ob-goal-btn" data-g="Building confidence">💪 Confidence</button>
+        <button class="ob-goal-btn" data-g="Managing intrusive thoughts">🧩 Intrusive thoughts</button>
+        <button class="ob-goal-btn" data-g="Recovery from trauma">🌱 Trauma recovery</button>
+      </div>
+      <button class="btn-primary" style="margin-top:16px" onclick="obNext(3)">Next →</button>
+    </div>
+    <!-- Step 4 -->
+    <div class="ob-step" id="ob-step-4">
+      <button class="ob-back" onclick="obBack(4)">‹ Back</button>
+      <div class="ob-step-num">Step 3 of 3</div>
+      <h2 class="ob-step-title">How familiar are you with mental health support?</h2>
+      <p class="ob-step-sub">Helps us calibrate lesson depth and guidance detail</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px" id="ob-exp">
+        <button class="ob-goal-btn" style="padding:14px;text-align:left;border-radius:var(--r)" data-e="new"><strong>New to mental health support</strong><br/><span style="font-size:12px;color:var(--muted)">I'm just starting to explore therapy and wellbeing tools</span></button>
+        <button class="ob-goal-btn" style="padding:14px;text-align:left;border-radius:var(--r)" data-e="some"><strong>Some experience</strong><br/><span style="font-size:12px;color:var(--muted)">I've had some therapy or tried wellbeing tools before</span></button>
+        <button class="ob-goal-btn" style="padding:14px;text-align:left;border-radius:var(--r)" data-e="ongoing"><strong>Ongoing support</strong><br/><span style="font-size:12px;color:var(--muted)">I'm currently working with a therapist and want extra support</span></button>
+      </div>
+      <button class="btn-primary" onclick="obFinish()">Set up my recovery portal →</button>
+    </div>
+    <!-- Step 5 Ready -->
+    <div class="ob-step" id="ob-step-5">
+      <div class="ob-ready-icon">✨</div>
+      <div class="ob-ready-title">You're all set!</div>
+      <div class="ob-ready-sub">Your personalised recovery portal is ready.</div>
+      <div id="ob-summary" style="background:var(--surface);border-radius:var(--r);padding:14px;margin-bottom:20px;font-size:13px;color:var(--muted);line-height:1.8"></div>
+      <div class="safety-notice">
+        <h4>⚠️ Important</h4>
+        <p>This app supports mental health education, reflection, and therapist-guided monitoring. It does not provide emergency support or replace professional care. If you feel at immediate risk or in crisis, please contact local emergency services or a crisis support line immediately.</p>
+      </div>
+      <button class="btn-primary" id="ob-launch-btn">Open My Recovery Portal →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN PORTAL ══ -->
+<div id="portal-root" style="display:none">
+  <header class="ap3x-header">
+    <div class="header-brand">
+      <div class="brand-dot"></div>
+      <div><div class="brand-name">TherapyLink™</div><div class="brand-sub" id="portal-brand-sub">My Recovery Support</div></div>
+    </div>
+    <div class="header-right">
+      <span id="xp-chip" style="background:var(--gold-xl);border:1.5px solid var(--gold-d);border-radius:99px;padding:4px 12px;font-size:12px;font-weight:700;color:var(--gold)">⚡ 0 XP</span>
+      <button class="btn-icon" onclick="toggleTheme()">🌙</button>
+      <a href="index.html" class="back-link">← Hub</a>
+    </div>
+  </header>
+
+  <div id="streak-banner" class="streak-banner" style="display:none">
+    <div class="streak-left"><span>🔥</span><span id="streak-text">0-day streak</span></div>
+    <span class="streak-xp" id="streak-xp-val">0 XP</span>
+  </div>
+
+  <!-- Bottom nav -->
+  <nav class="bottom-nav">
+    <button class="nav-tab active" id="tab-btn-home" onclick="switchTab('home')"><span style="font-size:20px">🏠</span>Home</button>
+    <button class="nav-tab" id="tab-btn-checkin" onclick="switchTab('checkin')"><span style="font-size:20px">📋</span>Check-In<span class="notif-dot" id="checkin-dot"></span></button>
+    <button class="nav-tab" id="tab-btn-lessons" onclick="switchTab('lessons')"><span style="font-size:20px">🎓</span>Lessons</button>
+    <button class="nav-tab" id="tab-btn-coping" onclick="switchTab('coping')"><span style="font-size:20px">🧘</span>Coping</button>
+    <button class="nav-tab" id="tab-btn-progress" onclick="switchTab('progress')"><span style="font-size:20px">📈</span>Progress</button>
+  </nav>
+
+  <!-- ── HOME TAB ── -->
+  <div class="tab-page" id="tab-home">
+    <div class="home-greeting">
+      <div class="hg-title" id="home-greeting-title">Good morning 👋</div>
+      <div class="hg-sub" id="home-greeting-sub">Your recovery journey continues today.</div>
+    </div>
+    <div class="quick-actions">
+      <button class="qa-btn" onclick="switchTab('checkin')"><div class="qa-icon">📋</div><div class="qa-label">Daily Check-In</div><div class="qa-desc" id="qa-checkin-desc">Complete today's check-in</div></button>
+      <button class="qa-btn" onclick="switchTab('lessons')"><div class="qa-icon">🎓</div><div class="qa-label">Continue Pathway</div><div class="qa-desc" id="qa-lesson-desc">Loading…</div></button>
+      <button class="qa-btn" onclick="switchTab('coping')"><div class="qa-icon">🧘</div><div class="qa-label">Coping Strategies</div><div class="qa-desc">10 techniques available</div></button>
+      <button class="qa-btn" onclick="switchTab('progress')"><div class="qa-icon">📈</div><div class="qa-label">My Progress</div><div class="qa-desc" id="qa-progress-desc">View your journey</div></button>
+    </div>
+    <div class="insight-strip" id="daily-insight">
+      <h4>💡 Today's Insight</h4>
+      <p id="insight-text">Loading…</p>
+    </div>
+    <div class="safety-notice">
+      <h4>⚠️ Support Notice</h4>
+      <p>This app supports your wellbeing between therapy sessions. It does not replace professional care. If you are in crisis or immediate danger, contact emergency services or a crisis support line now.</p>
+      <span id="crisis-info" style="display:block;font-size:12px;color:var(--muted);margin-top:8px"></span>
+    </div>
+  </div>
+
+  <!-- ── CHECK-IN TAB ── -->
+  <div class="tab-page hidden" id="tab-checkin">
+    <div class="section-title">Daily Check-In</div>
+    <div class="section-sub">10 questions · Takes about 3 minutes</div>
+    <div id="checkin-done-view" style="display:none">
+      <div style="text-align:center;padding:20px 0">
+        <div style="font-size:56px;margin-bottom:12px">✅</div>
+        <div style="font-size:20px;font-weight:700;margin-bottom:8px">Check-In Complete</div>
+        <div style="font-size:14px;color:var(--muted);margin-bottom:20px">Great work — your check-in has been saved.</div>
+      </div>
+      <div id="checkin-feedback"></div>
+      <button class="btn-secondary" style="margin-top:16px" onclick="resetCheckin()">Complete Another Check-In</button>
+    </div>
+    <div id="checkin-form-view">
+      <div class="step-progress"><div class="step-progress-bar" id="ci-progress-bar" style="width:10%"></div></div>
+      <div class="step-indicator" id="ci-dots"></div>
+      <!-- Q1 Mood -->
+      <div class="checkin-step active" id="ci-step-1">
+        <div class="ci-question">1. How would you rate your mood today?</div>
+        <div class="ci-sub">Select the emoji that best matches how you feel right now</div>
+        <div class="mood-row">
+          <button class="mood-btn" data-mood="1" onclick="selectMood(this)"><span class="mood-emoji">😔</span><span class="mood-label">Very Low</span></button>
+          <button class="mood-btn" data-mood="3" onclick="selectMood(this)"><span class="mood-emoji">😕</span><span class="mood-label">Low</span></button>
+          <button class="mood-btn" data-mood="5" onclick="selectMood(this)"><span class="mood-emoji">😐</span><span class="mood-label">Neutral</span></button>
+          <button class="mood-btn" data-mood="7" onclick="selectMood(this)"><span class="mood-emoji">🙂</span><span class="mood-label">Good</span></button>
+          <button class="mood-btn" data-mood="9" onclick="selectMood(this)"><span class="mood-emoji">😊</span><span class="mood-label">Great</span></button>
+        </div>
+        <div class="btn-row"><button class="btn-secondary" onclick="ciBack(1)">Back</button><button class="btn-primary" onclick="ciNext(1)">Next →</button></div>
+      </div>
+      <!-- Q2 Anxiety -->
+      <div class="checkin-step hidden" id="ci-step-2">
+        <div class="ci-question">2. How would you rate your anxiety or stress today?</div>
+        <div class="ci-sub">0 = No anxiety at all · 10 = Extreme anxiety</div>
+        <div class="scale-wrap">
+          <div class="scale-labels"><span>None</span><span>Moderate</span><span>Extreme</span></div>
+          <div class="scale-track" id="anxiety-scale"></div>
+          <div class="score-display" id="anxiety-display">—</div>
+          <div class="score-label" id="anxiety-label"></div>
+        </div>
+        <div class="btn-row"><button class="btn-secondary" onclick="ciBack(2)">Back</button><button class="btn-primary" onclick="ciNext(2)">Next →</button></div>
+      </div>
+      <!-- Q3 Sleep -->
+      <div class="checkin-step hidden" id="ci-step-3">
+        <div class="ci-question">3. How well did you sleep last night?</div>
+        <div class="ci-sub">0 = Did not sleep · 10 = Slept very well</div>
+        <div class="scale-wrap">
+          <div class="scale-labels"><span>Very Poor</span><span>Moderate</span><span>Excellent</span></div>
+          <div class="scale-track" id="sleep-scale"></div>
+          <div class="score-display" id="sleep-display">—</div>
+          <div class="score-label" id="sleep-label"></div>
+        </div>
+        <div class="btn-row"><button class="btn-secondary" onclick="ciBack(3)">Back</button><button class="btn-primary" onclick="ciNext(3)">Next →</button></div>
+      </div>
+      <!-- Q4 Energy -->
+      <div class="checkin-step hidden" id="ci-step-4">
+        <div class="ci-question">4. How much energy do you feel you have today?</div>
+        <div class="ci-sub">0 = Exhausted · 10 = Full of energy</div>
+        <div class="scale-wrap">
+          <div class="scale-labels"><span>Exhausted</span><span>Moderate</span><span>Energised</span></div>
+          <div class="scale-track" id="energy-scale"></div>
+          <div class="score-display" id="energy-display">—</div>
+        </div>
+        <div class="btn-row"><button class="btn-secondary" onclick="ciBack(4)">Back</button><button class="btn-primary" onclick="ciNext(4)">Next →</button></div>
+      </div>
+      <!-- Q5 Coping -->
+      <div class="checkin-step hidden" id="ci-step-5">
+        <div class="ci-question">5. Have you used any coping strategies today?</div>
+        <div class="ci-sub">e.g. breathing exercises, journaling, talking to someone</div>
+        <div class="form-card">
+          <div class="yn-row">
+            <button class="yn-btn yes" id="ci-coping-yes" onclick="selectYN('coping','yes')">✓ Yes</button>
+            <button class="yn-btn no" id="ci-coping-no" onclick="selectYN('coping','no')">✗ No</button>
+          </div>
+          <div id="coping-used-list" style="margin-top:12px;display:none">
+            <label class="form-label">Which strategies did you use?</label>
+            <div class="tag-group" id="coping-tags">
+              <button class="tag" data-c="Breathing exercises">🌬️ Breathing</button>
+              <button class="tag" data-c="Journaling">✍️ Journaling</button>
+              <button class="tag" data-c="Mindfulness">🧘 Mindfulness</button>
+              <button class="tag" data-c="Exercise">🏃 Exercise</button>
+              <button class="tag" data-c="Talking to someone">💬 Talking</button>
+              <button class="tag" data-c="Grounding techniques">🌿 Grounding</button>
+              <button class="tag" data-c="Music / Creative">🎵 Music</button>
+              <button class="tag" data-c="Rest / Self-care">🛁 Rest</button>
+            </div>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn-secondary" onclick="ciBack(5)">Back</button><button class="btn-primary" onclick="ciNext(5)">Next →</button></div>
+      </div>
+      <!-- Q6 Overwhelmed -->
+      <div class="checkin-step hidden" id="ci-step-6">
+        <div class="ci-question">6. Have you felt overwhelmed today?</div>
+        <div class="ci-sub">Feeling like things are too much to handle</div>
+        <div class="form-card">
+          <div class="yn-row">
+            <button class="yn-btn yes" id="ci-overwhelmed-yes" onclick="selectYN('overwhelmed','yes')">✓ Yes</button>
+            <button class="yn-btn no" id="ci-overwhelmed-no" onclick="selectYN('overwhelmed','no')">✗ No</button>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn-secondary" onclick="ciBack(6)">Back</button><button class="btn-primary" onclick="ciNext(6)">Next →</button></div>
+      </div>
+      <!-- Q7 Concentration -->
+      <div class="checkin-step hidden" id="ci-step-7">
+        <div class="ci-question">7. Have you had difficulty concentrating today?</div>
+        <div class="ci-sub">Trouble focusing on tasks or conversations</div>
+        <div class="form-card">
+          <div class="yn-row">
+            <button class="yn-btn yes" id="ci-conc-yes" onclick="selectYN('conc','yes')">✓ Yes</button>
+            <button class="yn-btn no" id="ci-conc-no" onclick="selectYN('conc','no')">✗ No</button>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn-secondary" onclick="ciBack(7)">Back</button><button class="btn-primary" onclick="ciNext(7)">Next →</button></div>
+      </div>
+      <!-- Q8 Connection -->
+      <div class="checkin-step hidden" id="ci-step-8">
+        <div class="ci-question">8. Have you connected with anyone supportive today?</div>
+        <div class="ci-sub">A friend, family member, therapist, or support group</div>
+        <div class="form-card">
+          <div class="yn-row">
+            <button class="yn-btn yes" id="ci-conn-yes" onclick="selectYN('conn','yes')">✓ Yes</button>
+            <button class="yn-btn no" id="ci-conn-no" onclick="selectYN('conn','no')">✗ Not today</button>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn-secondary" onclick="ciBack(8)">Back</button><button class="btn-primary" onclick="ciNext(8)">Next →</button></div>
+      </div>
+      <!-- Q9 Note for therapist -->
+      <div class="checkin-step hidden" id="ci-step-9">
+        <div class="ci-question">9. Is there anything you want your therapist to know?</div>
+        <div class="ci-sub">Optional — this will be visible in your therapist's notes view</div>
+        <div class="form-card">
+          <textarea id="ci-therapist-note" class="form-textarea" placeholder="e.g. I've been finding mornings really hard this week…" rows="4"></textarea>
+        </div>
+        <div class="btn-row"><button class="btn-secondary" onclick="ciBack(9)">Back</button><button class="btn-primary" onclick="ciNext(9)">Next →</button></div>
+      </div>
+      <!-- Q10 Extra support -->
+      <div class="checkin-step hidden" id="ci-step-10">
+        <div class="ci-question">10. Do you feel you need extra support before your next session?</div>
+        <div class="ci-sub">This helps flag to your therapist if you need earlier contact</div>
+        <div class="form-card">
+          <div class="yn-row">
+            <button class="yn-btn yes" id="ci-support-yes" onclick="selectYN('support','yes')">✓ Yes, I need support</button>
+            <button class="yn-btn no" id="ci-support-no" onclick="selectYN('support','no')">✗ I'm okay until then</button>
+          </div>
+          <div style="margin-top:16px;padding:12px;background:rgba(239,68,68,.08);border-radius:var(--rs);border:1px solid rgba(239,68,68,.2);font-size:12px;color:var(--muted);line-height:1.6">
+            ⚠️ If you are in immediate danger or crisis, do not wait — contact local emergency services or a crisis support line <strong>now</strong>. This check-in is not monitored in real-time.
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn-secondary" onclick="ciBack(10)">Back</button><button class="btn-primary filled btn-sm" style="width:auto;padding:14px 24px" onclick="submitCheckin()">Submit Check-In ✓</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LESSONS TAB ── -->
+  <div class="tab-page hidden" id="tab-lessons">
+    <div class="section-title">Mental Health Recovery Pathway</div>
+    <div class="section-sub">3 modules · 15 guided support lessons</div>
+    <div id="lessons-content"></div>
+  </div>
+
+  <!-- ── COPING TAB ── -->
+  <div class="tab-page hidden" id="tab-coping">
+    <div class="section-title">Coping Strategies</div>
+    <div class="section-sub">Wellbeing exercises and techniques for everyday support</div>
+    <div id="coping-content"></div>
+  </div>
+
+  <!-- ── PROGRESS TAB ── -->
+  <div class="tab-page hidden" id="tab-progress">
+    <div class="section-title">My Progress</div>
+    <div class="section-sub">Your personal recovery journey at a glance</div>
+    <div id="progress-content"></div>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<script>
+'use strict';
+// ── Storage ──────────────────────────────────────────────────────
+function sGet(k,d){try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):d;}catch{return d;}}
+function sSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+
+// ── Curriculum (3 modules, 5 lessons each) ──────────────────────
+const CURRICULUM=[
+  {id:1,name:'Module 1 — Understanding Your Mental Health',icon:'🌱',color:'#22c55e',lessons:[
+    {id:'m1l1',name:'What mental health recovery can look like',desc:'Exploring what recovery means — it is not linear and that is okay.',xp:60},
+    {id:'m1l2',name:'Understanding mood, anxiety, and stress',desc:'How mood, anxiety, and stress interact and influence each other daily.',xp:60},
+    {id:'m1l3',name:'Recognising personal triggers',desc:'Learning to identify situations, thoughts, or feelings that worsen symptoms.',xp:70},
+    {id:'m1l4',name:'Tracking patterns safely',desc:'Using gentle observation to notice patterns without judgement.',xp:70},
+    {id:'m1l5',name:'When to ask for support',desc:'Recognising when to reach out and how to communicate your needs.',xp:80},
+  ]},
+  {id:2,name:'Module 2 — Coping Skills and Daily Regulation',icon:'🎯',color:'#c9a84c',lessons:[
+    {id:'m2l1',name:'Breathing and grounding techniques',desc:'Practical tools to reduce anxiety and return to the present moment.',xp:70},
+    {id:'m2l2',name:'Building a daily wellbeing routine',desc:'Small, consistent habits that support mental health over time.',xp:70},
+    {id:'m2l3',name:'Managing overwhelming thoughts',desc:'Strategies for cognitive defusion and reducing thought rumination.',xp:80},
+    {id:'m2l4',name:'Sleep, rest, and recovery basics',desc:'Understanding the relationship between sleep quality and mental health.',xp:70},
+    {id:'m2l5',name:'Creating a personal support plan',desc:'Designing a simple, practical plan for difficult days.',xp:90},
+  ]},
+  {id:3,name:'Module 3 — Progress, Reflection, and Relapse Prevention',icon:'🌍',color:'#a855f7',lessons:[
+    {id:'m3l1',name:'Reflecting on progress',desc:'How to acknowledge growth while being compassionate with setbacks.',xp:80},
+    {id:'m3l2',name:'Identifying early warning signs',desc:'Recognising your personal signs that a difficult period may be starting.',xp:80},
+    {id:'m3l3',name:'Strengthening coping strategies',desc:'Reviewing and deepening the tools that work best for you.',xp:80},
+    {id:'m3l4',name:'Preparing for therapy sessions',desc:'Getting the most from your sessions with planning and reflection.',xp:80},
+    {id:'m3l5',name:'Building a personal recovery plan',desc:'Pulling everything together into a lasting personal recovery framework.',xp:100},
+  ]}
+];
+
+const COPING_STRATEGIES=[
+  {id:'breathing',icon:'🌬️',name:'4-7-8 Breathing',desc:'Inhale for 4 counts, hold for 7, exhale for 8. Activates your parasympathetic nervous system to reduce anxiety quickly.',cat:'Anxiety Relief'},
+  {id:'grounding',icon:'🌿',name:'5-4-3-2-1 Grounding',desc:'Name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste. Anchors you in the present moment.',cat:'Grounding'},
+  {id:'journaling',icon:'✍️',name:'Reflective Journaling',desc:'Write freely for 5–10 minutes without editing. Getting thoughts onto paper reduces their emotional intensity.',cat:'Emotional Processing'},
+  {id:'box',icon:'📦',name:'Box Breathing',desc:'Breathe in for 4, hold for 4, out for 4, hold for 4. Used by therapists to regulate the nervous system under stress.',cat:'Anxiety Relief'},
+  {id:'movement',icon:'🏃',name:'Movement Break',desc:'Even a 5-minute walk or light stretching can significantly shift mood. Physical movement processes stress hormones.',cat:'Mood Lifting'},
+  {id:'self_comp',icon:'💛',name:'Self-Compassion Pause',desc:'Place a hand on your heart, acknowledge your pain, remind yourself this is a shared human experience. Be kind to yourself.',cat:'Emotional Processing'},
+  {id:'mindful',icon:'🧘',name:'Mindful Observation',desc:'Choose one object and observe it for 2 minutes — colour, texture, shape, weight. Breaks cycles of anxious thinking.',cat:'Grounding'},
+  {id:'music',icon:'🎵',name:'Music & Movement',desc:'Put on a song that matches or lifts your mood. Music engages emotional processing centres of the brain rapidly.',cat:'Mood Lifting'},
+  {id:'cold',icon:'❄️',name:'Cold Water Reset',desc:'Splash cold water on your face or hold an ice cube. Activates the dive reflex and calms the nervous system quickly.',cat:'Crisis Tool'},
+  {id:'talk',icon:'💬',name:'Connect & Share',desc:'Reach out to one supportive person — a friend, family member, or therapist. Social connection is a powerful buffer against distress.',cat:'Connection'},
+];
+
+const INSIGHTS=[
+  'Recovery is not a straight line. Every small step forward matters, even when it does not feel like it.',
+  'Your nervous system needs rest to heal. Small moments of calm each day add up to lasting change.',
+  'Noticing how you feel without judging it is a skill — and you can get better at it with practice.',
+  'Coping strategies work best when you practise them before crisis. Rehearsal builds resilience.',
+  'Asking for support is a sign of self-awareness, not weakness. It takes courage to reach out.',
+  'Difficult feelings are not permanent. They are waves — they rise, peak, and pass.',
+  'Small, consistent actions build the foundation for recovery. You do not need to change everything at once.',
+  'Your experiences are valid. What you are feeling makes sense in the context of what you have been through.',
+  'Sleep and physical rest are not luxuries — they are essential components of mental health recovery.',
+  'Every check-in you complete is an act of self-care. Well done for showing up today.'
+];
+
+// ── State ────────────────────────────────────────────────────────
+let profile=sGet('4p3x_patient_profile',null);
+let checkins=sGet('4p3x_patient_checkins',[]);
+let lessonProgress=sGet('4p3x_lesson_progress',{});
+let copingUsed=sGet('4p3x_coping_used',[]);
+let xp=sGet('4p3x_xp',0);
+let streak=sGet('4p3x_streak',0);
+let lastCheckinDate=sGet('4p3x_last_checkin_date',null);
+let dark=sGet('4p3x_patient_theme','dark')==='dark';
+
+// Check-in state
+let ciData={mood:null,anxiety:null,sleep:null,energy:null,coping:null,copingList:[],overwhelmed:null,conc:null,conn:null,note:'',support:null};
+
+// ── Boot ─────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded',()=>{
+  applyTheme();
+  buildScales();
+  buildCiDots();
+  if(!profile){showOnboarding();}else{showPortal();}
+});
+
+function applyTheme(){document.body.dataset.theme=dark?'dark':'light';}
+function toggleTheme(){dark=!dark;sSet('4p3x_patient_theme',dark?'dark':'light');applyTheme();}
+
+function showOnboarding(){document.getElementById('onboarding').style.display='block';setupObGoals();setupObAge();}
+function showPortal(){
+  document.getElementById('onboarding').style.display='none';
+  document.getElementById('portal-root').style.display='block';
+  renderHome();renderLessons();renderCoping();renderProgress();
+  checkStreakAndCheckinStatus();
+}
+
+// ── Onboarding ───────────────────────────────────────────────────
+function setupObGoals(){document.querySelectorAll('#ob-goals .ob-goal-btn').forEach(b=>b.addEventListener('click',()=>b.classList.toggle('active')));}
+function setupObAge(){document.querySelectorAll('#ob-age .ob-goal-btn').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#ob-age .ob-goal-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');}));}
+
+function obNext(step){
+  document.getElementById('ob-step-'+step).classList.remove('active');
+  document.getElementById('ob-step-'+(step+1)).classList.add('active');
+}
+function obBack(step){
+  document.getElementById('ob-step-'+step).classList.remove('active');
+  document.getElementById('ob-step-'+(step-1)).classList.add('active');
+}
+function obSkip(){profile=sGet('4p3x_patient_profile',{name:'Friend',age:'',goals:[],exp:'',createdAt:Date.now()});sSet('4p3x_patient_profile',profile);showPortal();}
+function obFinish(){
+  const name=document.getElementById('ob-pname').value.trim()||'Friend';
+  const age=(document.querySelector('#ob-age .ob-goal-btn.active')||{}).dataset?.age||'';
+  const goals=[...document.querySelectorAll('#ob-goals .ob-goal-btn.active')].map(b=>b.dataset.g);
+  const exp=(document.querySelector('#ob-exp .ob-goal-btn.active')||{}).dataset?.e||'';
+  profile={name,age,goals,exp,createdAt:Date.now()};sSet('4p3x_patient_profile',profile);
+  document.getElementById('ob-summary').innerHTML=`<strong>${name}</strong> · Age: ${age||'Not specified'}<br/>Goals: ${goals.join(', ')||'Not selected'}<br/>Experience: ${exp||'Not specified'}`;
+  document.getElementById('ob-launch-btn').onclick=showPortal;
+  obNext(4);
+}
+
+// ── Home render ──────────────────────────────────────────────────
+function renderHome(){
+  if(!profile)return;
+  const hr=new Date().getHours();
+  const greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+  document.getElementById('home-greeting-title').textContent=(hr<12?'Good morning':hr<17?'Good afternoon':'Good evening')+', '+profile.name+' 👋';
+  document.getElementById('home-greeting-sub').textContent='Your recovery journey continues today.';
+  document.getElementById('insight-text').textContent=INSIGHTS[new Date().getDate()%INSIGHTS.length];
+  const completed=Object.values(lessonProgress).filter(Boolean).length;
+  document.getElementById('qa-lesson-desc').textContent=`${completed}/15 lessons complete`;
+  document.getElementById('qa-progress-desc').textContent=checkins.length+' check-ins logged';
+  const ci=sGet('4p3x_crisis_name','');const cc=sGet('4p3x_crisis_contact','');
+  document.getElementById('crisis-info').textContent=ci&&cc?`Configured crisis support: ${ci} — ${cc}`:'';
+}
+
+function checkStreakAndCheckinStatus(){
+  const today=new Date().toDateString();
+  const done=lastCheckinDate===today;
+  document.getElementById('checkin-dot').style.display=done?'none':'block';
+  document.getElementById('qa-checkin-desc').textContent=done?'Completed today ✓':'Complete today\'s check-in';
+  if(streak>0){document.getElementById('streak-banner').style.display='flex';document.getElementById('streak-text').textContent=streak+'-day streak';document.getElementById('streak-xp-val').textContent=xp+' XP';}
+  document.getElementById('xp-chip').textContent='⚡ '+xp+' XP';
+}
+
+// ── Tab switching ─────────────────────────────────────────────────
+function switchTab(name){
+  document.querySelectorAll('.tab-page').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.remove('hidden');
+  document.getElementById('tab-btn-'+name).classList.add('active');
+}
+
+// ── Check-In ─────────────────────────────────────────────────────
+let ciStep=1;
+function buildScales(){buildScale('anxiety-scale','anxiety-display','anxiety-label',true);buildScale('sleep-scale','sleep-display','sleep-label',false);buildScale('energy-scale','energy-display',null,false);}
+function buildScale(wrId,displayId,labelId,inverted){
+  const wr=document.getElementById(wrId);if(!wr)return;
+  for(let i=0;i<=10;i++){const b=document.createElement('button');b.className='scale-btn';b.dataset.v=i;b.textContent=i;b.onclick=()=>onScale(wrId,displayId,labelId,i,inverted,b);wr.appendChild(b);}
+}
+function onScale(wrId,displayId,labelId,val,inverted,btn){
+  document.querySelectorAll('#'+wrId+' .scale-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');
+  document.getElementById(displayId).textContent=val;
+  if(labelId){const labels=inverted?{0:'None',1:'Very Mild',2:'Mild',3:'Mild',4:'Moderate',5:'Moderate',6:'Elevated',7:'Elevated',8:'High',9:'Very High',10:'Extreme'}:{0:'Very Poor',3:'Poor',5:'Fair',7:'Good',9:'Very Good',10:'Excellent'};document.getElementById(labelId).textContent=labels[val]||'';}
+  if(wrId==='anxiety-scale')ciData.anxiety=val;else if(wrId==='sleep-scale')ciData.sleep=val;else if(wrId==='energy-scale')ciData.energy=val;
+}
+function buildCiDots(){const wr=document.getElementById('ci-dots');for(let i=1;i<=10;i++){const d=document.createElement('div');d.className='step-dot';d.id='ci-dot-'+i;wr.appendChild(d);}}
+function updateCiProgress(step){document.getElementById('ci-progress-bar').style.width=((step/10)*100)+'%';for(let i=1;i<=10;i++){const d=document.getElementById('ci-dot-'+i);d.className='step-dot'+(i<step?' done':i===step?' active':'');}}
+function selectMood(btn){document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');ciData.mood=parseInt(btn.dataset.mood);}
+function selectYN(key,val){
+  ciData[key]=val;
+  document.getElementById('ci-'+key+'-yes').classList.toggle('selected',val==='yes');
+  document.getElementById('ci-'+key+'-no').classList.toggle('selected',val==='no');
+  if(key==='coping'){document.getElementById('coping-used-list').style.display=val==='yes'?'block':'none';}
+  if(key==='support'&&val==='yes'){showToast('⚠️ Your therapist will see this flag. If in crisis, contact emergency services now.');}
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('#coping-tags .tag').forEach(t=>t.addEventListener('click',()=>{t.classList.toggle('active');ciData.copingList=Array.from(document.querySelectorAll('#coping-tags .tag.active')).map(x=>x.dataset.c);}));
+});
+
+function ciNext(step){
+  if(step===1&&ciData.mood===null)return showToast('Please select your mood');
+  if(step===2&&ciData.anxiety===null)return showToast('Please select an anxiety score');
+  if(step===3&&ciData.sleep===null)return showToast('Please select a sleep score');
+  if(step===4&&ciData.energy===null)return showToast('Please select an energy score');
+  document.getElementById('ci-step-'+step).classList.add('hidden');
+  ciStep=step+1;document.getElementById('ci-step-'+ciStep).classList.remove('hidden');updateCiProgress(ciStep);
+}
+function ciBack(step){
+  document.getElementById('ci-step-'+step).classList.add('hidden');
+  ciStep=step-1;document.getElementById('ci-step-'+ciStep).classList.remove('hidden');updateCiProgress(ciStep);
+}
+
+function submitCheckin(){
+  ciData.note=document.getElementById('ci-therapist-note').value.trim();
+  const today=new Date().toDateString();
+  const risk=_calcRisk(ciData);
+  const record={id:'ci_'+Date.now(),date:Date.now(),dateStr:today,...ciData,risk};
+  checkins.unshift(record);if(checkins.length>365)checkins.pop();sSet('4p3x_patient_checkins',checkins);
+  // Streak
+  if(lastCheckinDate!==today){const yesterday=new Date(Date.now()-86400000).toDateString();streak=lastCheckinDate===yesterday?streak+1:1;lastCheckinDate=today;sSet('4p3x_streak',streak);sSet('4p3x_last_checkin_date',today);}
+  // XP
+  xp+=20;sSet('4p3x_xp',xp);
+  // Show result
+  showCheckinResult(record,risk);
+  checkStreakAndCheckinStatus();renderProgress();
+}
+
+function _calcRisk(d){
+  if(d.anxiety>=8||d.mood<=2||d.support==='yes')return'CRITICAL';
+  if(d.anxiety>=6||d.mood<=4||(d.overwhelmed==='yes'&&d.sleep<=4))return'HIGH';
+  if(d.anxiety>=4||d.overwhelmed==='yes')return'MEDIUM';
+  return'LOW';
+}
+
+function showCheckinResult(record,risk){
+  document.getElementById('checkin-form-view').style.display='none';
+  document.getElementById('checkin-done-view').style.display='block';
+  const tips={LOW:['Well done on completing your check-in today.','Keep using the coping strategies that are working for you.','Consistency is key — every check-in adds to your recovery.'],MEDIUM:['You showed real self-awareness by completing your check-in.','Consider using a grounding exercise if you feel overwhelmed.','Reach out to a supportive person today if you can.'],HIGH:['Thank you for being honest in your check-in. That takes courage.','Try a breathing exercise now — the 4-7-8 method can help quickly.','If feelings intensify, please contact your therapist or support line.'],CRITICAL:['Your responses suggest you may be having a very hard time right now.','Please reach out to your therapist or a trusted person as soon as possible.','If you are in immediate danger, contact emergency services now.']};
+  const riskColors={LOW:'var(--green)',MEDIUM:'var(--warn)',HIGH:'var(--high)',CRITICAL:'var(--critical)'};
+  document.getElementById('checkin-feedback').innerHTML=`<div class="feedback-card risk-${risk.toLowerCase()}"><div style="margin-bottom:8px"><span class="risk-badge ${risk}">${{LOW:'✅ Low',MEDIUM:'⚡ Medium',HIGH:'⚠️ High',CRITICAL:'🚨 Needs Review'}[risk]}</span></div><div class="fcard-title">Check-In Recorded</div><div class="fcard-sub">Mood: ${record.mood}/10 · Anxiety: ${record.anxiety}/10 · Sleep: ${record.sleep}/10</div><div class="fcard-tips">${(tips[risk]||tips.LOW).map(t=>`<div class="fcard-tip">${t}</div>`).join('')}</div>${risk==='CRITICAL'||risk==='HIGH'?`<button class="btn-emergency" onclick="showToast('Contact your therapist or local emergency services immediately.')">🆘 Access Crisis Support</button>`:''}</div>`;
+}
+
+function resetCheckin(){
+  ciData={mood:null,anxiety:null,sleep:null,energy:null,coping:null,copingList:[],overwhelmed:null,conc:null,conn:null,note:'',support:null};
+  document.getElementById('checkin-form-view').style.display='block';document.getElementById('checkin-done-view').style.display='none';
+  document.querySelectorAll('.checkin-step').forEach((s,i)=>{s.classList[i===0?'remove':'add']('hidden');});
+  document.querySelectorAll('.mood-btn,.yn-btn,.scale-btn,.tag').forEach(b=>b.classList.remove('selected','active'));
+  ciStep=1;updateCiProgress(1);
+}
+
+const LESSON_CONTENT = {
+
+  /* ── MODULE 1 ─────────────────────────────────────────── */
+
+  m1l1: {
+    id: 'm1l1', moduleId: 1, lessonNumber: 1,
+    moduleTitle: 'Module 1 — Understanding Your Mental Health',
+    title: 'What Mental Health Recovery Can Look Like',
+    estimatedTime: '8–10 minutes',
+    summary: 'Recovery is not always a straight line. Some days may feel easier, while others may feel more difficult. This lesson helps you understand recovery as a process of learning, noticing patterns, building support, and taking small steps that help you feel safer and more able to cope.',
+    learningGoals: [
+      'Understand that recovery can look different for every person.',
+      'Recognise that progress can happen gradually.',
+      'Learn why small steps matter.',
+      'Understand how TherapyLink™ can support reflection between sessions.'
+    ],
+    sections: [
+      { heading: 'Recovery is personal', body: 'Mental health recovery does not mean feeling perfect all the time. It can mean understanding yourself better, recognising what affects your wellbeing, learning coping strategies, and feeling more able to ask for help when needed. Everyone\'s recovery looks different.' },
+      { heading: 'Progress is not always linear', body: 'It is normal to have good days, difficult days, and days that feel somewhere in between. A difficult day does not mean you have failed. It may simply show that your mind and body need care, rest, support, or a different strategy.' },
+      { heading: 'Small steps count', body: 'Small actions can support recovery. This might include completing a check-in, noticing a trigger, using a breathing exercise, writing down a thought, contacting someone supportive, or attending therapy. These steps can build confidence over time.' },
+      { heading: 'Why tracking helps', body: 'Tracking mood, stress, sleep, coping strategies, and reflections can help you and your therapist notice patterns. These patterns may help guide future support and make therapy sessions more focused.' },
+      { heading: 'Using TherapyLink™ safely', body: 'TherapyLink™ is designed to support reflection, learning, and therapist-guided monitoring. It is not an emergency service and does not replace professional care. Use it as a support tool between sessions.' }
+    ],
+    reflectionPrompt: 'What would progress look like for you this week, even if it is only a small step?',
+    patientExercise: 'Write down one small action you can take today to support your wellbeing.',
+    therapistNote: 'Review the patient\'s definition of progress. It may reveal expectations, pressure points, or opportunities for realistic goal-setting.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I understand what recovery can look like'
+  },
+
+  m1l2: {
+    id: 'm1l2', moduleId: 1, lessonNumber: 2,
+    moduleTitle: 'Module 1 — Understanding Your Mental Health',
+    title: 'Understanding Mood, Anxiety, and Stress',
+    estimatedTime: '8–10 minutes',
+    summary: 'Mood, anxiety, and stress can affect thoughts, feelings, body sensations, and behaviour. This lesson helps you understand how these experiences can show up and why tracking them may help you and your therapist recognise useful patterns.',
+    learningGoals: [
+      'Understand the difference between mood, anxiety, and stress.',
+      'Notice how emotional experiences can affect the body.',
+      'Learn why rating mood and stress can be useful.',
+      'Build confidence in describing your experience.'
+    ],
+    sections: [
+      { heading: 'What mood means', body: 'Mood is your general emotional state. It can include feeling low, calm, hopeful, numb, irritable, motivated, tired, or unsettled. Mood can change throughout the day and may be affected by sleep, relationships, thoughts, health, work, and life events.' },
+      { heading: 'What anxiety can feel like', body: 'Anxiety can include worry, fear, tension, racing thoughts, restlessness, avoidance, or physical sensations such as a tight chest, fast heartbeat, sweating, or stomach discomfort. Anxiety is not a personal failure. It is a signal that your mind or body may be responding to perceived threat or pressure.' },
+      { heading: 'What stress can feel like', body: 'Stress often appears when demands feel greater than your current capacity. It can affect concentration, patience, sleep, energy, motivation, and physical tension. Stress can build slowly, so noticing early signs is important.' },
+      { heading: 'Why rating helps', body: 'Rating mood, anxiety, or stress from 1–10 can make invisible experiences easier to track. A number is not the whole story, but it can help show patterns over time.' },
+      { heading: 'Talking about your experience', body: 'You do not need perfect words to describe how you feel. Simple descriptions like "heavy," "wired," "flat," "overwhelmed," or "on edge" can be useful starting points.' }
+    ],
+    reflectionPrompt: 'How do mood, anxiety, or stress usually show up for you?',
+    patientExercise: 'Choose one word that describes how you feel today. Then rate your mood and stress from 1–10.',
+    therapistNote: 'Look for differences between patient ratings and written descriptions. These may help guide conversation.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I understand mood, anxiety, and stress better'
+  },
+
+  m1l3: {
+    id: 'm1l3', moduleId: 1, lessonNumber: 3,
+    moduleTitle: 'Module 1 — Understanding Your Mental Health',
+    title: 'Recognising Personal Triggers',
+    estimatedTime: '10–12 minutes',
+    summary: 'Triggers are situations, thoughts, memories, sensations, or events that can affect emotional wellbeing. This lesson helps you identify possible triggers gently and safely without judging yourself.',
+    learningGoals: [
+      'Understand what a trigger can be.',
+      'Notice common types of triggers.',
+      'Learn how to track triggers safely.',
+      'Reduce self-blame around emotional reactions.'
+    ],
+    sections: [
+      { heading: 'What is a trigger?', body: 'A trigger is something that leads to a strong emotional, physical, or behavioural response. It might be obvious, such as an argument, or subtle, such as a tone of voice, a memory, a smell, a place, a deadline, or a feeling in the body.' },
+      { heading: 'Triggers are not weakness', body: 'Having triggers does not mean you are weak or broken. Triggers often develop because the mind and body are trying to protect you. Understanding them can help you respond with more care and less judgement.' },
+      { heading: 'Common trigger areas', body: 'Triggers may relate to relationships, work, health, money, conflict, uncertainty, rejection, trauma reminders, sensory overload, tiredness, loneliness, or feeling out of control.' },
+      { heading: 'Tracking gently', body: 'When tracking triggers, avoid forcing yourself to relive painful experiences. Start with simple notes: what happened, how you felt, what your body did, what you needed, and what helped.' },
+      { heading: 'Building awareness', body: 'Over time, trigger tracking can help you and your therapist identify patterns. This can support planning, coping strategies, boundaries, and safer responses.' }
+    ],
+    reflectionPrompt: 'What is one situation that often affects your wellbeing?',
+    patientExercise: 'Write down one possible trigger and one supportive response you could try next time.',
+    therapistNote: 'Review trigger notes carefully and avoid pushing for detail too quickly. Focus on safety, pacing, and stabilisation.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I can recognise some of my triggers'
+  },
+
+  m1l4: {
+    id: 'm1l4', moduleId: 1, lessonNumber: 4,
+    moduleTitle: 'Module 1 — Understanding Your Mental Health',
+    title: 'Tracking Patterns Safely',
+    estimatedTime: '8–10 minutes',
+    summary: 'Tracking can help you notice patterns in mood, stress, sleep, energy, coping strategies, and support needs. This lesson explains how to track safely without becoming overwhelmed or overly self-critical.',
+    learningGoals: [
+      'Understand the value of pattern tracking.',
+      'Learn what to track.',
+      'Avoid turning tracking into pressure.',
+      'Use check-ins as supportive information.'
+    ],
+    sections: [
+      { heading: 'Why patterns matter', body: 'Mental health experiences can feel random, but patterns often appear over time. You may notice that stress rises after poor sleep, mood drops after isolation, or coping improves after routine, movement, connection, or rest.' },
+      { heading: 'What can be tracked', body: 'Useful areas include mood, anxiety, stress, sleep, energy, appetite, concentration, coping strategies, social connection, symptoms, triggers, and notes for your therapist.' },
+      { heading: 'Tracking should not become punishment', body: 'Tracking is not about judging yourself or getting a perfect score. It is about gathering information. Missing a check-in does not mean failure. It may itself be useful information.' },
+      { heading: 'Look for trends, not single days', body: 'One difficult day does not define your recovery. Patterns become clearer when you look across several days or weeks. Your therapist can help interpret what the data might mean.' },
+      { heading: 'Keep it simple', body: 'A short check-in is enough. You do not need long explanations every day. Even a mood score, sleep rating, and one sentence can be useful.' }
+    ],
+    reflectionPrompt: 'What pattern would be useful for you and your therapist to understand better?',
+    patientExercise: 'Complete today\'s check-in and add one short note about what may have affected your wellbeing.',
+    therapistNote: 'Encourage patients to use tracking as information, not performance. Watch for perfectionism or anxiety around recording data.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I understand how to track patterns safely'
+  },
+
+  m1l5: {
+    id: 'm1l5', moduleId: 1, lessonNumber: 5,
+    moduleTitle: 'Module 1 — Understanding Your Mental Health',
+    title: 'When to Ask for Support',
+    estimatedTime: '8–10 minutes',
+    summary: 'Asking for support can be difficult, especially when you are used to coping alone. This lesson helps you recognise signs that extra support may be needed and how to communicate this clearly.',
+    learningGoals: [
+      'Recognise signs that support may be needed.',
+      'Reduce shame around asking for help.',
+      'Learn simple ways to communicate support needs.',
+      'Understand crisis boundaries.'
+    ],
+    sections: [
+      { heading: 'Support is part of recovery', body: 'Needing support does not mean you have failed. Support can help you feel less alone, organise your thoughts, make safer choices, and access the right help at the right time.' },
+      { heading: 'Signs you may need support', body: 'You may need extra support if you feel overwhelmed, unsafe, unable to cope, unusually withdrawn, highly anxious, very low, unable to sleep, unable to complete basic tasks, or unsure how to manage your thoughts or feelings.' },
+      { heading: 'Different levels of support', body: 'Support can include self-care, contacting a trusted person, messaging your therapist if appropriate, using a support plan, contacting a GP or healthcare professional, or contacting emergency/crisis services if there is immediate risk.' },
+      { heading: 'How to ask clearly', body: 'Simple phrases can help: "I am struggling today," "I need someone to check in," "I do not feel safe," "I need help making a plan," or "Can we talk about this in my next session?"' },
+      { heading: 'Immediate risk', body: 'If you feel at immediate risk or unable to stay safe, do not wait for an app response. Contact local emergency services or a crisis support line immediately.' }
+    ],
+    reflectionPrompt: 'What signs tell you that you may need extra support?',
+    patientExercise: 'Write one sentence you could use to ask for support when things feel difficult.',
+    therapistNote: 'Use this lesson to help patients build a realistic support plan and identify safe contacts and resources.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I know when to ask for support'
+  },
+
+  /* ── MODULE 2 ─────────────────────────────────────────── */
+
+  m2l1: {
+    id: 'm2l1', moduleId: 2, lessonNumber: 6,
+    moduleTitle: 'Module 2 — Coping Skills and Daily Regulation',
+    title: 'Breathing and Grounding Techniques',
+    estimatedTime: '10–12 minutes',
+    summary: 'Breathing and grounding techniques can help calm the body when stress or anxiety rises. This lesson introduces simple tools that can be practised gently and used when helpful.',
+    learningGoals: [
+      'Understand how breathing can affect the body.',
+      'Learn simple grounding techniques.',
+      'Practise using the senses to return to the present moment.',
+      'Choose a technique to try this week.'
+    ],
+    sections: [
+      { heading: 'Why regulation helps', body: 'When the body feels threatened or overwhelmed, it may move into a stress response. Breathing and grounding techniques can help signal safety and bring attention back to the present.' },
+      { heading: 'Gentle breathing', body: 'Try breathing in slowly through the nose for four counts, pausing briefly, and breathing out slowly for six counts. The longer out-breath can help the body settle. Do not force the breath. If it feels uncomfortable, stop and return to normal breathing.' },
+      { heading: '5-4-3-2-1 grounding', body: 'Notice five things you can see, four things you can feel, three things you can hear, two things you can smell, and one thing you can taste or appreciate. This can help reconnect with the present moment.' },
+      { heading: 'Feet on the floor', body: 'Place both feet on the floor. Notice the contact between your feet and the ground. Press gently into the floor and remind yourself: "I am here. This is now."' },
+      { heading: 'Practise when calm', body: 'Coping skills often work better when practised before distress is very high. Try using them during calm moments so they feel more familiar when needed.' }
+    ],
+    reflectionPrompt: 'Which grounding or breathing technique feels most manageable for you?',
+    patientExercise: 'Try one breathing or grounding technique for two minutes and record how you feel afterwards.',
+    therapistNote: 'Check whether breathing exercises feel safe for the patient. Some patients may prefer grounding over breath focus.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I have tried a grounding technique'
+  },
+
+  m2l2: {
+    id: 'm2l2', moduleId: 2, lessonNumber: 7,
+    moduleTitle: 'Module 2 — Coping Skills and Daily Regulation',
+    title: 'Building a Daily Wellbeing Routine',
+    estimatedTime: '10–12 minutes',
+    summary: 'A wellbeing routine does not need to be complicated. Small, repeatable actions can support stability, recovery, and self-awareness. This lesson helps you build a simple routine that fits your real life.',
+    learningGoals: [
+      'Understand why routine can support wellbeing.',
+      'Choose small daily actions.',
+      'Avoid unrealistic pressure.',
+      'Build a routine that can adapt on difficult days.'
+    ],
+    sections: [
+      { heading: 'Why routine helps', body: 'Routine can reduce decision pressure and create small anchors in the day. Predictable actions can support sleep, mood, energy, and emotional regulation.' },
+      { heading: 'Start small', body: 'A helpful routine might begin with one or two actions, such as drinking water, opening curtains, taking medication as prescribed, completing a check-in, stepping outside, eating something nourishing, or doing a grounding exercise.' },
+      { heading: 'Make a difficult-day version', body: 'Recovery routines should include a low-energy version. For example, if a walk feels too much, sitting near a window may be enough. If journaling feels too much, writing one word may be enough.' },
+      { heading: 'Link actions together', body: 'Routines are easier when connected to something you already do. For example: after brushing teeth, complete a check-in. After breakfast, take two slow breaths. Before bed, write one reflection.' },
+      { heading: 'Review and adjust', body: 'A routine should support you, not punish you. If it does not work, adjust it with curiosity rather than self-criticism.' }
+    ],
+    reflectionPrompt: 'What is one small wellbeing action you could repeat most days?',
+    patientExercise: 'Create a three-step routine for tomorrow, including one low-energy backup option.',
+    therapistNote: 'Review whether the patient\'s routine is realistic. Encourage flexible routines rather than perfectionistic plans.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I have created a simple wellbeing routine'
+  },
+
+  m2l3: {
+    id: 'm2l3', moduleId: 2, lessonNumber: 8,
+    moduleTitle: 'Module 2 — Coping Skills and Daily Regulation',
+    title: 'Managing Overwhelming Thoughts',
+    estimatedTime: '10–12 minutes',
+    summary: 'Overwhelming thoughts can feel powerful and urgent. This lesson helps you notice thoughts without immediately believing or fighting them, and introduces simple ways to create space around them.',
+    learningGoals: [
+      'Understand that thoughts are not always facts.',
+      'Learn ways to notice overwhelming thoughts.',
+      'Practise creating distance from thoughts.',
+      'Identify one helpful response.'
+    ],
+    sections: [
+      { heading: 'Thoughts can feel convincing', body: 'When you are stressed, low, or anxious, thoughts may become more intense. You might notice "what if" thoughts, self-critical thoughts, hopeless thoughts, or pressure-filled thoughts.' },
+      { heading: 'Thoughts are mental events', body: 'A thought is something your mind produces. It may contain useful information, but it is not automatically true. Learning to notice thoughts can reduce their control.' },
+      { heading: 'Name the thought', body: 'Try saying: "I am having the thought that…" before the thought. For example: "I am having the thought that I cannot cope." This can create a small amount of distance.' },
+      { heading: 'Look for a balanced response', body: 'Instead of forcing positivity, try a balanced response: "This feels hard right now, and I can take one small step," or "I do not have to solve everything today."' },
+      { heading: 'Use support', body: 'If thoughts feel intense, frightening, or difficult to manage alone, use your support plan, contact a trusted person, or seek professional help. If you feel unsafe, contact emergency or crisis support immediately.' }
+    ],
+    reflectionPrompt: 'What overwhelming thought shows up for you most often?',
+    patientExercise: 'Write one overwhelming thought, then rewrite it as "I am having the thought that…" and add one balanced response.',
+    therapistNote: 'This exercise can reveal cognitive themes. Use gently and avoid debating thoughts too aggressively.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I have practised creating space from thoughts'
+  },
+
+  m2l4: {
+    id: 'm2l4', moduleId: 2, lessonNumber: 9,
+    moduleTitle: 'Module 2 — Coping Skills and Daily Regulation',
+    title: 'Sleep, Rest, and Recovery Basics',
+    estimatedTime: '8–10 minutes',
+    summary: 'Sleep and rest can strongly affect mood, stress, concentration, and coping. This lesson helps you notice the relationship between rest and wellbeing, and plan small supportive changes.',
+    learningGoals: [
+      'Understand the connection between sleep and wellbeing.',
+      'Notice how rest affects mood and anxiety.',
+      'Learn simple sleep-supportive habits.',
+      'Identify one realistic rest goal.'
+    ],
+    sections: [
+      { heading: 'Sleep affects coping', body: 'Poor sleep can make emotions feel stronger, reduce concentration, increase irritability, and make coping strategies harder to use. This does not mean you are failing; it means your system may be under strain.' },
+      { heading: 'Rest is not laziness', body: 'Rest is part of recovery. Rest can include sleep, quiet time, reduced stimulation, gentle movement, breathing, time away from screens, or doing something calming.' },
+      { heading: 'Create a wind-down signal', body: 'A wind-down routine tells the body that sleep is approaching. This could include dimming lights, reducing phone use, stretching, listening to calming audio, or writing down tomorrow\'s tasks.' },
+      { heading: 'Track without pressure', body: 'Tracking sleep quality can help identify patterns. Avoid judging yourself for poor sleep. Use it as information to discuss with your therapist or healthcare professional if needed.' },
+      { heading: 'When sleep problems persist', body: 'If sleep problems continue or severely affect daily life, consider discussing them with a healthcare professional. TherapyLink™ can support tracking, but it does not diagnose or treat sleep conditions.' }
+    ],
+    reflectionPrompt: 'How does your sleep usually affect your mood or stress?',
+    patientExercise: 'Choose one small wind-down action to try tonight.',
+    therapistNote: 'Sleep tracking may reveal important wellbeing patterns. Explore without blame.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I have chosen a rest-supportive action'
+  },
+
+  m2l5: {
+    id: 'm2l5', moduleId: 2, lessonNumber: 10,
+    moduleTitle: 'Module 2 — Coping Skills and Daily Regulation',
+    title: 'Creating a Support Plan',
+    estimatedTime: '10–12 minutes',
+    summary: 'A support plan helps you know what to do when things become difficult. This lesson helps you create a simple plan that includes coping strategies, supportive people, professional support, and crisis steps.',
+    learningGoals: [
+      'Understand what a support plan is.',
+      'Identify personal warning signs.',
+      'Choose coping strategies.',
+      'List safe support contacts and next steps.'
+    ],
+    sections: [
+      { heading: 'What is a support plan?', body: 'A support plan is a clear list of actions and contacts that can help when your wellbeing drops or distress rises. It is easier to follow a plan when it is written before things feel overwhelming.' },
+      { heading: 'Warning signs', body: 'Warning signs may include withdrawal, poor sleep, racing thoughts, feeling numb, irritability, avoiding responsibilities, increased anxiety, low mood, or feeling unable to cope.' },
+      { heading: 'Coping actions', body: 'Helpful actions might include grounding, breathing, stepping outside, drinking water, eating something, reducing stimulation, writing thoughts down, using a routine, or contacting someone supportive.' },
+      { heading: 'Support contacts', body: 'Include people or services you can contact. This may include trusted friends/family, your therapist, your GP or healthcare provider, community support, crisis lines, or emergency services where appropriate.' },
+      { heading: 'Crisis step', body: 'If you feel in immediate danger or unable to stay safe, contact local emergency services or a crisis support line immediately. Do not wait for a TherapyLink™ response.' }
+    ],
+    reflectionPrompt: 'What are your early signs that you may need extra support?',
+    patientExercise: 'Create a simple support plan with three coping actions and two support contacts.',
+    therapistNote: 'Review the patient\'s support plan and help make it specific, realistic, and safe.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I have created a support plan'
+  },
+
+  /* ── MODULE 3 ─────────────────────────────────────────── */
+
+  m3l1: {
+    id: 'm3l1', moduleId: 3, lessonNumber: 11,
+    moduleTitle: 'Module 3 — Progress, Reflection, and Relapse Prevention',
+    title: 'Reflecting on Progress',
+    estimatedTime: '8–10 minutes',
+    summary: 'Progress can be easy to miss, especially when you are focused on what still feels difficult. This lesson helps you reflect on small changes, strengths, and patterns of improvement.',
+    learningGoals: [
+      'Recognise different types of progress.',
+      'Notice small wins.',
+      'Reflect without self-judgement.',
+      'Prepare progress notes for therapy.'
+    ],
+    sections: [
+      { heading: 'Progress can be subtle', body: 'Progress may look like noticing a trigger sooner, asking for support, completing a check-in, using a coping strategy, attending therapy, resting instead of pushing through, or speaking to yourself more kindly.' },
+      { heading: 'Progress is not perfection', body: 'You can be making progress and still have difficult days. Recovery does not require constant improvement. It often involves learning how to respond differently when difficulties appear.' },
+      { heading: 'Look at evidence', body: 'Use check-ins, lesson completion, mood trends, notes, and coping strategy use as evidence. This can help you see change more clearly over time.' },
+      { heading: 'Name strengths', body: 'Strengths might include persistence, honesty, courage, awareness, patience, creativity, care for others, or willingness to try. These strengths can support recovery.' },
+      { heading: 'Bring progress to therapy', body: 'Progress reflections can help your therapist understand what is changing and what still needs support.' }
+    ],
+    reflectionPrompt: 'What is one small sign of progress you have noticed recently?',
+    patientExercise: 'Write down three small wins from the past week, even if they seem minor.',
+    therapistNote: 'Use patient reflections to reinforce realistic progress and identify helpful interventions.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I have reflected on my progress'
+  },
+
+  m3l2: {
+    id: 'm3l2', moduleId: 3, lessonNumber: 12,
+    moduleTitle: 'Module 3 — Progress, Reflection, and Relapse Prevention',
+    title: 'Identifying Early Warning Signs',
+    estimatedTime: '10–12 minutes',
+    summary: 'Early warning signs are signals that your wellbeing may be starting to decline. Recognising them early can help you respond before things feel unmanageable.',
+    learningGoals: [
+      'Understand early warning signs.',
+      'Identify personal signs of decline.',
+      'Connect warning signs to support actions.',
+      'Build a prevention mindset.'
+    ],
+    sections: [
+      { heading: 'What are early warning signs?', body: 'Early warning signs are changes that may appear before a bigger drop in wellbeing. They can happen in thoughts, feelings, body sensations, behaviour, sleep, relationships, or daily routines.' },
+      { heading: 'Common warning signs', body: 'Examples include sleeping much more or less, withdrawing, skipping meals, feeling unusually irritable, avoiding messages, racing thoughts, feeling hopeless, losing interest, increased worry, or stopping helpful routines.' },
+      { heading: 'Your signs may be unique', body: 'Everyone\'s signs are different. Some people become restless, while others shut down. Some become more emotional, while others feel numb.' },
+      { heading: 'Respond early', body: 'When warning signs appear, use your support plan early. This might include reducing pressure, using grounding, contacting support, completing a check-in, or telling your therapist.' },
+      { heading: 'No shame', body: 'Warning signs are information, not failure. Noticing them is a skill.' }
+    ],
+    reflectionPrompt: 'What are your early warning signs that things may be getting harder?',
+    patientExercise: 'List three early warning signs and one action you can take for each.',
+    therapistNote: 'Help the patient connect warning signs to specific support steps.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I can identify early warning signs'
+  },
+
+  m3l3: {
+    id: 'm3l3', moduleId: 3, lessonNumber: 13,
+    moduleTitle: 'Module 3 — Progress, Reflection, and Relapse Prevention',
+    title: 'Strengthening Coping Strategies',
+    estimatedTime: '8–10 minutes',
+    summary: 'Coping strategies are skills or actions that help you manage difficult moments. This lesson helps you review what works, what does not, and how to build a practical coping toolkit.',
+    learningGoals: [
+      'Understand different types of coping strategies.',
+      'Identify strategies that already help.',
+      'Build a flexible coping toolkit.',
+      'Match strategies to different needs.'
+    ],
+    sections: [
+      { heading: 'Coping strategies are tools', body: 'No single coping strategy works for every situation. A toolkit gives you options depending on what you need: calming, distraction, connection, expression, rest, problem-solving, or support.' },
+      { heading: 'Different types of coping', body: 'Calming strategies include breathing, grounding, music, or quiet time. Practical strategies include making a list or reducing tasks. Connection strategies include messaging someone safe. Expression strategies include journaling, art, or talking.' },
+      { heading: 'Notice what works', body: 'After using a strategy, ask: Did this help a little, a lot, or not today? A strategy that does not work once may still help another time.' },
+      { heading: 'Make strategies easy to access', body: 'Keep coping strategies visible and simple. Add them to your support plan or TherapyLink™ notes so you do not have to remember them during distress.' },
+      { heading: 'Review with your therapist', body: 'Your therapist can help adjust coping strategies and explore why some feel easier or harder.' }
+    ],
+    reflectionPrompt: 'Which coping strategy has helped you even slightly?',
+    patientExercise: 'Create a coping toolkit with five strategies: one calming, one practical, one connection-based, one expressive, and one rest-based.',
+    therapistNote: 'Review whether coping strategies are accessible, safe, and realistic for the patient\'s context.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I have strengthened my coping toolkit'
+  },
+
+  m3l4: {
+    id: 'm3l4', moduleId: 3, lessonNumber: 14,
+    moduleTitle: 'Module 3 — Progress, Reflection, and Relapse Prevention',
+    title: 'Preparing for Therapy Sessions',
+    estimatedTime: '8–10 minutes',
+    summary: 'Preparing for therapy can help you make better use of your session time. This lesson helps you collect reflections, questions, progress notes, and concerns before meeting your therapist.',
+    learningGoals: [
+      'Prepare useful notes for therapy.',
+      'Identify topics to discuss.',
+      'Review check-in patterns.',
+      'Communicate support needs clearly.'
+    ],
+    sections: [
+      { heading: 'Why preparation helps', body: 'When emotions are high or time is limited, it can be hard to remember everything you wanted to say. Preparing notes can help you feel more organised and supported.' },
+      { heading: 'Review recent check-ins', body: 'Look at mood, anxiety, stress, sleep, coping strategy use, and support flags. Notice anything that changed or repeated.' },
+      { heading: 'Choose key topics', body: 'You might discuss triggers, difficult moments, progress, questions, coping strategies, medication concerns if relevant to your healthcare provider, relationship issues, work stress, or support needs.' },
+      { heading: 'Share what feels hard to say', body: 'If something feels difficult to say aloud, writing it down can help. You might show your therapist your notes or use them as a starting point.' },
+      { heading: 'End with next steps', body: 'After therapy, it can help to record one or two next steps so you know what to focus on before the next session.' }
+    ],
+    reflectionPrompt: 'What is one thing you want your therapist to understand at your next session?',
+    patientExercise: 'Write three notes for your next session: one progress update, one difficulty, and one question.',
+    therapistNote: 'Patient preparation notes may improve session focus and reveal concerns that are hard to verbalise.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I have prepared for my next therapy session'
+  },
+
+  m3l5: {
+    id: 'm3l5', moduleId: 3, lessonNumber: 15,
+    moduleTitle: 'Module 3 — Progress, Reflection, and Relapse Prevention',
+    title: 'Building a Personal Recovery Plan',
+    estimatedTime: '12–15 minutes',
+    summary: 'A personal recovery plan brings together what you have learned about your wellbeing, triggers, coping strategies, support needs, and goals. This lesson helps you create a practical plan you can review with your therapist.',
+    learningGoals: [
+      'Bring together learning from the pathway.',
+      'Identify strengths, triggers, and coping strategies.',
+      'Create realistic recovery goals.',
+      'Build a plan for continued support.'
+    ],
+    sections: [
+      { heading: 'What is a recovery plan?', body: 'A recovery plan is a personal guide for supporting your wellbeing. It can include what helps, what makes things harder, who can support you, what to do during difficult moments, and what progress means to you.' },
+      { heading: 'Include your strengths', body: 'Your strengths are part of the plan. These might include persistence, creativity, honesty, care for others, problem-solving, humour, patience, or the ability to keep trying.' },
+      { heading: 'Include triggers and warning signs', body: 'List the situations, feelings, thoughts, or patterns that may affect your wellbeing. Include early warning signs so you can respond sooner.' },
+      { heading: 'Include coping and support', body: 'Add coping strategies, daily routine anchors, support contacts, therapy goals, and crisis steps. Make the plan realistic and easy to follow.' },
+      { heading: 'Keep the plan flexible', body: 'A recovery plan can change. Review it with your therapist and update it when you learn more about yourself.' }
+    ],
+    reflectionPrompt: 'What are the most important things your recovery plan should include?',
+    patientExercise: 'Create a personal recovery plan with five sections: strengths, triggers, warning signs, coping strategies, and support contacts.',
+    therapistNote: 'Use the recovery plan as a collaborative tool. Review for realism, safety, and patient ownership.',
+    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    completionLabel: 'I have built my personal recovery plan'
+  }
+
+};
+
+
+// ── Lessons ──────────────────────────────────────────────────────
+function renderLessons(){
+  const el=document.getElementById('lessons-content');
+  // Remove any open lesson detail panel first
+  const existing=document.getElementById('lesson-detail-panel');
+  if(existing)existing.remove();
+  el.innerHTML=CURRICULUM.map(mod=>{
+    const done=mod.lessons.filter(l=>lessonProgress[l.id]).length;
+    const pct=Math.round((done/mod.lessons.length)*100);
+    return`<div class="module-card">
+      <div class="module-header"><div class="module-icon">${mod.icon}</div><div><div class="module-name">${mod.name}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${done}/${mod.lessons.length} lessons complete · ${pct}%</div></div></div>
+      <div class="module-prog"><div class="module-prog-bar" style="width:${pct}%;background:${mod.color}"></div></div>
+      ${mod.lessons.map(l=>`<div class="lesson-item" onclick="openLesson('${l.id}',${l.xp})" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openLesson('${l.id}',${l.xp})">
+        <div class="lesson-info"><div class="lesson-name">${l.name}</div><div class="lesson-desc">${l.desc}</div></div>
+        <button class="lesson-check ${lessonProgress[l.id]?'done':''}" onclick="event.stopPropagation();toggleLesson('${l.id}',${l.xp})" title="${lessonProgress[l.id]?'Mark incomplete':'Mark complete'}">${lessonProgress[l.id]?'✓':''}</button>
+      </div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+function toggleLesson(id,xpVal){
+  if(lessonProgress[id]){delete lessonProgress[id];}else{lessonProgress[id]=Date.now();xp+=xpVal;sSet('4p3x_xp',xp);showToast('+'+xpVal+' XP — Lesson complete! ✓');}
+  sSet('4p3x_lesson_progress',lessonProgress);renderLessons();renderProgress();document.getElementById('xp-chip').textContent='⚡ '+xp+' XP';
+}
+
+function openLesson(id,xpVal){
+  const lc=LESSON_CONTENT[id];
+  if(!lc){showToast('Lesson content loading…');return;}
+  // Save note key
+  const noteKey='tl_lesson_note_'+id;
+  const savedNote=sGet(noteKey,'');
+  const isDone=!!lessonProgress[id];
+  const panel=document.createElement('div');
+  panel.id='lesson-detail-panel';
+  panel.className='lesson-detail';
+  panel.innerHTML=`
+    <div class="ld-header">
+      <button class="ld-back" onclick="closeLessonDetail()" aria-label="Back to lessons">←</button>
+      <div class="ld-header-info">
+        <div class="ld-module-label">${lc.moduleTitle}</div>
+        <div class="ld-title">${lc.title}</div>
+      </div>
+    </div>
+    <div class="ld-body">
+      <div class="ld-meta">
+        <span class="ld-num">Lesson ${lc.lessonNumber} of 15</span>
+        <span class="ld-time">⏱ ${lc.estimatedTime}</span>
+        ${isDone?'<span class="risk-badge LOW" style="font-size:11px;padding:3px 10px">✓ Completed</span>':''}
+      </div>
+      <div class="ld-summary">${lc.summary}</div>
+      <div class="ld-goals">
+        <h3>What you will learn</h3>
+        ${lc.learningGoals.map(g=>`<div class="ld-goal">${g}</div>`).join('')}
+      </div>
+      ${lc.sections.map(s=>`<div class="ld-section"><h3>${s.heading}</h3><p>${s.body}</p></div>`).join('')}
+      <div class="ld-block">
+        <h3>💭 Reflection</h3>
+        <p>${lc.reflectionPrompt}</p>
+      </div>
+      <div class="ld-block">
+        <h3>✏️ Your Exercise</h3>
+        <p>${lc.patientExercise}</p>
+        <textarea class="ld-note-area" id="ld-note-field" placeholder="Write your reflection or notes here…" rows="3">${savedNote}</textarea>
+      </div>
+      <div class="ld-safety">
+        <h3>⚠️ Safety Notice</h3>
+        <p>${lc.safetyNote}</p>
+      </div>
+      <div style="height:80px"></div>
+    </div>
+    <div class="ld-complete-bar">
+      <button class="btn-primary" id="ld-complete-btn" onclick="completeLessonFromDetail('${id}',${xpVal})"
+        style="${isDone?'background:var(--green);':''}">
+        ${isDone?'✓ '+lc.completionLabel:lc.completionLabel}
+      </button>
+    </div>`;
+  document.body.appendChild(panel);
+  panel.scrollTop=0;
+}
+
+function closeLessonDetail(){
+  // Save note if user typed one
+  const panel=document.getElementById('lesson-detail-panel');
+  if(!panel)return;
+  // try to recover id from complete btn
+  const btn=document.getElementById('ld-complete-btn');
+  if(btn){
+    const onclick=btn.getAttribute('onclick')||'';
+    const m=onclick.match(/completeLessonFromDetail\('([^']+)'/);
+    if(m){const noteKey='tl_lesson_note_'+m[1];const field=document.getElementById('ld-note-field');if(field&&field.value.trim())sSet(noteKey,field.value.trim());}
+  }
+  panel.remove();
+}
+
+function completeLessonFromDetail(id,xpVal){
+  // Save note
+  const field=document.getElementById('ld-note-field');
+  if(field&&field.value.trim()){sSet('tl_lesson_note_'+id,field.value.trim());}
+  // Mark complete
+  if(!lessonProgress[id]){lessonProgress[id]=Date.now();xp+=xpVal;sSet('4p3x_xp',xp);showToast('+'+xpVal+' XP — Lesson complete! ✓');}
+  sSet('4p3x_lesson_progress',lessonProgress);renderProgress();document.getElementById('xp-chip').textContent='⚡ '+xp+' XP';
+  // Update button + badge in panel
+  const btn=document.getElementById('ld-complete-btn');
+  const lc=LESSON_CONTENT[id];
+  if(btn&&lc){btn.textContent='✓ '+lc.completionLabel;btn.style.background='var(--green)';}
+  // Update check in list behind panel (will be visible on close)
+  renderLessons();
+  // Re-open panel to show updated state (keeps user in lesson)
+  const panel=document.getElementById('lesson-detail-panel');
+  const metaEl=panel?panel.querySelector('.ld-meta'):null;
+  if(metaEl&&!metaEl.querySelector('.risk-badge')){
+    const badge=document.createElement('span');
+    badge.className='risk-badge LOW';badge.style='font-size:11px;padding:3px 10px';badge.textContent='✓ Completed';
+    metaEl.appendChild(badge);
+  }
+}
+
+// ── Coping ───────────────────────────────────────────────────────
+function renderCoping(){
+  document.getElementById('coping-content').innerHTML=COPING_STRATEGIES.map(s=>`<div class="coping-card">
+    <div class="coping-icon">${s.icon}</div>
+    <div class="coping-body">
+      <div class="coping-name">${s.name}</div>
+      <div class="coping-desc">${s.desc}</div>
+      <span class="coping-tag">${s.cat}</span>
+      <div style="margin-top:10px"><button class="btn-sm ${copingUsed.includes(s.id)?'filled':''}" onclick="markCoping('${s.id}')">${copingUsed.includes(s.id)?'✓ Used today':'Mark as used today'}</button></div>
+    </div>
+  </div>`).join('');
+}
+
+function markCoping(id){
+  if(!copingUsed.includes(id)){copingUsed.push(id);xp+=5;sSet('4p3x_xp',xp);showToast('+5 XP — Coping strategy logged ✓');}
+  sSet('4p3x_coping_used',copingUsed);renderCoping();document.getElementById('xp-chip').textContent='⚡ '+xp+' XP';
+}
+
+// ── Progress ─────────────────────────────────────────────────────
+function renderProgress(){
+  const el=document.getElementById('progress-content');
+  const totalLessons=Object.values(lessonProgress).filter(Boolean).length;
+  const avgAnx=checkins.length?(checkins.slice(0,7).reduce((a,c)=>a+(c.anxiety||0),0)/Math.min(checkins.length,7)).toFixed(1):'—';
+  const avgMood=checkins.length?(checkins.slice(0,7).reduce((a,c)=>a+(c.mood||0),0)/Math.min(checkins.length,7)).toFixed(1):'—';
+  el.innerHTML=`
+    <div class="prog-stat-grid">
+      <div class="prog-stat"><div class="prog-stat-val">${checkins.length}</div><div class="prog-stat-lbl">Check-Ins</div></div>
+      <div class="prog-stat"><div class="prog-stat-val">${streak}</div><div class="prog-stat-lbl">Day Streak</div></div>
+      <div class="prog-stat"><div class="prog-stat-val">${totalLessons}/15</div><div class="prog-stat-lbl">Lessons Done</div></div>
+      <div class="prog-stat"><div class="prog-stat-val">${xp}</div><div class="prog-stat-lbl">Total XP</div></div>
+    </div>
+    <div class="prog-stat-grid">
+      <div class="prog-stat"><div class="prog-stat-val" style="font-size:20px">${avgAnx}</div><div class="prog-stat-lbl">Avg Anxiety (7d)</div></div>
+      <div class="prog-stat"><div class="prog-stat-val" style="font-size:20px">${avgMood}</div><div class="prog-stat-lbl">Avg Mood (7d)</div></div>
+    </div>
+    <div style="font-size:14px;font-weight:700;margin:16px 0 10px">Recent Check-Ins</div>
+    ${checkins.length===0?'<p style="color:var(--muted);font-size:13px;padding:20px 0;text-align:center">No check-ins yet. Complete your first check-in to see your progress here.</p>':
+    checkins.slice(0,10).map(c=>{const sc=c.anxiety<=3?'sl':c.anxiety<=5?'sm':c.anxiety<=7?'sh':'sc';return`<div class="history-item"><div class="hi-score pc-score ${sc}">${c.anxiety}</div><div class="hi-info"><div style="font-size:13px;font-weight:600">${new Date(c.date).toLocaleDateString()} <span class="risk-badge ${c.risk}" style="font-size:10px;padding:2px 8px">${c.risk}</span></div><div class="hi-date">Mood: ${c.mood}/10 · Sleep: ${c.sleep}/10 · Energy: ${c.energy}/10</div>${c.note?`<div class="hi-note" style="color:var(--muted)">📝 ${c.note}</div>`:''}</div></div>`;}).join('')}
+    <div class="safety-notice" style="margin-top:20px">
+      <h4>⚠️ Recovery Support Notice</h4>
+      <p>This app supports mental health education, reflection, and therapist-guided monitoring. It does not provide emergency support or replace professional care. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.</p>
+    </div>`;
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),2800);}
+</script>
+</body>
+</html>
