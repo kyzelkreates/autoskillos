@@ -158,365 +158,401 @@ const CURRICULUM = [
 
 const LESSON_CONTENT = {
 
+  /* ── MODULE 1 ─────────────────────────────────────────── */
+
   m1l1: {
-    id: 'm1l1',
-    moduleId: 1,
-    lessonNumber: 1,
+    id: 'm1l1', moduleId: 1, lessonNumber: 1,
     moduleTitle: 'Module 1 — Manufacturing Site Orientation',
-    title: 'Welcome to AutoSkill OS™',
+    title: 'Understanding Your Workstation',
     estimatedTime: '8–10 minutes',
-    summary: 'Welcome to AutoSkill OS™. This pathway introduces the process-learning structure used in an automotive/manufacturing environment. You will move through lessons, safety checks, process steps, and supervisor-review points. Progress is saved locally first and can be connected to a backend in live mode.',
-    learningGoals: ['Understand the purpose and structure of AutoSkill OS™.', 'Know how to complete each lesson, checkpoint, and safety acknowledgement.', 'Understand how your progress is saved and what it is used for.', 'Know when to ask a supervisor during training.'],
-    sections: [{  heading: 'What this app does', body: 'AutoSkill OS™ is a manufacturing training support tool. It helps employees complete structured process learning, record safety acknowledgements, and prepare evidence for supervisor review. It does not replace your supervisor, employer procedures, or site-specific safety training.' }, {  heading: 'How the pathway works', body: 'Your training is organised into modules and lessons. Each module covers a specific part of manufacturing such as PPE, workstation readiness, assembly, or quality control. Some lessons include a checkpoint question or a safety acknowledgement.' }, {  heading: 'Completing lessons', body: 'Read each lesson carefully. Complete the checkpoint if one is shown. Acknowledge any safety items when prompted. Press the complete button to record your progress locally. Your progress updates immediately.' }, {  heading: 'When to ask a supervisor', body: 'If any instruction is unclear, stop and ask a supervisor before continuing. This app supports awareness but does not replace qualified supervision or site-specific safety procedures.' }, {  heading: 'Demo vs Live mode', body: 'In Demo Mode, you explore the full training pathway using sample content. In Live Mode, your employer can configure live training data and connect to a backend. Progress is saved locally first in both modes.' }],
-    reflectionPrompt: 'What does completing this training pathway mean for your role? Write a short note about why training consistency matters at your workstation.',
-    patientExercise: 'Before your next shift, identify one aspect of your workstation setup you want to understand better. Write it down and ask your supervisor if you need clarification.',
-    safetyNote: 'AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility. For on-site emergencies, follow your site emergency procedure immediately.',
-    completionLabel: 'I understand what AutoSkill OS™ is for and how to use it',
-    checkpoint: {
-      question: 'What is the purpose of AutoSkill OS™?',
-      type: 'multipleChoice',
-      options: ['To replace workplace supervision', 'To support training, progress tracking, safety awareness, and supervisor review', 'To guarantee legal compliance', 'To operate machinery automatically'],
-      correctAnswer: 'To support training, progress tracking, safety awareness, and supervisor review',
-      safetyCritical: false,
-      feedbackText: 'Correct. AutoSkill OS™ supports training and progress tracking. It does not replace supervision or guarantee compliance.',
-    },
+    summary: 'Your workstation is your primary work area during each shift. Understanding its layout, responsibilities, and daily readiness requirements helps you work safely and efficiently.',
+    learningGoals: [
+      'Understand your workstation layout and key responsibility zones.',
+      'Know the daily readiness checks required before starting work.',
+      'Understand the safety requirements for your workstation.',
+      'Understand how AutoSkill OS™ can support your learning between supervisor sessions.'
+    ],
+    sections: [
+      { heading: 'Your workstation', body: 'Your workstation is the specific area where you perform your assigned tasks. Understanding its boundaries, equipment, and materials is the first step to working safely and effectively.' },
+      { heading: 'Readiness checks', body: 'Before starting work, verify that your workstation is clean, tools are in correct position, PPE is available, and materials are correctly staged. A readiness check prevents errors before they happen.' },
+      { heading: 'Small checks count', body: 'Small consistent actions build competency. This might include completing a check-in, reviewing a process step, practising a tool procedure, writing down a question, or contacting your supervisor. These steps build confidence over time.' },
+      { heading: 'Why tracking helps', body: 'Tracking process accuracy, check-in frequency, and training progress can help you and your supervisor notice patterns. These patterns may help guide future training and make supervisor check-ins more focused.' },
+      { heading: 'Using AutoSkill OS™', body: 'AutoSkill OS™ is designed to support training, learning, and supervisor-guided competency tracking. Use it as a training tool between supervisor sessions.' }
+    ],
+    reflectionPrompt: 'What would progress look like for you this week, even if it is only a small step?',
+    learnerTask: 'Identify one area of your workstation you are least familiar with and review it today.',
+    supervisorNote: 'Review the patient\'s definition of progress. It may reveal expectations, pressure points, or opportunities for realistic goal-setting.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I understand my workstation layout and responsibilities'
   },
 
   m1l2: {
-    id: 'm1l2',
-    moduleId: 1,
-    lessonNumber: 2,
+    id: 'm1l2', moduleId: 1, lessonNumber: 2,
     moduleTitle: 'Module 1 — Manufacturing Site Orientation',
-    title: 'Understanding Your Training Pathway',
+    title: 'Health, Safety and PPE Basics',
     estimatedTime: '8–10 minutes',
-    summary: 'Your training pathway is a structured sequence of modules and lessons. Each module focuses on a specific part of the manufacturing process. Some lessons include checkpoints or safety acknowledgements that confirm you have understood the training and know when supervisor support is required.',
-    learningGoals: ['Understand the structure of a training pathway.', 'Know the difference between a module, a lesson, and a checkpoint.', 'Understand when a safety acknowledgement is required.', 'Know how supervisor review fits into the pathway.'],
-    sections: [{  heading: 'Pathway, module, lesson', body: 'A pathway contains modules. A module contains lessons. A lesson may include a checkpoint or a safety acknowledgement. Completing lessons in a module contributes to module progress. Completing all modules contributes to pathway progress.' }, {  heading: 'Checkpoints', body: 'A checkpoint is a short question that confirms you have understood the lesson content. Checkpoints are not a formal qualification. They support your learning and may form part of your evidence record for supervisor review.' }, {  heading: 'Safety acknowledgements', body: 'Some lessons require a safety acknowledgement. This confirms you have read and understood a specific safety requirement. Acknowledgements are recorded locally and can be reviewed by your supervisor.' }, {  heading: 'Supervisor review', body: 'Some steps in your pathway may require supervisor review. This means your supervisor needs to confirm your understanding or observe your practical skills. App completion is not the same as workplace authorisation.' }, {  heading: 'Honest progress', body: 'Your progress should be accurate and honest. Only complete a lesson or checkpoint when you have genuinely worked through the material. If unsure, ask a supervisor or trainer before marking it complete.' }],
-    reflectionPrompt: 'What would you do if a training step is unclear? Write down the correct action in your own words.',
-    patientExercise: 'Look at the lesson list for this module. Identify which lessons have checkpoint questions and which have safety acknowledgements.',
-    safetyNote: 'AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility. For on-site emergencies, follow your site emergency procedure immediately.',
-    completionLabel: 'I understand how training pathways, modules, and checkpoints work',
-    checkpoint: {
-      question: 'What should you do if you do not understand a training step?',
-      type: 'multipleChoice',
-      options: ['Skip it and mark it complete', 'Guess and continue', 'Ask a supervisor or trainer for guidance', 'Ignore the training pathway'],
-      correctAnswer: 'Ask a supervisor or trainer for guidance',
-      safetyCritical: false,
-      feedbackText: 'Correct. Always ask a supervisor or trainer if a training step is unclear before continuing.',
-    },
+    summary: 'Mood, anxiety, and stress can affect thoughts, feelings, body sensations, and behaviour. This lesson helps you understand how these experiences can show up and why tracking them may help you and your supervisor recognise useful patterns.',
+    learningGoals: [
+      'Understand the difference between mood, anxiety, and stress.',
+      'Notice how emotional experiences can affect the body.',
+      'Learn why rating mood and stress can be useful.',
+      'Build confidence in describing your experience.'
+    ],
+    sections: [
+      { heading: 'What mood means', body: 'Mood is your general emotional state. It can include feeling low, calm, hopeful, numb, irritable, motivated, tired, or unsettled. Mood can change throughout the day and may be affected by sleep, relationships, thoughts, health, work, and life events.' },
+      { heading: 'What anxiety can feel like', body: 'Anxiety can include worry, fear, tension, racing thoughts, restlessness, avoidance, or physical sensations such as a tight chest, fast heartbeat, sweating, or stomach discomfort. Anxiety is not a personal failure. It is a signal that your mind or body may be responding to perceived threat or pressure.' },
+      { heading: 'What stress can feel like', body: 'Stress often appears when demands feel greater than your current capacity. It can affect concentration, patience, sleep, energy, motivation, and physical tension. Stress can build slowly, so noticing early signs is important.' },
+      { heading: 'Why rating helps', body: 'Rating mood, anxiety, or stress from 1–10 can make invisible experiences easier to track. A number is not the whole story, but it can help show patterns over time.' },
+      { heading: 'Talking about your experience', body: 'You do not need perfect words to describe how you feel. Simple descriptions like "heavy," "wired," "flat," "overwhelmed," or "on edge" can be useful starting points.' }
+    ],
+    reflectionPrompt: 'How do mood, anxiety, or stress usually show up for you?',
+    learnerTask: 'Choose one word that describes how you feel today. Then rate your mood and stress from 1–10.',
+    supervisorNote: 'Look for differences between patient ratings and written descriptions. These may help guide conversation.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I understand the key health, safety and PPE requirements'
   },
 
   m1l3: {
-    id: 'm1l3',
-    moduleId: 1,
-    lessonNumber: 3,
+    id: 'm1l3', moduleId: 1, lessonNumber: 3,
     moduleTitle: 'Module 1 — Manufacturing Site Orientation',
     title: 'Assembly Line Process Overview',
     estimatedTime: '10–12 minutes',
-    summary: 'The assembly line is a structured sequence of workstations, each contributing a specific step to the final product. Understanding how your workstation connects to the wider production flow helps you work consistently and communicate issues effectively.',
-    learningGoals: ['Understand how work flows through an assembly line.', 'Know how one workstation connects to the next.', 'Understand why consistent process order matters.', 'Know how to communicate a delay or issue in the flow.'],
-    sections: [{  heading: 'What is an assembly line?', body: 'An assembly line is a sequence of workstations where employees complete specific steps in a defined order. Each station receives work from the previous one and passes it forward. The quality and completeness of your step affects everything that follows.' }, {  heading: 'Why order matters', body: 'Manufacturing processes depend on steps being completed in the correct order. Skipping or changing a step without authorisation can affect safety, quality, traceability, and production flow. Always follow approved process instructions.' }, {  heading: 'Flow and handover', body: 'At the end of your step, work moves to the next station. If your step is incomplete or contains an issue, the next station may not be able to continue safely or correctly. Good handover information keeps the line running.' }, {  heading: 'When flow stops', body: 'A delay, missing part, or quality issue at one station can affect the next stage. If you encounter a blocker, report it through the correct workplace route rather than improvising or skipping ahead.' }, {  heading: 'Your role in the line', body: 'You need to understand your station clearly, complete your step correctly, and communicate when something is wrong. Understanding the wider flow helps you see why your consistency matters.' }],
-    reflectionPrompt: 'How does your workstation connect to the next step in the process? Describe what you pass on and what you receive.',
-    patientExercise: 'If you were explaining your workstation role to a new colleague, what would you say in three sentences? Write it down.',
-    safetyNote: 'AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility. For on-site emergencies, follow your site emergency procedure immediately.',
-    completionLabel: 'I understand how assembly line flow works and my role within it',
-    checkpoint: {
-      question: 'What can happen if a problem at one station is not reported?',
-      type: 'multipleChoice',
-      options: ['It may affect later process stages', 'Nothing ever happens', 'It automatically fixes itself', 'The training pathway deletes it'],
-      correctAnswer: 'It may affect later process stages',
-      safetyCritical: false,
-      feedbackText: 'Correct. Problems not reported at one station can cascade and affect downstream steps, quality, and safety.',
-    },
+    summary: 'Triggers are situations, thoughts, memories, sensations, or events that can affect process performance. This lesson helps you identify possible triggers gently and safely without judging yourself.',
+    learningGoals: [
+      'Understand what a trigger can be.',
+      'Notice common types of triggers.',
+      'Learn how to track triggers safely.',
+      'Reduce self-blame around emotional reactions.'
+    ],
+    sections: [
+      { heading: 'What is a trigger?', body: 'A trigger is something that leads to a strong emotional, physical, or behavioural response. It might be obvious, such as an argument, or subtle, such as a tone of voice, a memory, a smell, a place, a deadline, or a feeling in the body.' },
+      { heading: 'Triggers are not weakness', body: 'Having triggers does not mean you are weak or broken. Triggers often develop because the mind and body are trying to protect you. Understanding them can help you respond with more care and less judgement.' },
+      { heading: 'Common trigger areas', body: 'Triggers may relate to relationships, work, health, money, conflict, uncertainty, rejection, trauma reminders, sensory overload, tiredness, loneliness, or feeling out of control.' },
+      { heading: 'Tracking gently', body: 'When tracking triggers, avoid forcing yourself to relive painful experiences. Start with simple notes: what happened, how you felt, what your body did, what you needed, and what helped.' },
+      { heading: 'Building awareness', body: 'Over time, trigger tracking can help you and your supervisor identify patterns. This can support planning, skill techniques, boundaries, and safer responses.' }
+    ],
+    reflectionPrompt: 'What is one situation that often affects your performance?',
+    learnerTask: 'Write down one possible trigger and one supportive response you could try next time.',
+    supervisorNote: 'Review trigger notes carefully and avoid pushing for detail too quickly. Focus on safety, pacing, and stabilisation.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I can recognise some of my triggers'
   },
 
   m1l4: {
-    id: 'm1l4',
-    moduleId: 1,
-    lessonNumber: 4,
+    id: 'm1l4', moduleId: 1, lessonNumber: 4,
     moduleTitle: 'Module 1 — Manufacturing Site Orientation',
     title: 'Workstation Readiness',
-    estimatedTime: '10 minutes',
-    summary: 'Before starting work at any workstation, employees must complete a readiness check. This confirms that the area, tools, materials, and PPE are ready, and that you understand the process step you are about to perform.',
-    learningGoals: ['Know what a workstation readiness check involves.', 'Understand why readiness checks reduce errors.', 'Identify what to do if something is missing or incorrect.', 'Know when supervisor sign-off is required before starting.'],
-    sections: [{  heading: 'What is a readiness check?', body: 'A readiness check is a brief review of your workstation before starting work. It confirms that PPE is available, tools are correct and undamaged, materials are correctly staged, the area is clean and clear, and you understand the process step.' }, {  heading: 'Why it matters', body: 'A missing tool or unclear instruction discovered before starting is far easier to resolve than one discovered mid-process. Consistent readiness checks reduce defects, delays, and safety incidents.' }, {  heading: 'What to check', body: 'Before starting: confirm PPE is available and worn correctly. Verify correct tools are present and in good condition. Check that right materials are at the station. Review the process instruction to confirm you understand the next step.' }, {  heading: 'If something is missing or wrong', body: 'Do not start work if required PPE, tools, or materials are missing. Do not start if you are unclear on the process step. Report the issue to your supervisor before beginning. Starting with incomplete preparation is a common cause of errors.' }, {  heading: 'Supervisor sign-off', body: 'Some workstation starts may require supervisor sign-off. If sign-off is required for your station, do not begin until it has been completed.' }],
-    reflectionPrompt: 'What is the most important thing you check before starting at your workstation? Why does that item matter most?',
-    patientExercise: 'Write a simple five-item readiness checklist for your workstation: PPE, tools, materials, area condition, and process step confirmation.',
-    safetyNote: 'AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility. For on-site emergencies, follow your site emergency procedure immediately.',
-    completionLabel: 'I understand how to complete a workstation readiness check',
-    checkpoint: {
-      question: 'What should be checked before starting at a workstation?',
-      type: 'multipleChoice',
-      options: ['Only the time', 'Task instructions, tools/materials, area condition, and PPE', 'Nothing if the previous person used it', 'Only whether the training app opens'],
-      correctAnswer: 'Task instructions, tools/materials, area condition, and PPE',
-      safetyCritical: true,
-      feedbackText: 'Correct. A proper readiness check covers the task instruction, tools, materials, area condition, and PPE before starting.',
-    },
+    estimatedTime: '8–10 minutes',
+    summary: 'Tracking can help you notice patterns in mood, stress, sleep, energy, skill techniques, and support needs. This lesson explains how to track safely without becoming overwhelmed or overly self-critical.',
+    learningGoals: [
+      'Understand the value of pattern tracking.',
+      'Learn what to track.',
+      'Avoid turning tracking into pressure.',
+      'Use check-ins as supportive information.'
+    ],
+    sections: [
+      { heading: 'Why patterns matter', body: 'Training progress can feel uneven, but patterns often appear over time. You may notice that process errors increase when preparation is rushed, performance improves after clear briefing, or skills build after routine practice, connection, or rest.' },
+      { heading: 'What can be tracked', body: 'Useful areas include mood, anxiety, stress, sleep, energy, appetite, concentration, skill techniques, social connection, symptoms, triggers, and notes for your supervisor.' },
+      { heading: 'Tracking should not become punishment', body: 'Tracking is not about judging yourself or getting a perfect score. It is about gathering information. Missing a check-in does not mean failure. It may itself be useful information.' },
+      { heading: 'Look for trends, not single days', body: 'One difficult day does not define your training journey. Patterns become clearer when you look across several days or weeks. Your supervisor can help interpret what the data might mean.' },
+      { heading: 'Keep it simple', body: 'A short check-in is enough. You do not need long explanations every day. Even a mood score, sleep rating, and one sentence can be useful.' }
+    ],
+    reflectionPrompt: 'What pattern would be useful for you and your supervisor to understand better?',
+    learnerTask: 'Complete today\'s check-in and add one short note about what may have affected your performance.',
+    supervisorNote: 'Encourage patients to use tracking as information, not performance. Watch for perfectionism or anxiety around recording data.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I understand how to track patterns safely'
   },
 
   m1l5: {
-    id: 'm1l5',
-    moduleId: 1,
-    lessonNumber: 5,
+    id: 'm1l5', moduleId: 1, lessonNumber: 5,
     moduleTitle: 'Module 1 — Manufacturing Site Orientation',
     title: 'Tool Handling and Equipment Safety',
-    estimatedTime: '10–12 minutes',
-    summary: 'Employees should only use tools and equipment they are trained and authorised to use. Safe tool handling reduces injury risk and protects product quality. This lesson covers tool selection, inspection, safe use, and what to do when a tool is damaged or unfamiliar.',
-    learningGoals: ['Know which tools you are authorised to use.', 'Understand how to inspect a tool before use.', 'Know correct handling procedures for common manufacturing tools.', 'Know what to do if a tool is damaged, missing, or unfamiliar.'],
-    sections: [{  heading: 'Authorised use only', body: 'Only use tools, equipment, or systems you are trained and authorised to use. If a task appears to require equipment you have not been trained on, stop and ask your supervisor before proceeding.' }, {  heading: 'Tool inspection before use', body: 'Before using any tool: check it is the correct tool for the task. Inspect for visible damage such as cracks, frayed wires, loose parts, or worn surfaces. Do not use a damaged tool. Report it and request a replacement.' }, {  heading: 'Safe handling', body: 'Use tools as designed. Do not use a tool for a purpose it was not designed for. Keep tools clear of moving machinery. Store tools in their correct location after every use.' }, {  heading: 'Equipment boundary awareness', body: 'Manufacturing areas may include machinery, restricted zones, moving parts, vehicles, or controlled processes. Respect barriers, signage, and restricted areas. Do not operate equipment outside your authorised scope.' }, {  heading: 'Report unsafe conditions', body: 'If a tool is missing, damaged, or behaving unusually, do not attempt to use or fix it yourself. Report to your supervisor immediately. Report unsafe conditions at any workstation, even if it is not your area.' }],
-    reflectionPrompt: 'What would you do if you needed to complete a step but the correct tool was missing? Write down the steps you would take.',
-    patientExercise: 'Identify two tools you use at your workstation. For each, write: what it does, how to inspect it before use, and where it is stored when not in use.',
-    safetyNote: 'AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility. For on-site emergencies, follow your site emergency procedure immediately.',
-    completionLabel: 'I understand safe tool handling and equipment boundaries',
-    checkpoint: {
-      question: 'What should you do if a tool looks damaged or unfamiliar?',
-      type: 'multipleChoice',
-      options: ['Use it carefully', 'Hide it', 'Stop and ask a supervisor', 'Continue because production speed matters most'],
-      correctAnswer: 'Stop and ask a supervisor',
-      safetyCritical: true,
-      feedbackText: 'Correct. Never use a damaged or unfamiliar tool. Stop and ask your supervisor before continuing.',
-    },
+    estimatedTime: '8–10 minutes',
+    summary: 'Asking for support can be difficult, especially when you are used to coping alone. This lesson helps you recognise signs that extra support may be needed and how to communicate this clearly.',
+    learningGoals: [
+      'Recognise signs that support may be needed.',
+      'Reduce shame around asking for help.',
+      'Learn simple ways to communicate support needs.',
+      'Understand crisis boundaries.'
+    ],
+    sections: [
+      { heading: 'Support is part of development', body: 'Asking for help does not mean you have failed. Support can help you feel less alone, organise your thoughts, make safer choices, and access the right help at the right time.' },
+      { heading: 'Signs you may need support', body: 'You may need extra support if you feel overwhelmed, unsafe, unable to cope, unusually withdrawn, highly anxious, very low, unable to sleep, unable to complete basic tasks, or unsure how to manage your thoughts or feelings.' },
+      { heading: 'Different levels of support', body: 'Support can include self-care, contacting a trusted person, messaging your supervisor if appropriate, using a support plan, contacting a GP or healthcare professional, or contacting emergency/crisis services if there is immediate risk.' },
+      { heading: 'How to ask clearly', body: 'Simple phrases can help: "I am struggling today," "I need someone to check in," "I do not feel safe," "I need help making a plan," or "Can we talk about this in my next session?"' },
+      { heading: 'Immediate risk', body: 'If you feel at immediate risk or unable to stay safe, do not wait for an app response. Contact local emergency services or a crisis support line immediately.' }
+    ],
+    reflectionPrompt: 'What signs tell you that you may need extra support?',
+    learnerTask: 'Write one sentence you could use to ask for support when things feel difficult.',
+    supervisorNote: 'Use this lesson to help patients build a realistic support plan and identify safe contacts and resources.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I know when to ask for support'
   },
 
+  /* ── MODULE 2 ─────────────────────────────────────────── */
+
   m2l1: {
-    id: 'm2l1',
-    moduleId: 2,
-    lessonNumber: 6,
+    id: 'm2l1', moduleId: 2, lessonNumber: 6,
     moduleTitle: 'Module 2 — Quality Control and Process Standards',
     title: 'Quality Control and Defect Reporting',
     estimatedTime: '10–12 minutes',
-    summary: 'Quality control helps ensure that products, parts, and processes meet required standards. Employees should be alert for visible defects, missing parts, incorrect alignment, or anything that does not match the expected process. When an issue is found, it must be reported correctly.',
-    learningGoals: ['Understand what quality control means at workstation level.', 'Know how to recognise a quality issue.', 'Understand the correct reporting process for defects.', 'Know why accurate reporting matters for the whole line.'],
-    sections: [{  heading: 'What is quality control?', body: 'Quality control at workstation level means checking that your step meets the required standard before passing work to the next station. This may involve visual inspection, measurement, or functional checks depending on your role.' }, {  heading: 'Recognising a quality issue', body: 'A quality issue is anything that does not match the expected standard. This might include visible damage, incorrect assembly, missing components, wrong dimensions, surface defects, or incomplete steps. If in doubt, stop and ask.' }, {  heading: 'What to do when you find a defect', body: 'Do not pass defective work to the next station. Stop, quarantine the part if your site procedure requires it, and report the defect through the correct workplace route. Record what you found, where, and when.' }, {  heading: 'Accurate reporting', body: 'A useful defect report includes: what was found, where it was found, when it was found, and any action taken. Do not guess, hide, or change records. Accurate reporting protects employees, customers, and the business.' }, {  heading: 'Why it matters', body: 'Quality checks protect customers, employees, and the business. A missed defect can create rework, delays, safety concerns, customer dissatisfaction, or traceability issues.' }],
-    reflectionPrompt: 'Can you describe a situation where missing a small quality issue could create a larger problem later in the process?',
-    patientExercise: 'Write a brief defect report template for your workstation: what, where, when, and action taken.',
-    safetyNote: 'AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility. For on-site emergencies, follow your site emergency procedure immediately.',
-    completionLabel: 'I understand quality control and the defect reporting process',
-    checkpoint: {
-      question: 'What should you do if something does not match the expected quality standard?',
-      type: 'multipleChoice',
-      options: ['Ignore it if it is small', 'Report it through the correct process or ask a supervisor', 'Hide it from the next station', 'Change the process yourself'],
-      correctAnswer: 'Report it through the correct process or ask a supervisor',
-      safetyCritical: false,
-      feedbackText: 'Correct. Always report quality issues through the correct route. Do not hide or ignore them, even if minor.',
-    },
+    summary: 'Breathing and grounding techniques can help calm the body when stress or anxiety rises. This lesson introduces simple tools that can be practised gently and used when helpful.',
+    learningGoals: [
+      'Understand how breathing can affect the body.',
+      'Learn simple grounding techniques.',
+      'Practise using the senses to return to the present moment.',
+      'Choose a technique to try this week.'
+    ],
+    sections: [
+      { heading: 'Why regulation helps', body: 'When the body feels threatened or overwhelmed, it may move into a stress response. Breathing and grounding techniques can help signal safety and bring attention back to the present.' },
+      { heading: 'Gentle breathing', body: 'Try breathing in slowly through the nose for four counts, pausing briefly, and breathing out slowly for six counts. The longer out-breath can help the body settle. Do not force the breath. If it feels uncomfortable, stop and return to normal breathing.' },
+      { heading: '5-4-3-2-1 grounding', body: 'Notice five things you can see, four things you can feel, three things you can hear, two things you can smell, and one thing you can taste or appreciate. This can help reconnect with the present moment.' },
+      { heading: 'Feet on the floor', body: 'Place both feet on the floor. Notice the contact between your feet and the ground. Press gently into the floor and remind yourself: "I am here. This is now."' },
+      { heading: 'Practise when calm', body: 'Coping skills often work better when practised before distress is very high. Try using them during calm moments so they feel more familiar when needed.' }
+    ],
+    reflectionPrompt: 'Which grounding or breathing technique feels most manageable for you?',
+    learnerTask: 'Try one breathing or grounding technique for two minutes and record how you feel afterwards.',
+    supervisorNote: 'Check whether breathing exercises feel safe for the employee. Some patients may prefer grounding over breath focus.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I have tried a grounding technique'
   },
 
   m2l2: {
-    id: 'm2l2',
-    moduleId: 2,
-    lessonNumber: 7,
+    id: 'm2l2', moduleId: 2, lessonNumber: 7,
     moduleTitle: 'Module 2 — Quality Control and Process Standards',
     title: 'Production Workflow and Handover',
-    estimatedTime: '10 minutes',
-    summary: 'Production flow describes how work moves through departments, stations, checks, and handover points. Good handovers reduce confusion and prevent missed issues. This lesson covers production flow awareness and what a good shift handover looks like.',
-    learningGoals: ['Understand how production flow connects workstations.', 'Know what information a good handover should include.', 'Understand why handovers matter for the next shift or station.', 'Know what to do if a handover is unclear or incomplete.'],
-    sections: [{  heading: 'Production flow', body: 'Production flow describes how work moves through departments, stations, quality checks, and handover points. A delay or issue at one station can affect the next stage. Understanding your position in the flow helps you communicate issues early.' }, {  heading: 'What is a handover?', body: 'A handover communicates the current state of work to the next person, team, shift, or station. A good handover reduces confusion, prevents missed issues, and keeps the line running safely.' }, {  heading: 'What to include in a handover', body: 'A useful handover includes: completed steps, pending or incomplete items, quality or safety concerns, missing materials, open defects, and any supervisor instructions. Do not assume the next person already knows.' }, {  heading: 'Clear communication', body: 'Clear communication supports production flow. Vague or missing handovers can cause defects, repeated work, safety incidents, or production delays. If your handover route requires written records, complete them accurately.' }, {  heading: 'If a handover you receive is unclear', body: 'If you receive an unclear handover, do not guess. Ask the previous operator or your supervisor for clarification before starting. Starting with incorrect information increases defect and error risk.' }],
-    reflectionPrompt: 'What are the three most important items to communicate in your shift handover?',
-    patientExercise: 'Write a sample handover note for your current or most recent workstation: completed items, pending issues, and safety concerns.',
-    safetyNote: 'AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility. For on-site emergencies, follow your site emergency procedure immediately.',
-    completionLabel: 'I understand production workflow and how to complete a handover',
-    checkpoint: {
-      question: 'What should a handover communicate?',
-      type: 'multipleChoice',
-      options: ['Only positive updates', 'Completed steps, pending items, issues, and relevant safety or quality concerns', 'Nothing if the shift is busy', 'Only the training score'],
-      correctAnswer: 'Completed steps, pending items, issues, and relevant safety or quality concerns',
-      safetyCritical: false,
-      feedbackText: 'Correct. A complete handover covers completed steps, pending items, and any safety or quality concerns.',
-    },
+    estimatedTime: '10–12 minutes',
+    summary: 'A training routine does not need to be complicated. Small, repeatable actions can reinforce stability, recovery, and self-awareness. This lesson helps you build a simple routine that fits your real life.',
+    learningGoals: [
+      'Understand why a consistent routine supports training performance.',
+      'Choose small daily actions.',
+      'Avoid unrealistic pressure.',
+      'Build a routine that can adapt on difficult days.'
+    ],
+    sections: [
+      { heading: 'Why routine helps', body: 'Routine can reduce decision pressure and create small anchors in the day. Predictable actions can support sleep, mood, energy, and emotional regulation.' },
+      { heading: 'Start small', body: 'A helpful routine might begin with one or two actions, such as drinking water, opening curtains, taking medication as prescribed, completing a check-in, stepping outside, eating something nourishing, or doing a grounding exercise.' },
+      { heading: 'Plan for challenging shifts', body: 'Training routines should include a backup plan. For example, if a walk feels too much, sitting near a window may be enough. If journaling feels too much, writing one word may be enough.' },
+      { heading: 'Link actions together', body: 'Routines are easier when connected to something you already do. For example: after brushing teeth, complete a check-in. After breakfast, take two slow breaths. Before bed, write one reflection.' },
+      { heading: 'Review and adjust', body: 'A routine should support you, not punish you. If it does not work, adjust it with curiosity rather than self-criticism.' }
+    ],
+    reflectionPrompt: 'What is one training action or process check you could complete consistently each shift?',
+    learnerTask: 'Create a three-step routine for tomorrow, including one low-energy backup option.',
+    supervisorNote: 'Review whether the patient\'s routine is realistic. Encourage flexible routines rather than perfectionistic plans.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I have created a simple training routine'
   },
 
   m2l3: {
-    id: 'm2l3',
-    moduleId: 2,
-    lessonNumber: 8,
+    id: 'm2l3', moduleId: 2, lessonNumber: 8,
     moduleTitle: 'Module 2 — Quality Control and Process Standards',
     title: 'Process Checkpoint Procedures',
-    estimatedTime: '10 minutes',
-    summary: 'Process checkpoints are defined verification points within the manufacturing process. At a checkpoint, an employee confirms that the required step has been completed correctly before work continues.',
-    learningGoals: ['Understand what a process checkpoint is.', 'Know how to complete a checkpoint correctly.', 'Understand what to do if a step does not pass a checkpoint.', 'Know when supervisor involvement is required at a checkpoint.'],
-    sections: [{  heading: 'What is a process checkpoint?', body: 'A process checkpoint is a point in the manufacturing sequence where an employee verifies that a step has been completed correctly before work continues. Checkpoints may be visual, dimensional, functional, or procedural.' }, {  heading: 'How to complete a checkpoint', body: 'At each checkpoint: review the quality standard for that step. Inspect the work against that standard. Record the result. If the step passes, continue. If it does not, follow the non-conformance process.' }, {  heading: 'If a step does not pass', body: 'Do not pass work that has not met the checkpoint standard. Quarantine the item if required. Report to your supervisor or follow the workplace non-conformance procedure. Do not skip a failed checkpoint to maintain production speed.' }, {  heading: 'Supervisor involvement', body: 'Some checkpoints require supervisor sign-off before work continues. If this is required at your station, do not proceed without it. The requirement will be shown in your process instruction.' }, {  heading: 'Recording accurately', body: 'Checkpoint records are part of your product traceability. Accurate records help the business track quality, investigate issues, and meet requirements. Do not record a pass when the step has not been properly checked.' }],
-    reflectionPrompt: 'What is the checkpoint procedure at your workstation? Describe it in your own words from memory.',
-    patientExercise: 'Write a step-by-step description of how you would complete a process checkpoint at your workstation.',
-    safetyNote: 'AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility. For on-site emergencies, follow your site emergency procedure immediately.',
-    completionLabel: 'I understand how to complete a process checkpoint correctly',
-    checkpoint: {
-      question: 'What should you do if a process step does not meet the checkpoint standard?',
-      type: 'multipleChoice',
-      options: ['Record a pass anyway to keep production moving', 'Follow the non-conformance process and report to your supervisor', 'Skip the checkpoint record', 'Pass the work and fix it at the next station'],
-      correctAnswer: 'Follow the non-conformance process and report to your supervisor',
-      safetyCritical: false,
-      feedbackText: 'Correct. A failed checkpoint must be reported and handled through the non-conformance process.',
-    },
+    estimatedTime: '10–12 minutes',
+    summary: 'Overwhelming thoughts can feel powerful and urgent. This lesson helps you notice thoughts without immediately believing or fighting them, and introduces simple ways to create space around them.',
+    learningGoals: [
+      'Understand that thoughts are not always facts.',
+      'Learn ways to notice overwhelming thoughts.',
+      'Practise creating distance from thoughts.',
+      'Identify one helpful response.'
+    ],
+    sections: [
+      { heading: 'Thoughts can feel convincing', body: 'When you are stressed, low, or anxious, thoughts may become more intense. You might notice "what if" thoughts, self-critical thoughts, hopeless thoughts, or pressure-filled thoughts.' },
+      { heading: 'Thoughts are mental events', body: 'A thought is something your mind produces. It may contain useful information, but it is not automatically true. Learning to notice thoughts can reduce their control.' },
+      { heading: 'Name the thought', body: 'Try saying: "I am having the thought that…" before the thought. For example: "I am having the thought that I cannot cope." This can create a small amount of distance.' },
+      { heading: 'Look for a balanced response', body: 'Instead of forcing positivity, try a balanced response: "This feels hard right now, and I can take one small step," or "I do not have to solve everything today."' },
+      { heading: 'Use support', body: 'If thoughts feel intense, frightening, or difficult to manage alone, use your support plan, contact a trusted person, or seek professional help. If you feel unsafe, contact emergency or crisis support immediately.' }
+    ],
+    reflectionPrompt: 'What overwhelming thought shows up for you most often?',
+    learnerTask: 'Write one overwhelming thought, then rewrite it as "I am having the thought that…" and add one balanced response.',
+    supervisorNote: 'This exercise can reveal cognitive themes. Use gently and avoid debating thoughts too aggressively.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I have practised creating space from thoughts'
   },
 
   m2l4: {
-    id: 'm2l4',
-    moduleId: 2,
-    lessonNumber: 9,
+    id: 'm2l4', moduleId: 2, lessonNumber: 9,
     moduleTitle: 'Module 2 — Quality Control and Process Standards',
     title: 'Workstation Safety Checks',
     estimatedTime: '8–10 minutes',
-    summary: 'Workstation safety checks are brief but important reviews completed before and during a shift. They help identify hazards, confirm PPE, verify equipment condition, and confirm area readiness. Consistent safety checks protect employees and production quality.',
-    learningGoals: ['Know what a workstation safety check involves.', 'Understand when safety checks should be completed.', 'Know what to do if a hazard is found during a safety check.', 'Understand the difference between a safety check and a process checkpoint.'],
-    sections: [{  heading: 'What is a workstation safety check?', body: 'A workstation safety check is a structured review of the physical safety of your work area. It is different from a process checkpoint. A safety check looks for hazards, PPE issues, equipment problems, and area concerns.' }, {  heading: 'When to complete safety checks', body: 'Safety checks should be completed at the start of every shift before work begins. They may also be required after a break, after an incident, after equipment is moved, or when the workstation has been handed over from another shift.' }, {  heading: 'What to check', body: 'A typical safety check includes: PPE availability, equipment condition and guard positions, clear walkways and emergency exits, correct tool storage, absence of obvious spills or hazards, and confirmation that the area matches its expected state.' }, {  heading: 'If a hazard is found', body: 'If a hazard is found, do not start work in that area. Report the hazard to your supervisor immediately. Follow site-specific hazard reporting procedures. Do not attempt to resolve hazards yourself unless trained and authorised.' }, {  heading: 'Safety checks are not optional', body: 'Safety checks exist to protect you and your colleagues. Skipping them to save time is a false economy. A missed hazard that causes an incident costs far more than the minute spent on the check.' }],
-    reflectionPrompt: 'Have you ever noticed a potential hazard at a workstation? What did you do, or what would you do next time?',
-    patientExercise: 'Write a simple safety check list for your workstation covering at least five items: PPE, equipment, area condition, tool storage, and emergency access.',
-    safetyNote: 'AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility. For on-site emergencies, follow your site emergency procedure immediately.',
-    completionLabel: 'I understand how to complete a workstation safety check',
-    checkpoint: {
-      question: 'What should you do if a hazard is found during a workstation safety check?',
-      type: 'multipleChoice',
-      options: ['Work around it carefully', 'Ignore it if it looks minor', 'Report it to your supervisor and do not start work in that area', 'Fix it yourself before anyone notices'],
-      correctAnswer: 'Report it to your supervisor and do not start work in that area',
-      safetyCritical: true,
-      feedbackText: 'Correct. If a hazard is found, stop, do not start work, and report it to your supervisor immediately.',
-    },
+    summary: 'Daily workstation safety checks are a critical part of manufacturing operations. This module helps you understand which checks to perform, when to perform them, and why they matter.',
+    learningGoals: [
+      'Understand the key safety checks required at your workstation each shift.',
+      'Notice how rest affects mood and anxiety.',
+      'Learn simple sleep-supportive habits.',
+      'Identify one realistic rest goal.'
+    ],
+    sections: [
+      { heading: 'Sleep affects coping', body: 'Poor sleep can make emotions feel stronger, reduce concentration, increase irritability, and make skill techniques harder to use. This does not mean you are failing; it means your system may be under strain.' },
+      { heading: 'Readiness is not optional', body: 'Workstation readiness is part of every shift. Checks can include PPE inspection, tool condition, equipment calibration, surface cleanliness, and hazard identification.' },
+      { heading: 'Create a pre-shift checklist', body: 'A pre-shift checklist tells you exactly what to verify before starting work. This could include PPE status, tool condition, workstation cleanliness, materials availability, and supervisor sign-on.' },
+      { heading: 'Track without pressure', body: 'Tracking sleep quality can help identify patterns. Avoid judging yourself for poor sleep. Use it as information to discuss with your supervisor or healthcare professional if needed.' },
+      { heading: 'When sleep problems persist', body: 'If sleep problems continue or severely affect daily life, consider discussing them with a healthcare professional. AutoSkill OS™ can support tracking, but it does not diagnose or treat sleep conditions.' }
+    ],
+    reflectionPrompt: 'How does your sleep usually affect your mood or stress?',
+    learnerTask: 'Choose one small wind-down action to try tonight.',
+    supervisorNote: 'Sleep tracking may reveal important training patterns. Explore without blame.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I have chosen a rest-supportive action'
   },
 
   m2l5: {
-    id: 'm2l5',
-    moduleId: 2,
-    lessonNumber: 10,
+    id: 'm2l5', moduleId: 2, lessonNumber: 10,
     moduleTitle: 'Module 2 — Quality Control and Process Standards',
-    title: 'Supervisor Sign-Off and Sign-On',
-    estimatedTime: '8–10 minutes',
-    summary: 'Supervisor sign-off is a formal confirmation that a step, competency, or training milestone has been reviewed by a qualified supervisor. Sign-off is not automatic and is not replaced by app completion.',
-    learningGoals: ['Understand what supervisor sign-off means.', 'Know which steps require supervisor sign-off.', 'Know how to prepare for a supervisor review.', 'Understand the difference between app completion and workplace authorisation.'],
-    sections: [{  heading: 'What is supervisor sign-off?', body: 'Supervisor sign-off is formal confirmation from a qualified supervisor that you have demonstrated the required knowledge, skill, or safety behaviour for a specific step or competency. It is not automatic from completing training lessons.' }, {  heading: 'When is sign-off required?', body: 'Sign-off may be required before starting certain workstations, after completing a training module, when a competency is being assessed, or at the start of a new process. Your site procedures will state where sign-off is required.' }, {  heading: 'Preparing for supervisor review', body: 'To prepare: complete all required lessons and checkpoints. Review safety acknowledgements. Keep notes accurate. Be ready to explain or demonstrate what you have learned. Ask questions before the review if anything is unclear.' }, {  heading: 'App completion is not authorisation', body: 'Completing lessons in AutoSkill OS™ is a training milestone. It does not mean you are authorised to work independently at a station. Authorisation comes through supervisor sign-off and site-specific procedures.' }, {  heading: 'After sign-off', body: 'After sign-off, your progress record may be updated. Further sign-off may be required at later stages. Keep notes and evidence accurate throughout your pathway.' }],
-    reflectionPrompt: 'What does your supervisor sign-off process look like at your site? What evidence would you bring to a review?',
-    patientExercise: 'List three things you would check or prepare before requesting supervisor sign-off on a module.',
-    safetyNote: 'AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility. For on-site emergencies, follow your site emergency procedure immediately.',
-    completionLabel: 'I understand the supervisor sign-off process and how to prepare for it',
-    checkpoint: {
-      question: 'Does completing app lessons automatically prove full workplace competence?',
-      type: 'multipleChoice',
-      options: ['Yes, always', 'No, supervisor review and workplace procedures may still be required', 'Only if the score is above 50%', 'Only in live mode'],
-      correctAnswer: 'No, supervisor review and workplace procedures may still be required',
-      safetyCritical: false,
-      feedbackText: 'Correct. App completion is a training milestone. Workplace authorisation requires supervisor review and site procedures.',
-    },
+    title: 'Creating a Support Plan',
+    estimatedTime: '10–12 minutes',
+    summary: 'A support plan helps you know what to do when things become difficult. This lesson helps you create a simple plan that includes skill techniques, supportive people, professional support, and crisis steps.',
+    learningGoals: [
+      'Understand what a support plan is.',
+      'Identify personal warning signs.',
+      'Choose skill techniques.',
+      'List safe support contacts and next steps.'
+    ],
+    sections: [
+      { heading: 'What is a support plan?', body: 'A competency plan is a clear list of actions and contacts that can help when your performance drops or distress rises. It is easier to follow a plan when it is written before things feel overwhelming.' },
+      { heading: 'Warning signs', body: 'Warning signs may include withdrawal, poor sleep, racing thoughts, feeling numb, irritability, avoiding responsibilities, increased anxiety, low mood, or feeling unable to cope.' },
+      { heading: 'Coping actions', body: 'Helpful actions might include grounding, breathing, stepping outside, drinking water, eating something, reducing stimulation, writing thoughts down, using a routine, or contacting someone supportive.' },
+      { heading: 'Support contacts', body: 'Include people or services you can contact. This may include trusted friends/family, your supervisor, your GP or healthcare provider, community support, crisis lines, or emergency services where appropriate.' },
+      { heading: 'Crisis step', body: 'If you feel in immediate danger or unable to stay safe, contact local emergency services or a crisis support line immediately. Do not wait for a digital response — act immediately.' }
+    ],
+    reflectionPrompt: 'What are your early signs that you may need extra support?',
+    learnerTask: 'Create a simple support plan with three coping actions and two support contacts.',
+    supervisorNote: 'Review the patient\'s support plan and help make it specific, realistic, and safe.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I have created a support plan'
   },
 
+  /* ── MODULE 3 ─────────────────────────────────────────── */
+
   m3l1: {
-    id: 'm3l1',
-    moduleId: 3,
-    lessonNumber: 11,
+    id: 'm3l1', moduleId: 3, lessonNumber: 11,
     moduleTitle: 'Module 3 — Competency Assessment and Development',
     title: 'Reviewing Your Training Progress',
-    estimatedTime: '10 minutes',
-    summary: 'Reviewing your training progress helps you and your supervisor identify what you have completed, what is pending, and where additional support may be useful. Progress review is a regular part of competency development.',
-    learningGoals: ['Understand how to review your own training progress.', 'Know what progress information is recorded in AutoSkill OS™.', 'Understand how to use progress review in a supervisor conversation.', 'Know how to identify gaps in your training.'],
-    sections: [{  heading: 'What progress is recorded?', body: 'AutoSkill OS™ records lesson completions, checkpoint answers, safety acknowledgements, evidence notes, and local sync queue items. This data is saved locally first and can support supervisor review conversations.' }, {  heading: 'How to review your progress', body: 'Open the Progress tab in the Employee Learning PWA. You will see completed lessons, pathway percentage, safety acknowledgement status, pending reviews, and evidence record counts. Review this before a supervisor check-in.' }, {  heading: 'Identifying gaps', body: 'If a module or lesson appears incomplete, check whether you missed a checkpoint or acknowledgement. If a supervisor review is pending, confirm when it is scheduled. If something appears incorrect, ask your supervisor to review it.' }, {  heading: 'Honest self-assessment', body: 'Progress should reflect your genuine understanding, not just task completion. If you completed a lesson but did not understand it fully, note that as a gap. Honest self-assessment makes supervisor conversations more useful.' }, {  heading: 'Progress is not a competition', body: 'Training speed varies between individuals and situations. A slower, more thorough review is more useful than a fast, shallow one. Competency is about understanding and capability, not speed.' }],
-    reflectionPrompt: 'Looking at your current progress, where do you feel most confident? Where do you feel least confident? Write a short honest summary.',
-    patientExercise: 'Open the Progress tab. Write down: how many lessons are complete, how many safety acknowledgements are done, and what you think is your biggest knowledge gap right now.',
-    safetyNote: 'AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility. For on-site emergencies, follow your site emergency procedure immediately.',
-    completionLabel: 'I understand how to review and use my training progress',
-    checkpoint: {
-      question: 'What should honest training progress reflect?',
-      type: 'multipleChoice',
-      options: ['Only the lessons that were easy', 'Genuine understanding and capability, not just task completion speed', 'The highest possible score regardless of understanding', 'Only completed modules, not gaps'],
-      correctAnswer: 'Genuine understanding and capability, not just task completion speed',
-      safetyCritical: false,
-      feedbackText: 'Correct. Progress should reflect genuine understanding. Rushing through reduces the value of the training.',
-    },
+    estimatedTime: '8–10 minutes',
+    summary: 'Progress can be easy to miss, especially when you are focused on what still feels difficult. This lesson helps you reflect on small changes, strengths, and patterns of improvement.',
+    learningGoals: [
+      'Recognise different types of progress.',
+      'Notice small wins.',
+      'Reflect without self-judgement.',
+      'Prepare progress notes for your supervisor check-in.'
+    ],
+    sections: [
+      { heading: 'Progress can be subtle', body: 'Progress may look like noticing a trigger sooner, asking for support, completing a check-in, using a coping strategy, attending a training session, resting instead of pushing through, or speaking to yourself more kindly.' },
+      { heading: 'Progress is not perfection', body: 'You can be making training progress and still face challenging days. Development does not require constant improvement. It often involves learning how to respond differently when difficulties appear.' },
+      { heading: 'Look at evidence', body: 'Use check-ins, lesson completion, mood trends, notes, and coping strategy use as evidence. This can help you see change more clearly over time.' },
+      { heading: 'Name strengths', body: 'Strengths might include persistence, honesty, courage, awareness, patience, creativity, care for others, or willingness to try. These strengths can support recovery.' },
+      { heading: 'Bring progress to your check-in', body: 'Progress reflections can help your supervisor understand what is improving and where additional support is needed.' }
+    ],
+    reflectionPrompt: 'What is one small sign of progress you have noticed recently?',
+    learnerTask: 'Write down three small wins from the past week, even if they seem minor.',
+    supervisorNote: 'Use patient reflections to reinforce realistic progress and identify helpful interventions.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I have reflected on my progress'
   },
 
   m3l2: {
-    id: 'm3l2',
-    moduleId: 3,
-    lessonNumber: 12,
+    id: 'm3l2', moduleId: 3, lessonNumber: 12,
     moduleTitle: 'Module 3 — Competency Assessment and Development',
     title: 'Recognising Process Errors Early',
-    estimatedTime: '10 minutes',
-    summary: 'Process errors are deviations from the expected standard. Recognising them early — before they cause defects, incidents, or escalated problems — is a valuable manufacturing skill. This lesson explains how to spot early warning signs and what to do when they appear.',
-    learningGoals: ['Know what a process error looks like.', 'Understand the difference between a minor variation and a defect.', 'Know the correct early response when a process error is spotted.', 'Understand why early reporting is better than late correction.'],
-    sections: [{  heading: 'What is a process error?', body: 'A process error is any deviation from the approved process instruction, quality standard, or expected output. This includes incorrect assembly sequence, wrong material, incorrect torque, surface damage, missing step, or out-of-tolerance measurement.' }, {  heading: 'Variation vs defect', body: 'Not all variation is a defect. Some processes have defined tolerance ranges. A result within the range may be acceptable. A result outside the range is a defect and must be treated as such. If unsure, ask a supervisor.' }, {  heading: 'Early warning signs', body: 'Early warning signs of a process problem include: tools behaving unusually, materials that look or feel different from expected, a step that takes longer than normal, a part that does not fit as expected, or a result that looks different from the approved sample.' }, {  heading: 'What to do when you spot an error', body: 'Stop the step if you can do so safely. Do not pass the issue to the next station. Report the error to your supervisor immediately using the correct reporting route. Record what you observed, when, and what action you took.' }, {  heading: 'Why early reporting matters', body: 'A process error caught early can be corrected with minimal disruption. An error that reaches the end of the line or the customer can result in rework, recalls, complaints, and significant cost.' }],
-    reflectionPrompt: 'Can you think of a time when a small deviation in a process led to a bigger issue? What would earlier reporting have changed?',
-    patientExercise: 'Write a list of three early warning signs that would tell you something may be wrong at your workstation. What would you do for each?',
-    safetyNote: 'AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility. For on-site emergencies, follow your site emergency procedure immediately.',
-    completionLabel: 'I can recognise early process error signs and know how to respond',
-    checkpoint: {
-      question: 'Why is early error reporting better than waiting to report at the end?',
-      type: 'multipleChoice',
-      options: ['It is not — waiting gives more information', 'Early reporting allows correction before the error spreads or escalates', 'Only supervisors need to know about errors', 'Errors usually fix themselves over time'],
-      correctAnswer: 'Early reporting allows correction before the error spreads or escalates',
-      safetyCritical: false,
-      feedbackText: 'Correct. Early error reporting prevents the problem from spreading to later stages or reaching the customer.',
-    },
+    estimatedTime: '10–12 minutes',
+    summary: 'Early warning signs are signals that your performance may be starting to decline. Recognising them early can help you respond before things feel unmanageable.',
+    learningGoals: [
+      'Understand early warning signs.',
+      'Identify personal signs of decline.',
+      'Connect warning signs to support actions.',
+      'Build a prevention mindset.'
+    ],
+    sections: [
+      { heading: 'What are early warning signs?', body: 'Early warning signs are changes that may appear before a bigger process error or performance drop. They can show up in process accuracy, task timing, tool handling, communication, or shift readiness.' },
+      { heading: 'Common warning signs', body: 'Examples include sleeping much more or less, withdrawing, skipping meals, feeling unusually irritable, avoiding messages, racing thoughts, feeling hopeless, losing interest, increased worry, or stopping helpful routines.' },
+      { heading: 'Your signs may be unique', body: 'Everyone\'s signs are different. Some people become restless, while others shut down. Some become more emotional, while others feel numb.' },
+      { heading: 'Respond early', body: 'When warning signs appear, use your support plan early. This might include reducing pressure, using grounding, contacting support, completing a check-in, or telling your supervisor.' },
+      { heading: 'No shame', body: 'Warning signs are information, not failure. Noticing them is a skill.' }
+    ],
+    reflectionPrompt: 'What are your early warning signs that things may be getting harder?',
+    learnerTask: 'List three early warning signs and one action you can take for each.',
+    supervisorNote: 'Help the patient connect warning signs to specific support steps.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I can identify early warning signs'
   },
 
   m3l3: {
-    id: 'm3l3',
-    moduleId: 3,
-    lessonNumber: 13,
+    id: 'm3l3', moduleId: 3, lessonNumber: 13,
     moduleTitle: 'Module 3 — Competency Assessment and Development',
     title: 'Strengthening Core Process Skills',
-    estimatedTime: '10–12 minutes',
-    summary: 'Core process skills are the practical abilities you need to work safely and consistently at your workstation. This lesson helps you identify which skills matter most for your role and how to strengthen them through deliberate practice and review.',
-    learningGoals: ['Identify the core process skills relevant to your role.', 'Understand how deliberate practice builds competency.', 'Know how to use supervisor feedback to improve skills.', 'Understand the relationship between skill confidence and quality output.'],
-    sections: [{  heading: 'What are core process skills?', body: 'Core process skills are the specific practical abilities needed to complete your role effectively and safely. For an assembly trainee these might include tool handling, process step sequence, quality checking, and defect recognition.' }, {  heading: 'Deliberate practice', body: 'Deliberate practice means practising with attention and intent — not just repeating a step automatically. It involves noticing what you do well, noticing where you make errors, and working to improve specific areas.' }, {  heading: 'Using supervisor feedback', body: 'Supervisor feedback is one of the most valuable tools for skill development. Ask specific questions: What did I do well? What should I do differently? What is the most critical area to improve? Use feedback to adjust your approach deliberately.' }, {  heading: 'Skill confidence and quality', body: 'As skill confidence increases, you are likely to make fewer errors, work more consistently, and handle unexpected situations more calmly. Skill confidence comes from repetition with attention, feedback, and honest self-assessment.' }, {  heading: 'Continuous improvement', body: 'Even experienced employees continue to develop skills. Continuous improvement is a normal part of manufacturing culture. If you notice a better way to complete a step, raise it with your supervisor rather than changing the process independently.' }],
-    reflectionPrompt: 'Which two process skills do you feel least confident about right now? What is your plan to strengthen them?',
-    patientExercise: 'Write a simple skill development plan for one of your core process skills: what you want to improve, how you will practise, and what feedback you will ask your supervisor for.',
-    safetyNote: 'AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility. For on-site emergencies, follow your site emergency procedure immediately.',
-    completionLabel: 'I understand how to identify and strengthen my core process skills',
-    checkpoint: {
-      question: 'What does deliberate practice mean in a manufacturing context?',
-      type: 'multipleChoice',
-      options: ['Repeating steps as fast as possible', 'Practising with attention, noticing errors, and working to improve specific areas', 'Only practising easy steps', 'Waiting for a supervisor to tell you what to do'],
-      correctAnswer: 'Practising with attention, noticing errors, and working to improve specific areas',
-      safetyCritical: false,
-      feedbackText: 'Correct. Deliberate practice is focused and intentional. It means noticing errors and working to address them, not just repeating steps automatically.',
-    },
+    estimatedTime: '8–10 minutes',
+    summary: 'Coping strategies are skills or actions that help you manage difficult moments. This lesson helps you review what works, what does not, and how to build a practical coping toolkit.',
+    learningGoals: [
+      'Understand different types of skill techniques.',
+      'Identify strategies that already help.',
+      'Build a flexible coping toolkit.',
+      'Match strategies to different needs.'
+    ],
+    sections: [
+      { heading: 'Process skills are tools', body: 'No single process skill covers every situation. A skills toolkit gives you options depending on what you need: quality checking, process review, supervisor escalation, documentation, or hands-on practice.' },
+      { heading: 'Different types of coping', body: 'Process-focused strategies include workstation checks, process review, or a supervised step-through. Practical strategies include making a list or reducing tasks. Connection strategies include messaging someone safe. Expression strategies include journaling, art, or talking.' },
+      { heading: 'Notice what works', body: 'After using a strategy, ask: Did this help a little, a lot, or not today? A strategy that does not work once may still help another time.' },
+      { heading: 'Make strategies easy to access', body: 'Keep skill techniques visible and simple. Add them to your support plan or AutoSkill OS™ notes so you do not have to remember them during distress.' },
+      { heading: 'Review with your supervisor', body: 'Your supervisor can help adjust skill techniques and explore why some feel easier or harder.' }
+    ],
+    reflectionPrompt: 'Which coping strategy has helped you even slightly?',
+    learnerTask: 'Create a skills toolkit with five process skills: one quality-focused, one safety-focused, one communication-based, one documentation-based, and one hands-on practice.',
+    supervisorNote: 'Review whether skill techniques are accessible, safe, and realistic for the employee\'s context.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I have strengthened my coping toolkit'
   },
 
   m3l4: {
-    id: 'm3l4',
-    moduleId: 3,
-    lessonNumber: 14,
+    id: 'm3l4', moduleId: 3, lessonNumber: 14,
     moduleTitle: 'Module 3 — Competency Assessment and Development',
     title: 'Preparing for Supervisor Check-In',
-    estimatedTime: '10 minutes',
-    summary: 'A supervisor check-in is a structured conversation where you and your supervisor review your progress, address gaps, and confirm next steps. Preparing well makes the check-in more useful for both of you.',
-    learningGoals: ['Know how to prepare for a supervisor check-in.', 'Understand what evidence to bring to a review.', 'Know which questions to ask your supervisor.', 'Understand how check-ins contribute to your competency record.'],
-    sections: [{  heading: 'What is a supervisor check-in?', body: 'A supervisor check-in is a scheduled conversation between an employee and their supervisor. It is used to review training progress, address gaps, discuss performance, and confirm next steps. It may include formal sign-off at pathway milestones.' }, {  heading: 'How to prepare', body: 'Before the check-in: review your progress in the app. Note which lessons are complete and which are pending. Review safety acknowledgements. Collect any evidence notes. Identify two or three specific questions you want to ask.' }, {  heading: 'What evidence to bring', body: 'Evidence may include lesson completion records, checkpoint answers, safety acknowledgements, notes from your reflection exercises, or practical observations noted by your supervisor. Keep records accurate and honest.' }, {  heading: 'Questions to ask', body: 'Useful questions: What am I doing well? What is my biggest area for improvement? Are there steps I need to repeat or review? What is my next sign-off milestone? Is there anything I should be aware of before my next step?' }, {  heading: 'After the check-in', body: 'After the check-in, note any feedback received. Update your action plan. Complete any steps your supervisor identified as priority. Do not wait for the next formal check-in to address a gap.' }],
-    reflectionPrompt: 'What is one area of your training you would want to discuss at a supervisor check-in? What evidence would you bring to support that conversation?',
-    patientExercise: 'Prepare a short brief for your next supervisor check-in: three completed milestones, one gap you have identified, and one question you want to ask.',
-    safetyNote: 'AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility. For on-site emergencies, follow your site emergency procedure immediately.',
-    completionLabel: 'I know how to prepare for a supervisor check-in',
-    checkpoint: {
-      question: 'What is the purpose of a supervisor check-in?',
-      type: 'multipleChoice',
-      options: ['To review training progress, address gaps, and confirm next steps', 'To fill in paperwork with no real purpose', 'To prove that the training app was opened', 'Only to approve pay increases'],
-      correctAnswer: 'To review training progress, address gaps, and confirm next steps',
-      safetyCritical: false,
-      feedbackText: 'Correct. A supervisor check-in reviews progress, addresses gaps, and confirms next steps in your competency development.',
-    },
+    estimatedTime: '8–10 minutes',
+    summary: 'Preparing for your supervisor check-in can help you make better use of the session. This module helps you collect training reflections, questions, progress evidence, and concerns before your review.',
+    learningGoals: [
+      'Prepare useful notes for your supervisor check-in.',
+      'Identify topics to discuss.',
+      'Review check-in patterns.',
+      'Communicate support needs clearly.'
+    ],
+    sections: [
+      { heading: 'Why preparation helps', body: 'When emotions are high or time is limited, it can be hard to remember everything you wanted to say. Preparing notes can help you feel more organised and supported.' },
+      { heading: 'Review recent check-ins', body: 'Look at mood, anxiety, stress, sleep, coping strategy use, and support flags. Notice anything that changed or repeated.' },
+      { heading: 'Choose key topics', body: 'You might discuss triggers, difficult moments, progress, questions, skill techniques, medication concerns if relevant to your healthcare provider, relationship issues, work stress, or support needs.' },
+      { heading: 'Share what feels hard to say', body: 'If something feels difficult to say aloud, writing it down can help. You might show your supervisor your notes or use them as a starting point.' },
+      { heading: 'End with next steps', body: 'After your supervisor check-in, record one or two next steps so you know what to focus on before your next shift or review.' }
+    ],
+    reflectionPrompt: 'What is one thing you want your supervisor to understand at your next session?',
+    learnerTask: 'Write three notes for your next session: one progress update, one difficulty, and one question.',
+    supervisorNote: 'Patient preparation notes may improve session focus and reveal concerns that are hard to verbalise.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I have prepared for my next supervisor check-in'
   },
 
   m3l5: {
-    id: 'm3l5',
-    moduleId: 3,
-    lessonNumber: 15,
+    id: 'm3l5', moduleId: 3, lessonNumber: 15,
     moduleTitle: 'Module 3 — Competency Assessment and Development',
     title: 'Final Competency Check',
-    estimatedTime: '10–12 minutes',
-    summary: 'The final pathway check confirms you understand the basics of manufacturing training flow, PPE readiness, workstation preparation, process order, tool safety, quality checks, defect reporting, and supervisor review. Completion is a training milestone, not a guarantee of legal compliance or independent authorisation.',
-    learningGoals: ['Review the key themes from all three modules.', 'Confirm understanding of safety-critical responsibilities.', 'Understand what final pathway completion means in AutoSkill OS™.', 'Know the correct next steps after completing the pathway.'],
-    sections: [{  heading: 'Module 1 review: Site orientation', body: 'You covered the purpose of AutoSkill OS™, training pathway structure, assembly line flow, workstation readiness, and safe tool handling. These foundational topics apply across all manufacturing roles.' }, {  heading: 'Module 2 review: Quality and process', body: 'You covered quality control, defect reporting, production handover, process checkpoints, workstation safety checks, and supervisor sign-off. Quality and process consistency are shared responsibilities across the whole line.' }, {  heading: 'Module 3 review: Competency development', body: 'You covered progress review, early error recognition, core skill strengthening, and supervisor check-in preparation. Competency development is ongoing and does not stop at the end of this pathway.' }, {  heading: 'What pathway completion means', body: 'Completing this pathway in AutoSkill OS™ is a training milestone. It shows you have engaged with all three modules. It does not mean you are fully authorised to work independently. Supervisor review and site-specific authorisation steps still apply.' }, {  heading: 'Next steps', body: 'Review all safety acknowledgements. Confirm any outstanding supervisor reviews. Continue following workplace procedures. If further pathways are assigned, begin them when ready. Continue to ask questions and report issues as they arise.' }],
-    reflectionPrompt: 'What are the three most important things you have learned from this training pathway? Write them in your own words.',
-    patientExercise: 'Write a short personal commitment statement: what you will do differently after completing this pathway, and what you will ask for support with from your supervisor.',
-    safetyNote: 'Completing this pathway supports training awareness and supervisor review, but does not replace workplace safety procedures, legal duties, qualified supervision, employer responsibility, or site-specific training. AutoSkill OS™ supports training awareness and evidence capture. It does not replace workplace safety procedures, legal duties, or qualified supervision.',
-    completionLabel: 'I have completed the New Starter Manufacturing Training Pathway',
-    checkpoint: {
-      question: 'What does final pathway completion mean in AutoSkill OS™ demo mode?',
-      type: 'multipleChoice',
-      options: ['The employee can ignore workplace procedures', 'It shows a training milestone that may support supervisor review', 'It guarantees legal compliance', 'It replaces employer responsibility'],
-      correctAnswer: 'It shows a training milestone that may support supervisor review',
-      safetyCritical: false,
-      feedbackText: 'Correct. Final pathway completion is a training milestone. It may support supervisor review but does not guarantee compliance or replace employer responsibility.',
-    },
-  },
+    estimatedTime: '12–15 minutes',
+    summary: 'A personal competency plan brings together what you have learned about your performance, triggers, skill techniques, support needs, and goals. This lesson helps you create a practical plan you can review with your supervisor.',
+    learningGoals: [
+      'Bring together learning from the pathway.',
+      'Identify strengths, triggers, and skill techniques.',
+      'Create realistic training goals.',
+      'Build a plan for continued support.'
+    ],
+    sections: [
+      { heading: 'What is a competency plan?', body: 'A competency plan is a personal guide for supporting your performance. It can include what helps, what makes things harder, who can support you, what to do during difficult moments, and what progress means to you.' },
+      { heading: 'Include your strengths', body: 'Your strengths are part of the plan. These might include persistence, creativity, honesty, care for others, problem-solving, humour, patience, or the ability to keep trying.' },
+      { heading: 'Include triggers and warning signs', body: 'List the situations, feelings, thoughts, or patterns that may affect your performance. Include early warning signs so you can respond sooner.' },
+      { heading: 'Include process skills and support', body: 'Add key process skills, daily workstation anchors, supervisor contacts, training goals, and escalation steps. Make the plan realistic and easy to follow.' },
+      { heading: 'Keep the plan flexible', body: 'A competency plan can change. Review it with your supervisor and update it when you learn more about yourself.' }
+    ],
+    reflectionPrompt: 'What are the most important things your competency plan should include?',
+    learnerTask: 'Create a personal competency plan with five sections: strengths, triggers, warning signs, skill techniques, and support contacts.',
+    supervisorNote: 'Use the competency plan as a collaborative tool. Review for realism, safety, and patient ownership.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I have built my personal competency plan'
+  }
 
 };
 
@@ -1022,7 +1058,6 @@ function openLesson(id, xpVal) {
     + '<div style="background:var(--surface);border-radius:var(--r);padding:14px;margin-bottom:14px;border:1px solid var(--border)"><div style="font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">\u270f\ufe0f Your Exercise</div><div style="font-size:14px;line-height:1.7;margin-bottom:10px">' + lc.patientExercise + '</div>'
     + '<textarea id="ld-note-field" style="width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--text);font-family:inherit;resize:none;min-height:60px;outline:none" placeholder="Write your reflection or notes here\u2026" rows="3">' + savedNote + '</textarea></div>'
     + '<div style="background:rgba(239,68,68,.06);border:1.5px solid rgba(239,68,68,.2);border-radius:var(--r);padding:14px;margin-bottom:14px"><div style="font-size:12px;font-weight:700;color:var(--high);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">\u26a0\ufe0f Safety Notice</div><div style="font-size:12px;color:var(--muted);line-height:1.6">' + lc.safetyNote + '</div></div>'
-    + (lc.checkpoint ? '<div class="chk-container">' + buildCheckpointHTML(lc.checkpoint, id) + '</div>' : '')
     + '</div>'
     + '<div id="ld-complete-bar" style="position:fixed;bottom:0;left:0;right:0;padding:14px 16px;background:var(--surface);border-top:1.5px solid var(--border);box-shadow:0 -4px 16px rgba(0,0,0,.3);z-index:20;max-width:480px;margin:0 auto">'
     + '<button id="ld-complete-btn" onclick="completeLessonFromDetail(\'' + id + '\',' + xpVal + ')" style="width:100%;padding:14px;background:' + (isDone ? 'var(--green)' : 'var(--gold)') + ';color:#000;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer">'
@@ -1031,85 +1066,6 @@ function openLesson(id, xpVal) {
 
   document.body.appendChild(panel);
   panel.scrollTop = 0;
-}
-
-
-// ── CHECKPOINT RENDERER (Run 5) ───────────────────────────────────
-function buildCheckpointHTML(cp, lessonId) {
-  if (!cp) return '';
-  var answeredKey = 'ap3x_chk_ans_' + lessonId;
-  var saved = sGet(answeredKey, null);
-  var isCorrect = saved && saved.answer === cp.correctAnswer;
-  var optionsHTML = cp.options.map(function(opt, i) {
-    var isSelected = saved && saved.answer === opt;
-    var isRight    = opt === cp.correctAnswer;
-    var bg = isSelected ? (isCorrect ? 'rgba(34,197,94,.15)' : 'rgba(239,68,68,.12)') : 'var(--surface2)';
-    var border = isSelected ? (isCorrect ? 'rgba(34,197,94,.4)' : 'rgba(239,68,68,.35)') : 'var(--border)';
-    var prefix = saved ? (isRight ? '\u2713 ' : (isSelected ? '\u2717 ' : '')) : '';
-    return '<div style="margin-bottom:8px">' +
-      '<button data-lesson="' + lessonId + '" data-opt="' + i + '" data-answer="' + opt.replace(/"/g, '&quot;') + '" ' +
-      'onclick="submitCheckpointAnswer(this)" ' +
-      'style="width:100%;text-align:left;padding:10px 12px;background:' + bg + ';border:1.5px solid ' + border + ';' +
-      'border-radius:var(--rs);font-size:13px;color:var(--text);cursor:' + (saved ? 'default' : 'pointer') + ';' +
-      'font-family:inherit;line-height:1.4;transition:background .15s" ' +
-      (saved ? 'disabled' : '') + '>' + prefix + opt + '</button></div>';
-  }).join('');
-
-  return '<div style="background:var(--surface);border:1.5px solid ' + (saved ? (isCorrect ? 'rgba(34,197,94,.4)' : 'rgba(239,68,68,.3)') : 'var(--gold-d)') + ';' +
-    'border-radius:var(--r);padding:14px;margin-bottom:14px">' +
-    '<div style="font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">' +
-    (cp.safetyCritical ? '\u26a0\ufe0f ' : '\u2753 ') + 'Skill Checkpoint</div>' +
-    '<div style="font-size:14px;font-weight:600;margin-bottom:12px;line-height:1.5">' + cp.question + '</div>' +
-    optionsHTML +
-    (saved
-      ? '<div style="margin-top:10px;font-size:12px;color:' + (isCorrect ? 'var(--green)' : 'var(--high)') + ';font-weight:700">' +
-        (isCorrect ? '\u2713 Correct ' : '\u2717 Incorrect ') + '\u2014 ' + (cp.feedbackText || '') + '</div>'
-      : '<div style="font-size:11px;color:var(--muted);margin-top:8px">Select your answer above to record it locally.</div>'
-    ) +
-  '</div>';
-}
-
-function submitCheckpointAnswer(btn) {
-  var lessonId = btn.getAttribute('data-lesson');
-  var answer   = btn.getAttribute('data-answer');
-  if (!lessonId || !answer) return;
-
-  var lc = LESSON_CONTENT[lessonId];
-  if (!lc || !lc.checkpoint) return;
-  var isCorrect = (answer === lc.checkpoint.correctAnswer);
-
-  var answeredKey = 'ap3x_chk_ans_' + lessonId;
-  var record = {
-    lessonId: lessonId, answer: answer, isCorrect: isCorrect,
-    answeredAt: new Date().toISOString(), attempts: (sGet(answeredKey, {attempts:0}).attempts || 0) + 1
-  };
-  sSet(answeredKey, record);
-
-  // Write to SSOT progress records
-  createPwaProgressRecord({
-    lessonId: lessonId, status: isCorrect ? 'checkpoint_passed' : 'checkpoint_failed',
-    progressPercent: isCorrect ? 100 : 50, score: isCorrect ? 100 : 0
-  });
-
-  if (isCorrect && !lessonDone[lessonId]) {
-    xp += 10; sSet('ap3x_xp', xp);
-    showToast('+10 XP \u2014 Checkpoint correct! \u2713');
-    updateHeader();
-  } else if (!isCorrect) {
-    showToast('\u26a0 Incorrect \u2014 review the lesson and try again.');
-  }
-
-  // Re-render checkpoint section in place
-  var panel = document.getElementById('lesson-detail-panel');
-  if (panel) {
-    var chkOld = panel.querySelector('.chk-container');
-    if (!chkOld) {
-      // fallback: rebuild entire panel
-      openLesson(lessonId, xp);
-    } else {
-      chkOld.outerHTML = '<div class="chk-container">' + buildCheckpointHTML(lc.checkpoint, lessonId) + '</div>';
-    }
-  }
 }
 
 function closeLessonDetail() {
