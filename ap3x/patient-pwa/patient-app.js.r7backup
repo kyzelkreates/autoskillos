@@ -184,215 +184,25 @@ function createPwaProgressRecord(payload) {
  * Adds a structured item to ap3x_dm_pwa_sync_queue.
  * Supplements existing ap3x_sync_queue. Full sync wiring in Run 7.
  */
-// ════════════════════════════════════════════════════════════════
-// Run 7: Local-First PWA Sync Queue
-// Spec-compliant queue records — backend-ready payload shape.
-// All writes go through createSyncQueueItem() / queueDmSyncItem().
-// ════════════════════════════════════════════════════════════════
-
-var AP3X_SYNC_QUEUE_KEY = 'ap3x_dm_pwa_sync_queue';
-
-function createSyncQueueItem(opts) {
-  // opts: eventType, source, target, employeeId, pathwayId, moduleId,
-  //       lessonId, checkpointId, acknowledgementId, evidenceRecordId,
-  //       supervisorReviewId, payload, priority, notes, isDemo
-  var now      = new Date().toISOString();
-  var demoOn   = sGet('4p3x_demo_mode', true);
-  var emp      = (getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : null) || {};
-  var beCfg    = dmGet('ap3x_dm_backend_config', {});
-  return {
-    id:                   'sqr_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
-    eventType:            opts.eventType            || 'unknown',
-    source:               opts.source               || 'employee-pwa',
-    target:               opts.target               || 'control-dashboard',
-    employeeId:           opts.employeeId           || emp.id || null,
-    pathwayId:            opts.pathwayId            || null,
-    moduleId:             opts.moduleId             || null,
-    lessonId:             opts.lessonId             || null,
-    checkpointId:         opts.checkpointId         || null,
-    acknowledgementId:    opts.acknowledgementId    || null,
-    evidenceRecordId:     opts.evidenceRecordId     || null,
-    supervisorReviewId:   opts.supervisorReviewId   || null,
-    payload:              opts.payload              || {},
-    status:               'queued',
-    priority:             opts.priority             || 'normal',
-    createdAt:            now,
-    updatedAt:            now,
-    processedAt:          null,
-    retryCount:           0,
-    errorMessage:         null,
-    dataMode:             demoOn ? 'demo' : 'live',
-    isDemo:               opts.isDemo !== undefined ? opts.isDemo : demoOn,
-    localDeviceId:        'pwa_' + (navigator.userAgent.length % 999),
-    remoteId:             null,
-    provider:             (beCfg.provider || beCfg.mode || 'local-only'),
-    notes:                opts.notes || null
-  };
-}
-
 function queueDmSyncItem(payload) {
-  // Backward-compat wrapper used by existing createPwaProgressRecord / acknowledgeLocalSafetyItem
   try {
-    var item = createSyncQueueItem({
-      eventType:  payload.type       || 'unknown',
-      lessonId:   payload.data && payload.data.lessonId || null,
-      payload:    payload.data       || {},
-      priority:   payload.priority   || 'normal'
+    const KEY = 'ap3x_dm_pwa_sync_queue';
+    const queue = JSON.parse(localStorage.getItem(KEY) || '[]');
+    queue.push({
+      id:         'sync_pwa_' + Date.now(),
+      type:       payload.type       || 'unknown',
+      entityType: payload.entityType || 'unknown',
+      entityId:   payload.entityId   || null,
+      data:       payload.data       || {},
+      queuedAt:   new Date().toISOString(),
+      syncStatus: 'queued',
+      attempts:   0,
+      isDemo:     sGet('4p3x_demo_mode', true)
     });
-    var queue = dmGet(AP3X_SYNC_QUEUE_KEY, []);
-    queue.push(item);
-    sSet(AP3X_SYNC_QUEUE_KEY, queue);
-  } catch(e) { /* non-fatal */ }
-}
-
-function getPwaSyncQueue(filters) {
-  var all = dmGet(AP3X_SYNC_QUEUE_KEY, []);
-  if (!filters) return all;
-  return all.filter(function(item) {
-    if (filters.status    && item.status    !== filters.status)    return false;
-    if (filters.isDemo    !== undefined && item.isDemo !== filters.isDemo) return false;
-    if (filters.eventType && item.eventType !== filters.eventType) return false;
-    if (filters.priority  && item.priority  !== filters.priority)  return false;
-    return true;
-  });
-}
-
-function getPwaSyncQueueStats() {
-  var all   = dmGet(AP3X_SYNC_QUEUE_KEY, []);
-  var stats = { total:0, queued:0, processed:0, failed:0, safetyCritical:0, demo:0, live:0 };
-  all.forEach(function(item) {
-    stats.total++;
-    if (item.status === 'queued' || item.status === 'processing')  stats.queued++;
-    if (item.status === 'synced') stats.processed++;
-    if (item.status === 'failed' || item.status === 'conflict')    stats.failed++;
-    if (item.priority === 'safety-critical') stats.safetyCritical++;
-    if (item.isDemo)  stats.demo++;
-    else              stats.live++;
-  });
-  return stats;
-}
-
-function updatePwaSyncItemStatus(itemId, status, meta) {
-  try {
-    var queue = dmGet(AP3X_SYNC_QUEUE_KEY, []);
-    var updated = queue.map(function(item) {
-      if (item.id !== itemId) return item;
-      return Object.assign({}, item, {
-        status:       status,
-        updatedAt:    new Date().toISOString(),
-        processedAt:  (status === 'synced' || status === 'failed' || status === 'ignored') ? new Date().toISOString() : item.processedAt,
-        errorMessage: (meta && meta.errorMessage) || item.errorMessage,
-        retryCount:   (meta && meta.retry) ? (item.retryCount||0) + 1 : item.retryCount,
-        remoteId:     (meta && meta.remoteId)     || item.remoteId
-      });
-    });
-    sSet(AP3X_SYNC_QUEUE_KEY, updated);
-  } catch(e) {}
-}
-
-// ─────────────────────────────────────────────────────────────────
-// PWA event queue helpers — called by PWA UI actions
-// ─────────────────────────────────────────────────────────────────
-function queueLessonStarted(lessonId) {
-  try {
-    var lc  = LESSON_CONTENT && LESSON_CONTENT[lessonId];
-    var emp = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : null;
-    var item = createSyncQueueItem({
-      eventType: 'lesson_started',
-      lessonId:  lessonId,
-      moduleId:  lc && lc.moduleId || null,
-      pathwayId: emp && emp.assignedPathwayIds && emp.assignedPathwayIds[0] || null,
-      payload:   { lessonTitle: lc && lc.title || lessonId, startedAt: new Date().toISOString() },
-      priority:  'normal'
-    });
-    var q = dmGet(AP3X_SYNC_QUEUE_KEY, []); q.push(item); sSet(AP3X_SYNC_QUEUE_KEY, q);
-  } catch(e) {}
-}
-
-function queueLessonCompleted(lessonId, xpAwarded) {
-  try {
-    var lc  = LESSON_CONTENT && LESSON_CONTENT[lessonId];
-    var emp = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : null;
-    var sc  = lc && lc.checkpoint && lc.checkpoint.safetyCritical;
-    var item = createSyncQueueItem({
-      eventType: 'lesson_completed',
-      lessonId:  lessonId,
-      moduleId:  lc && lc.moduleId || null,
-      pathwayId: emp && emp.assignedPathwayIds && emp.assignedPathwayIds[0] || null,
-      payload:   {
-        lessonTitle:   lc && lc.title || lessonId,
-        completedAt:   new Date().toISOString(),
-        xpAwarded:     xpAwarded || 0,
-        moduleTitle:   lc && lc.moduleTitle || null
-      },
-      priority: sc ? 'safety-critical' : 'normal'
-    });
-    var q = dmGet(AP3X_SYNC_QUEUE_KEY, []); q.push(item); sSet(AP3X_SYNC_QUEUE_KEY, q);
-    sSet('ap3x_last_queue_at', new Date().toISOString());
-  } catch(e) {}
-}
-
-function queueCheckpointSubmitted(lessonId, answer, isCorrect, checkpointId) {
-  try {
-    var lc  = LESSON_CONTENT && LESSON_CONTENT[lessonId];
-    var chk = lc && lc.checkpoint;
-    var sc  = chk && chk.passRequired;
-    var item = createSyncQueueItem({
-      eventType:    'checkpoint_submitted',
-      lessonId:     lessonId,
-      checkpointId: checkpointId || (chk && chk.id) || null,
-      moduleId:     lc && lc.moduleId || null,
-      payload:      {
-        answer:       answer,
-        isCorrect:    isCorrect,
-        question:     chk && chk.question || null,
-        answeredAt:   new Date().toISOString(),
-        safetyCritical: sc || false
-      },
-      priority: sc ? 'safety-critical' : 'normal'
-    });
-    var q = dmGet(AP3X_SYNC_QUEUE_KEY, []); q.push(item); sSet(AP3X_SYNC_QUEUE_KEY, q);
-  } catch(e) {}
-}
-
-function queueSafetyAcknowledged(ackId, ackTitle) {
-  try {
-    var emp = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : null;
-    var item = createSyncQueueItem({
-      eventType:         'safety_acknowledged',
-      acknowledgementId: ackId,
-      payload: {
-        ackId:       ackId,
-        ackTitle:    ackTitle || ackId,
-        employeeId:  emp && emp.id || null,
-        acknowledgedAt: new Date().toISOString()
-      },
-      priority: 'safety-critical'
-    });
-    var q = dmGet(AP3X_SYNC_QUEUE_KEY, []); q.push(item); sSet(AP3X_SYNC_QUEUE_KEY, q);
-  } catch(e) {}
-}
-
-function queueSupervisorReviewRequested(pathwayId, moduleId, notes) {
-  try {
-    var emp = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : null;
-    var item = createSyncQueueItem({
-      eventType:  'supervisor_review_requested',
-      pathwayId:  pathwayId || null,
-      moduleId:   moduleId  || null,
-      payload: {
-        employeeId:  emp && emp.id || null,
-        employeeName: emp && emp.displayName || 'Employee',
-        pathwayId:   pathwayId,
-        moduleId:    moduleId,
-        requestedAt: new Date().toISOString(),
-        notes:       notes || null
-      },
-      priority: 'high'
-    });
-    var q = dmGet(AP3X_SYNC_QUEUE_KEY, []); q.push(item); sSet(AP3X_SYNC_QUEUE_KEY, q);
-    sSet('ap3x_last_queue_at', new Date().toISOString());
-  } catch(e) {}
+    localStorage.setItem(KEY, JSON.stringify(queue));
+  } catch(e) {
+    // Non-fatal — sync queue failure must never block PWA
+  }
 }
 
 
@@ -1306,8 +1116,6 @@ function toggleLesson(id, xpVal) {
 
 function openLesson(id, xpVal) {
   var lc = LESSON_CONTENT[id];
-  // ── Run 7: Queue lesson_started event ─────────────────────────
-  try { queueLessonStarted(id); } catch(e) {}
   if (!lc) { showToast('Lesson content loading\u2026'); return; }
   var noteKey = 'tl_lesson_note_' + id;
   var savedNote = sGet(noteKey, '');
@@ -1405,8 +1213,6 @@ function submitCheckpointAnswer(btn) {
   };
   sSet(answeredKey, record);
 
-  // ── Run 7: Queue checkpoint_submitted sync event ──────────────
-  queueCheckpointSubmitted(lessonId, answer, isCorrect, lc.checkpoint && lc.checkpoint.id || null);
   // Write to SSOT progress records
   createPwaProgressRecord({
     lessonId: lessonId, status: isCorrect ? 'checkpoint_passed' : 'checkpoint_failed',
@@ -1457,11 +1263,9 @@ function completeLessonFromDetail(id, xpVal) {
     showToast('+' + xpVal + ' XP \u2014 Lesson complete! \u2713');
   }
   sSet('ap3x_lesson_progress', lessonDone);
-  // ── Run 7: Queue structured sync event for Control Dashboard ──────────────
-  queueLessonCompleted(id, xpVal);
-  // Legacy queue (backward compat)
+  // Queue lesson progress for backend-ready sync
   tlEnqueueSync('lesson_progress', { lessonId: id, completedAt: new Date().toISOString(), xpAwarded: xpVal });
-  // Structured DM progress record
+  // ── Run 2: Also write to structured DM progress record ─────────────────
   createPwaProgressRecord({ lessonId: id, status: 'completed', progressPercent: 100, score: null });
   renderProgress(); updateHeader();
   var btn = document.getElementById('ld-complete-btn');
@@ -1623,11 +1427,7 @@ function handleSafetyAck(ackId) {
   var emp = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : getActiveEmployee();
   if (!emp) { showToast('No employee profile active'); return; }
   acknowledgeLocalSafetyItem(ackId, emp.id);
-  // ── Run 7: Queue safety_acknowledged sync event ────────────────
-  var acks = dmGetAll('ap3x_dm_safety_acks');
-  var ack  = acks.filter(function(a) { return a.id === ackId; })[0] || {};
-  queueSafetyAcknowledged(ackId, ack.title || ackId);
-  showToast('✓ Safety acknowledgement queued for Dashboard review');
+  showToast('&#x2713; Safety acknowledgement saved locally');
   renderSafetyChecks();
   updateHeader();
 }
@@ -1647,52 +1447,6 @@ function renderCoping() { renderSafetyChecks(); }
 function markCoping(id) { markSkillTechnique(id); }
 
 // ── PROGRESS ─────────────────────────────────────────────
-
-// ─────────────────────────────────────────────────────────────────
-// Run 7: Supervisor Review Request
-// ─────────────────────────────────────────────────────────────────
-function requestSupervisorReview() {
-  var emp  = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : getActiveEmployee();
-  var acks = dmGetAll('ap3x_dm_safety_acks');
-  if (!emp) {
-    showToast('⚠ No active employee profile. Enable Demo Mode or configure live employee.');
-    return;
-  }
-  var ackDone  = acks.filter(function(a) { return (a.acknowledgedByEmployeeIds||[]).includes(emp.id); }).length;
-  var totalL   = Object.values(lessonDone).filter(Boolean).length;
-  // Create supervisor review record in SSOT
-  var revId = 'rev_pwa_' + Date.now();
-  try {
-    var revs = dmGetAll('ap3x_dm_supervisor_reviews');
-    revs.push({
-      id:            revId,
-      employeeId:    emp.id,
-      employeeName:  emp.displayName || emp.id,
-      pathwayId:     (emp.assignedPathwayIds || [])[0] || null,
-      moduleId:      null,
-      status:        'pending',
-      requestedAt:   new Date().toISOString(),
-      reviewedAt:    null,
-      reviewedBy:    null,
-      notes:         'Requested from Employee Learning PWA. Lessons: ' + totalL + '/15. Safety acks: ' + ackDone + '/' + acks.length + '.',
-      completedXP:   xp,
-      lessonsDone:   totalL,
-      acksDone:      ackDone,
-      isDemo:        isPwaDemoMode ? isPwaDemoMode() : true,
-      source:        'employee-pwa'
-    });
-    sSet('ap3x_dm_supervisor_reviews', revs);
-  } catch(e) {}
-  // Queue sync event
-  queueSupervisorReviewRequested(
-    (emp.assignedPathwayIds || [])[0] || null,
-    null,
-    'Employee requested review after ' + Object.values(lessonDone).filter(Boolean).length + ' lessons completed.'
-  );
-  showToast('✓ Supervisor review request queued for Control Dashboard');
-  renderProgress();
-}
-
 function renderProgress() {
   var el = document.getElementById('tab-progress');
   if (!el) return;
@@ -1751,30 +1505,15 @@ function renderProgress() {
         '</div>' +
       '</div>';
     }).join('') + '</div>' +
-    (function() {
-      var sqStats = getPwaSyncQueueStats ? getPwaSyncQueueStats() : { total:0, queued:0, processed:0, failed:0, safetyCritical:0 };
-      var lastQ   = sGet('ap3x_last_queue_at', null);
-      var lastQStr= lastQ ? new Date(lastQ).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}) : 'Never';
-      return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px">' +
-        '<div style="font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">&#x1F4BE; Sync Queue Status &mdash; ' + (demoOn ? '&#x1F3AD; Demo' : '&#x1F7E2; Live') + '</div>' +
-        '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">' +
-          [['Queued', sqStats.queued], ['Processed', sqStats.processed], ['Failed', sqStats.failed]].map(function(p) {
-            return '<div style="text-align:center;padding:6px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border)">' +
-              '<div style="font-size:16px;font-weight:700">' + p[1] + '</div>' +
-              '<div style="font-size:10px;color:var(--muted)">' + p[0] + '</div></div>';
-          }).join('') +
-        '</div>' +
-        '<div style="font-size:12px;line-height:1.8;color:var(--muted)">' +
-          (sqStats.queued > 0 ? '&#x1F504; ' + sqStats.queued + ' update(s) queued for Control Dashboard review<br>' : '&#x2713; No pending queue items<br>') +
-          (sqStats.safetyCritical > 0 ? '&#x26A0;&#xFE0F; ' + sqStats.safetyCritical + ' safety-critical update(s) in queue<br>' : '') +
-          'Last queued: ' + lastQStr + '<br>' +
-          'Progress saved locally. Dashboard queue prepared.<br>' +
-          '<span style="color:var(--muted)">Remote backend not connected. Live sync connects in Run 8.</span>' +
-        '</div>' +
-      '</div>';
-    })() +
-    '<button onclick="submitCheckin()" aria-label="Log training check-in" style="width:100%;padding:13px;background:var(--gold);color:#000;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px">&#x1F4CB; Log Training Check-In (+10 XP)</button>' +
-    '<button onclick="requestSupervisorReview()" aria-label="Request supervisor review" style="width:100%;padding:12px;background:rgba(201,168,76,.12);color:var(--gold);border:1.5px solid rgba(201,168,76,.3);border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:14px">&#x1F464; Request Supervisor Review — Queued Locally</button>' +
+    '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px">' +
+      '<div style="font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">&#x1F4BE; Local Storage Status</div>' +
+      '<div style="font-size:13px;line-height:1.8">' +
+        '&#x2713; Progress saved locally &mdash; local-first mode active<br>' +
+        (syncQ > 0 ? '&#x1F504; ' + syncQ + ' updates queued for future dashboard sync<br>' : '&#x2713; Sync queue empty<br>') +
+        '<span style="color:var(--muted);font-size:12px">Backend: ' + status.backendMode + ' &mdash; live sync connects in a later run</span>' +
+      '</div>' +
+    '</div>' +
+    '<button onclick="submitCheckin()" aria-label="Log training check-in" style="width:100%;padding:13px;background:var(--gold);color:#000;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;margin-bottom:14px">&#x1F4CB; Log Training Check-In (+10 XP)</button>' +
     '<div class="safety-notice">' +
       '<div style="font-weight:700;margin-bottom:4px">&#x26A0;&#xFE0F; AutoSkill OS&#x2122; Notice</div>' +
       '<div>AutoSkill OS&#x2122; supports training awareness, supervisor review, and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility.</div>' +
