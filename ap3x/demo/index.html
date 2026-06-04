@@ -88,10 +88,10 @@ a{color:inherit;text-decoration:none}
 .dc-features li{font-size:13px;color:var(--muted);display:flex;align-items:flex-start;gap:8px}
 .dc-features li::before{content:"✓";font-weight:700;color:var(--green);flex-shrink:0;margin-top:1px}
 .dc-open-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:var(--rs);font-size:14px;font-weight:700;transition:all var(--t);border:none;cursor:pointer;width:100%}
-.dc-open-btn.therapist-btn{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#000}
-.dc-open-btn.therapist-btn:hover{opacity:.9}
-.dc-open-btn.patient-btn{background:linear-gradient(135deg,var(--purple-d),var(--purple));color:#fff}
-.dc-open-btn.patient-btn:hover{opacity:.9}
+.dc-open-btn.supervisor-btn{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#000}
+.dc-open-btn.supervisor-btn:hover{opacity:.9}
+.dc-open-btn.employee-btn{background:linear-gradient(135deg,var(--purple-d),var(--purple));color:#fff}
+.dc-open-btn.employee-btn:hover{opacity:.9}
 .btn-arr{transition:transform var(--t)}
 .dc-open-btn:hover .btn-arr{transform:translateX(4px)}
 
@@ -175,7 +175,7 @@ a{color:inherit;text-decoration:none}
   <p class="section-sub-lg">The Control Dashboard and Employee Learning PWA work together — all training data stays local to the device.</p>
 
   <div class="demo-grid">
-    <!-- Therapist -->
+    <!-- Supervisor -->
     <a href="clinician-demo.html" class="demo-card dc-therapist">
       <div class="dc-header">
         <div class="dc-icon">🏥</div>
@@ -191,7 +191,7 @@ a{color:inherit;text-decoration:none}
           <li>Analytics, timeline &amp; reporting</li>
           <li>Demo mode ON/OFF toggle in Settings</li>
         </ul>
-        <button class="dc-open-btn therapist-btn">Open Control Dashboard <span class="btn-arr">→</span></button>
+        <button class="dc-open-btn supervisor-btn">Open Control Dashboard <span class="btn-arr">→</span></button>
       </div>
     </a>
 
@@ -211,7 +211,7 @@ a{color:inherit;text-decoration:none}
           <li>Progress summary &amp; streak tracking</li>
           <li>Installable as a PWA on any device</li>
         </ul>
-        <button class="dc-open-btn patient-btn">Open Employee Learning PWA <span class="btn-arr">→</span></button>
+        <button class="dc-open-btn employee-btn">Open Employee Learning PWA <span class="btn-arr">→</span></button>
       </div>
     </a>
   </div>
