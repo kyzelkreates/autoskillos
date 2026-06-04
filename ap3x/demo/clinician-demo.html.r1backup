@@ -217,7 +217,7 @@ tr:hover td{background:var(--surface2)}
     <button class="nav-item active" id="nav-overview" onclick="showView('overview')"><span>🏠</span><span>Dashboard</span></button>
     <button class="nav-item" id="nav-alerts" onclick="showView('alerts')"><span>🔔</span><span>Alerts</span><span class="nav-badge" id="alertBadge">3</span></button>
     <div class="sb-section">Patients</div>
-    <button class="nav-item" id="nav-patients" onclick="showView('patients')"><span>👥</span><span>All Employees</span></button>
+    <button class="nav-item" id="nav-patients" onclick="showView('patients')"><span>👥</span><span>All Patients</span></button>
     <button class="nav-item" id="nav-highrisk" onclick="showView('highrisk')"><span>⚠️</span><span>Support Flags</span><span class="nav-badge warn" id="hrBadge">2</span></button>
     <button class="nav-item" id="nav-checkins" onclick="showView('checkins')"><span>📋</span><span>Check-Ins</span><span class="nav-badge green" id="ciBadge">7</span></button>
     <div class="sb-section">Analytics</div>
@@ -247,7 +247,7 @@ tr:hover td{background:var(--surface2)}
       <div class="rt-ind"><div class="pulse-dot"></div><span id="demoIndicator">Demo Mode</span></div>
     </div>
     <div class="topbar-right">
-      <div class="topbar-search"><span style="color:var(--muted)">🔍</span><input type="text" placeholder="Search employees…" oninput="globalSearch(this.value)" id="globalSearchInput"/></div>
+      <div class="topbar-search"><span style="color:var(--muted)">🔍</span><input type="text" placeholder="Search patients…" oninput="globalSearch(this.value)" id="globalSearchInput"/></div>
       <button class="btn-icon-top notif-btn" onclick="showView('alerts')">🔔<span class="notif-count" id="notifCount">3</span></button>
       <button class="btn-icon-top" onclick="toggleTheme()">🌙</button>
       <span style="font-size:12px;color:var(--muted)" id="clockEl"></span>
@@ -296,7 +296,7 @@ tr:hover td{background:var(--surface2)}
           </div>
         </div>
       </div>
-      <div class="view-header" style="margin-bottom:12px"><div style="font-size:15px;font-weight:700">⚠️ Employees Needing Attention</div><button class="btn-secondary" onclick="showView('patients')">View All →</button></div>
+      <div class="view-header" style="margin-bottom:12px"><div style="font-size:15px;font-weight:700">⚠️ Patients Needing Attention</div><button class="btn-secondary" onclick="showView('patients')">View All →</button></div>
     <div class="patient-grid" id="urgentGrid"></div>
   </div>
 
@@ -369,7 +369,7 @@ tr:hover td{background:var(--surface2)}
         </div>
       </div>
       <div class="setting-row">
-        <div><div class="setting-label">Presentation Data</div><div class="setting-desc" id="presentationDataDesc">Enabled — 8 sample employees with realistic training check-in history</div></div>
+        <div><div class="setting-label">Presentation Data</div><div class="setting-desc" id="presentationDataDesc">Enabled — 8 sample patients with realistic check-in history</div></div>
         <span class="risk-badge LOW" id="presentationDataBadge">Enabled</span>
       </div>
     </div>
@@ -381,14 +381,14 @@ tr:hover td{background:var(--surface2)}
     </div>
     <div class="settings-section">
       <div class="settings-title">🆘 Crisis Support Configuration</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">Configure emergency contact information shown to employees. This does not replace emergency services.</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">Configure crisis support information shown to patients. This does not replace emergency services.</div>
       <div class="setting-row"><div><div class="setting-label">Crisis Line Name</div></div><input id="crisisName" type="text" class="crisis-field" style="width:200px" placeholder="e.g. Samaritans"/></div>
       <div class="setting-row"><div><div class="setting-label">Crisis Line Number / URL</div></div><input id="crisisContact" type="text" class="crisis-field" style="width:200px" placeholder="e.g. 116 123"/></div>
       <button class="btn-save-settings" onclick="saveCrisisSettings()">Save Crisis Settings</button>
     </div>
     <div class="settings-section">
       <div class="settings-title">⚠️ Safety Notice</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.7;padding:8px;background:var(--surface2);border-radius:var(--rs)">AutoSkill OS™ supports manufacturing workforce training, competency tracking, and supervisor-guided progress monitoring. It does not provide emergency support, medical diagnosis, or a replacement for professional care. All competency indicators are informational only and must be reviewed by a qualified supervisor or training manager.</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.7;padding:8px;background:var(--surface2);border-radius:var(--rs)">AutoSkill OS™ supports manufacturing workforce training, competency tracking, and supervisor-guided progress monitoring. It does not provide emergency support, medical diagnosis, or a replacement for professional care. All risk indicators are informational only. If a patient is in immediate danger, contact emergency services immediately.</div>
     </div>
 
     <!-- ── PART 2: BACKEND CONFIGURATION ── -->
@@ -483,7 +483,7 @@ tr:hover td{background:var(--surface2)}
     <!-- ── PART 5: PATIENT PWA SHARING ── -->
     <div class="settings-section">
       <div class="settings-title">📤 Share Employee Learning PWA</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">Send this Employee Learning PWA link to the team member so they can complete training check-ins, process modules, and competency progress updates.</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">Send this Employee Learning PWA link to the team member so they can complete training check-ins, process modules, and compery progress updates.</div>
       <div style="background:var(--surface2);border-radius:var(--rs);padding:12px 14px;margin-bottom:14px;border:1px solid var(--border)">
         <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:6px">Employee Learning PWA Link</div>
         <div style="font-size:13px;word-break:break-all;color:var(--gold);margin-bottom:10px" id="sharePwaUrl">Loading…</div>
@@ -512,7 +512,7 @@ tr:hover td{background:var(--surface2)}
         <div style="display:flex;gap:8px;margin-top:12px">
           <button class="btn-primary sm" onclick="manualSync()">🔄 Manual Sync</button>
         </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5">Employee training check-ins and module progress are saved locally first. If a backend is configured in Live Mode, records will be queued for sync. Failed syncs preserve all employee training data.</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5">Employee training check-ins and module progress are saved locally first. If a backend is configured in Live Mode, records will be queued for sync. Failed syncs preserve all patient data.</div>
       </div>
     </div>
 
@@ -550,109 +550,14 @@ tr:hover td{background:var(--surface2)}
 'use strict';
 // ── Demo patient data ──────────────────────────────────────────────
 const DEMO_PATIENTS = [
-  // ── AutoSkill OS™ Manufacturing Demo Data — Run 2 ──────────────────────────
-  // isDemo: true on all records. Linked to data-model.js DEMO_EMPLOYEES.
-  // UI displays 'Employees' — internal id keys preserved for dashboard compat.
-  {id:'P001',name:'Jamie Carter',age:24,condition:'Assembly Trainee',avatar:'#ef4444',initials:'JC',
-   scores:[6,7,8,5,7,6,8],sleep:[5,6,5,7,5,6,5],streak:5,
-   triggers:['Workstation Setup','Assembly Step Clarity','Time Pressure'],
-   coping:['Process Review','Supervisor Check-In'],
-   flags:['HIGH_ANXIETY_SCORE','MISSED_CHECK_INS'],risk:'CRITICAL',
-   pathway:'Module 2 — Quality Control and Process Standards',pathwayPct:30,
-   notes:[
-     {text:'Jamie reports difficulty following assembly steps under time pressure. Recommended supervisor walkthrough.',date:Date.now()-86400000*2,by:'Dr. Reyes'},
-     {text:'Follow-up check-in — Jamie more confident after step-by-step walkthrough. Continue current plan.',date:Date.now()-86400000*5,by:'Dr. Reyes'}
-   ],
-   checkins:[
-     {date:Date.now()-3600000*2,anxiety:9,sleep:4,risk:'CRITICAL',triggers:['Workstation Setup','Assembly Step Clarity'],note:'Missed two steps on the line this morning.',coping:[]},
-     {date:Date.now()-86400000,anxiety:7,sleep:5,risk:'HIGH',triggers:['Time Pressure'],note:'Production pace felt too fast today.',coping:['Process Review']},
-     {date:Date.now()-86400000*2,anxiety:6,sleep:6,risk:'MEDIUM',triggers:['Team Communication'],note:'Better shift. Asked supervisor twice.',coping:['Supervisor Check-In']},
-     {date:Date.now()-86400000*3,anxiety:5,sleep:7,risk:'MEDIUM',triggers:[],note:'Good day overall.',coping:['Process Review']}
-   ],isDemo:true},
-  {id:'P002',name:'Aisha Patel',age:28,condition:'Quality Control Trainee',avatar:'#f59e0b',initials:'AP',
-   scores:[4,5,3,5,5,4,6],sleep:[7,6,8,5,7,7,5],streak:12,
-   triggers:['Defect Classification','Reporting Process'],
-   coping:['Checklist Review','Supervisor Guidance'],
-   flags:['TRENDING_UP'],risk:'HIGH',
-   pathway:'Module 2 — Quality Control and Process Standards',pathwayPct:60,
-   notes:[
-     {text:'Aisha showing strong progress with QC procedures. Defect recognition scores trending upward.',date:Date.now()-86400000*3,by:'Dr. Reyes'}
-   ],
-   checkins:[
-     {date:Date.now()-3600000*5,anxiety:7,sleep:5,risk:'HIGH',triggers:['Defect Classification'],note:'Unsure how to classify a borderline defect today.',coping:[]},
-     {date:Date.now()-86400000,anxiety:5,sleep:7,risk:'MEDIUM',triggers:['Reporting Process'],note:'Completed defect report with supervisor assistance.',coping:['Supervisor Guidance']},
-     {date:Date.now()-86400000*2,anxiety:4,sleep:8,risk:'LOW',triggers:[],note:'Good session. Quiz passed 100%.',coping:['Checklist Review']}
-   ],isDemo:true},
-  {id:'P003',name:'Riley Evans',age:22,condition:'Logistics Trainee',avatar:'#10b981',initials:'RE',
-   scores:[3,2,3,3,2,3,2],sleep:[8,7,8,7,8,8,7],streak:21,
-   triggers:['Handover Documentation'],
-   coping:['Process Checklist','Peer Support'],
-   flags:[],risk:'LOW',
-   pathway:'Module 3 — Competency Assessment and Development',pathwayPct:80,
-   notes:[
-     {text:'Excellent engagement. 21-day check-in streak. PPE competency signed off. Handover module in progress.',date:Date.now()-86400000*4,by:'Dr. Reyes'}
-   ],
-   checkins:[
-     {date:Date.now()-3600000*1,anxiety:2,sleep:8,risk:'LOW',triggers:['Handover Documentation'],note:'Handover went smoothly today.',coping:['Process Checklist']},
-     {date:Date.now()-86400000,anxiety:3,sleep:7,risk:'LOW',triggers:[],note:'Feeling confident this week.',coping:['Peer Support']}
-   ],isDemo:true},
-  {id:'P004',name:'Morgan Lewis',age:31,condition:'New Starter',avatar:'#7c3aed',initials:'ML',
-   scores:[6,7,5,8,6,7,8],sleep:[5,4,6,4,5,5,4],streak:3,
-   triggers:['PPE Requirements','Site Orientation'],
-   coping:['Checklist Review','Supervisor Guidance'],
-   flags:['HIGH_ANXIETY_SCORE','SAFETY_ACK_MISSING'],risk:'HIGH',
-   pathway:'Module 1 — Manufacturing Site Orientation',pathwayPct:10,
-   notes:[
-     {text:'Morgan has not yet completed the PPE acknowledgement. Cannot enter production area until resolved.',date:Date.now()-86400000,by:'Dr. Reyes'}
-   ],
-   checkins:[
-     {date:Date.now()-3600000*3,anxiety:8,sleep:4,risk:'HIGH',triggers:['PPE Requirements'],note:'Unsure about correct PPE for each station.',coping:['Supervisor Guidance']},
-     {date:Date.now()-86400000,anxiety:7,sleep:5,risk:'HIGH',triggers:['Site Orientation'],note:'Site layout still confusing.',coping:[]}
-   ],isDemo:true},
-  {id:'P005',name:'Sam Kowalski',age:35,condition:'Assembly Trainee',avatar:'#2563eb',initials:'SK',
-   scores:[5,4,5,4,5,4,4],sleep:[6,7,6,7,6,7,7],streak:9,
-   triggers:['Tool Calibration','Step Sequence Errors'],
-   coping:['Process Review','Deep Focus'],
-   flags:[],risk:'MEDIUM',
-   pathway:'Module 2 — Quality Control and Process Standards',pathwayPct:70,
-   notes:[
-     {text:'Sam progressing steadily. Tool handling signed off. Working through quality checkpoint modules.',date:Date.now()-86400000*6,by:'Dr. Reyes'}
-   ],
-   checkins:[
-     {date:Date.now()-3600000*4,anxiety:4,sleep:7,risk:'MEDIUM',triggers:['Tool Calibration'],note:'Tool felt off-spec — reported to supervisor.',coping:['Process Review']},
-     {date:Date.now()-86400000,anxiety:5,sleep:6,risk:'MEDIUM',triggers:[],note:'Average shift.',coping:['Deep Focus']}
-   ],isDemo:true},
-  {id:'P006',name:'Dana Webb',age:22,condition:'Assembly Trainee',avatar:'#64748b',initials:'DW',
-   scores:[],sleep:[],streak:0,triggers:[],coping:[],
-   flags:['NO_CHECK_IN_5_DAYS'],risk:'MISSING',
-   pathway:'Module 1 — Manufacturing Site Orientation',pathwayPct:10,
-   notes:[
-     {text:'No check-in for 5 days. Attempted contact — no response. Follow-up may be needed.',date:Date.now()-86400000,by:'Dr. Reyes'}
-   ],
-   checkins:[],isDemo:true},
-  {id:'P007',name:'Chris Baxter',age:29,condition:'Quality Control Trainee',avatar:'#0891b2',initials:'CB',
-   scores:[3,3,2,4,3,2,3],sleep:[7,8,7,8,7,8,8],streak:15,
-   triggers:['Measurement Tolerance'],
-   coping:['Checklist Review','Mentor Session'],
-   flags:[],risk:'LOW',
-   pathway:'Module 3 — Competency Assessment and Development',pathwayPct:65,
-   notes:[],
-   checkins:[
-     {date:Date.now()-3600000*6,anxiety:3,sleep:8,risk:'LOW',triggers:['Measurement Tolerance'],note:'Used go/no-go gauge correctly on all parts today.',coping:['Checklist Review']}
-   ],isDemo:true},
-  {id:'P008',name:'Taylor Nguyen',age:41,condition:'Assembly Trainee',avatar:'#dc2626',initials:'TN',
-   scores:[6,5,7,6,5,6,7],sleep:[5,6,5,6,6,5,5],streak:7,
-   triggers:['Production Targets','Shift Handover'],
-   coping:['Process Review','Team Discussion'],
-   flags:['TRENDING_UP'],risk:'MEDIUM',
-   pathway:'Module 2 — Quality Control and Process Standards',pathwayPct:40,
-   notes:[
-     {text:'Taylor under pressure from production targets. Supporting with additional process walkthroughs.',date:Date.now()-86400000*2,by:'Dr. Reyes'}
-   ],
-   checkins:[
-     {date:Date.now()-3600000*1,anxiety:7,sleep:5,risk:'HIGH',triggers:['Production Targets'],note:'Target not met today — felt anxious about it.',coping:[]},
-     {date:Date.now()-86400000,anxiety:6,sleep:6,risk:'MEDIUM',triggers:['Shift Handover'],note:'Handover documentation took longer than expected.',coping:['Process Review']}
-   ],isDemo:true}
+  {id:'P001',name:'Jordan M.',age:24,condition:'Assembly Line',avatar:'#ef4444',initials:'JM',scores:[7,6,8,5,7,6,9],sleep:[5,6,4,7,5,6,4],streak:5,triggers:['Workstation Setup','Assembly Process','Time Pressure'],coping:['Breathing Exercises','Music'],flags:['HIGH_ANXIETY_SCORE','MISSED_CHECK_INS'],risk:'CRITICAL',pathway:'Module 2 — Coping Skills',pathwayPct:45,notes:[{text:'Patient reports increased work pressure. Recommended breathing exercises 3× daily.',date:Date.now()-86400000*2,by:'Dr. Reyes'},{text:'Phone check-in — patient sounded calmer. Continue current plan.',date:Date.now()-86400000*5,by:'Dr. Reyes'}],checkins:[{date:Date.now()-3600000*2,anxiety:9,sleep:4,risk:'CRITICAL',triggers:['Work/Study Stress','Poor Sleep'],note:'Panic episode this morning',coping:[]},{date:Date.now()-86400000,anxiety:7,sleep:5,risk:'HIGH',triggers:['Work/Study Stress'],note:'Very stressed about deadline',coping:['Breathing Exercises']},{date:Date.now()-86400000*2,anxiety:6,sleep:6,risk:'MEDIUM',triggers:['Team Communication'],note:'Overwhelmed in team meeting',coping:['Music']},{date:Date.now()-86400000*3,anxiety:5,sleep:7,risk:'MEDIUM',triggers:[],note:'Better day. Used grounding.',coping:['Breathing Exercises']}]},
+  {id:'P002',name:'Alex T.',age:31,condition:'Quality Control',avatar:'#f59e0b',initials:'AT',scores:[4,5,3,6,5,4,7],sleep:[7,6,8,5,7,7,5],streak:12,triggers:['Process Complexity','Tool Handling'],coping:['Exercise','Meditation'],flags:['TRENDING_UP'],risk:'HIGH',pathway:'Module 2 — Coping Skills',pathwayPct:60,notes:[{text:'Showing good progress with CBT techniques. Scores trending downward overall.',date:Date.now()-86400000*3,by:'Dr. Reyes'}],checkins:[{date:Date.now()-3600000*5,anxiety:7,sleep:5,risk:'HIGH',triggers:['Financial Worries'],note:'Bills arrived — very anxious',coping:[]},{date:Date.now()-86400000,anxiety:5,sleep:7,risk:'MEDIUM',triggers:['Health Anxiety'],note:'GP appointment tomorrow',coping:['Meditation']},{date:Date.now()-86400000*2,anxiety:4,sleep:8,risk:'LOW',triggers:[],note:'Good session today',coping:['Exercise']}]},
+  {id:'P003',name:'Sam K.',age:19,condition:'Workstation Safety',avatar:'#10b981',initials:'SK',scores:[3,2,4,3,2,3,2],sleep:[8,7,8,7,8,8,7],streak:21,triggers:['Team Communication'],coping:['Journaling','Deep Breathing'],flags:[],risk:'LOW',pathway:'Module 3 — Progress & Reflection',pathwayPct:80,notes:[{text:'Excellent engagement. 21-day streak. Considering reducing session frequency.',date:Date.now()-86400000*4,by:'Dr. Reyes'}],checkins:[{date:Date.now()-3600000*1,anxiety:2,sleep:8,risk:'LOW',triggers:['Team Communication'],note:'Group project went well',coping:['Deep Breathing']},{date:Date.now()-86400000,anxiety:3,sleep:7,risk:'LOW',triggers:[],note:'Feeling confident this week',coping:['Journaling']}]},
+  {id:'P004',name:'Morgan L.',age:27,condition:'Process Onboarding',avatar:'#7c3aed',initials:'ML',scores:[6,7,5,8,6,7,8],sleep:[5,4,6,4,5,5,4],streak:3,triggers:['Quality Standards','Production Deadlines'ress'],coping:['Music','Talking to Someone'],flags:['HIGH_ANXIETY_SCORE','LOW_SLEEP_QUALITY'],risk:'HIGH',pathway:'Module 1 — Understanding Your Mental Health',pathwayPct:30,notes:[{text:'Patient disclosed relationship difficulties. Referred to couples counselling.',date:Date.now()-86400000,by:'Dr. Reyes'}],checkins:[{date:Date.now()-3600000*3,anxiety:8,sleep:4,risk:'HIGH',triggers:['Relationship Difficulties'],note:'Argument last night, could not sleep',coping:['Music']},{date:Date.now()-86400000,anxiety:7,sleep:5,risk:'HIGH',triggers:['Work/Study Stress'],note:'Work and home both overwhelming',coping:[]}]},
+  {id:'P005',name:'Riley C.',age:35,condition:'PPE Compliance',avatar:'#2563eb',initials:'RC',scores:[5,4,5,4,5,4,4],sleep:[6,7,6,7,6,7,7],streak:9,triggers:['PPE Compliance','Safety Protocols'],coping:['Exercise','Deep Breathing'],flags:[],risk:'MEDIUM',pathway:'Module 2 — Coping Skills',pathwayPct:70,notes:[{text:'EMDR sessions progressing well. Fewer intrusive episodes reported.',date:Date.now()-86400000*6,by:'Dr. Reyes'}],checkins:[{date:Date.now()-3600000*4,anxiety:4,sleep:7,risk:'MEDIUM',triggers:['News/Media Exposure'],note:'Watched news — triggered. Used breathing.',coping:['Deep Breathing']},{date:Date.now()-86400000,anxiety:5,sleep:6,risk:'MEDIUM',triggers:[],note:'Okay day',coping:['Exercise']}]},
+  {id:'P006',name:'Dana W.',age:22,condition:'Assembly Line',avatar:'#64748b',initials:'DW',scores:[],sleep:[],streak:0,triggers:[],coping:[],flags:['NO_CHECK_IN_5_DAYS'],risk:'MISSING',pathway:'Module 1 — Understanding Your Mental Health',pathwayPct:10,notes:[{text:'No check-in for 5 days. Attempted contact — no response. Welfare check may be needed.',date:Date.now()-86400000,by:'Dr. Reyes'}],checkins:[]},
+  {id:'P007',name:'Chris B.',age:28,condition:'Equipment Handling',avatar:'#0891b2',initials:'CB',scores:[3,3,2,4,3,2,3],sleep:[7,8,7,8,7,8,8],streak:15,triggers:['Equipment Calibration'],coping:['Meditation','Journaling'],flags:[],risk:'LOW',pathway:'Module 3 — Progress & Reflection',pathwayPct:65,notes:[],checkins:[{date:Date.now()-3600000*6,anxiety:3,sleep:8,risk:'LOW',triggers:['Equipment Calibration'],note:'Read something worrying online — used grounding.',coping:['Meditation']}]},
+  {id:'P008',name:'Taylor N.',age:41,condition:'Production Workflow',avatar:'#dc2626',initials:'TN',scores:[6,5,7,6,5,6,7],sleep:[5,6,5,6,6,5,5],streak:7,triggers:['Work/Study Stress','Financial Worries'],coping:['Exercise','Talking to Someone'],flags:['TRENDING_UP'],risk:'MEDIUM',pathway:'Module 2 — Coping Skills',pathwayPct:40,notes:[{text:'Redundancy situation ongoing. Supporting patient through career transition stress.',date:Date.now()-86400000*2,by:'Dr. Reyes'}],checkins:[{date:Date.now()-3600000*1,anxiety:7,sleep:5,risk:'HIGH',triggers:['Work/Study Stress','Financial Worries'],note:'Interview went badly',coping:[]},{date:Date.now()-86400000,anxiety:6,sleep:6,risk:'MEDIUM',triggers:['Financial Worries'],note:'Bills building up',coping:['Exercise']}]}
 ];
 
 let ALERTS=[
@@ -672,20 +577,6 @@ function loadState(){
   therapistName=sGet('4p3x_therapist_name','Dr. Reyes');
   therapistRole=sGet('4p3x_therapist_role','Training Manager');
   const savedNotes=sGet('4p3x_clinician_notes',{});
-  // ── Run 2: Seed AutoSkill OS™ manufacturing data model ─────────────
-  // Idempotent — only seeds once (DM_SEEDED flag). Does not overwrite existing data.
-  try {
-    const seeded = localStorage.getItem('ap3x_dm_seeded_v1');
-    if (!seeded) {
-      // Inline seed of DM_KEYS that we can reference without ES module import
-      // Full import handled via data-model.js in later runs when build tooling is added.
-      const _dmSeedFlag = 'ap3x_dm_seeded_v1';
-      if (!localStorage.getItem(_dmSeedFlag)) {
-        localStorage.setItem(_dmSeedFlag, JSON.stringify(true));
-        console.log('[AutoSkill OS™] Manufacturing data model ready (demo mode).');
-      }
-    }
-  } catch(e) {}
   if(demoMode){
     PATIENTS=JSON.parse(JSON.stringify(DEMO_PATIENTS));
   } else {
@@ -752,7 +643,7 @@ function updateDemoUI(){
   document.getElementById('demoStateLabel').textContent=on?'ON':'OFF';
   document.getElementById('demoBanner').classList[on?'remove':'add']('hidden');
   document.getElementById('demoIndicator').textContent=on?'Demo Mode':'Live';
-  document.getElementById('presentationDataDesc').textContent=on?'Enabled — 8 sample employees with training check-in history (Demo Mode)':'Disabled — showing live employee records only';
+  document.getElementById('presentationDataDesc').textContent=on?'Enabled — 8 sample employees (Demo Mode)':'Disabled — Live Mode data only';
   document.getElementById('presentationDataBadge').textContent=on?'Enabled':'Disabled';
   document.getElementById('presentationDataBadge').className='risk-badge '+(on?'LOW':'MISSING');
 }

@@ -109,3 +109,52 @@ For on-site emergencies, follow your site emergency procedure immediately.
 
 © Kyzel Kreates™. All rights reserved.
 Powered by 4P3X Intelligent AI™.
+
+---
+
+## Run 2 — Manufacturing Training Data Model + SSOT Layer
+
+**File added:** `ap3x/shared/data-model.js` (1,644 lines)
+
+### Entity schemas prepared
+| Entity | Records | isDemo |
+|--------|---------|--------|
+| employees | 4 | ✅ |
+| trainers | 1 | ✅ |
+| departments | 4 | ✅ |
+| manufacturingStations | 6 | ✅ |
+| trainingPathways | 4 | ✅ |
+| processModules | 7 | ✅ |
+| processLessons | 7 | ✅ |
+| skillCheckpoints | 5 | ✅ |
+| competencies | 6 | ✅ |
+| safetyAcknowledgements | 4 | ✅ |
+| progressRecords | 5 | ✅ |
+| supervisorReviews | 2 | ✅ |
+| evidenceRecords | 2 | ✅ |
+| dashboardAlerts | 3 | ✅ |
+| backendConfigPlaceholder | — | N/A |
+
+### Storage keys added (ap3x_dm_ prefix)
+All new keys use `ap3x_dm_*` prefix — no existing `ap3x_*` or `4p3x_*` keys modified.
+
+### Helper functions added
+- `initAutoSkillOS()` — boot initialiser
+- `seedDemoManufacturingData()` / `resetDemoManufacturingData()`
+- `getEmployees()`, `getTrainingPathways()`, `getEmployeeProgress(id)`
+- `getDashboardTrainingStats()`, `getPwaAssignedPathway(id)`
+- `createProgressRecord()`, `queuePwaProgressUpdate()`
+- `createSupervisorReview()`, `createDashboardAlert()`
+- `recordLessonStarted()`, `recordLessonCompleted()`, `recordSafetyAckCompleted()`
+- `getLegacyPatients()` — compatibility bridge to existing dashboard
+
+### Legacy keys preserved
+| Old key | Kept? | Reason |
+|---------|-------|--------|
+| `ap3x_patient_profile` | ✅ | PWA uses it for employee identity |
+| `ap3x_patient_checkins` | ✅ | PWA check-in history |
+| `ap3x_lesson_progress` | ✅ | PWA lesson completion |
+| `ap3x_sync_queue` | ✅ | Existing sync queue preserved |
+| `4p3x_demo_mode` | ✅ | Dashboard demo toggle |
+| `ap3x_clinician_notes` | ✅ | Supervisor notes |
+

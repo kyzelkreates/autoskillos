@@ -21,116 +21,6 @@ function tlGetPendingCount() {
 function sGet(k, d) { try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : d; } catch { return d; } }
 function sSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 
-// ── AutoSkill OS™ Run 2: Manufacturing Data Model Boot (PWA) ─────────────────
-// Seeds manufacturing training data model into localStorage on first load.
-// Does NOT overwrite existing ap3x_* keys. Idempotent — safe to call repeatedly.
-// Full module reads: Run 4. Sync wiring: Run 7.
-(function bootAutoSkillOSDM() {
-  'use strict';
-  try {
-    const SEEDED = 'ap3x_dm_seeded_v1';
-    if (!localStorage.getItem(SEEDED)) {
-      localStorage.setItem(SEEDED, JSON.stringify(true));
-      // Data mode — compatible with existing 4p3x_demo_mode
-      if (!localStorage.getItem('ap3x_dm_data_mode')) {
-        const existingDemoMode = localStorage.getItem('4p3x_demo_mode');
-        const mode = (existingDemoMode === null || JSON.parse(existingDemoMode)) ? 'demo' : 'local';
-        localStorage.setItem('ap3x_dm_data_mode', JSON.stringify(mode));
-      }
-      // Backend config placeholder — no secrets, public config only
-      if (!localStorage.getItem('ap3x_dm_backend_config')) {
-        localStorage.setItem('ap3x_dm_backend_config', JSON.stringify({
-          mode: 'demo',
-          provider: 'local-only',
-          connectionStatus: 'not_configured',
-          publicConfig: { projectUrl: '', anonKeyHint: '', region: '' },
-          maskedStatus: '',
-          lastTestedAt: null,
-          updatedAt: null
-        }));
-      }
-      console.log('[AutoSkill OS™ PWA] Manufacturing data model initialised.');
-    }
-  } catch(e) {
-    // Never block PWA boot
-    console.warn('[AutoSkill OS™ PWA] DM boot warning:', e.message);
-  }
-})();
-
-// ── PWA Manufacturing Progress Record Helpers (Run 2) ────────────────────────
-// These supplement existing tlEnqueueSync() with structured entity records.
-// They write to the ap3x_dm_* namespace so they do not clash with ap3x_* keys.
-// Full entity reads and sync: Run 4 and Run 7.
-
-/**
- * createPwaProgressRecord(payload)
- * Saves a structured progress record to ap3x_dm_progress_records.
- * Called after lesson complete, checkpoint pass, or safety ack.
- * Does NOT replace existing sSet('ap3x_lesson_progress', ...) calls.
- */
-function createPwaProgressRecord(payload) {
-  try {
-    const KEY = 'ap3x_dm_progress_records';
-    const records = JSON.parse(localStorage.getItem(KEY) || '[]');
-    const record = {
-      id:               'prog_pwa_' + Date.now(),
-      employeeId:       payload.employeeId       || sGet('ap3x_patient_profile', {}).userId || null,
-      pathwayId:        payload.pathwayId        || null,
-      moduleId:         payload.moduleId         || null,
-      lessonId:         payload.lessonId         || null,
-      status:           payload.status           || 'completed',
-      progressPercent:  payload.progressPercent  !== undefined ? payload.progressPercent : 100,
-      score:            payload.score            !== undefined ? payload.score : null,
-      timeSpentMinutes: payload.timeSpentMinutes || 0,
-      completedAt:      payload.completedAt      || new Date().toISOString(),
-      lastUpdatedAt:    new Date().toISOString(),
-      source:           'employee-pwa',
-      syncStatus:       'local',
-      isDemo:           sGet('4p3x_demo_mode', true)
-    };
-    records.push(record);
-    localStorage.setItem(KEY, JSON.stringify(records));
-    // Queue for future sync (Run 7)
-    queueDmSyncItem({
-      type:       'lesson_completed',
-      entityType: 'progressRecord',
-      entityId:   record.id,
-      data:       record
-    });
-    return record;
-  } catch(e) {
-    console.warn('[AutoSkill OS™ PWA] createPwaProgressRecord failed:', e.message);
-    return null;
-  }
-}
-
-/**
- * queueDmSyncItem(payload)
- * Adds a structured item to ap3x_dm_pwa_sync_queue.
- * Supplements existing ap3x_sync_queue. Full sync wiring in Run 7.
- */
-function queueDmSyncItem(payload) {
-  try {
-    const KEY = 'ap3x_dm_pwa_sync_queue';
-    const queue = JSON.parse(localStorage.getItem(KEY) || '[]');
-    queue.push({
-      id:         'sync_pwa_' + Date.now(),
-      type:       payload.type       || 'unknown',
-      entityType: payload.entityType || 'unknown',
-      entityId:   payload.entityId   || null,
-      data:       payload.data       || {},
-      queuedAt:   new Date().toISOString(),
-      syncStatus: 'queued',
-      attempts:   0,
-      isDemo:     sGet('4p3x_demo_mode', true)
-    });
-    localStorage.setItem(KEY, JSON.stringify(queue));
-  } catch(e) {
-    // Non-fatal — sync queue failure must never block PWA
-  }
-}
-
-
 // ── Curriculum ────────────────────────────────────────────────────
 const CURRICULUM = [
   { id: 1, name: 'Module 1 — Manufacturing Site Orientation', icon: '🌱', color: '#22c55e', lessons: [
@@ -962,8 +852,6 @@ function submitCheckin() {
   sSet('ap3x_patient_checkins', checkins);
   // Queue check-in for backend-ready sync
   tlEnqueueSync('checkin', { ...ciData, submitted_at: new Date().toISOString() });
-  // ── Run 2: Queue structured DM check-in record ─────────────────────────
-  queueDmSyncItem({ type: 'check_in_submitted', entityType: 'checkIn', entityId: record.id, data: { ...ciData, submittedAt: new Date().toISOString() } });
   const todayStr = new Date().toDateString();
   if (lastCIDate !== todayStr) {
     const yest = new Date(Date.now() - 86400000).toDateString();
@@ -1110,8 +998,6 @@ function completeLessonFromDetail(id, xpVal) {
   sSet('ap3x_lesson_progress', lessonDone);
   // Queue lesson progress for backend-ready sync
   tlEnqueueSync('lesson_progress', { lessonId: id, completedAt: new Date().toISOString(), xpAwarded: xpVal });
-  // ── Run 2: Also write to structured DM progress record ─────────────────
-  createPwaProgressRecord({ lessonId: id, status: 'completed', progressPercent: 100, score: null });
   renderProgress(); updateHeader();
   var btn = document.getElementById('ld-complete-btn');
   var lc = LESSON_CONTENT[id];
