@@ -229,7 +229,7 @@ const LESSON_CONTENT = {
       { heading: 'Triggers are not weakness', body: 'Having triggers does not mean you are weak or broken. Triggers often develop because the mind and body are trying to protect you. Understanding them can help you respond with more care and less judgement.' },
       { heading: 'Common trigger areas', body: 'Triggers may relate to relationships, work, health, money, conflict, uncertainty, rejection, trauma reminders, sensory overload, tiredness, loneliness, or feeling out of control.' },
       { heading: 'Tracking gently', body: 'When tracking triggers, avoid forcing yourself to relive painful experiences. Start with simple notes: what happened, how you felt, what your body did, what you needed, and what helped.' },
-      { heading: 'Building awareness', body: 'Over time, trigger tracking can help you and your supervisor identify patterns. This can support planning, skill techniques, boundaries, and safer responses.' }
+      { heading: 'Building awareness', body: 'Over time, trigger tracking can help you and your supervisor identify patterns. This can support planning, coping strategies, boundaries, and safer responses.' }
     ],
     reflectionPrompt: 'What is one situation that often affects your performance?',
     learnerTask: 'Write down one possible trigger and one supportive response you could try next time.',
@@ -243,7 +243,7 @@ const LESSON_CONTENT = {
     moduleTitle: 'Module 1 — Manufacturing Site Orientation',
     title: 'Workstation Readiness',
     estimatedTime: '8–10 minutes',
-    summary: 'Tracking can help you notice patterns in mood, stress, sleep, energy, skill techniques, and support needs. This lesson explains how to track safely without becoming overwhelmed or overly self-critical.',
+    summary: 'Tracking can help you notice patterns in mood, stress, sleep, energy, coping strategies, and support needs. This lesson explains how to track safely without becoming overwhelmed or overly self-critical.',
     learningGoals: [
       'Understand the value of pattern tracking.',
       'Learn what to track.',
@@ -252,9 +252,9 @@ const LESSON_CONTENT = {
     ],
     sections: [
       { heading: 'Why patterns matter', body: 'Training progress can feel uneven, but patterns often appear over time. You may notice that process errors increase when preparation is rushed, performance improves after clear briefing, or skills build after routine practice, connection, or rest.' },
-      { heading: 'What can be tracked', body: 'Useful areas include mood, anxiety, stress, sleep, energy, appetite, concentration, skill techniques, social connection, symptoms, triggers, and notes for your supervisor.' },
+      { heading: 'What can be tracked', body: 'Useful areas include mood, anxiety, stress, sleep, energy, appetite, concentration, coping strategies, social connection, symptoms, triggers, and notes for your supervisor.' },
       { heading: 'Tracking should not become punishment', body: 'Tracking is not about judging yourself or getting a perfect score. It is about gathering information. Missing a check-in does not mean failure. It may itself be useful information.' },
-      { heading: 'Look for trends, not single days', body: 'One difficult day does not define your training journey. Patterns become clearer when you look across several days or weeks. Your supervisor can help interpret what the data might mean.' },
+      { heading: 'Look for trends, not single days', body: 'One difficult day does not define your recovery. Patterns become clearer when you look across several days or weeks. Your supervisor can help interpret what the data might mean.' },
       { heading: 'Keep it simple', body: 'A short check-in is enough. You do not need long explanations every day. Even a mood score, sleep rating, and one sentence can be useful.' }
     ],
     reflectionPrompt: 'What pattern would be useful for you and your supervisor to understand better?',
@@ -277,7 +277,7 @@ const LESSON_CONTENT = {
       'Understand crisis boundaries.'
     ],
     sections: [
-      { heading: 'Support is part of development', body: 'Asking for help does not mean you have failed. Support can help you feel less alone, organise your thoughts, make safer choices, and access the right help at the right time.' },
+      { heading: 'Support is part of recovery', body: 'Needing support does not mean you have failed. Support can help you feel less alone, organise your thoughts, make safer choices, and access the right help at the right time.' },
       { heading: 'Signs you may need support', body: 'You may need extra support if you feel overwhelmed, unsafe, unable to cope, unusually withdrawn, highly anxious, very low, unable to sleep, unable to complete basic tasks, or unsure how to manage your thoughts or feelings.' },
       { heading: 'Different levels of support', body: 'Support can include self-care, contacting a trusted person, messaging your supervisor if appropriate, using a support plan, contacting a GP or healthcare professional, or contacting emergency/crisis services if there is immediate risk.' },
       { heading: 'How to ask clearly', body: 'Simple phrases can help: "I am struggling today," "I need someone to check in," "I do not feel safe," "I need help making a plan," or "Can we talk about this in my next session?"' },
@@ -323,7 +323,7 @@ const LESSON_CONTENT = {
     moduleTitle: 'Module 2 — Quality Control and Process Standards',
     title: 'Production Workflow and Handover',
     estimatedTime: '10–12 minutes',
-    summary: 'A training routine does not need to be complicated. Small, repeatable actions can reinforce stability, recovery, and self-awareness. This lesson helps you build a simple routine that fits your real life.',
+    summary: 'A training routine does not need to be complicated. Small, repeatable actions can support stability, recovery, and self-awareness. This lesson helps you build a simple routine that fits your real life.',
     learningGoals: [
       'Understand why a consistent routine supports training performance.',
       'Choose small daily actions.',
@@ -333,7 +333,7 @@ const LESSON_CONTENT = {
     sections: [
       { heading: 'Why routine helps', body: 'Routine can reduce decision pressure and create small anchors in the day. Predictable actions can support sleep, mood, energy, and emotional regulation.' },
       { heading: 'Start small', body: 'A helpful routine might begin with one or two actions, such as drinking water, opening curtains, taking medication as prescribed, completing a check-in, stepping outside, eating something nourishing, or doing a grounding exercise.' },
-      { heading: 'Plan for challenging shifts', body: 'Training routines should include a backup plan. For example, if a walk feels too much, sitting near a window may be enough. If journaling feels too much, writing one word may be enough.' },
+      { heading: 'Make a difficult-day version', body: 'Recovery routines should include a low-energy version. For example, if a walk feels too much, sitting near a window may be enough. If journaling feels too much, writing one word may be enough.' },
       { heading: 'Link actions together', body: 'Routines are easier when connected to something you already do. For example: after brushing teeth, complete a check-in. After breakfast, take two slow breaths. Before bed, write one reflection.' },
       { heading: 'Review and adjust', body: 'A routine should support you, not punish you. If it does not work, adjust it with curiosity rather than self-criticism.' }
     ],
@@ -383,7 +383,7 @@ const LESSON_CONTENT = {
       'Identify one realistic rest goal.'
     ],
     sections: [
-      { heading: 'Sleep affects coping', body: 'Poor sleep can make emotions feel stronger, reduce concentration, increase irritability, and make skill techniques harder to use. This does not mean you are failing; it means your system may be under strain.' },
+      { heading: 'Sleep affects coping', body: 'Poor sleep can make emotions feel stronger, reduce concentration, increase irritability, and make coping strategies harder to use. This does not mean you are failing; it means your system may be under strain.' },
       { heading: 'Readiness is not optional', body: 'Workstation readiness is part of every shift. Checks can include PPE inspection, tool condition, equipment calibration, surface cleanliness, and hazard identification.' },
       { heading: 'Create a pre-shift checklist', body: 'A pre-shift checklist tells you exactly what to verify before starting work. This could include PPE status, tool condition, workstation cleanliness, materials availability, and supervisor sign-on.' },
       { heading: 'Track without pressure', body: 'Tracking sleep quality can help identify patterns. Avoid judging yourself for poor sleep. Use it as information to discuss with your supervisor or healthcare professional if needed.' },
@@ -401,11 +401,11 @@ const LESSON_CONTENT = {
     moduleTitle: 'Module 2 — Quality Control and Process Standards',
     title: 'Creating a Support Plan',
     estimatedTime: '10–12 minutes',
-    summary: 'A support plan helps you know what to do when things become difficult. This lesson helps you create a simple plan that includes skill techniques, supportive people, professional support, and crisis steps.',
+    summary: 'A support plan helps you know what to do when things become difficult. This lesson helps you create a simple plan that includes coping strategies, supportive people, professional support, and crisis steps.',
     learningGoals: [
       'Understand what a support plan is.',
       'Identify personal warning signs.',
-      'Choose skill techniques.',
+      'Choose coping strategies.',
       'List safe support contacts and next steps.'
     ],
     sections: [
@@ -438,7 +438,7 @@ const LESSON_CONTENT = {
     ],
     sections: [
       { heading: 'Progress can be subtle', body: 'Progress may look like noticing a trigger sooner, asking for support, completing a check-in, using a coping strategy, attending a training session, resting instead of pushing through, or speaking to yourself more kindly.' },
-      { heading: 'Progress is not perfection', body: 'You can be making training progress and still face challenging days. Development does not require constant improvement. It often involves learning how to respond differently when difficulties appear.' },
+      { heading: 'Progress is not perfection', body: 'You can be making progress and still have difficult days. Recovery does not require constant improvement. It often involves learning how to respond differently when difficulties appear.' },
       { heading: 'Look at evidence', body: 'Use check-ins, lesson completion, mood trends, notes, and coping strategy use as evidence. This can help you see change more clearly over time.' },
       { heading: 'Name strengths', body: 'Strengths might include persistence, honesty, courage, awareness, patience, creativity, care for others, or willingness to try. These strengths can support recovery.' },
       { heading: 'Bring progress to your check-in', body: 'Progress reflections can help your supervisor understand what is improving and where additional support is needed.' }
@@ -483,7 +483,7 @@ const LESSON_CONTENT = {
     estimatedTime: '8–10 minutes',
     summary: 'Coping strategies are skills or actions that help you manage difficult moments. This lesson helps you review what works, what does not, and how to build a practical coping toolkit.',
     learningGoals: [
-      'Understand different types of skill techniques.',
+      'Understand different types of coping strategies.',
       'Identify strategies that already help.',
       'Build a flexible coping toolkit.',
       'Match strategies to different needs.'
@@ -492,12 +492,12 @@ const LESSON_CONTENT = {
       { heading: 'Process skills are tools', body: 'No single process skill covers every situation. A skills toolkit gives you options depending on what you need: quality checking, process review, supervisor escalation, documentation, or hands-on practice.' },
       { heading: 'Different types of coping', body: 'Process-focused strategies include workstation checks, process review, or a supervised step-through. Practical strategies include making a list or reducing tasks. Connection strategies include messaging someone safe. Expression strategies include journaling, art, or talking.' },
       { heading: 'Notice what works', body: 'After using a strategy, ask: Did this help a little, a lot, or not today? A strategy that does not work once may still help another time.' },
-      { heading: 'Make strategies easy to access', body: 'Keep skill techniques visible and simple. Add them to your support plan or AutoSkill OS™ notes so you do not have to remember them during distress.' },
-      { heading: 'Review with your supervisor', body: 'Your supervisor can help adjust skill techniques and explore why some feel easier or harder.' }
+      { heading: 'Make strategies easy to access', body: 'Keep coping strategies visible and simple. Add them to your support plan or AutoSkill OS™ notes so you do not have to remember them during distress.' },
+      { heading: 'Review with your supervisor', body: 'Your supervisor can help adjust coping strategies and explore why some feel easier or harder.' }
     ],
     reflectionPrompt: 'Which coping strategy has helped you even slightly?',
     learnerTask: 'Create a skills toolkit with five process skills: one quality-focused, one safety-focused, one communication-based, one documentation-based, and one hands-on practice.',
-    supervisorNote: 'Review whether skill techniques are accessible, safe, and realistic for the employee\'s context.',
+    supervisorNote: 'Review whether coping strategies are accessible, safe, and realistic for the employee\'s context.',
     platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I have strengthened my coping toolkit'
   },
@@ -517,7 +517,7 @@ const LESSON_CONTENT = {
     sections: [
       { heading: 'Why preparation helps', body: 'When emotions are high or time is limited, it can be hard to remember everything you wanted to say. Preparing notes can help you feel more organised and supported.' },
       { heading: 'Review recent check-ins', body: 'Look at mood, anxiety, stress, sleep, coping strategy use, and support flags. Notice anything that changed or repeated.' },
-      { heading: 'Choose key topics', body: 'You might discuss triggers, difficult moments, progress, questions, skill techniques, medication concerns if relevant to your healthcare provider, relationship issues, work stress, or support needs.' },
+      { heading: 'Choose key topics', body: 'You might discuss triggers, difficult moments, progress, questions, coping strategies, medication concerns if relevant to your healthcare provider, relationship issues, work stress, or support needs.' },
       { heading: 'Share what feels hard to say', body: 'If something feels difficult to say aloud, writing it down can help. You might show your supervisor your notes or use them as a starting point.' },
       { heading: 'End with next steps', body: 'After your supervisor check-in, record one or two next steps so you know what to focus on before your next shift or review.' }
     ],
@@ -533,11 +533,11 @@ const LESSON_CONTENT = {
     moduleTitle: 'Module 3 — Competency Assessment and Development',
     title: 'Final Competency Check',
     estimatedTime: '12–15 minutes',
-    summary: 'A personal competency plan brings together what you have learned about your performance, triggers, skill techniques, support needs, and goals. This lesson helps you create a practical plan you can review with your supervisor.',
+    summary: 'A personal competency plan brings together what you have learned about your performance, triggers, coping strategies, support needs, and goals. This lesson helps you create a practical plan you can review with your supervisor.',
     learningGoals: [
       'Bring together learning from the pathway.',
-      'Identify strengths, triggers, and skill techniques.',
-      'Create realistic training goals.',
+      'Identify strengths, triggers, and coping strategies.',
+      'Create realistic recovery goals.',
       'Build a plan for continued support.'
     ],
     sections: [
@@ -548,7 +548,7 @@ const LESSON_CONTENT = {
       { heading: 'Keep the plan flexible', body: 'A competency plan can change. Review it with your supervisor and update it when you learn more about yourself.' }
     ],
     reflectionPrompt: 'What are the most important things your competency plan should include?',
-    learnerTask: 'Create a personal competency plan with five sections: strengths, triggers, warning signs, skill techniques, and support contacts.',
+    learnerTask: 'Create a personal competency plan with five sections: strengths, triggers, warning signs, coping strategies, and support contacts.',
     supervisorNote: 'Use the competency plan as a collaborative tool. Review for realism, safety, and patient ownership.',
     platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I have built my personal competency plan'
@@ -558,32 +558,30 @@ const LESSON_CONTENT = {
 
 
 const COPING = [
-  { id: 'workstation_check', icon: '🔧', name: 'Workstation Readiness Check', desc: 'Before starting your shift: verify tools are in position, PPE is available, materials are correctly staged, and your area is clear of hazards.', cat: 'Workstation Readiness' },
-  { id: 'ppe_check',         icon: '🦺', name: 'PPE Pre-Shift Check', desc: 'Confirm hard hat, hi-vis vest, safety boots, gloves, and any role-specific PPE are worn and in good condition before entering the production area.', cat: 'Safety' },
-  { id: 'defect_report',     icon: '🎯', name: 'Defect Reporting Practice', desc: 'Identify the defect type, note the location on the assembly, record batch/serial, stop the line if required, and report to your supervisor before continuing.', cat: 'Quality Control' },
-  { id: 'handover',          icon: '🤝', name: 'Shift Handover Checklist', desc: 'At shift end: update the handover log, notify the incoming operator of any open issues, confirm workstation is clean and tools are stored correctly.', cat: 'Production Workflow' },
-  { id: 'process_checkpoint',icon: '✅', name: 'Process Checkpoint Verification', desc: 'At each process checkpoint: confirm the step is complete to spec, sign the checkpoint log, and alert your supervisor if the step does not meet quality standards.', cat: 'Process Standards' },
-  { id: 'supervisor_signoff',icon: '👁️', name: 'Supervisor Sign-Off Preparation', desc: 'Gather evidence of your completed work, note any questions or concerns, and request your supervisor check-in when a completed task requires formal sign-off.', cat: 'Supervisor Review' },
-  { id: 'qc_inspection',     icon: '🔍', name: 'Quality Inspection Technique', desc: 'Use the correct inspection method for your product stage — visual, dimensional, or functional. Always use the approved inspection sheet and record findings immediately.', cat: 'Quality Control' },
-  { id: 'tool_safety',       icon: '⚙️', name: 'Safe Tool Handling Practice', desc: 'Select the correct tool for the task, inspect for damage before use, use correct technique, and return tools to the correct location after every task.', cat: 'Workstation Safety' },
-  { id: 'focus_reset',       icon: '⏸️', name: 'Focus Reset — Short Pause', desc: 'If you feel rushed or unsure: stop, step back from the workstation, take a moment to review the process step, then continue. Rushing causes defects and accidents.', cat: 'Process Safety' },
-  { id: 'ask_supervisor',    icon: '💬', name: 'Ask Your Supervisor', desc: 'If unsure about any step, quality requirement, or safety rule: stop work, ask your supervisor. Asking is the correct action — never guess on safety or quality.', cat: 'Supervisor Support' },
+  { id: 'breathing', icon: '🌬️', name: '4-7-8 Breathing', desc: 'Inhale 4, hold 7, exhale 8. Activates the parasympathetic nervous system to reduce anxiety quickly.', cat: 'Anxiety Relief' },
+  { id: 'grounding', icon: '🌿', name: '5-4-3-2-1 Grounding', desc: 'Name 5 things you see, 4 you can touch, 3 you hear, 2 you smell, 1 you taste. Anchors you in the present.', cat: 'Grounding' },
+  { id: 'journaling', icon: '✍️', name: 'Reflective Journaling', desc: 'Write freely for 5–10 minutes without editing. Getting thoughts onto paper reduces emotional intensity.', cat: 'Emotional Processing' },
+  { id: 'box',       icon: '📦', name: 'Box Breathing', desc: 'Breathe in 4, hold 4, out 4, hold 4. Regulates the nervous system under stress.', cat: 'Anxiety Relief' },
+  { id: 'movement',  icon: '🏃', name: 'Movement Break', desc: 'A 5-minute walk or light stretch can significantly shift mood by processing stress hormones.', cat: 'Mood Lifting' },
+  { id: 'selfcomp',  icon: '💛', name: 'Self-Compassion Pause', desc: 'Hand on heart, acknowledge your pain, remind yourself this is a shared human experience.', cat: 'Emotional Processing' },
+  { id: 'mindful',   icon: '🧘', name: 'Mindful Observation', desc: 'Choose one object and observe it for 2 minutes — colour, texture, shape. Breaks anxious thought cycles.', cat: 'Grounding' },
+  { id: 'music',     icon: '🎵', name: 'Music & Movement', desc: 'Put on a song that lifts your mood. Music engages emotional processing centres of the brain rapidly.', cat: 'Mood Lifting' },
+  { id: 'cold',      icon: '❄️', name: 'Cold Water Reset', desc: 'Splash cold water on your face. Activates the dive reflex and rapidly calms the nervous system.', cat: 'Crisis Tool' },
+  { id: 'talk',      icon: '💬', name: 'Connect & Share', desc: 'Reach out to one supportive person. Social connection is a powerful buffer against distress.', cat: 'Connection' },
 ];
 
 const INSIGHTS = [
-  'Every process check you complete builds your competency record. Consistency matters more than speed.',
-  'Quality control starts at your workstation. A defect caught early prevents a recall later.',
-  'PPE is not optional — it is part of the job. Check yours before every shift.',
-  'A good handover keeps the whole line running safely. Take it seriously every time.',
-  'If you are unsure, stop and ask your supervisor. Guessing costs the line more than a short pause.',
-  'Your training progress is recorded locally and will sync to the dashboard in a later run.',
-  'Small consistent checks build the foundation for competency. Focus on one process step at a time.',
-  'Supervisor sign-off is a quality gate — prepare your evidence before requesting it.',
-  'Workstation readiness at the start of every shift prevents the most common line errors.',
-  'Every safety acknowledgement you complete is logged. Your training record is building up.',
+  'Progress in training builds over time. Every check-in and module completed moves you forward.',
+  'Your nervous system needs rest to heal. Small moments of calm each day add up to lasting change.',
+  'Noticing how you feel without judging it is a skill — and you can get better at it with practice.',
+  'Coping strategies work best when practised before crisis. Rehearsal builds resilience.',
+  'Asking for support is a sign of self-awareness, not weakness. It takes courage to reach out.',
+  'Difficult feelings are not permanent. They rise, peak, and pass like waves.',
+  'Small, consistent practice builds the foundation for competency. Focus on one process step at a time.',
+  'Your experiences are valid. What you are feeling makes sense in the context of what you have been through.',
+  'Sleep and physical rest are essential components of workplace competency development, not luxuries.',
+  'Every check-in you complete is an act of self-care. Well done for showing up today.',
 ];
-
-
 
 // ── App State ─────────────────────────────────────────────────────
 let profile       = sGet('ap3x_patient_profile', null);
@@ -597,62 +595,7 @@ let dark          = sGet('ap3x_patient_theme', 'dark') === 'dark';
 let ciStep        = 1;
 let ciData        = freshCIData();
 let selectedMood  = null;
-const TOTAL_STEPS = 5;  // Run 4: shortened to 5-step training check-in
-
-// ── Run 4: SSOT employee / pathway state ─────────────────────────
-// Reads from ap3x_dm_* keys seeded by data model boot.
-// Does not create a second store — reads SSOT only.
-function dmGet(key, fallback) {
-  try { var v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch(e) { return fallback; }
-}
-function dmSet(key, val) {
-  try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {} 
-}
-function dmGetAll(key) { return dmGet(key, []); }
-
-// Active employee — use first demo employee if no live profile
-function getActiveEmployee() {
-  if (profile && profile.userId) {
-    var emps = dmGetAll('ap3x_dm_employees');
-    var matched = emps.find(function(e) { return e.id === profile.userId; });
-    if (matched) return matched;
-  }
-  // Fall back to first demo employee
-  var demos = dmGetAll('ap3x_dm_employees').filter(function(e) { return e.isDemo; });
-  return demos.length ? demos[0] : null;
-}
-function getEmployeeAssignedPathways(emp) {
-  if (!emp) return [];
-  var all = dmGetAll('ap3x_dm_pathways');
-  return all.filter(function(p) { return (emp.assignedPathwayIds || []).includes(p.id); });
-}
-function getPathwayModules(pathwayId) {
-  var all = dmGetAll('ap3x_dm_process_modules');
-  return all.filter(function(m) { return (m.pathwayId === pathwayId) || (m.lessonIds && m.lessonIds.length); });
-}
-function getPwaLocalStatus() {
-  var syncQ  = dmGetAll('ap3x_dm_pwa_sync_queue').length + (function(){ try{ return JSON.parse(localStorage.getItem('ap3x_sync_queue')||'[]').length; }catch(e){return 0;} })();
-  var beCfg  = dmGet('ap3x_dm_backend_config', {});
-  var mode   = dmGet('ap3x_dm_data_mode', 'demo');
-  return { syncQueue: syncQ, backendMode: beCfg.provider || 'local-only', dataMode: mode, isDemo: dmGet('4p3x_demo_mode', true) };
-}
-
-// Safety acknowledgements local save
-function acknowledgeLocalSafetyItem(ackId, employeeId) {
-  var acks = dmGetAll('ap3x_dm_safety_acks');
-  var updated = acks.map(function(a) {
-    if (a.id !== ackId) return a;
-    var ids = (a.acknowledgedByEmployeeIds || []).slice();
-    if (!ids.includes(employeeId)) ids.push(employeeId);
-    return Object.assign({}, a, { acknowledgedByEmployeeIds: ids, updatedAt: new Date().toISOString() });
-  });
-  dmSet('ap3x_dm_safety_acks', updated);
-  queueDmSyncItem({ type: 'safety_ack_completed', entityType: 'safetyAck', entityId: ackId, data: { ackId: ackId, employeeId: employeeId } });
-  return updated;
-}
-
-// Active pathway/module nav state (session only — no localStorage)
-var pwaNav = { pathwayId: null, moduleId: null, lessonId: null };
+const TOTAL_STEPS = 10;
 
 function freshCIData() {
   return { mood: null, anxiety: null, sleep: null, energy: null, coping: null, copingList: [], overwhelmed: null, conc: null, conn: null, note: '', support: null };
@@ -681,16 +624,16 @@ function buildOnboarding() {
   document.getElementById('onboarding').innerHTML = `
   <div class="ob-inner">
     <div class="ob-step active" id="ob1">
-      <div class="ob-logo"><div style="font-size:48px">🧠</div><div class="ob-brand">AutoSkill OS™</div><div class="ob-brand-sub">Employee Learning PWA</div></div>
+      <div class="ob-logo"><div style="font-size:48px">🧠</div><div class="ob-brand">AutoSkill OS™</div><div class="ob-brand-sub">My Recovery Support</div></div>
       <h1 class="ob-title">Welcome to your Employee Learning Portal</h1>
-      <p class="ob-desc">Manufacturing training check-ins, process modules, skill techniques, and competency tracking — all built around your recovery.</p>
+      <p class="ob-desc">Guided daily check-ins, process modules, coping strategies, and progress tracking — all built around your recovery.</p>
       <div class="ob-feats">
         <div class="ob-feat"><span>📋</span>Daily training check-in (10 questions)</div>
         <div class="ob-feat"><span>🎓</span>Manufacturing Training Pathway — 3 modules</div>
         <div class="ob-feat"><span>📈</span>Mood, anxiety &amp; sleep tracking</div>
         <div class="ob-feat"><span>🛠️</span>Skill practices &amp; process checkpoints</div>
       </div>
-      <button class="btn-primary" onclick="obGo(1,2)">Set up my training profile →</button>
+      <button class="btn-primary" onclick="obGo(1,2)">Set up my recovery profile →</button>
       <button class="ob-skip" onclick="obSkip()">Skip — already set up</button>
     </div>
     <div class="ob-step" id="ob2">
@@ -712,7 +655,7 @@ function buildOnboarding() {
       <h2 class="ob-step-title">What are your training goals?</h2>
       <p class="ob-step-sub">Select everything relevant — helps personalise your Training Pathway.</p>
       <div class="ob-goals-grid" id="ob-goals">
-        ${['Site orientation','Quality control','Safety induction','Workstation readiness','Supervisor sign-off','Processing difficult feelings','Improving relationships','Building confidence','Managing intrusive thoughts','Trauma recovery'].map(g=>`<button class="ob-goal-btn" data-g="${g}" onclick="this.classList.toggle('active')">${g}</button>`).join('')}
+        ${['Managing anxiety','Improving mood','Better sleep','Reducing stress','Building coping skills','Processing difficult feelings','Improving relationships','Building confidence','Managing intrusive thoughts','Trauma recovery'].map(g=>`<button class="ob-goal-btn" data-g="${g}" onclick="this.classList.toggle('active')">${g}</button>`).join('')}
       </div>
       <button class="btn-primary" style="margin-top:16px" onclick="obGo(3,4)">Next →</button>
     </div>
@@ -753,21 +696,6 @@ function obGo(from, to) {
 function obSkip() {
   profile = { name: 'Friend', age: '', goals: [], exp: '', createdAt: Date.now() };
   sSet('ap3x_patient_profile', profile);
-  // ── Run 4: seed employee into SSOT dm_employees if not already seeded ──
-  try {
-    var existing = JSON.parse(localStorage.getItem('ap3x_dm_employees') || '[]');
-    var alreadyExists = existing.some(function(e) { return e.id === profile.userId; });
-    if (!alreadyExists) {
-      existing.push({
-        id: profile.userId, displayName: profile.name, roleTitle: profile.role || 'Employee',
-        departmentId: 'dept-general', employeeNumber: null, status: 'active',
-        assignedPathwayIds: [], completedModuleIds: [], progressPercent: 0,
-        competencyStatus: 'not_started', safetyAcknowledgementStatus: 'pending',
-        syncStatus: 'local', isDemo: false, lastActivityAt: new Date().toISOString()
-      });
-      localStorage.setItem('ap3x_dm_employees', JSON.stringify(existing));
-    }
-  } catch(e) { /* non-fatal */ }
   launchPortal();
 }
 function obFinish() {
@@ -775,22 +703,8 @@ function obFinish() {
   const age  = (document.querySelector('#ob-age .ob-goal-btn.active') || {}).dataset?.age || '';
   const goals = [...document.querySelectorAll('#ob-goals .ob-goal-btn.active')].map(b => b.dataset.g);
   const exp   = (document.querySelector('#ob-exp .ob-goal-btn.active') || {}).dataset?.e || '';
-  profile = { name, age, goals, exp, createdAt: Date.now(), userId: 'emp_' + Date.now() };
+  profile = { name, age, goals, exp, createdAt: Date.now() };
   sSet('ap3x_patient_profile', profile);
-  // ── Run 4: seed this employee into ap3x_dm_employees if not present ──
-  try {
-    var _emps = JSON.parse(localStorage.getItem('ap3x_dm_employees') || '[]');
-    if (!_emps.some(function(e) { return e.id === profile.userId; })) {
-      _emps.push({
-        id: profile.userId, displayName: profile.name, roleTitle: 'Employee',
-        departmentId: 'dept-general', employeeNumber: null, status: 'active',
-        assignedPathwayIds: [], completedModuleIds: [], progressPercent: 0,
-        competencyStatus: 'not_started', safetyAcknowledgementStatus: 'pending',
-        syncStatus: 'local', isDemo: false, lastActivityAt: new Date().toISOString()
-      });
-      localStorage.setItem('ap3x_dm_employees', JSON.stringify(_emps));
-    }
-  } catch(e) { /* non-fatal */ }
   document.getElementById('ob-summary').innerHTML = `<strong>${name}</strong> · Age: ${age || 'Not specified'}<br/>Goals: ${goals.join(', ') || 'Not selected'}<br/>Experience: ${exp || 'Not specified'}`;
   obGo(4, 5);
 }
@@ -806,7 +720,7 @@ function buildPortal() {
   applyTheme();
   document.getElementById('portal-root').innerHTML = `
     <header class="portal-header">
-      <div class="ph-brand"><div class="brand-dot"></div><div><div class="brand-name">AutoSkill OS™</div><div class="brand-sub">Employee Learning PWA</div></div></div>
+      <div class="ph-brand"><div class="brand-dot"></div><div><div class="brand-name">AutoSkill OS™</div><div class="brand-sub">My Recovery Support</div></div></div>
       <div class="ph-right">
         <span class="xp-chip" id="xp-chip">⚡ 0 XP</span>
         <button class="btn-icon" onclick="toggleTheme()">🌙</button>
@@ -817,174 +731,277 @@ function buildPortal() {
       <span class="streak-xp" id="streak-xp-val">0 XP</span>
     </div>
     <nav class="bottom-nav">
-      <button class="nav-tab active" id="tab-btn-home" onclick="switchTab('home')" aria-label="Home">
-        <span style="font-size:20px">&#x1F3E0;</span>Home</button>
-      <button class="nav-tab" id="tab-btn-pathway" onclick="switchTab('pathway')" aria-label="My Training">
-        <span style="font-size:20px">&#x1F5FA;</span>Pathway</button>
-      <button class="nav-tab" id="tab-btn-lessons" onclick="switchTab('lessons')" aria-label="Lessons">
-        <span style="font-size:20px">&#x1F393;</span>Lessons</button>
-      <button class="nav-tab" id="tab-btn-safety" onclick="switchTab('safety')" aria-label="Safety Checks">
-        <span style="font-size:20px">&#x1F9BA;</span>Safety<span class="notif-dot" id="safety-dot" style="display:none"></span></button>
-      <button class="nav-tab" id="tab-btn-progress" onclick="switchTab('progress')" aria-label="My Progress">
-        <span style="font-size:20px">&#x1F4C8;</span>Progress</button>
+      <button class="nav-tab active" id="tab-btn-home" onclick="switchTab('home')"><span style="font-size:20px">🏠</span>Home</button>
+      <button class="nav-tab" id="tab-btn-checkin" onclick="switchTab('checkin')"><span style="font-size:20px">📋</span>Check-In<span class="notif-dot" id="checkin-dot" style="display:none"></span></button>
+      <button class="nav-tab" id="tab-btn-lessons" onclick="switchTab('lessons')"><span style="font-size:20px">🎓</span>Lessons</button>
+      <button class="nav-tab" id="tab-btn-coping" onclick="switchTab('coping')"><span style="font-size:20px">🧘</span>Coping</button>
+      <button class="nav-tab" id="tab-btn-progress" onclick="switchTab('progress')"><span style="font-size:20px">📈</span>Progress</button>
     </nav>
     <div id="tab-home" class="tab-page"></div>
-    <div id="tab-pathway" class="tab-page hidden"></div>
+    <div id="tab-checkin" class="tab-page hidden"></div>
     <div id="tab-lessons" class="tab-page hidden"></div>
-    <div id="tab-safety" class="tab-page hidden"></div>
+    <div id="tab-coping" class="tab-page hidden"></div>
     <div id="tab-progress" class="tab-page hidden"></div>`;
 }
 
 function toggleTheme() { dark = !dark; sSet('ap3x_patient_theme', dark ? 'dark' : 'light'); applyTheme(); }
 
 function switchTab(name) {
-  // Back-compat redirects for removed tabs
-  if (name === 'checkin') name = 'home';
-  if (name === 'coping')  name = 'safety';
-  document.querySelectorAll('.tab-page').forEach(function(p) { p.classList.add('hidden'); });
-  document.querySelectorAll('.nav-tab').forEach(function(b) { b.classList.remove('active'); });
-  var pg  = document.getElementById('tab-' + name);
-  var btn = document.getElementById('tab-btn-' + name);
-  if (pg)  pg.classList.remove('hidden');
-  if (btn) btn.classList.add('active');
-  // Re-render on switch
-  if (name === 'pathway')  renderPathway();
-  if (name === 'safety')   renderSafetyChecks();
-  if (name === 'progress') renderProgress();
-  if (name === 'lessons')  renderLessons();
-  if (name === 'home')     renderHome();
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.add('hidden'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.remove('hidden');
+  document.getElementById('tab-btn-' + name).classList.add('active');
 }
 
 function renderAll() {
   renderHome();
-  renderPathway();
+  renderCheckin();
   renderLessons();
-  renderSafetyChecks();
+  renderCoping();
   renderProgress();
   updateHeader();
 }
 
 // ── Header / streak ───────────────────────────────────────────────
 function updateHeader() {
-  document.getElementById('xp-chip').textContent = '&#x26A1; ' + xp + ' XP';
-  // Safety dot — show if any missing safety acks
-  var emp = getActiveEmployee();
-  var acks = dmGetAll('ap3x_dm_safety_acks');
-  var missingAcks = emp ? acks.filter(function(a) {
-    return !(a.acknowledgedByEmployeeIds || []).includes(emp.id);
-  }).length : 0;
-  var dot = document.getElementById('safety-dot');
-  if (dot) dot.style.display = missingAcks > 0 ? 'block' : 'none';
+  const todayStr = new Date().toDateString();
+  const todayDone = lastCIDate === todayStr;
+  const dot = document.getElementById('checkin-dot');
+  if (dot) dot.style.display = todayDone ? 'none' : 'block';
+  document.getElementById('xp-chip').textContent = '⚡ ' + xp + ' XP';
   if (streak > 0) {
-    var sb = document.getElementById('streak-banner');
-    if (sb) sb.style.display = 'flex';
-    var st = document.getElementById('streak-text');
-    if (st) st.textContent = streak + '-day streak';
-    var sv = document.getElementById('streak-xp-val');
-    if (sv) sv.textContent = xp + ' XP';
+    document.getElementById('streak-banner').style.display = 'flex';
+    document.getElementById('streak-text').textContent = streak + '-day streak';
+    document.getElementById('streak-xp-val').textContent = xp + ' XP';
   }
 }
 
-// ── HOME ─────────────────────────────────────────────────
+// ── HOME ──────────────────────────────────────────────────────────
 function renderHome() {
-  var hr     = new Date().getHours();
-  var greet  = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
-  var emp    = getActiveEmployee();
-  var status = getPwaLocalStatus();
-  var totalLessons = Object.values(lessonDone).filter(Boolean).length;
-  var insight = INSIGHTS[new Date().getDate() % INSIGHTS.length];
+  const hr = new Date().getHours();
+  const greet = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
+  const todayDone = lastCIDate === new Date().toDateString();
+  const totalLessons = Object.values(lessonDone).filter(Boolean).length;
+  const crisisName    = sGet('4p3x_crisis_name', '');
+  const crisisContact = sGet('4p3x_crisis_contact', '');
+  const insight = INSIGHTS[new Date().getDate() % INSIGHTS.length];
 
-  var empName = emp ? emp.displayName : (profile ? profile.name : 'Trainee');
-  var empRole = emp ? emp.roleTitle : 'Employee';
-  var empDept = emp ? (emp.departmentId || '').replace('dept-','').replace(/-/g,' ') : '--';
-
-  var pathways  = emp ? getEmployeeAssignedPathways(emp) : [];
-  var firstPath = pathways[0];
-  var pathPct   = emp ? (emp.progressPercent || 0) : Math.round((totalLessons / 15) * 100);
-
-  var acks     = dmGetAll('ap3x_dm_safety_acks');
-  var ackDone  = emp ? acks.filter(function(a) { return (a.acknowledgedByEmployeeIds||[]).includes(emp.id); }).length : 0;
-  var ackTotal = acks.length;
-  var syncCount = status.syncQueue;
-  var modeLabel = status.isDemo ? 'Demo Mode' : 'Live Mode';
-  var insight   = INSIGHTS[new Date().getDate() % INSIGHTS.length];
-
-  document.getElementById('tab-home').innerHTML =
-    '<div class="home-hero">' +
-      '<div class="hh-title">' + greet + ', ' + empName + ' &#x1F44B;</div>' +
-      '<div class="hh-sub">' + empRole + (empDept !== '--' ? ' &middot; ' + empDept : '') + '</div>' +
-      '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">' +
-        '<span style="font-size:11px;background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3);border-radius:99px;padding:2px 10px;font-weight:700">' + modeLabel + '</span>' +
-        (syncCount > 0
-          ? '<span style="font-size:11px;background:var(--surface2);color:var(--muted);border:1px solid var(--border);border-radius:99px;padding:2px 10px">' + syncCount + ' updates queued</span>'
-          : '<span style="font-size:11px;background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.3);border-radius:99px;padding:2px 10px">&#x2713; Saved locally</span>') +
-      '</div>' +
-    '</div>' +
-    '<div class="quick-grid">' +
-      '<button class="qa-btn" onclick="switchTab(\'pathway\')" aria-label="View Training Pathway">' +
-        '<div class="qa-icon">&#x1F5FA;</div><div class="qa-label">My Training</div>' +
-        '<div class="qa-desc">' + (firstPath ? firstPath.title.substring(0,32) + (firstPath.title.length>32?'...':'') : 'No pathway assigned') + '</div>' +
-      '</button>' +
-      '<button class="qa-btn" onclick="switchTab(\'lessons\')" aria-label="Open Lessons">' +
-        '<div class="qa-icon">&#x1F393;</div><div class="qa-label">Lessons</div>' +
-        '<div class="qa-desc">' + totalLessons + '/15 lessons complete</div>' +
-      '</button>' +
-      '<button class="qa-btn" onclick="switchTab(\'safety\')" aria-label="Safety Checks">' +
-        '<div class="qa-icon">&#x1F9BA;</div><div class="qa-label">Safety Checks</div>' +
-        '<div class="qa-desc">' + ackDone + '/' + (ackTotal||'--') + ' acknowledged</div>' +
-      '</button>' +
-      '<button class="qa-btn" onclick="switchTab(\'progress\')" aria-label="My Progress">' +
-        '<div class="qa-icon">&#x1F4C8;</div><div class="qa-label">My Progress</div>' +
-        '<div class="qa-desc">' + pathPct + '% pathway complete</div>' +
-      '</button>' +
-    '</div>' +
-    '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin:12px 0">' +
-      '<div style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">&#x1F4A1; Training Tip</div>' +
-      '<div style="font-size:13px;color:var(--text);line-height:1.6">' + insight + '</div>' +
-    '</div>' +
-    (emp && emp.isDemo ? '<div style="font-size:11px;color:var(--muted);background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);border-radius:var(--rs);padding:8px 12px;margin-bottom:12px">&#x1F3AD; Demo employee profile &mdash; Demo Mode shows the product. Live Mode runs the product.</div>' : '') +
-    '<div class="safety-notice"><div style="font-weight:700;margin-bottom:4px">&#x26A0;&#xFE0F; Training Notice</div>' +
-    '<div>AutoSkill OS&#x2122; supports your learning between supervisor sessions. For on-site emergencies, follow your site emergency procedure immediately.</div></div>';
+  document.getElementById('tab-home').innerHTML = `
+    <div class="home-hero">
+      <div class="hh-title">${greet}, ${profile ? profile.name : 'Friend'} 👋</div>
+      <div class="hh-sub">Your training journey continues today.</div>
+    </div>
+    <div class="quick-grid">
+      <button class="qa-btn" onclick="switchTab('checkin')"><div class="qa-icon">📋</div><div class="qa-label">Daily Check-In</div><div class="qa-desc">${todayDone ? '✅ Completed today' : 'Complete today\'s check-in'}</div></button>
+      <button class="qa-btn" onclick="switchTab('lessons')"><div class="qa-icon">🎓</div><div class="qa-label">Training Pathway</div><div class="qa-desc">${totalLessons}/15 lessons complete</div></button>
+      <button class="qa-btn" onclick="switchTab('coping')"><div class="qa-icon">🧘</div><div class="qa-label">Coping Strategies</div><div class="qa-desc">10 techniques available</div></button>
+      <button class="qa-btn" onclick="switchTab('progress')"><div class="qa-icon">📈</div><div class="qa-label">My Progress</div><div class="qa-desc">${checkins.length} check-ins logged</div></button>
+    </div>
+    <div class="insight-card"><h4>💡 Today's Insight</h4><p>${insight}</p></div>
+    <div class="safety-notice">
+      <h4>⚠️ Support Notice</h4>
+      <p>AutoSkill OS™ supports your learning between supervisor sessions. For on-site emergencies, follow your site emergency procedure immediately.</p>
+      ${crisisName && crisisContact ? `<p style="margin-top:6px;font-size:12px;color:var(--muted)">Crisis support: <strong>${crisisName} — ${crisisContact}</strong></p>` : ''}
+    </div>`;
 }
 
-// ── CHECK-IN ─────────────────────────────────────────────
-function renderCheckin() { /* preserved for compatibility — tab replaced in Run 4 */ }
-function buildCheckinHTML() { return ''; }
-function wireScales() {}
-function wireCopingTags() {}
-function updateCiProgress(step) {}
-function pickMood(btn) {}
-function ynPick(key, val) {}
-function ciNext(step) {}
-function ciBack(step) {}
+// ── CHECK-IN ──────────────────────────────────────────────────────
+function renderCheckin() {
+  ciData = freshCIData(); ciStep = 1; selectedMood = null;
+  document.getElementById('tab-checkin').innerHTML = buildCheckinHTML();
+  wireScales();
+  wireCopingTags();
+}
+
+function buildCheckinHTML() {
+  const todayDone = lastCIDate === new Date().toDateString();
+  if (todayDone && checkins.length > 0) {
+    const last = checkins[0];
+    return `<div class="section-title">Daily Check-In</div><div class="section-sub">10 questions · Takes about 3 minutes</div>
+    <div style="text-align:center;padding:20px 0"><div style="font-size:56px;margin-bottom:12px">✅</div><div style="font-size:20px;font-weight:700;margin-bottom:8px">Today's Check-In Complete</div><div style="font-size:14px;color:var(--muted);margin-bottom:20px">Anxiety: ${last.anxiety}/10 · Mood: ${last.mood}/10 · Sleep: ${last.sleep}/10</div><button class="btn-secondary" onclick="renderCheckin();document.getElementById('checkin-done-notice').style.display='none'">Complete another check-in</button></div>
+    <div id="checkin-done-notice"></div>`;
+  }
+  return `<div class="section-title">Daily Check-In</div><div class="section-sub">10 questions · Takes about 3 minutes</div>
+  <div id="ci-result" style="display:none"></div>
+  <div id="ci-form">
+    <div class="step-progress"><div class="step-progress-bar" id="ci-bar" style="width:10%"></div></div>
+    <div class="step-dots" id="ci-dots">${Array.from({length:10},(_,i)=>`<div class="step-dot${i===0?' active':''}" id="ci-dot-${i+1}"></div>`).join('')}</div>
+    <div class="ci-step active" id="ci-1">
+      <div class="ci-q">1. How would you rate your mood today?</div><div class="ci-sub">Select the emoji that best matches how you feel right now</div>
+      <div class="mood-row">
+        ${[{v:1,e:'😔',l:'Very Low'},{v:3,e:'😕',l:'Low'},{v:5,e:'😐',l:'Neutral'},{v:7,e:'🙂',l:'Good'},{v:9,e:'😊',l:'Great'}].map(m=>`<button class="mood-btn" data-mood="${m.v}" onclick="pickMood(this)"><span class="mood-emoji">${m.e}</span><span class="mood-label">${m.l}</span></button>`).join('')}
+      </div>
+      <div class="btn-row"><button class="btn-secondary" onclick="">—</button><button class="btn-primary" onclick="ciNext(1)">Next →</button></div>
+    </div>
+    <div class="ci-step hidden" id="ci-2">
+      <div class="ci-q">2. How would you rate your anxiety or stress today?</div><div class="ci-sub">0 = No anxiety at all · 10 = Extreme anxiety</div>
+      <div class="scale-card"><div class="scale-lbl-row"><span>None</span><span>Moderate</span><span>Extreme</span></div><div class="scale-track" id="anxiety-scale"></div><div class="score-val" id="anxiety-val">—</div><div class="score-desc" id="anxiety-desc"></div></div>
+      <div class="btn-row"><button class="btn-secondary" onclick="ciBack(2)">Back</button><button class="btn-primary" onclick="ciNext(2)">Next →</button></div>
+    </div>
+    <div class="ci-step hidden" id="ci-3">
+      <div class="ci-q">3. How well did you sleep last night?</div><div class="ci-sub">0 = Did not sleep · 10 = Excellent sleep</div>
+      <div class="scale-card"><div class="scale-lbl-row"><span>Very Poor</span><span>Fair</span><span>Excellent</span></div><div class="scale-track" id="sleep-scale"></div><div class="score-val" id="sleep-val">—</div></div>
+      <div class="btn-row"><button class="btn-secondary" onclick="ciBack(3)">Back</button><button class="btn-primary" onclick="ciNext(3)">Next →</button></div>
+    </div>
+    <div class="ci-step hidden" id="ci-4">
+      <div class="ci-q">4. How much energy do you feel you have today?</div><div class="ci-sub">0 = Exhausted · 10 = Full of energy</div>
+      <div class="scale-card"><div class="scale-lbl-row"><span>Exhausted</span><span>Moderate</span><span>Energised</span></div><div class="scale-track" id="energy-scale"></div><div class="score-val" id="energy-val">—</div></div>
+      <div class="btn-row"><button class="btn-secondary" onclick="ciBack(4)">Back</button><button class="btn-primary" onclick="ciNext(4)">Next →</button></div>
+    </div>
+    <div class="ci-step hidden" id="ci-5">
+      <div class="ci-q">5. Have you used any coping strategies today?</div><div class="ci-sub">Breathing, journaling, exercise, talking to someone…</div>
+      <div class="form-card">
+        <div class="yn-row"><button class="yn-btn yes" id="yn-coping-yes" onclick="ynPick('coping','yes')">✓ Yes</button><button class="yn-btn no" id="yn-coping-no" onclick="ynPick('coping','no')">✗ No</button></div>
+        <div id="coping-which" style="display:none;margin-top:12px"><label class="form-label">Which strategies?</label><div class="tag-group" id="coping-tags">
+          ${['Breathing exercises','Journaling','Mindfulness','Exercise','Talking to someone','Grounding','Music','Rest / Self-care'].map(c=>`<button class="tag" data-c="${c}">${c}</button>`).join('')}
+        </div></div>
+      </div>
+      <div class="btn-row"><button class="btn-secondary" onclick="ciBack(5)">Back</button><button class="btn-primary" onclick="ciNext(5)">Next →</button></div>
+    </div>
+    <div class="ci-step hidden" id="ci-6">
+      <div class="ci-q">6. Have you felt overwhelmed today?</div><div class="ci-sub">Feeling like things are too much to handle</div>
+      <div class="form-card"><div class="yn-row"><button class="yn-btn yes" id="yn-overwhelmed-yes" onclick="ynPick('overwhelmed','yes')">✓ Yes</button><button class="yn-btn no" id="yn-overwhelmed-no" onclick="ynPick('overwhelmed','no')">✗ No</button></div></div>
+      <div class="btn-row"><button class="btn-secondary" onclick="ciBack(6)">Back</button><button class="btn-primary" onclick="ciNext(6)">Next →</button></div>
+    </div>
+    <div class="ci-step hidden" id="ci-7">
+      <div class="ci-q">7. Have you had difficulty concentrating today?</div><div class="ci-sub">Trouble focusing on tasks or conversations</div>
+      <div class="form-card"><div class="yn-row"><button class="yn-btn yes" id="yn-conc-yes" onclick="ynPick('conc','yes')">✓ Yes</button><button class="yn-btn no" id="yn-conc-no" onclick="ynPick('conc','no')">✗ No</button></div></div>
+      <div class="btn-row"><button class="btn-secondary" onclick="ciBack(7)">Back</button><button class="btn-primary" onclick="ciNext(7)">Next →</button></div>
+    </div>
+    <div class="ci-step hidden" id="ci-8">
+      <div class="ci-q">8. Have you connected with anyone supportive today?</div><div class="ci-sub">A colleague, team leader, or support contact</div>
+      <div class="form-card"><div class="yn-row"><button class="yn-btn yes" id="yn-conn-yes" onclick="ynPick('conn','yes')">✓ Yes</button><button class="yn-btn no" id="yn-conn-no" onclick="ynPick('conn','no')">✗ Not today</button></div></div>
+      <div class="btn-row"><button class="btn-secondary" onclick="ciBack(8)">Back</button><button class="btn-primary" onclick="ciNext(8)">Next →</button></div>
+    </div>
+    <div class="ci-step hidden" id="ci-9">
+      <div class="ci-q">9. Is there anything you want your supervisor to know?</div><div class="ci-sub">Optional — visible in your supervisor's review dashboard</div>
+      <div class="form-card"><textarea id="ci-note" class="form-textarea" placeholder="e.g. I've been finding mornings really hard this week…" rows="4"></textarea></div>
+      <div class="btn-row"><button class="btn-secondary" onclick="ciBack(9)">Back</button><button class="btn-primary" onclick="ciNext(9)">Next →</button></div>
+    </div>
+    <div class="ci-step hidden" id="ci-10">
+      <div class="ci-q">10. Do you feel you need extra support before your next session?</div><div class="ci-sub">Flags to your supervisor that you may need earlier contact</div>
+      <div class="form-card">
+        <div class="yn-row"><button class="yn-btn yes" id="yn-support-yes" onclick="ynPick('support','yes')">✓ Yes, I need support</button><button class="yn-btn no" id="yn-support-no" onclick="ynPick('support','no')">✗ I'm okay until then</button></div>
+        <div style="margin-top:14px;padding:12px;background:rgba(239,68,68,.08);border-radius:var(--rs);border:1px solid rgba(239,68,68,.2);font-size:12px;color:var(--muted);line-height:1.6">⚠️ If you are in immediate danger or crisis, do not wait — contact local emergency services or a crisis support line <strong>now</strong>. This check-in is not monitored in real-time.</div>
+      </div>
+      <div class="btn-row"><button class="btn-secondary" onclick="ciBack(10)">Back</button><button class="btn-primary" style="flex:2" onclick="submitCheckin()">Submit Check-In ✓</button></div>
+    </div>
+  </div>`;
+}
+
+function wireScales() {
+  [['anxiety-scale','anxiety-val','anxiety-desc',true],['sleep-scale','sleep-val',null,false],['energy-scale','energy-val',null,false]].forEach(([id,valId,descId,inv]) => {
+    const wr = document.getElementById(id); if (!wr) return;
+    for (let i = 0; i <= 10; i++) {
+      const b = document.createElement('button'); b.className = 'scale-btn'; b.dataset.v = i; b.textContent = i;
+      b.addEventListener('click', () => {
+        wr.querySelectorAll('.scale-btn').forEach(x => x.classList.remove('sel')); b.classList.add('sel');
+        document.getElementById(valId).textContent = i;
+        if (descId) { const m = inv?{0:'None',1:'Very Mild',3:'Mild',5:'Moderate',7:'Elevated',9:'Very High',10:'Extreme'}:{0:'Very Poor',3:'Poor',5:'Fair',7:'Good',10:'Excellent'}; document.getElementById(descId).textContent = m[i] || ''; }
+        if (id === 'anxiety-scale') ciData.anxiety = i;
+        else if (id === 'sleep-scale') ciData.sleep = i;
+        else ciData.energy = i;
+      });
+      wr.appendChild(b);
+    }
+  });
+}
+
+function wireCopingTags() {
+  const tags = document.querySelectorAll('#coping-tags .tag');
+  tags.forEach(t => t.addEventListener('click', () => {
+    t.classList.toggle('active');
+    ciData.copingList = [...document.querySelectorAll('#coping-tags .tag.active')].map(x => x.dataset.c);
+  }));
+}
+
+function updateCiProgress(step) {
+  document.getElementById('ci-bar').style.width = ((step / TOTAL_STEPS) * 100) + '%';
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
+    const d = document.getElementById('ci-dot-' + i);
+    if (d) d.className = 'step-dot' + (i < step ? ' done' : i === step ? ' active' : '');
+  }
+}
+
+function pickMood(btn) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel'); ciData.mood = parseInt(btn.dataset.mood);
+}
+
+function ynPick(key, val) {
+  ciData[key] = val;
+  const yEl = document.getElementById('yn-'+key+'-yes'), nEl = document.getElementById('yn-'+key+'-no');
+  if (yEl) yEl.classList.toggle('sel', val === 'yes');
+  if (nEl) nEl.classList.toggle('sel', val === 'no');
+  if (key === 'coping') document.getElementById('coping-which').style.display = val === 'yes' ? 'block' : 'none';
+  if (key === 'support' && val === 'yes') showToast('⚠️ Your supervisor will see this. If in crisis, contact emergency services now.');
+}
+
+function ciNext(step) {
+  if (step === 1 && ciData.mood === null) return showToast('Please select your mood');
+  if (step === 2 && ciData.anxiety === null) return showToast('Please select an anxiety score');
+  if (step === 3 && ciData.sleep === null) return showToast('Please select a sleep score');
+  if (step === 4 && ciData.energy === null) return showToast('Please select an energy score');
+  document.getElementById('ci-'+step).classList.add('hidden');
+  ciStep = step + 1;
+  document.getElementById('ci-'+ciStep).classList.remove('hidden');
+  updateCiProgress(ciStep);
+}
+function ciBack(step) {
+  document.getElementById('ci-'+step).classList.add('hidden');
+  ciStep = step - 1;
+  document.getElementById('ci-'+ciStep).classList.remove('hidden');
+  updateCiProgress(ciStep);
+}
 
 function submitCheckin() {
-  // Lightweight Run 4 training check-in — saves a simple work-readiness record locally
-  var emp = getActiveEmployee();
-  var record = {
-    date: new Date().toISOString(),
-    employeeId: emp ? emp.id : null,
-    type: 'training_checkin',
-    source: 'employee-pwa',
-    isDemo: dmGet('4p3x_demo_mode', true)
-  };
-  checkins.unshift(record);
+  ciData.note = (document.getElementById('ci-note') || {}).value?.trim() || '';
+  const risk = calcRisk(ciData);
+  const record = { id: 'ci_' + Date.now(), date: Date.now(), dateStr: new Date().toDateString(), ...ciData, risk };
+  checkins.unshift(record); if (checkins.length > 365) checkins.pop();
   sSet('ap3x_patient_checkins', checkins);
-  lastCIDate = new Date().toDateString();
-  sSet('ap3x_last_checkin_date', lastCIDate);
-  streak = (streak || 0) + 1;
-  sSet('ap3x_streak', streak);
-  xp += 10;
-  sSet('ap3x_xp', xp);
-  tlEnqueueSync('training_checkin', record);
-  showToast('+10 XP — Training check-in recorded ✓');
-  updateHeader();
-  renderHome();
-  renderProgress();
+  // Queue check-in for backend-ready sync
+  tlEnqueueSync('checkin', { ...ciData, submitted_at: new Date().toISOString() });
+  // ── Run 2: Queue structured DM check-in record ─────────────────────────
+  queueDmSyncItem({ type: 'check_in_submitted', entityType: 'checkIn', entityId: record.id, data: { ...ciData, submittedAt: new Date().toISOString() } });
+  const todayStr = new Date().toDateString();
+  if (lastCIDate !== todayStr) {
+    const yest = new Date(Date.now() - 86400000).toDateString();
+    streak = lastCIDate === yest ? streak + 1 : 1;
+    lastCIDate = todayStr;
+    sSet('ap3x_streak', streak); sSet('ap3x_last_checkin_date', todayStr);
+  }
+  xp += 20; sSet('ap3x_xp', xp);
+  showCheckinResult(record, risk);
+  updateHeader(); renderHome(); renderProgress();
 }
 
-function showCheckinResult(record, risk) { /* legacy stub */ }
-function calcRisk(d) { return 'LOW'; }
+function calcRisk(d) {
+  if (d.anxiety >= 8 || d.mood <= 2 || d.support === 'yes') return 'CRITICAL';
+  if (d.anxiety >= 6 || d.mood <= 3 || (d.overwhelmed === 'yes' && d.sleep <= 3)) return 'HIGH';
+  if (d.anxiety >= 4 || d.overwhelmed === 'yes') return 'MEDIUM';
+  return 'LOW';
+}
+
+function showCheckinResult(record, risk) {
+  document.getElementById('ci-form').style.display = 'none';
+  const tips = {
+    LOW:      ['Well done on completing your training check-in today.','Keep practising the process skills that are working for you.','Consistency is key — every check-in adds to your recovery.'],
+    MEDIUM:   ['You showed real self-awareness by completing your check-in.','Consider a grounding exercise if feelings intensify.','Reaching out to someone supportive today could help.'],
+    HIGH:     ['Thank you for completing your check-in honestly. That shows professional awareness.','Try a breathing exercise now — even 2 minutes can help.','If the issue persists or feels unsafe, contact your supervisor or site safety officer immediately.'],
+    CRITICAL: ['Your check-in suggests you may be finding things very difficult right now.','Please reach out to your supervisor or training manager as soon as possible.','If there is an on-site emergency, follow your site emergency procedure immediately.']
+  };
+  const labels = { LOW: '✅ Low', MEDIUM: '⚡ Medium', HIGH: '⚠️ High', CRITICAL: '🚨 Needs Review' };
+  document.getElementById('ci-result').style.display = 'block';
+  document.getElementById('ci-result').innerHTML = `
+    <div style="text-align:center;padding:16px 0 8px"><div style="font-size:48px;margin-bottom:10px">✅</div><div style="font-size:19px;font-weight:700;margin-bottom:4px">Check-In Recorded</div><div style="font-size:13px;color:var(--muted)">Mood: ${record.mood}/10 · Anxiety: ${record.anxiety}/10 · Sleep: ${record.sleep}/10</div></div>
+    <div class="feedback-card risk-${risk.toLowerCase()}">
+      <div style="margin-bottom:8px"><span class="risk-badge ${risk}">${labels[risk]}</span></div>
+      <div class="fc-tips">${(tips[risk]||tips.LOW).map(t=>`<div class="fc-tip">${t}</div>`).join('')}</div>
+      ${risk==='CRITICAL'||risk==='HIGH'?`<button class="btn-emergency" onclick="showToast('Contact your supervisor or local emergency services immediately.')">🆘 Access Crisis Support Info</button>`:''}
+    </div>
+    <button class="btn-secondary" style="margin-top:16px" onclick="renderCheckin()">Complete Another Check-In</button>`;
+}
 
 // ── LESSONS ───────────────────────────────────────────────────────
 function renderLessons() {
@@ -1102,249 +1119,66 @@ function completeLessonFromDetail(id, xpVal) {
   renderLessons();
 }
 
-// ── COPING ─────────────────────────────────────────────
-
-// ── PATHWAY TAB ────────────────────────────────────────────────────
-function renderPathway() {
-  var el = document.getElementById('tab-pathway');
-  if (!el) return;
-  var emp      = getActiveEmployee();
-  var pathways = emp ? getEmployeeAssignedPathways(emp) : [];
-  var modules  = dmGetAll('ap3x_dm_process_modules');
-  var lessons  = dmGetAll('ap3x_dm_process_lessons');
-
-  if (!emp) {
-    el.innerHTML =
-      '<div class="section-title">My Training Pathway</div>' +
-      '<div class="section-sub">Assigned training pathways and process modules</div>' +
-      '<div style="padding:32px 16px;text-align:center;color:var(--muted)">' +
-        '<div style="font-size:40px;margin-bottom:12px">&#x1F5FA;</div>' +
-        '<div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px">No employee profile active</div>' +
-        '<div style="font-size:13px;line-height:1.6">Demo employee profiles appear when Demo Mode is active. Live employee profiles will appear after backend/live setup is configured.</div>' +
-      '</div>' +
-      '<div class="safety-notice" style="margin:0 0 16px">Your progress is saved locally first. Dashboard sync will be connected in a later run or through live backend setup.</div>';
-    return;
-  }
-
-  var empPathHtml = pathways.length === 0
-    ? '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">No pathways assigned. Demo pathways appear when Demo Mode is active.</div>'
-    : pathways.map(function(path) {
-        var pathMods = modules.filter(function(m) { return m.pathwayId === path.id; });
-        var compRate = emp.progressPercent || 0;
-        var hasSafety = path.safetyCritical || pathMods.some(function(m) { return m.safetyCritical; });
-        var bgColor = compRate >= 80 ? 'var(--green)' : compRate >= 40 ? 'var(--gold)' : 'var(--warn)';
-        return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px">' +
-          '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px">' +
-            '<div>' +
-              '<div style="font-size:15px;font-weight:800;color:var(--text)">' + path.title + '</div>' +
-              '<div style="font-size:12px;color:var(--muted);margin-top:2px">' + (path.estimatedDuration || '--') + ' &middot; ' + pathMods.length + ' module' + (pathMods.length !== 1 ? 's' : '') + '</div>' +
-            '</div>' +
-            (hasSafety ? '<span style="font-size:10px;background:rgba(239,68,68,.12);color:var(--high);border:1px solid rgba(239,68,68,.25);border-radius:99px;padding:2px 8px;flex-shrink:0">&#x26A0; Safety-critical</span>' : '') +
-          '</div>' +
-          '<div style="height:6px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-bottom:8px">' +
-            '<div style="height:100%;width:' + compRate + '%;background:' + bgColor + ';border-radius:99px;transition:width .3s"></div>' +
-          '</div>' +
-          '<div style="font-size:12px;color:var(--muted);margin-bottom:12px">' + compRate + '% complete</div>' +
-          (pathMods.length > 0
-            ? '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Modules</div>' +
-              pathMods.map(function(mod) {
-                var modLessons = lessons.filter(function(l) { return l.moduleId === mod.id; });
-                return '<div style="background:var(--surface2);border-radius:var(--rs);padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:8px">' +
-                  '<div><div style="font-size:13px;font-weight:700">' + (mod.safetyCritical ? '&#x26A0; ' : '') + mod.title + '</div>' +
-                  '<div style="font-size:11px;color:var(--muted);margin-top:2px">' + modLessons.length + ' lesson' + (modLessons.length !== 1 ? 's' : '') + (mod.estimatedDuration ? ' &middot; ' + mod.estimatedDuration : '') + '</div></div>' +
-                  '<button onclick="switchTab(\'lessons\')" aria-label="Open lessons" style="font-size:11px;padding:5px 10px;background:var(--gold);color:#000;border:none;border-radius:99px;font-weight:700;cursor:pointer;white-space:nowrap">Open &#x2192;</button>' +
-                '</div>';
-              }).join('')
-            : '<div style="font-size:12px;color:var(--muted);padding:8px 0">Module list will be expanded in Run 5.</div>'
-          ) +
-        '</div>';
-      }).join('');
-
-  el.innerHTML =
-    '<div class="section-title">&#x1F5FA; My Training Pathway</div>' +
-    '<div class="section-sub">Assigned pathways, modules, and progress</div>' +
-    '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px">' +
-      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">' +
-        '<div style="width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000;flex-shrink:0">' +
-          emp.displayName.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase() +
-        '</div>' +
-        '<div>' +
-          '<div style="font-size:14px;font-weight:700">' + emp.displayName + '</div>' +
-          '<div style="font-size:12px;color:var(--muted)">' + emp.roleTitle + ' &middot; ' + (emp.departmentId||'').replace('dept-','').replace(/-/g,' ') + (emp.employeeNumber ? ' &middot; ' + emp.employeeNumber : '') + '</div>' +
-        '</div>' +
-      '</div>' +
-      '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
-        '<span style="font-size:11px;background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:2px 10px;color:var(--text)">' + (emp.competencyStatus||'not_started').replace(/_/g,' ') + '</span>' +
-        '<span style="font-size:11px;background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:2px 10px;color:var(--text)">' + (emp.syncStatus||'local') + '</span>' +
-        (emp.isDemo ? '<span style="font-size:11px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);border-radius:99px;padding:2px 10px;color:var(--gold)">Demo profile</span>' : '') +
-      '</div>' +
-    '</div>' +
-    empPathHtml +
-    '<div class="safety-notice" style="margin-top:4px">Your progress is saved locally first. Dashboard sync will be connected in a later run or through live backend setup.</div>';
+// ── COPING ────────────────────────────────────────────────────────
+function renderCoping() {
+  document.getElementById('tab-coping').innerHTML = `
+    <div class="section-title">Coping Strategies</div>
+    <div class="section-sub">Skill practices and process checkpoints for everyday work</div>
+    ${COPING.map(s => `<div class="coping-card">
+      <div class="coping-icon">${s.icon}</div>
+      <div class="coping-body">
+        <div class="coping-name">${s.name}</div>
+        <div class="coping-desc">${s.desc}</div>
+        <span class="coping-cat">${s.cat}</span>
+        <div style="margin-top:10px"><button class="btn-sm ${copingUsed.includes(s.id)?'filled':''}" onclick="markCoping('${s.id}')">${copingUsed.includes(s.id)?'✓ Used today':'Mark as used today'}</button></div>
+      </div>
+    </div>`).join('')}`;
 }
 
-// ── SAFETY CHECKS TAB ──────────────────────────────────────────────
-function renderSafetyChecks() {
-  var el = document.getElementById('tab-safety');
-  if (!el) return;
-  var emp      = getActiveEmployee();
-  var acks     = dmGetAll('ap3x_dm_safety_acks');
-  var modules  = dmGetAll('ap3x_dm_process_modules');
-  var lessons  = dmGetAll('ap3x_dm_process_lessons');
-
-  var ackHtml = '';
-  if (!acks.length) {
-    ackHtml = '<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px">' +
-      '<div style="font-size:36px;margin-bottom:10px">&#x1F9BA;</div>' +
-      '<div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px">No safety checks found</div>' +
-      '<div>Safety acknowledgements appear when Demo Mode is active.</div></div>';
-  } else {
-    ackHtml = acks.map(function(ack) {
-      var empId   = emp ? emp.id : null;
-      var isDone  = empId && (ack.acknowledgedByEmployeeIds||[]).includes(empId);
-      var mod     = modules.find(function(m) { return m.id === ack.linkedModuleId; });
-      var les     = lessons.find(function(l) { return l.id === ack.linkedLessonId; });
-      return '<div style="background:var(--surface);border:1px solid ' + (isDone ? 'rgba(34,197,94,.3)' : ack.legalCritical ? 'rgba(239,68,68,.3)' : 'var(--border)') + ';border-radius:var(--r);padding:14px;margin-bottom:12px;border-left:4px solid ' + (isDone ? 'var(--green)' : ack.legalCritical ? 'var(--high)' : 'var(--gold)') + '">' +
-        '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px">' +
-          '<div style="flex:1">' +
-            '<div style="font-size:14px;font-weight:700">' + (ack.legalCritical ? '&#x26A0; ' : '') + ack.title + '</div>' +
-            (ack.description ? '<div style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5">' + ack.description + '</div>' : '') +
-            (mod || les ? '<div style="font-size:11px;color:var(--muted);margin-top:6px">' + (mod ? 'Module: ' + mod.title : '') + (les ? ' &middot; Lesson: ' + les.title : '') + '</div>' : '') +
-          '</div>' +
-          '<div style="flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:4px">' +
-            (ack.legalCritical ? '<span style="font-size:10px;background:rgba(239,68,68,.12);color:var(--high);border:1px solid rgba(239,68,68,.25);border-radius:99px;padding:2px 8px">Legal-critical</span>' : '') +
-            (isDone ? '<span style="font-size:11px;background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.3);border-radius:99px;padding:2px 10px;font-weight:700">&#x2713; Acknowledged</span>' : '') +
-          '</div>' +
-        '</div>' +
-        (!isDone && empId
-          ? '<button data-ack="' + ack.id + '" onclick="handleSafetyAck(this.getAttribute(\x27data-ack\x27))" aria-label="Acknowledge safety check" style="width:100%;padding:10px;background:var(--gold);color:#000;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;margin-top:6px">&#x2713; Acknowledge &mdash; I confirm I have read and understood this requirement</button>'
-          : (!empId ? '<div style="font-size:11px;color:var(--muted);margin-top:6px;padding:8px;background:var(--surface2);border-radius:var(--rs)">Log in as an employee to acknowledge safety checks.</div>' : '')
-        ) +
-      '</div>';
-    }).join('');
-  }
-
-  el.innerHTML =
-    '<div class="section-title">&#x1F9BA; Safety Checks</div>' +
-    '<div class="section-sub">Required safety acknowledgements before production</div>' +
-    '<div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:14px">' +
-      'Safety acknowledgements support training awareness and supervisor review. They do not replace workplace safety procedures, legal duties, or qualified supervision.' +
-    '</div>' +
-    ackHtml +
-    '<div style="margin-top:8px"><div class="section-title" style="margin-bottom:10px">&#x1F527; Skill Techniques</div>' +
-    '<div class="section-sub" style="margin-bottom:12px">Quick-reference job skill practices</div>' +
-    COPING.map(function(s) {
-      return '<div class="coping-card">' +
-        '<div class="coping-icon">' + s.icon + '</div>' +
-        '<div class="coping-body">' +
-          '<div class="coping-name">' + s.name + '</div>' +
-          '<div class="coping-desc">' + s.desc + '</div>' +
-          '<span class="coping-cat">' + s.cat + '</span>' +
-          '<div style="margin-top:10px">' +
-            '<button class="btn-sm ' + (copingUsed.includes(s.id) ? 'filled' : '') + '" data-skill="' + s.id + '" onclick="markSkillTechnique(this.dataset.skill)" aria-label="' + (copingUsed.includes(s.id) ? 'Technique logged' : 'Mark technique as practised') + '">' +
-            (copingUsed.includes(s.id) ? '&#x2713; Practised today' : 'Mark as practised') + '</button>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-    }).join('') +
-    '</div>';
-}
-
-function handleSafetyAck(ackId) {
-  var emp = getActiveEmployee();
-  if (!emp) { showToast('No employee profile active'); return; }
-  acknowledgeLocalSafetyItem(ackId, emp.id);
-  showToast('&#x2713; Safety acknowledgement saved locally');
-  renderSafetyChecks();
-  updateHeader();
-}
-
-function markSkillTechnique(id) {
-  if (!copingUsed.includes(id)) {
-    copingUsed.push(id); xp += 5;
-    sSet('ap3x_xp', xp);
-    showToast('+5 XP — Skill technique logged ✓');
-  }
+function markCoping(id) {
+  if (!copingUsed.includes(id)) { copingUsed.push(id); xp += 5; sSet('ap3x_xp', xp); showToast('+5 XP — Coping strategy logged ✓'); }
   sSet('ap3x_coping_used', copingUsed);
-  renderSafetyChecks(); updateHeader();
+  renderCoping(); updateHeader();
 }
 
-// Legacy stub preserved
-function renderCoping() { renderSafetyChecks(); }
-function markCoping(id) { markSkillTechnique(id); }
-
-// ── PROGRESS ─────────────────────────────────────────────
+// ── PROGRESS ──────────────────────────────────────────────────────
 function renderProgress() {
-  var el = document.getElementById('tab-progress');
-  if (!el) return;
-  var totalL  = Object.values(lessonDone).filter(Boolean).length;
-  var emp     = getActiveEmployee();
-  var acks    = dmGetAll('ap3x_dm_safety_acks');
-  var reviews = dmGetAll('ap3x_dm_supervisor_reviews');
-  var evidence= dmGetAll('ap3x_dm_evidence_records');
-  var status  = getPwaLocalStatus();
+  const totalL  = Object.values(lessonDone).filter(Boolean).length;
+  const recent  = checkins.slice(0, 7);
+  const avgAnx  = recent.length ? (recent.reduce((a, c) => a + (c.anxiety || 0), 0) / recent.length).toFixed(1) : '—';
+  const avgMood = recent.length ? (recent.reduce((a, c) => a + (c.mood || 0), 0) / recent.length).toFixed(1) : '—';
 
-  var ackDone  = emp ? acks.filter(function(a) { return (a.acknowledgedByEmployeeIds||[]).includes(emp.id); }).length : 0;
-  var ackTotal = acks.length;
-  var pendingRevs = emp ? reviews.filter(function(r) { return r.employeeId === emp.id && r.status === 'pending'; }).length : 0;
-  var evidenceCount = emp ? evidence.filter(function(e) { return e.employeeId === emp.id; }).length : 0;
-  var pathPct = emp ? (emp.progressPercent || Math.round((totalL / 15) * 100)) : Math.round((totalL / 15) * 100);
-  var syncQ   = status.syncQueue;
-  var lastSaved = sGet('ap3x_last_checkin_date', null);
-
-  el.innerHTML =
-    '<div class="section-title">&#x1F4C8; My Progress</div>' +
-    '<div class="section-sub">Your personal training journey at a glance</div>' +
-    '<div class="prog-grid">' +
-      '<div class="prog-stat"><div class="prog-val">' + totalL + '/15</div><div class="prog-lbl">Lessons Done</div></div>' +
-      '<div class="prog-stat"><div class="prog-val">' + pathPct + '%</div><div class="prog-lbl">Pathway</div></div>' +
-      '<div class="prog-stat"><div class="prog-val">' + ackDone + '/' + (ackTotal||'--') + '</div><div class="prog-lbl">Safety Acks</div></div>' +
-      '<div class="prog-stat"><div class="prog-val">' + xp + '</div><div class="prog-lbl">Training XP</div></div>' +
-    '</div>' +
-    '<div class="prog-grid">' +
-      '<div class="prog-stat"><div class="prog-val" style="font-size:20px">' + (pendingRevs||0) + '</div><div class="prog-lbl">Pending Reviews</div></div>' +
-      '<div class="prog-stat"><div class="prog-val" style="font-size:20px">' + evidenceCount + '</div><div class="prog-lbl">Evidence Records</div></div>' +
-      '<div class="prog-stat"><div class="prog-val" style="font-size:20px">' + streak + '</div><div class="prog-lbl">Day Streak</div></div>' +
-      '<div class="prog-stat"><div class="prog-val" style="font-size:20px">' + syncQ + '</div><div class="prog-lbl">Queued Updates</div></div>' +
-    '</div>' +
-    '<div style="font-size:14px;font-weight:700;margin:16px 0 10px">&#x1F4DA; Lesson Progress</div>' +
-    '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:14px">' +
-    [1,2,3].map(function(mId) {
-      var mod = [
-        {id:1,name:'Module 1 — Site Orientation',icon:'&#x1F331;',color:'#22c55e'},
-        {id:2,name:'Module 2 — Quality Control',icon:'&#x1F3AF;',color:'#c9a84c'},
-        {id:3,name:'Module 3 — Competency Assessment',icon:'&#x1F30D;',color:'#a855f7'}
-      ][mId-1];
-      var lessons_m = [
-        ['m1l1','m1l2','m1l3','m1l4','m1l5'],
-        ['m2l1','m2l2','m2l3','m2l4','m2l5'],
-        ['m3l1','m3l2','m3l3','m3l4','m3l5']
-      ][mId-1];
-      var done = lessons_m.filter(function(id){return lessonDone[id];}).length;
-      var pct  = Math.round((done/5)*100);
-      return '<div style="padding:12px 14px;border-bottom:1px solid var(--border)">' +
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">' +
-          '<div style="font-size:13px;font-weight:700">' + mod.icon + ' ' + mod.name + '</div>' +
-          '<div style="font-size:12px;color:var(--muted)">' + done + '/5</div>' +
-        '</div>' +
-        '<div style="height:5px;background:var(--surface2);border-radius:99px;overflow:hidden">' +
-          '<div style="height:100%;width:' + pct + '%;background:' + mod.color + ';border-radius:99px"></div>' +
-        '</div>' +
-      '</div>';
-    }).join('') + '</div>' +
-    '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px">' +
-      '<div style="font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">&#x1F4BE; Local Storage Status</div>' +
-      '<div style="font-size:13px;line-height:1.8">' +
-        '&#x2713; Progress saved locally &mdash; local-first mode active<br>' +
-        (syncQ > 0 ? '&#x1F504; ' + syncQ + ' updates queued for future dashboard sync<br>' : '&#x2713; Sync queue empty<br>') +
-        '<span style="color:var(--muted);font-size:12px">Backend: ' + status.backendMode + ' &mdash; live sync connects in a later run</span>' +
-      '</div>' +
-    '</div>' +
-    '<button onclick="submitCheckin()" aria-label="Log training check-in" style="width:100%;padding:13px;background:var(--gold);color:#000;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;margin-bottom:14px">&#x1F4CB; Log Training Check-In (+10 XP)</button>' +
-    '<div class="safety-notice">' +
-      '<div style="font-weight:700;margin-bottom:4px">&#x26A0;&#xFE0F; AutoSkill OS&#x2122; Notice</div>' +
-      '<div>AutoSkill OS&#x2122; supports training awareness, supervisor review, and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility.</div>' +
-    '</div>';
+  document.getElementById('tab-progress').innerHTML = `
+    <div class="section-title">My Progress</div>
+    <div class="section-sub">Your personal training journey at a glance</div>
+    <div class="prog-grid">
+      <div class="prog-stat"><div class="prog-val">${checkins.length}</div><div class="prog-lbl">Check-Ins</div></div>
+      <div class="prog-stat"><div class="prog-val">${streak}</div><div class="prog-lbl">Day Streak</div></div>
+      <div class="prog-stat"><div class="prog-val">${totalL}/15</div><div class="prog-lbl">Lessons Done</div></div>
+      <div class="prog-stat"><div class="prog-val">${xp}</div><div class="prog-lbl">Total XP</div></div>
+    </div>
+    <div class="prog-grid">
+      <div class="prog-stat"><div class="prog-val" style="font-size:20px">${avgAnx}</div><div class="prog-lbl">Avg Anxiety (7d)</div></div>
+      <div class="prog-stat"><div class="prog-val" style="font-size:20px">${avgMood}</div><div class="prog-lbl">Avg Mood (7d)</div></div>
+    </div>
+    <div style="font-size:14px;font-weight:700;margin:16px 0 10px">Recent Check-Ins</div>
+    ${checkins.length === 0
+      ? '<p style="color:var(--muted);font-size:13px;padding:20px;text-align:center">No check-ins yet. Complete your first check-in to see your progress here.</p>'
+      : checkins.slice(0, 10).map(c => {
+          const sc = c.anxiety <= 3 ? 'sl' : c.anxiety <= 5 ? 'sm' : c.anxiety <= 7 ? 'sh' : 'sc';
+          return `<div class="history-item">
+            <div class="hi-score ${sc}">${c.anxiety}</div>
+            <div class="hi-info">
+              <div style="font-size:13px;font-weight:600">${new Date(c.date).toLocaleDateString()} <span class="risk-badge ${c.risk}" style="font-size:10px;padding:2px 8px">${c.risk}</span></div>
+              <div class="hi-date">Mood: ${c.mood}/10 · Sleep: ${c.sleep}/10 · Energy: ${c.energy}/10</div>
+              ${c.note ? `<div class="hi-note" style="color:var(--muted)">📝 ${c.note}</div>` : ''}
+            </div>
+          </div>`;
+        }).join('')}
+    <div class="safety-notice" style="margin-top:20px">
+      <h4>⚠️ Recovery Support Notice</h4>
+      <p>AutoSkill OS™ supports manufacturing workforce training and competency tracking. It does not replace site-specific safety protocols or emergency procedures. For on-site emergencies, follow your site emergency procedure immedes or a crisis support line immediately. Created by Kyzel Kreates · Powered by 4P3X Intelligent AI.</p>
+    </div>`;
 }
 
 // ── Toast ─────────────────────────────────────────────────────────
