@@ -650,58 +650,6 @@ function dmSet(key, val) {
 function dmGetAll(key) { return dmGet(key, []); }
 
 // Active employee — use first demo employee if no live profile
-
-// ════════════════════════════════════════════════════════════════
-// Run 6: Data-Mode Awareness Helpers (PWA local-first)
-// ════════════════════════════════════════════════════════════════
-
-function getPwaDataMode() {
-  return dmGet('ap3x_dm_data_mode', 'demo');
-}
-
-function isPwaDemoMode() {
-  var stored = localStorage.getItem('4p3x_demo_mode');
-  if (stored !== null) return JSON.parse(stored);
-  return true; // default to demo
-}
-
-function setPwaDemoMode(on) {
-  sSet('4p3x_demo_mode', on);
-  sSet('ap3x_dm_data_mode', on ? 'demo' : 'live');
-  showToast(on ? '🎭 Demo Mode enabled' : '🟢 Live Mode — demo records hidden');
-  updateHeader();
-  // Re-render current tab
-  var tab = document.querySelector('.tab-btn.active') || {};
-  if (typeof buildPortal === 'function') buildPortal();
-}
-
-function getPwaActiveEmployeeByMode() {
-  var demoOn = isPwaDemoMode();
-  var emps = dmGetAll('ap3x_dm_employees');
-  if (demoOn) {
-    var demos = emps.filter(function(e) { return e.isDemo; });
-    return demos.length ? demos[0] : null;
-  }
-  // Live mode: only non-demo employees
-  var live = emps.filter(function(e) { return !e.isDemo; });
-  return live.length ? live[0] : null;
-}
-
-function getPwaPathwaysByMode() {
-  var demoOn = isPwaDemoMode();
-  var all = dmGetAll('ap3x_dm_pathways');
-  if (demoOn) return all;
-  return all.filter(function(p) { return !p.isDemo; });
-}
-
-function getPwaSafetyAcksByMode() {
-  var demoOn = isPwaDemoMode();
-  var all = dmGetAll('ap3x_dm_safety_acks');
-  if (demoOn) return all;
-  return all.filter(function(a) { return !a.isDemo; });
-}
-
-
 function getActiveEmployee() {
   if (profile && profile.userId) {
     var emps = dmGetAll('ap3x_dm_employees');
@@ -959,7 +907,7 @@ function renderAll() {
 function updateHeader() {
   document.getElementById('xp-chip').textContent = '&#x26A1; ' + xp + ' XP';
   // Safety dot — show if any missing safety acks
-  var emp = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : getActiveEmployee();
+  var emp = getActiveEmployee();
   var acks = dmGetAll('ap3x_dm_safety_acks');
   var missingAcks = emp ? acks.filter(function(a) {
     return !(a.acknowledgedByEmployeeIds || []).includes(emp.id);
@@ -980,8 +928,7 @@ function updateHeader() {
 function renderHome() {
   var hr     = new Date().getHours();
   var greet  = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
-  var demoOn = isPwaDemoMode ? isPwaDemoMode() : true;
-  var emp    = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : getActiveEmployee();
+  var emp    = getActiveEmployee();
   var status = getPwaLocalStatus();
   var totalLessons = Object.values(lessonDone).filter(Boolean).length;
   var insight = INSIGHTS[new Date().getDate() % INSIGHTS.length];
@@ -1012,7 +959,7 @@ function renderHome() {
           : '<span style="font-size:11px;background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.3);border-radius:99px;padding:2px 10px">&#x2713; Saved locally</span>') +
       '</div>' +
     '</div>' +
-    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">' + '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Quick Access</div>' + '<span style="font-size:10px;padding:2px 8px;border-radius:99px;font-weight:700;background:' + (demoOn?'rgba(201,168,76,.15)':'rgba(34,197,94,.12)') + ';color:' + (demoOn?'var(--gold)':'var(--green)') + ';border:1px solid ' + (demoOn?'rgba(201,168,76,.3)':'rgba(34,197,94,.25)') + '">' + (demoOn ? '\ud83c\udfad Demo' : '\ud83d\udfe2 Live') + '</span></div>' + '<div class="quick-grid">' +
+    '<div class="quick-grid">' +
       '<button class="qa-btn" onclick="switchTab(\'pathway\')" aria-label="View Training Pathway">' +
         '<div class="qa-icon">&#x1F5FA;</div><div class="qa-label">My Training</div>' +
         '<div class="qa-desc">' + (firstPath ? firstPath.title.substring(0,32) + (firstPath.title.length>32?'...':'') : 'No pathway assigned') + '</div>' +
@@ -1052,7 +999,7 @@ function ciBack(step) {}
 
 function submitCheckin() {
   // Lightweight Run 4 training check-in — saves a simple work-readiness record locally
-  var emp = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : getActiveEmployee();
+  var emp = getActiveEmployee();
   var record = {
     date: new Date().toISOString(),
     employeeId: emp ? emp.id : null,
@@ -1280,8 +1227,7 @@ function completeLessonFromDetail(id, xpVal) {
 function renderPathway() {
   var el = document.getElementById('tab-pathway');
   if (!el) return;
-  var demoOn = isPwaDemoMode ? isPwaDemoMode() : true;
-  var emp    = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : getActiveEmployee();
+  var emp      = getActiveEmployee();
   var pathways = emp ? getEmployeeAssignedPathways(emp) : [];
   var modules  = dmGetAll('ap3x_dm_process_modules');
   var lessons  = dmGetAll('ap3x_dm_process_lessons');
@@ -1293,9 +1239,9 @@ function renderPathway() {
       '<div style="padding:32px 16px;text-align:center;color:var(--muted)">' +
         '<div style="font-size:40px;margin-bottom:12px">&#x1F5FA;</div>' +
         '<div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px">No employee profile active</div>' +
-        '<div style="font-size:13px;line-height:1.6">' + (isPwaDemoMode && isPwaDemoMode() ? 'Demo employee profiles appear when Demo Mode is active.' : 'Live Mode is active. No live employee record is connected yet. Configure a backend provider in the Control Dashboard Settings to connect live employees.') + '</div>' +
+        '<div style="font-size:13px;line-height:1.6">Demo employee profiles appear when Demo Mode is active. Live employee profiles will appear after backend/live setup is configured.</div>' +
       '</div>' +
-      '<div class="safety-notice" style="margin:0 0 16px">Your progress is saved locally first. Live backend sync is not active yet. Progress is saved locally until sync is connected in Run 7.</div>';
+      '<div class="safety-notice" style="margin:0 0 16px">Your progress is saved locally first. Dashboard sync will be connected in a later run or through live backend setup.</div>';
     return;
   }
 
@@ -1353,7 +1299,7 @@ function renderPathway() {
       '</div>' +
     '</div>' +
     empPathHtml +
-    '<div class="safety-notice" style="margin-top:4px">Your progress is saved locally first. Live backend sync is not active yet. Progress is saved locally until sync is connected in Run 7.</div>';
+    '<div class="safety-notice" style="margin-top:4px">Your progress is saved locally first. Dashboard sync will be connected in a later run or through live backend setup.</div>';
 }
 
 // ── SAFETY CHECKS TAB ──────────────────────────────────────────────
@@ -1424,7 +1370,7 @@ function renderSafetyChecks() {
 }
 
 function handleSafetyAck(ackId) {
-  var emp = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : getActiveEmployee();
+  var emp = getActiveEmployee();
   if (!emp) { showToast('No employee profile active'); return; }
   acknowledgeLocalSafetyItem(ackId, emp.id);
   showToast('&#x2713; Safety acknowledgement saved locally');

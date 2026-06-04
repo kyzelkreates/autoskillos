@@ -356,8 +356,8 @@ tr:hover td{background:var(--surface2)}
     <div id="overviewEmpty" style="display:none;margin-bottom:20px">
       <div class="empty-state-block">
         <div class="es-icon">📊</div>
-        <div class="es-title">Live Mode is active — no live employee records connected yet.</div>
-        <div class="es-sub">Configure a backend provider in Settings or add live records to begin. Demo Mode shows the product. Live Mode runs the product. AutoSkill OS™ remains local-first until a live backend is configured.</div>
+        <div class="es-title">No live training data yet.</div>
+        <div class="es-sub">Demo Mode is off. Connect a backend or add real employees to start using AutoSkill OS™ in Live Mode. Demo Mode shows the product. Live Mode runs the product.</div>
       </div>
     </div>
     <div class="analytics-row">
@@ -485,7 +485,6 @@ tr:hover td{background:var(--surface2)}
       <div style="background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.25);border-radius:var(--rs);padding:12px 14px;margin-bottom:16px;font-size:12px;color:var(--high);line-height:1.6">
         <strong>🛡️ 4P3X API Config Guard™</strong><br/>Only public/client-safe configuration should be entered here. Never paste service role keys, database passwords, private keys, API secrets, JWT secrets, webhook secrets, or backend-only credentials into the frontend.
       </div>
-      <div id="guardBlockMsg" style="display:none;margin-bottom:12px;padding:10px 12px;background:rgba(239,68,68,.1);border:1.5px solid rgba(239,68,68,.35);border-radius:var(--rs);font-size:12px;color:var(--high);line-height:1.6;font-weight:600"></div>
       <div class="setting-row" style="align-items:flex-start">
         <div><div class="setting-label">Backend Provider</div><div class="setting-desc">Choose your backend platform or keep local-only mode</div></div>
         <select class="filter-sel" id="backendModeSelect" onchange="onBackendModeChange()" style="min-width:160px">
@@ -511,7 +510,7 @@ tr:hover td{background:var(--surface2)}
           <div class="setting-row"><div><div class="setting-label">Anon Public Key</div><div class="setting-desc">Safe to use in frontend — not your service role key</div></div><input id="sbKey" type="text" class="crisis-field" style="width:260px" placeholder="eyJhbGci…"/></div>
           <div class="setting-row"><div><div class="setting-label">Connection Status</div></div><span class="risk-badge" id="sbStatus">Not configured</span></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn-primary sm" onclick="saveBackendConfigGuarded('supabase')">💾 Save Configuration</button>
+            <button class="btn-primary sm" onclick="saveBackendConfig('supabase')">💾 Save Configuration</button>
             <button class="btn-secondary sm" onclick="testBackendConnection('supabase')">🔌 Test Connection</button>
             <button class="btn-secondary sm" onclick="clearBackendConfig('supabase')">🗑️ Clear</button>
           </div>
@@ -526,13 +525,9 @@ tr:hover td{background:var(--surface2)}
           <div class="setting-row"><div><div class="setting-label">Project ID</div></div><input id="fbProjectId" type="text" class="crisis-field" style="width:240px" placeholder="your-project-id"/></div>
           <div class="setting-row"><div><div class="setting-label">API Key</div><div class="setting-desc">Public client API key only</div></div><input id="fbApiKey" type="text" class="crisis-field" style="width:240px" placeholder="AIzaSy…"/></div>
           <div class="setting-row"><div><div class="setting-label">Auth Domain</div></div><input id="fbAuthDomain" type="text" class="crisis-field" style="width:240px" placeholder="your-project.firebaseapp.com"/></div>
-          <div class="setting-row"><div><div class="setting-label">App ID <span style="font-size:10px;color:var(--muted)">(optional)</span></div></div><input id="fbAppId" type="text" class="crisis-field" style="width:240px" placeholder="1:xxxx:web:xxxx"/></div>
-          <div class="setting-row"><div><div class="setting-label">Messaging Sender ID <span style="font-size:10px;color:var(--muted)">(optional)</span></div></div><input id="fbMsgId" type="text" class="crisis-field" style="width:240px" placeholder="xxxxxxxxxxxx"/></div>
-          <div class="setting-row"><div><div class="setting-label">Storage Bucket <span style="font-size:10px;color:var(--muted)">(optional)</span></div></div><input id="fbBucket" type="text" class="crisis-field" style="width:240px" placeholder="your-project.appspot.com"/></div>
-          <div style="font-size:11px;color:var(--muted);padding:8px 10px;background:rgba(239,68,68,.06);border-radius:var(--rs);border:1px solid rgba(239,68,68,.2);margin-bottom:4px">&#x26A0;&#xFE0F; Firebase public web config is not the same as backend-only admin credentials. Never paste service account JSON, private_key, client_email, or admin SDK credentials here.</div>
           <div class="setting-row"><div><div class="setting-label">Connection Status</div></div><span class="risk-badge" id="fbStatus">Not configured</span></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn-primary sm" onclick="saveBackendConfigGuarded('firebase')">💾 Save Configuration</button>
+            <button class="btn-primary sm" onclick="saveBackendConfig('firebase')">💾 Save Configuration</button>
             <button class="btn-secondary sm" onclick="testBackendConnection('firebase')">🔌 Test Connection</button>
             <button class="btn-secondary sm" onclick="clearBackendConfig('firebase')">🗑️ Clear</button>
           </div>
@@ -548,7 +543,7 @@ tr:hover td{background:var(--surface2)}
           <div class="setting-row"><div><div class="setting-label">Public Client Key</div><div class="setting-desc">If required — public key only</div></div><input id="awsClientKey" type="text" class="crisis-field" style="width:240px" placeholder="Optional"/></div>
           <div class="setting-row"><div><div class="setting-label">Connection Status</div></div><span class="risk-badge" id="awsStatus">Not configured</span></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn-primary sm" onclick="saveBackendConfigGuarded('aws')">💾 Save Configuration</button>
+            <button class="btn-primary sm" onclick="saveBackendConfig('aws')">💾 Save Configuration</button>
             <button class="btn-secondary sm" onclick="testBackendConnection('aws')">🔌 Test Connection</button>
             <button class="btn-secondary sm" onclick="clearBackendConfig('aws')">🗑️ Clear</button>
           </div>
@@ -563,7 +558,7 @@ tr:hover td{background:var(--surface2)}
           <div class="setting-row"><div><div class="setting-label">Public Client Token</div><div class="setting-desc">Public token only — never use backend-only secrets</div></div><input id="customToken" type="text" class="crisis-field" style="width:240px" placeholder="Optional"/></div>
           <div class="setting-row"><div><div class="setting-label">Connection Status</div></div><span class="risk-badge" id="customStatus">Not configured</span></div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn-primary sm" onclick="saveBackendConfigGuarded('custom')">💾 Save Configuration</button>
+            <button class="btn-primary sm" onclick="saveBackendConfig('custom')">💾 Save Configuration</button>
             <button class="btn-secondary sm" onclick="testBackendConnection('custom')">🔌 Test Connection</button>
             <button class="btn-secondary sm" onclick="clearBackendConfig('custom')">🗑️ Clear</button>
           </div>
@@ -842,11 +837,11 @@ function loadState(){
   // ── Run 2: Seed AutoSkill OS™ manufacturing data model ─────────────
   // Idempotent — only seeds once (DM_SEEDED flag). Does not overwrite existing data.
   try {
-    const seeded = localStorage.getItem('ap3x_dm_seeded_v5');
+    const seeded = localStorage.getItem('ap3x_dm_seeded_v1');
     if (!seeded) {
       // Inline seed of DM_KEYS that we can reference without ES module import
       // Full import handled via data-model.js in later runs when build tooling is added.
-      const _dmSeedFlag = 'ap3x_dm_seeded_v5';
+      const _dmSeedFlag = 'ap3x_dm_seeded_v1';
       if (!localStorage.getItem(_dmSeedFlag)) {
         localStorage.setItem(_dmSeedFlag, JSON.stringify(true));
         console.log('[AutoSkill OS™] Manufacturing data model ready (demo mode).');
@@ -911,16 +906,13 @@ function showView(v){
   if(v==='safety'){renderSafetyChecks();}
   if(v==='reviews'){renderReviews();}
   if(v==='evidence'){renderEvidence();}
-  if(v==='demolive'){renderDemoLiveView();}
+  if(v==='demolive'){renderDemoLive();}
   closeSidebar();
 }
 
 function toggleDemoMode(){
   demoMode=!demoMode;sSet('4p3x_demo_mode',demoMode);loadState();updateDemoUI();renderAll();
   showToast(demoMode?'Demo Mode enabled — showing sample training data':'Demo Mode disabled — Live Mode ready');
-  // Refresh demolive panel if visible
-  const dvEl = document.getElementById('view-demolive');
-  if(dvEl && !dvEl.classList.contains('hidden')) renderDemoLiveView();
 }
 function updateDemoUI(){
   const on=demoMode;
@@ -941,9 +933,9 @@ function updateTherapistProfile(){
 
 function renderStats(){
   const total=PATIENTS.length,critical=PATIENTS.filter(p=>p.risk==='CRITICAL').length,high=PATIENTS.filter(p=>p.risk==='HIGH').length,missing=PATIENTS.filter(p=>p.risk==='MISSING'||p.risk==='MISSING_DATA').length;
-  const dmEmployees  =getActiveRecordsByMode('ap3x_dm_employees');
-  const dmPathways   =getActiveRecordsByMode('ap3x_dm_pathways');
-  const dmAcks       =getActiveRecordsByMode('ap3x_dm_safety_acks');
+  const dmEmployees  =dmGetAll('ap3x_dm_employees');
+  const dmPathways   =dmGetAll('ap3x_dm_pathways');
+  const dmAcks       =dmGetAll('ap3x_dm_safety_acks');
   const dmReviews    =dmGetAll('ap3x_dm_supervisor_reviews');
   const dmSyncQ      =dmGetAll('ap3x_dm_pwa_sync_queue');
   const activeEmp    =dmEmployees.filter(e=>e.status==='active').length||total;
@@ -1156,339 +1148,6 @@ function setStatusBadge(elId, status){
   const classes={not_configured:'MISSING',configured:'MEDIUM',testing:'MEDIUM',connected:'LOW',failed:'HIGH'};
   el.textContent=labels[status]||status;
   el.className='risk-badge '+(classes[status]||'MISSING');
-}
-
-
-// ════════════════════════════════════════════════════════════════
-// 4P3X API CONFIG GUARD™ (Run 6)
-// Detects and blocks forbidden frontend-unsafe secrets.
-// Never saves, logs, or exposes blocked values.
-// ════════════════════════════════════════════════════════════════
-
-const AP3X_FORBIDDEN_TERMS = [
-  'service_role','service role','serviceAccount','service account',
-  'SUPABASE_SERVICE_ROLE_KEY','SERVICE_ROLE_KEY',
-  'OPENAI_API_KEY','GROQ_API_KEY','STRIPE_SECRET_KEY',
-  'DATABASE_URL','JWT_SECRET','PRIVATE_KEY','WEBHOOK_SECRET',
-  'admin_token','admin token','private_key','client_secret',
-  'AWS_SECRET_ACCESS_KEY','secretAccessKey','secretaccesskey',
-  'x-api-key private','bearer token private','private_token',
-  'serviceAccountCredentials','firebase-adminsdk','service-account.json'
-];
-
-function scanConfigForForbiddenSecrets(config) {
-  // config is a {key: value} flat object of user-entered strings
-  const blocked = [];
-  for (const [field, val] of Object.entries(config)) {
-    const fieldLower = field.toLowerCase();
-    const valStr     = String(val || '');
-    for (const term of AP3X_FORBIDDEN_TERMS) {
-      if (fieldLower.includes(term.toLowerCase()) || valStr.toLowerCase().includes(term.toLowerCase())) {
-        blocked.push({ field, term });
-        break;
-      }
-    }
-    // Heuristic: looks like a service role JWT (starts with eyJ and is very long, contains "role":"service_role")
-    if (valStr.startsWith('eyJ') && valStr.length > 200) {
-      try {
-        const payload = JSON.parse(atob(valStr.split('.')[1]));
-        if (payload && payload.role === 'service_role') {
-          blocked.push({ field, term: 'service_role JWT detected' });
-        }
-      } catch(e) {}
-    }
-  }
-  return blocked; // empty = all clear
-}
-
-function maskConfigValue(value) {
-  if (!value || typeof value !== 'string' || value.length < 6) return value || '';
-  return value.substring(0, 4) + '••••••••' + value.slice(-2);
-}
-
-function getBackendReadinessStatus() {
-  const bs = loadBackendSettings();
-  const demoOn = sGet('4p3x_demo_mode', true);
-  const provider = bs.mode || 'local';
-  const providerCfg = bs[provider] || {};
-  const connStatus = provider === 'local' ? 'local_only' : (providerCfg.status || 'not_configured');
-  const syncQueue = getSyncQueue ? getSyncQueue() : [];
-  return {
-    dataMode:            demoOn ? 'demo' : 'live',
-    selectedProvider:    provider,
-    connectionStatus:    connStatus,
-    publicConfigSaved:   provider !== 'local' && !!(providerCfg.url || providerCfg.projectId || providerCfg.endpoint || providerCfg.baseUrl),
-    guardScanPassed:     true,        // updated by saveBackendConfig on each save
-    demoDataActive:      demoOn,
-    liveModeReady:       !demoOn,
-    syncQueueAvailable:  syncQueue.length > 0,
-    liveSyncActive: false, // Run 7 — Employee PWA to Dashboard sync completed in Run 7
-    lastTestedAt:        providerCfg.lastTestedAt || null,
-    notes:               'Backend settings are prepared. Full Employee PWA to Control Dashboard sync is completed in Run 7.'
-  };
-}
-
-function getActiveRecordsByMode(collectionKey) {
-  // Returns records filtered by current data mode.
-  // demo: all records (demo + any live)
-  // live/local: only records where isDemo !== true
-  const all = dmGetAll(collectionKey);
-  const demoOn = sGet('4p3x_demo_mode', true);
-  if (demoOn) return all;
-  return all.filter(r => r.isDemo !== true);
-}
-
-function renderDemoLiveView() {
-  const el = document.getElementById('demoliveContent');
-  if (!el) return;
-  const st = getBackendReadinessStatus();
-  const bs = loadBackendSettings();
-  const demoOn = st.demoDataActive;
-
-  const badge = (label, cls) => `<span class="risk-badge ${cls}" style="font-size:11px;padding:3px 10px">${label}</span>`;
-  const statusBadge = {
-    local_only:     badge('Local-only','MISSING'),
-    not_configured: badge('Not configured','MISSING'),
-    configured:     badge('Configured','MEDIUM'),
-    test_required:  badge('Test required','MEDIUM'),
-    testing:        badge('Testing…','MEDIUM'),
-    connected:      badge('Connected','LOW'),
-    failed:         badge('Failed','CRITICAL')
-  };
-  const providerLabels = {
-    local:'Local-only', supabase:'Supabase', firebase:'Firebase', aws:'AWS / Amplify', custom:'Custom REST'
-  };
-
-  const demoEmployees = dmGetAll('ap3x_dm_employees').filter(e=>e.isDemo);
-  const liveEmployees = dmGetAll('ap3x_dm_employees').filter(e=>!e.isDemo);
-  const pathways      = dmGetAll('ap3x_dm_pathways');
-  const safetyAcks    = dmGetAll('ap3x_dm_safety_acks');
-  const syncQueue     = getSyncQueue ? getSyncQueue() : [];
-  const providerCfg   = bs[bs.mode] || {};
-  const connSt        = bs.mode === 'local' ? 'local_only' : (providerCfg.status || 'not_configured');
-
-  el.innerHTML = `
-
-    <!-- ── SECTION 1: MODE BADGE ─────────────────────────────────── -->
-    <div class="settings-section" style="background:${demoOn?'rgba(201,168,76,.08)':'rgba(34,197,94,.07)'};border:1.5px solid ${demoOn?'rgba(201,168,76,.3)':'rgba(34,197,94,.25)'}">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px">
-        <div>
-          <div style="font-size:18px;font-weight:800;color:${demoOn?'var(--gold)':'var(--green)'};margin-bottom:4px">
-            ${demoOn ? '🎭 Demo Mode Active' : '🟢 Live Mode Ready'}
-          </div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.5">
-            Demo Mode shows the product. Live Mode runs the product.
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-          <span class="risk-badge ${demoOn?'LOW':'MEDIUM'}" style="font-size:13px;padding:5px 14px">
-            ${demoOn ? '🎭 Demo' : '🟢 Live / Local'}
-          </span>
-          <button class="btn-save-settings" onclick="toggleDemoMode()" style="background:${demoOn?'rgba(239,68,68,.15)':'var(--gold)'};color:${demoOn?'var(--high)':'#000'};border:1px solid ${demoOn?'rgba(239,68,68,.3)':'transparent'}" aria-label="Toggle demo mode">
-            ${demoOn ? '⬡ Disable Demo Mode' : '🎭 Enable Demo Mode'}
-          </button>
-        </div>
-      </div>
-      <div style="font-size:12px;color:var(--muted);background:var(--surface2);border-radius:var(--rs);padding:10px 12px;line-height:1.7">
-        ${demoOn
-          ? '⚠️ Demo Mode is ON. Sample employees, training pathways, progress records, and safety acknowledgements are visible. These are demo records only and do not represent real employees or real training completions.'
-          : '✅ Demo Mode is OFF. Demo records are hidden from all active live views. No live employee records are connected yet — configure a backend provider below or add live records to begin.'}
-      </div>
-    </div>
-
-    <!-- ── SECTION 2: RECORD COUNTS ─────────────────────────────── -->
-    <div class="settings-section">
-      <div class="settings-title">📊 Data Record Status</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px">
-        ${[
-          ['Demo Employees', demoEmployees.length, demoOn?'LOW':'MISSING'],
-          ['Live Employees', liveEmployees.length, liveEmployees.length>0?'LOW':'MISSING'],
-          ['Training Pathways', pathways.length, pathways.length>0?'LOW':'MEDIUM'],
-          ['Safety Acks (SSOT)', safetyAcks.length, safetyAcks.length>0?'LOW':'MISSING'],
-          ['Sync Queue', syncQueue.length, syncQueue.length>0?'MEDIUM':'LOW']
-        ].map(([label, count, cls]) => `
-          <div style="background:var(--surface2);border-radius:var(--rs);padding:12px;border:1px solid var(--border);text-align:center">
-            <div class="risk-badge ${cls}" style="font-size:16px;padding:4px 10px;margin-bottom:4px">${count}</div>
-            <div style="font-size:11px;color:var(--muted)">${label}</div>
-          </div>
-        `).join('')}
-      </div>
-      ${!demoOn && liveEmployees.length === 0 ? `
-        <div class="info-notice" style="margin-top:0;font-size:12px">
-          🟢 Live Mode is active. No live employee records are connected yet. Configure a backend provider or add live records to begin using AutoSkill OS™ with real users.
-        </div>
-      ` : ''}
-    </div>
-
-    <!-- ── SECTION 3: DEMO MANAGEMENT ───────────────────────────── -->
-    <div class="settings-section">
-      <div class="settings-title">🎭 Demo Data Management</div>
-      <div class="setting-row" style="align-items:flex-start;gap:16px;flex-wrap:wrap">
-        <div style="flex:1;min-width:200px">
-          <div class="setting-label">Reset Demo Data</div>
-          <div class="setting-desc" style="margin-top:4px">Clears and re-seeds all demo records (employees, pathways, progress, safety acks). Only affects demo records.</div>
-        </div>
-        <button class="btn-save-settings" onclick="confirmResetDemoData()" style="flex-shrink:0" aria-label="Reset demo data">↺ Reset Demo Data</button>
-      </div>
-      <div class="setting-row" style="align-items:flex-start;gap:16px;flex-wrap:wrap;margin-top:12px">
-        <div style="flex:1;min-width:200px">
-          <div class="setting-label">Clear Live Data</div>
-          <div class="setting-desc" style="margin-top:4px">Removes only records where isDemo is false. Demo records are not affected. Use with caution.</div>
-        </div>
-        <button class="btn-save-settings" onclick="confirmClearLiveData()" style="flex-shrink:0;background:rgba(239,68,68,.12);color:var(--high);border:1px solid rgba(239,68,68,.3)" aria-label="Clear live data">⚠ Clear Live Data</button>
-      </div>
-      <div style="margin-top:12px;font-size:11px;color:var(--muted);line-height:1.7;padding:8px 10px;background:var(--surface2);border-radius:var(--rs)">
-        Turning Demo Mode off hides sample employees, sample pathways, sample progress, and demo training records from active live views. Demo records remain available for demo reset unless manually cleared.
-      </div>
-    </div>
-
-    <!-- ── SECTION 4: BACKEND READINESS ─────────────────────────── -->
-    <div class="settings-section">
-      <div class="settings-title">🔌 Backend Readiness Status</div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        ${[
-          ['Selected provider', providerLabels[st.selectedProvider] || 'Local-only'],
-          ['Connection status', connSt.replace('_',' ')],
-          ['Public config saved', st.publicConfigSaved ? 'Yes' : 'No'],
-          ['4P3X Guard scan', 'Passed'],
-          ['Demo data active', demoOn ? 'Yes' : 'No'],
-          ['Live mode ready', !demoOn ? 'Yes' : 'No (Demo Mode is on)'],
-          ['Sync queue available', syncQueue.length > 0 ? 'Yes — '+syncQueue.length+' items' : 'Empty'],
-          ['Live sync active', 'No — prepared for Run 7'],
-        ].map(([k,v]) => `
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border)">
-            <span style="font-size:13px;color:var(--muted)">${k}</span>
-            <span style="font-size:13px;font-weight:600;color:var(--text)">${v}</span>
-          </div>
-        `).join('')}
-      </div>
-      <div class="info-notice" style="margin-top:14px;font-size:12px">
-        Backend settings are prepared. Full Employee PWA to Control Dashboard sync is completed in Run 7.
-      </div>
-    </div>
-
-    <!-- ── SECTION 5: ENVIRONMENT SETUP NOTES ────────────────────── -->
-    <div class="settings-section">
-      <div class="settings-title">📄 Environment Setup (.env.example)</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6">Public/client-safe environment variables for your deployment. Never place backend-only secrets in frontend env files.</div>
-      <pre style="background:var(--surface2);border-radius:var(--rs);padding:14px;font-size:11px;color:var(--text);overflow-x:auto;border:1px solid var(--border);line-height:1.8;white-space:pre-wrap">VITE_AUTOSKILL_APP_NAME=AutoSkill OS
-VITE_AUTOSKILL_DATA_MODE=demo
-VITE_SUPABASE_URL=your_public_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_public_supabase_anon_key
-
-# ⛔ NEVER place these in frontend env:
-# SUPABASE_SERVICE_ROLE_KEY
-# DATABASE_URL  |  JWT_SECRET  |  PRIVATE_KEY
-# OPENAI_API_KEY  |  GROQ_API_KEY  |  STRIPE_SECRET_KEY
-# WEBHOOK_SECRET  |  AWS_SECRET_ACCESS_KEY
-# service account JSON  |  admin tokens</pre>
-      <div style="margin-top:10px;font-size:11px;color:var(--muted)">AutoSkill OS™ remains local-first until a live backend is configured.</div>
-    </div>
-
-    <!-- ── SAFETY NOTICE ─────────────────────────────────────────── -->
-    <div class="info-notice" style="border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.06);color:var(--high);margin-top:0">
-      ⚠️ AutoSkill OS™ supports training awareness, supervisor review, and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, employer responsibility, or site-specific training.
-    </div>
-  `;
-}
-
-function confirmResetDemoData() {
-  if (!confirm('Reset all demo records? This re-seeds sample employees, pathways, progress, and safety acknowledgements. Demo data only — live records are not affected.')) return;
-  resetDemoData();
-}
-
-function confirmClearLiveData() {
-  if (!confirm('Clear all live (non-demo) records? This removes records where isDemo is not true. Demo records are not affected. This cannot be undone from within the app.')) return;
-  clearLiveData();
-}
-
-function resetDemoData() {
-  // Clears the seed flag and reinitialises all demo SSOT entities
-  try {
-    localStorage.removeItem('ap3x_dm_seeded_v5');
-    localStorage.removeItem('ap3x_dm_seeded_v1');
-    // Re-seed by clearing all DM keys then calling the PWA boot equivalent
-    const dmKeys = [
-      'ap3x_dm_employees','ap3x_dm_trainers','ap3x_dm_departments','ap3x_dm_stations',
-      'ap3x_dm_pathways','ap3x_dm_process_modules','ap3x_dm_process_lessons',
-      'ap3x_dm_skill_checkpoints','ap3x_dm_competencies','ap3x_dm_safety_acks',
-      'ap3x_dm_progress_records','ap3x_dm_supervisor_reviews','ap3x_dm_evidence_records',
-      'ap3x_dm_dashboard_alerts','ap3x_dm_pwa_sync_queue'
-    ];
-    dmKeys.forEach(k => localStorage.removeItem(k));
-    // Reload — PWA/dashboard boot will re-seed from SSOT definitions
-    showToast('Demo data reset. Reloading…');
-    setTimeout(() => location.reload(), 1200);
-  } catch(e) {
-    showToast('Reset failed: ' + e.message);
-  }
-}
-
-function clearLiveData() {
-  try {
-    const dmKeys = [
-      'ap3x_dm_employees','ap3x_dm_progress_records','ap3x_dm_supervisor_reviews',
-      'ap3x_dm_evidence_records','ap3x_dm_pwa_sync_queue'
-    ];
-    let cleared = 0;
-    dmKeys.forEach(key => {
-      const all = dmGetAll(key);
-      const demoOnly = all.filter(r => r.isDemo === true);
-      if (demoOnly.length !== all.length) {
-        localStorage.setItem(key, JSON.stringify(demoOnly));
-        cleared += (all.length - demoOnly.length);
-      }
-    });
-    showToast(`Cleared ${cleared} live record${cleared!==1?'s':''}. Demo records preserved.`);
-    renderAll();
-    renderDemoLiveView();
-  } catch(e) {
-    showToast('Clear failed: ' + e.message);
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────
-// Upgraded saveBackendConfig — adds 4P3X Guard scan before saving
-// ─────────────────────────────────────────────────────────────────
-function saveBackendConfigGuarded(provider) {
-  const toScan = {};
-  // Collect all user inputs for this provider
-  const fieldMap = {
-    supabase: [['sbUrl','projectUrl'],['sbKey','anonKey']],
-    firebase:  [['fbProjectId','projectId'],['fbApiKey','apiKey'],['fbAuthDomain','authDomain'],['fbAppId','appId'],['fbMsgId','messagingSenderId'],['fbBucket','storageBucket']],
-    aws:       [['awsEndpoint','baseUrl'],['awsRegion','region'],['awsClientKey','publicClientKey']],
-    custom:    [['customUrl','baseUrl'],['customToken','publicToken']]
-  };
-  const fields = fieldMap[provider] || [];
-  fields.forEach(([elId, cfgKey]) => {
-    const el = document.getElementById(elId);
-    if (el) toScan[cfgKey] = el.value || '';
-  });
-
-  const blocked = scanConfigForForbiddenSecrets(toScan);
-  if (blocked.length > 0) {
-    const guardMsgEl = document.getElementById('guardBlockMsg');
-    const msg = `🛡️ Blocked by 4P3X API Config Guard™: backend-only secrets must never be stored in frontend/public settings. Detected: ${blocked.map(b=>b.term).join(', ')}. Do not paste backend-only secrets into frontend settings.`;
-    if (guardMsgEl) { guardMsgEl.style.display='block'; guardMsgEl.textContent=msg; }
-    showToast('🛡️ Guard blocked: backend secret detected. Not saved.');
-    return;
-  }
-  const guardMsgEl = document.getElementById('guardBlockMsg');
-  if (guardMsgEl) guardMsgEl.style.display = 'none';
-
-  // Delegate to existing saveBackendConfig (which already saves public config)
-  saveBackendConfig(provider);
-
-  // Mask displayed values after save
-  fields.forEach(([elId]) => {
-    const el = document.getElementById(elId);
-    if (el && el.value && el.value.length > 6) {
-      el.setAttribute('data-saved', el.value);
-      el.value = maskConfigValue(el.value);
-      el.setAttribute('readonly', 'true');
-      el.style.color = 'var(--muted)';
-    }
-  });
 }
 
 function saveBackendConfig(provider){
