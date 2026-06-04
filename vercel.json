@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "therapylink",
+  "name": "autoskill-os",
   "builds": [
     { "src": "**/*", "use": "@vercel/static" }
   ],

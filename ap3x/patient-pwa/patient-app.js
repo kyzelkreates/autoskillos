@@ -1,7 +1,7 @@
-/* TherapyLink™ — Patient Recovery PWA App
+/* AutoSkill OS™ — Employee Learning PWA App
    Standalone installable PWA version (patient-pwa/index.html)
    All data via localStorage SSOT — no backend required
-   Created by Kyzel Kreates · Powered by 4P3X Intelligent AI     */
+   Created by Kyzel Kreates™ · Powered by 4P3X Intelligent AI™     */
 'use strict';
 
 // ── Sync Queue (backend-ready local-first) ───────────────────────
@@ -23,26 +23,26 @@ function sSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch 
 
 // ── Curriculum ────────────────────────────────────────────────────
 const CURRICULUM = [
-  { id: 1, name: 'Module 1 — Understanding Your Mental Health', icon: '🌱', color: '#22c55e', lessons: [
-    { id: 'm1l1', name: 'What mental health recovery can look like', desc: 'Exploring what recovery means — it is not linear and that is okay.', xp: 60 },
-    { id: 'm1l2', name: 'Understanding mood, anxiety, and stress', desc: 'How mood, anxiety, and stress interact and influence each other daily.', xp: 60 },
-    { id: 'm1l3', name: 'Recognising personal triggers', desc: 'Learning to identify situations, thoughts, or feelings that worsen symptoms.', xp: 70 },
-    { id: 'm1l4', name: 'Tracking patterns safely', desc: 'Using gentle observation to notice patterns without judgement.', xp: 70 },
-    { id: 'm1l5', name: 'When to ask for support', desc: 'Recognising when to reach out and how to communicate your needs.', xp: 80 },
+  { id: 1, name: 'Module 1 — Manufacturing Site Orientation', icon: '🌱', color: '#22c55e', lessons: [
+    { id: 'm1l1', name: 'Understanding your workstation', desc: 'Learn your workstation layout, responsibilities, and daily readiness checks.', xp: 60 },
+    { id: 'm1l2', name: 'Health, Safety and PPE Basics', desc: 'Essential PPE requirements and safety protocols before entering the production area.', xp: 60 },
+    { id: 'm1l3', name: 'Assembly Line Process Overview', desc: 'Understanding the production flow, stages, and your role within the line.', xp: 70 },
+    { id: 'm1l4', name: 'Workstation Readiness', desc: 'How to prepare your workstation correctly at the start of each shift.', xp: 70 },
+    { id: 'm1l5', name: 'Tool Handling and Equipment Safety', desc: 'Safe handling procedures for tools and equipment at your workstation.', xp: 80 },
   ]},
-  { id: 2, name: 'Module 2 — Coping Skills and Daily Regulation', icon: '🎯', color: '#c9a84c', lessons: [
-    { id: 'm2l1', name: 'Breathing and grounding techniques', desc: 'Practical tools to reduce anxiety and return to the present moment.', xp: 70 },
-    { id: 'm2l2', name: 'Building a daily wellbeing routine', desc: 'Small, consistent habits that support mental health over time.', xp: 70 },
-    { id: 'm2l3', name: 'Managing overwhelming thoughts', desc: 'Strategies for cognitive defusion and reducing thought rumination.', xp: 80 },
-    { id: 'm2l4', name: 'Sleep, rest, and recovery basics', desc: 'Understanding the relationship between sleep quality and mental health.', xp: 70 },
-    { id: 'm2l5', name: 'Creating a personal support plan', desc: 'Designing a simple, practical plan for difficult days.', xp: 90 },
+  { id: 2, name: 'Module 2 — Quality Control and Process Standards', icon: '🎯', color: '#c9a84c', lessons: [
+    { id: 'm2l1', name: 'Quality Control and Defect Reporting', desc: 'How to identify quality issues and report defects correctly.', xp: 70 },
+    { id: 'm2l2', name: 'Production Workflow and Handover', desc: 'Understanding production flow, shift handover, and workflow documentation.', xp: 70 },
+    { id: 'm2l3', name: 'Process Checkpoint Procedures', desc: 'How to complete process checkpoints and verify your work at each stage.', xp: 80 },
+    { id: 'm2l4', name: 'Workstation Safety Checks', desc: 'Daily safety checks required before and during your shift.', xp: 70 },
+    { id: 'm2l5', name: 'Supervisor Sign-Off and Sign-On', desc: 'Understanding the supervisor sign-off process for completed tasks.', xp: 90 },
   ]},
-  { id: 3, name: 'Module 3 — Progress, Reflection, and Relapse Prevention', icon: '🌍', color: '#a855f7', lessons: [
-    { id: 'm3l1', name: 'Reflecting on progress', desc: 'How to acknowledge growth while being compassionate with setbacks.', xp: 80 },
-    { id: 'm3l2', name: 'Identifying early warning signs', desc: 'Recognising your personal signs that a difficult period may be starting.', xp: 80 },
-    { id: 'm3l3', name: 'Strengthening coping strategies', desc: 'Reviewing and deepening the tools that work best for you.', xp: 80 },
-    { id: 'm3l4', name: 'Preparing for therapy sessions', desc: 'Getting the most from your sessions with planning and reflection.', xp: 80 },
-    { id: 'm3l5', name: 'Building a personal recovery plan', desc: 'Pulling everything together into a lasting personal recovery framework.', xp: 100 },
+  { id: 3, name: 'Module 3 — Competency Assessment and Development', icon: '🌍', color: '#a855f7', lessons: [
+    { id: 'm3l1', name: 'Reviewing Your Training Progress', desc: 'How to review your competency progress and identify areas for growth.', xp: 80 },
+    { id: 'm3l2', name: 'Recognising Process Errors Early', desc: 'How to spot and respond to process errors before they escalate.', xp: 80 },
+    { id: 'm3l3', name: 'Strengthening Core Process Skills', desc: 'Reviewing and deepening the process skills that are most critical for your role.', xp: 80 },
+    { id: 'm3l4', name: 'Preparing for Supervisor Check-In', desc: 'Getting the most from your supervisor check-in with notes and progress evidence.', xp: 80 },
+    { id: 'm3l5', name: 'Final Competency Check', desc: 'Pulling everything together into your personal competency record and development plan.', xp: 100 },
   ]},
 ];
 
@@ -52,36 +52,36 @@ const LESSON_CONTENT = {
 
   m1l1: {
     id: 'm1l1', moduleId: 1, lessonNumber: 1,
-    moduleTitle: 'Module 1 — Understanding Your Mental Health',
-    title: 'What Mental Health Recovery Can Look Like',
+    moduleTitle: 'Module 1 — Manufacturing Site Orientation',
+    title: 'Understanding Your Workstation',
     estimatedTime: '8–10 minutes',
-    summary: 'Recovery is not always a straight line. Some days may feel easier, while others may feel more difficult. This lesson helps you understand recovery as a process of learning, noticing patterns, building support, and taking small steps that help you feel safer and more able to cope.',
+    summary: 'Your workstation is your primary work area during each shift. Understanding its layout, responsibilities, and daily readiness requirements helps you work safely and efficiently.',
     learningGoals: [
-      'Understand that recovery can look different for every person.',
-      'Recognise that progress can happen gradually.',
-      'Learn why small steps matter.',
-      'Understand how TherapyLink™ can support reflection between sessions.'
+      'Understand your workstation layout and key responsibility zones.',
+      'Know the daily readiness checks required before starting work.',
+      'Understand the safety requirements for your workstation.',
+      'Understand how AutoSkill OS™ can support your learning between supervisor sessions.'
     ],
     sections: [
-      { heading: 'Recovery is personal', body: 'Mental health recovery does not mean feeling perfect all the time. It can mean understanding yourself better, recognising what affects your wellbeing, learning coping strategies, and feeling more able to ask for help when needed. Everyone\'s recovery looks different.' },
-      { heading: 'Progress is not always linear', body: 'It is normal to have good days, difficult days, and days that feel somewhere in between. A difficult day does not mean you have failed. It may simply show that your mind and body need care, rest, support, or a different strategy.' },
-      { heading: 'Small steps count', body: 'Small actions can support recovery. This might include completing a check-in, noticing a trigger, using a breathing exercise, writing down a thought, contacting someone supportive, or attending therapy. These steps can build confidence over time.' },
-      { heading: 'Why tracking helps', body: 'Tracking mood, stress, sleep, coping strategies, and reflections can help you and your therapist notice patterns. These patterns may help guide future support and make therapy sessions more focused.' },
-      { heading: 'Using TherapyLink™ safely', body: 'TherapyLink™ is designed to support reflection, learning, and therapist-guided monitoring. It is not an emergency service and does not replace professional care. Use it as a support tool between sessions.' }
+      { heading: 'Your workstation', body: 'Your workstation is the specific area where you perform your assigned tasks. Understanding its boundaries, equipment, and materials is the first step to working safely and effectively.' },
+      { heading: 'Readiness checks', body: 'Before starting work, verify that your workstation is clean, tools are in correct position, PPE is available, and materials are correctly staged. A readiness check prevents errors before they happen.' },
+      { heading: 'Small checks count', body: 'Small consistent actions build competency. This might include completing a check-in, reviewing a process step, practising a tool procedure, writing down a question, or contacting your supervisor. These steps build confidence over time.' },
+      { heading: 'Why tracking helps', body: 'Tracking process accuracy, check-in frequency, and training progress can help you and your supervisor notice patterns. These patterns may help guide future training and make supervisor check-ins more focused.' },
+      { heading: 'Using AutoSkill OS™', body: 'AutoSkill OS™ is designed to support training, learning, and supervisor-guided competency tracking. Use it as a training tool between supervisor sessions.' }
     ],
     reflectionPrompt: 'What would progress look like for you this week, even if it is only a small step?',
-    patientExercise: 'Write down one small action you can take today to support your wellbeing.',
-    therapistNote: 'Review the patient\'s definition of progress. It may reveal expectations, pressure points, or opportunities for realistic goal-setting.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
-    completionLabel: 'I understand what recovery can look like'
+    learnerTask: 'Identify one area of your workstation you are least familiar with and review it today.',
+    supervisorNote: 'Review the patient\'s definition of progress. It may reveal expectations, pressure points, or opportunities for realistic goal-setting.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I understand my workstation layout and responsibilities'
   },
 
   m1l2: {
     id: 'm1l2', moduleId: 1, lessonNumber: 2,
-    moduleTitle: 'Module 1 — Understanding Your Mental Health',
-    title: 'Understanding Mood, Anxiety, and Stress',
+    moduleTitle: 'Module 1 — Manufacturing Site Orientation',
+    title: 'Health, Safety and PPE Basics',
     estimatedTime: '8–10 minutes',
-    summary: 'Mood, anxiety, and stress can affect thoughts, feelings, body sensations, and behaviour. This lesson helps you understand how these experiences can show up and why tracking them may help you and your therapist recognise useful patterns.',
+    summary: 'Mood, anxiety, and stress can affect thoughts, feelings, body sensations, and behaviour. This lesson helps you understand how these experiences can show up and why tracking them may help you and your supervisor recognise useful patterns.',
     learningGoals: [
       'Understand the difference between mood, anxiety, and stress.',
       'Notice how emotional experiences can affect the body.',
@@ -96,18 +96,18 @@ const LESSON_CONTENT = {
       { heading: 'Talking about your experience', body: 'You do not need perfect words to describe how you feel. Simple descriptions like "heavy," "wired," "flat," "overwhelmed," or "on edge" can be useful starting points.' }
     ],
     reflectionPrompt: 'How do mood, anxiety, or stress usually show up for you?',
-    patientExercise: 'Choose one word that describes how you feel today. Then rate your mood and stress from 1–10.',
-    therapistNote: 'Look for differences between patient ratings and written descriptions. These may help guide conversation.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
-    completionLabel: 'I understand mood, anxiety, and stress better'
+    learnerTask: 'Choose one word that describes how you feel today. Then rate your mood and stress from 1–10.',
+    supervisorNote: 'Look for differences between patient ratings and written descriptions. These may help guide conversation.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I understand the key health, safety and PPE requirements'
   },
 
   m1l3: {
     id: 'm1l3', moduleId: 1, lessonNumber: 3,
-    moduleTitle: 'Module 1 — Understanding Your Mental Health',
-    title: 'Recognising Personal Triggers',
+    moduleTitle: 'Module 1 — Manufacturing Site Orientation',
+    title: 'Assembly Line Process Overview',
     estimatedTime: '10–12 minutes',
-    summary: 'Triggers are situations, thoughts, memories, sensations, or events that can affect emotional wellbeing. This lesson helps you identify possible triggers gently and safely without judging yourself.',
+    summary: 'Triggers are situations, thoughts, memories, sensations, or events that can affect process performance. This lesson helps you identify possible triggers gently and safely without judging yourself.',
     learningGoals: [
       'Understand what a trigger can be.',
       'Notice common types of triggers.',
@@ -119,19 +119,19 @@ const LESSON_CONTENT = {
       { heading: 'Triggers are not weakness', body: 'Having triggers does not mean you are weak or broken. Triggers often develop because the mind and body are trying to protect you. Understanding them can help you respond with more care and less judgement.' },
       { heading: 'Common trigger areas', body: 'Triggers may relate to relationships, work, health, money, conflict, uncertainty, rejection, trauma reminders, sensory overload, tiredness, loneliness, or feeling out of control.' },
       { heading: 'Tracking gently', body: 'When tracking triggers, avoid forcing yourself to relive painful experiences. Start with simple notes: what happened, how you felt, what your body did, what you needed, and what helped.' },
-      { heading: 'Building awareness', body: 'Over time, trigger tracking can help you and your therapist identify patterns. This can support planning, coping strategies, boundaries, and safer responses.' }
+      { heading: 'Building awareness', body: 'Over time, trigger tracking can help you and your supervisor identify patterns. This can support planning, coping strategies, boundaries, and safer responses.' }
     ],
-    reflectionPrompt: 'What is one situation that often affects your wellbeing?',
-    patientExercise: 'Write down one possible trigger and one supportive response you could try next time.',
-    therapistNote: 'Review trigger notes carefully and avoid pushing for detail too quickly. Focus on safety, pacing, and stabilisation.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    reflectionPrompt: 'What is one situation that often affects your performance?',
+    learnerTask: 'Write down one possible trigger and one supportive response you could try next time.',
+    supervisorNote: 'Review trigger notes carefully and avoid pushing for detail too quickly. Focus on safety, pacing, and stabilisation.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I can recognise some of my triggers'
   },
 
   m1l4: {
     id: 'm1l4', moduleId: 1, lessonNumber: 4,
-    moduleTitle: 'Module 1 — Understanding Your Mental Health',
-    title: 'Tracking Patterns Safely',
+    moduleTitle: 'Module 1 — Manufacturing Site Orientation',
+    title: 'Workstation Readiness',
     estimatedTime: '8–10 minutes',
     summary: 'Tracking can help you notice patterns in mood, stress, sleep, energy, coping strategies, and support needs. This lesson explains how to track safely without becoming overwhelmed or overly self-critical.',
     learningGoals: [
@@ -141,23 +141,23 @@ const LESSON_CONTENT = {
       'Use check-ins as supportive information.'
     ],
     sections: [
-      { heading: 'Why patterns matter', body: 'Mental health experiences can feel random, but patterns often appear over time. You may notice that stress rises after poor sleep, mood drops after isolation, or coping improves after routine, movement, connection, or rest.' },
-      { heading: 'What can be tracked', body: 'Useful areas include mood, anxiety, stress, sleep, energy, appetite, concentration, coping strategies, social connection, symptoms, triggers, and notes for your therapist.' },
+      { heading: 'Why patterns matter', body: 'Training progress can feel uneven, but patterns often appear over time. You may notice that process errors increase when preparation is rushed, performance improves after clear briefing, or skills build after routine practice, connection, or rest.' },
+      { heading: 'What can be tracked', body: 'Useful areas include mood, anxiety, stress, sleep, energy, appetite, concentration, coping strategies, social connection, symptoms, triggers, and notes for your supervisor.' },
       { heading: 'Tracking should not become punishment', body: 'Tracking is not about judging yourself or getting a perfect score. It is about gathering information. Missing a check-in does not mean failure. It may itself be useful information.' },
-      { heading: 'Look for trends, not single days', body: 'One difficult day does not define your recovery. Patterns become clearer when you look across several days or weeks. Your therapist can help interpret what the data might mean.' },
+      { heading: 'Look for trends, not single days', body: 'One difficult day does not define your recovery. Patterns become clearer when you look across several days or weeks. Your supervisor can help interpret what the data might mean.' },
       { heading: 'Keep it simple', body: 'A short check-in is enough. You do not need long explanations every day. Even a mood score, sleep rating, and one sentence can be useful.' }
     ],
-    reflectionPrompt: 'What pattern would be useful for you and your therapist to understand better?',
-    patientExercise: 'Complete today\'s check-in and add one short note about what may have affected your wellbeing.',
-    therapistNote: 'Encourage patients to use tracking as information, not performance. Watch for perfectionism or anxiety around recording data.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    reflectionPrompt: 'What pattern would be useful for you and your supervisor to understand better?',
+    learnerTask: 'Complete today\'s check-in and add one short note about what may have affected your performance.',
+    supervisorNote: 'Encourage patients to use tracking as information, not performance. Watch for perfectionism or anxiety around recording data.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I understand how to track patterns safely'
   },
 
   m1l5: {
     id: 'm1l5', moduleId: 1, lessonNumber: 5,
-    moduleTitle: 'Module 1 — Understanding Your Mental Health',
-    title: 'When to Ask for Support',
+    moduleTitle: 'Module 1 — Manufacturing Site Orientation',
+    title: 'Tool Handling and Equipment Safety',
     estimatedTime: '8–10 minutes',
     summary: 'Asking for support can be difficult, especially when you are used to coping alone. This lesson helps you recognise signs that extra support may be needed and how to communicate this clearly.',
     learningGoals: [
@@ -169,14 +169,14 @@ const LESSON_CONTENT = {
     sections: [
       { heading: 'Support is part of recovery', body: 'Needing support does not mean you have failed. Support can help you feel less alone, organise your thoughts, make safer choices, and access the right help at the right time.' },
       { heading: 'Signs you may need support', body: 'You may need extra support if you feel overwhelmed, unsafe, unable to cope, unusually withdrawn, highly anxious, very low, unable to sleep, unable to complete basic tasks, or unsure how to manage your thoughts or feelings.' },
-      { heading: 'Different levels of support', body: 'Support can include self-care, contacting a trusted person, messaging your therapist if appropriate, using a support plan, contacting a GP or healthcare professional, or contacting emergency/crisis services if there is immediate risk.' },
+      { heading: 'Different levels of support', body: 'Support can include self-care, contacting a trusted person, messaging your supervisor if appropriate, using a support plan, contacting a GP or healthcare professional, or contacting emergency/crisis services if there is immediate risk.' },
       { heading: 'How to ask clearly', body: 'Simple phrases can help: "I am struggling today," "I need someone to check in," "I do not feel safe," "I need help making a plan," or "Can we talk about this in my next session?"' },
       { heading: 'Immediate risk', body: 'If you feel at immediate risk or unable to stay safe, do not wait for an app response. Contact local emergency services or a crisis support line immediately.' }
     ],
     reflectionPrompt: 'What signs tell you that you may need extra support?',
-    patientExercise: 'Write one sentence you could use to ask for support when things feel difficult.',
-    therapistNote: 'Use this lesson to help patients build a realistic support plan and identify safe contacts and resources.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    learnerTask: 'Write one sentence you could use to ask for support when things feel difficult.',
+    supervisorNote: 'Use this lesson to help patients build a realistic support plan and identify safe contacts and resources.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I know when to ask for support'
   },
 
@@ -184,8 +184,8 @@ const LESSON_CONTENT = {
 
   m2l1: {
     id: 'm2l1', moduleId: 2, lessonNumber: 6,
-    moduleTitle: 'Module 2 — Coping Skills and Daily Regulation',
-    title: 'Breathing and Grounding Techniques',
+    moduleTitle: 'Module 2 — Quality Control and Process Standards',
+    title: 'Quality Control and Defect Reporting',
     estimatedTime: '10–12 minutes',
     summary: 'Breathing and grounding techniques can help calm the body when stress or anxiety rises. This lesson introduces simple tools that can be practised gently and used when helpful.',
     learningGoals: [
@@ -202,20 +202,20 @@ const LESSON_CONTENT = {
       { heading: 'Practise when calm', body: 'Coping skills often work better when practised before distress is very high. Try using them during calm moments so they feel more familiar when needed.' }
     ],
     reflectionPrompt: 'Which grounding or breathing technique feels most manageable for you?',
-    patientExercise: 'Try one breathing or grounding technique for two minutes and record how you feel afterwards.',
-    therapistNote: 'Check whether breathing exercises feel safe for the patient. Some patients may prefer grounding over breath focus.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    learnerTask: 'Try one breathing or grounding technique for two minutes and record how you feel afterwards.',
+    supervisorNote: 'Check whether breathing exercises feel safe for the employee. Some patients may prefer grounding over breath focus.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I have tried a grounding technique'
   },
 
   m2l2: {
     id: 'm2l2', moduleId: 2, lessonNumber: 7,
-    moduleTitle: 'Module 2 — Coping Skills and Daily Regulation',
-    title: 'Building a Daily Wellbeing Routine',
+    moduleTitle: 'Module 2 — Quality Control and Process Standards',
+    title: 'Production Workflow and Handover',
     estimatedTime: '10–12 minutes',
-    summary: 'A wellbeing routine does not need to be complicated. Small, repeatable actions can support stability, recovery, and self-awareness. This lesson helps you build a simple routine that fits your real life.',
+    summary: 'A training routine does not need to be complicated. Small, repeatable actions can support stability, recovery, and self-awareness. This lesson helps you build a simple routine that fits your real life.',
     learningGoals: [
-      'Understand why routine can support wellbeing.',
+      'Understand why a consistent routine supports training performance.',
       'Choose small daily actions.',
       'Avoid unrealistic pressure.',
       'Build a routine that can adapt on difficult days.'
@@ -227,17 +227,17 @@ const LESSON_CONTENT = {
       { heading: 'Link actions together', body: 'Routines are easier when connected to something you already do. For example: after brushing teeth, complete a check-in. After breakfast, take two slow breaths. Before bed, write one reflection.' },
       { heading: 'Review and adjust', body: 'A routine should support you, not punish you. If it does not work, adjust it with curiosity rather than self-criticism.' }
     ],
-    reflectionPrompt: 'What is one small wellbeing action you could repeat most days?',
-    patientExercise: 'Create a three-step routine for tomorrow, including one low-energy backup option.',
-    therapistNote: 'Review whether the patient\'s routine is realistic. Encourage flexible routines rather than perfectionistic plans.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
-    completionLabel: 'I have created a simple wellbeing routine'
+    reflectionPrompt: 'What is one training action or process check you could complete consistently each shift?',
+    learnerTask: 'Create a three-step routine for tomorrow, including one low-energy backup option.',
+    supervisorNote: 'Review whether the patient\'s routine is realistic. Encourage flexible routines rather than perfectionistic plans.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I have created a simple training routine'
   },
 
   m2l3: {
     id: 'm2l3', moduleId: 2, lessonNumber: 8,
-    moduleTitle: 'Module 2 — Coping Skills and Daily Regulation',
-    title: 'Managing Overwhelming Thoughts',
+    moduleTitle: 'Module 2 — Quality Control and Process Standards',
+    title: 'Process Checkpoint Procedures',
     estimatedTime: '10–12 minutes',
     summary: 'Overwhelming thoughts can feel powerful and urgent. This lesson helps you notice thoughts without immediately believing or fighting them, and introduces simple ways to create space around them.',
     learningGoals: [
@@ -254,41 +254,41 @@ const LESSON_CONTENT = {
       { heading: 'Use support', body: 'If thoughts feel intense, frightening, or difficult to manage alone, use your support plan, contact a trusted person, or seek professional help. If you feel unsafe, contact emergency or crisis support immediately.' }
     ],
     reflectionPrompt: 'What overwhelming thought shows up for you most often?',
-    patientExercise: 'Write one overwhelming thought, then rewrite it as "I am having the thought that…" and add one balanced response.',
-    therapistNote: 'This exercise can reveal cognitive themes. Use gently and avoid debating thoughts too aggressively.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    learnerTask: 'Write one overwhelming thought, then rewrite it as "I am having the thought that…" and add one balanced response.',
+    supervisorNote: 'This exercise can reveal cognitive themes. Use gently and avoid debating thoughts too aggressively.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I have practised creating space from thoughts'
   },
 
   m2l4: {
     id: 'm2l4', moduleId: 2, lessonNumber: 9,
-    moduleTitle: 'Module 2 — Coping Skills and Daily Regulation',
-    title: 'Sleep, Rest, and Recovery Basics',
+    moduleTitle: 'Module 2 — Quality Control and Process Standards',
+    title: 'Workstation Safety Checks',
     estimatedTime: '8–10 minutes',
-    summary: 'Sleep and rest can strongly affect mood, stress, concentration, and coping. This lesson helps you notice the relationship between rest and wellbeing, and plan small supportive changes.',
+    summary: 'Daily workstation safety checks are a critical part of manufacturing operations. This module helps you understand which checks to perform, when to perform them, and why they matter.',
     learningGoals: [
-      'Understand the connection between sleep and wellbeing.',
+      'Understand the key safety checks required at your workstation each shift.',
       'Notice how rest affects mood and anxiety.',
       'Learn simple sleep-supportive habits.',
       'Identify one realistic rest goal.'
     ],
     sections: [
       { heading: 'Sleep affects coping', body: 'Poor sleep can make emotions feel stronger, reduce concentration, increase irritability, and make coping strategies harder to use. This does not mean you are failing; it means your system may be under strain.' },
-      { heading: 'Rest is not laziness', body: 'Rest is part of recovery. Rest can include sleep, quiet time, reduced stimulation, gentle movement, breathing, time away from screens, or doing something calming.' },
-      { heading: 'Create a wind-down signal', body: 'A wind-down routine tells the body that sleep is approaching. This could include dimming lights, reducing phone use, stretching, listening to calming audio, or writing down tomorrow\'s tasks.' },
-      { heading: 'Track without pressure', body: 'Tracking sleep quality can help identify patterns. Avoid judging yourself for poor sleep. Use it as information to discuss with your therapist or healthcare professional if needed.' },
-      { heading: 'When sleep problems persist', body: 'If sleep problems continue or severely affect daily life, consider discussing them with a healthcare professional. TherapyLink™ can support tracking, but it does not diagnose or treat sleep conditions.' }
+      { heading: 'Readiness is not optional', body: 'Workstation readiness is part of every shift. Checks can include PPE inspection, tool condition, equipment calibration, surface cleanliness, and hazard identification.' },
+      { heading: 'Create a pre-shift checklist', body: 'A pre-shift checklist tells you exactly what to verify before starting work. This could include PPE status, tool condition, workstation cleanliness, materials availability, and supervisor sign-on.' },
+      { heading: 'Track without pressure', body: 'Tracking sleep quality can help identify patterns. Avoid judging yourself for poor sleep. Use it as information to discuss with your supervisor or healthcare professional if needed.' },
+      { heading: 'When sleep problems persist', body: 'If sleep problems continue or severely affect daily life, consider discussing them with a healthcare professional. AutoSkill OS™ can support tracking, but it does not diagnose or treat sleep conditions.' }
     ],
     reflectionPrompt: 'How does your sleep usually affect your mood or stress?',
-    patientExercise: 'Choose one small wind-down action to try tonight.',
-    therapistNote: 'Sleep tracking may reveal important wellbeing patterns. Explore without blame.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    learnerTask: 'Choose one small wind-down action to try tonight.',
+    supervisorNote: 'Sleep tracking may reveal important training patterns. Explore without blame.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I have chosen a rest-supportive action'
   },
 
   m2l5: {
     id: 'm2l5', moduleId: 2, lessonNumber: 10,
-    moduleTitle: 'Module 2 — Coping Skills and Daily Regulation',
+    moduleTitle: 'Module 2 — Quality Control and Process Standards',
     title: 'Creating a Support Plan',
     estimatedTime: '10–12 minutes',
     summary: 'A support plan helps you know what to do when things become difficult. This lesson helps you create a simple plan that includes coping strategies, supportive people, professional support, and crisis steps.',
@@ -299,16 +299,16 @@ const LESSON_CONTENT = {
       'List safe support contacts and next steps.'
     ],
     sections: [
-      { heading: 'What is a support plan?', body: 'A support plan is a clear list of actions and contacts that can help when your wellbeing drops or distress rises. It is easier to follow a plan when it is written before things feel overwhelming.' },
+      { heading: 'What is a support plan?', body: 'A competency plan is a clear list of actions and contacts that can help when your performance drops or distress rises. It is easier to follow a plan when it is written before things feel overwhelming.' },
       { heading: 'Warning signs', body: 'Warning signs may include withdrawal, poor sleep, racing thoughts, feeling numb, irritability, avoiding responsibilities, increased anxiety, low mood, or feeling unable to cope.' },
       { heading: 'Coping actions', body: 'Helpful actions might include grounding, breathing, stepping outside, drinking water, eating something, reducing stimulation, writing thoughts down, using a routine, or contacting someone supportive.' },
-      { heading: 'Support contacts', body: 'Include people or services you can contact. This may include trusted friends/family, your therapist, your GP or healthcare provider, community support, crisis lines, or emergency services where appropriate.' },
-      { heading: 'Crisis step', body: 'If you feel in immediate danger or unable to stay safe, contact local emergency services or a crisis support line immediately. Do not wait for a TherapyLink™ response.' }
+      { heading: 'Support contacts', body: 'Include people or services you can contact. This may include trusted friends/family, your supervisor, your GP or healthcare provider, community support, crisis lines, or emergency services where appropriate.' },
+      { heading: 'Crisis step', body: 'If you feel in immediate danger or unable to stay safe, contact local emergency services or a crisis support line immediately. Do not wait for a digital response — act immediately.' }
     ],
     reflectionPrompt: 'What are your early signs that you may need extra support?',
-    patientExercise: 'Create a simple support plan with three coping actions and two support contacts.',
-    therapistNote: 'Review the patient\'s support plan and help make it specific, realistic, and safe.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    learnerTask: 'Create a simple support plan with three coping actions and two support contacts.',
+    supervisorNote: 'Review the patient\'s support plan and help make it specific, realistic, and safe.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I have created a support plan'
   },
 
@@ -316,36 +316,36 @@ const LESSON_CONTENT = {
 
   m3l1: {
     id: 'm3l1', moduleId: 3, lessonNumber: 11,
-    moduleTitle: 'Module 3 — Progress, Reflection, and Relapse Prevention',
-    title: 'Reflecting on Progress',
+    moduleTitle: 'Module 3 — Competency Assessment and Development',
+    title: 'Reviewing Your Training Progress',
     estimatedTime: '8–10 minutes',
     summary: 'Progress can be easy to miss, especially when you are focused on what still feels difficult. This lesson helps you reflect on small changes, strengths, and patterns of improvement.',
     learningGoals: [
       'Recognise different types of progress.',
       'Notice small wins.',
       'Reflect without self-judgement.',
-      'Prepare progress notes for therapy.'
+      'Prepare progress notes for your supervisor check-in.'
     ],
     sections: [
-      { heading: 'Progress can be subtle', body: 'Progress may look like noticing a trigger sooner, asking for support, completing a check-in, using a coping strategy, attending therapy, resting instead of pushing through, or speaking to yourself more kindly.' },
+      { heading: 'Progress can be subtle', body: 'Progress may look like noticing a trigger sooner, asking for support, completing a check-in, using a coping strategy, attending a training session, resting instead of pushing through, or speaking to yourself more kindly.' },
       { heading: 'Progress is not perfection', body: 'You can be making progress and still have difficult days. Recovery does not require constant improvement. It often involves learning how to respond differently when difficulties appear.' },
       { heading: 'Look at evidence', body: 'Use check-ins, lesson completion, mood trends, notes, and coping strategy use as evidence. This can help you see change more clearly over time.' },
       { heading: 'Name strengths', body: 'Strengths might include persistence, honesty, courage, awareness, patience, creativity, care for others, or willingness to try. These strengths can support recovery.' },
-      { heading: 'Bring progress to therapy', body: 'Progress reflections can help your therapist understand what is changing and what still needs support.' }
+      { heading: 'Bring progress to your check-in', body: 'Progress reflections can help your supervisor understand what is improving and where additional support is needed.' }
     ],
     reflectionPrompt: 'What is one small sign of progress you have noticed recently?',
-    patientExercise: 'Write down three small wins from the past week, even if they seem minor.',
-    therapistNote: 'Use patient reflections to reinforce realistic progress and identify helpful interventions.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    learnerTask: 'Write down three small wins from the past week, even if they seem minor.',
+    supervisorNote: 'Use patient reflections to reinforce realistic progress and identify helpful interventions.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I have reflected on my progress'
   },
 
   m3l2: {
     id: 'm3l2', moduleId: 3, lessonNumber: 12,
-    moduleTitle: 'Module 3 — Progress, Reflection, and Relapse Prevention',
-    title: 'Identifying Early Warning Signs',
+    moduleTitle: 'Module 3 — Competency Assessment and Development',
+    title: 'Recognising Process Errors Early',
     estimatedTime: '10–12 minutes',
-    summary: 'Early warning signs are signals that your wellbeing may be starting to decline. Recognising them early can help you respond before things feel unmanageable.',
+    summary: 'Early warning signs are signals that your performance may be starting to decline. Recognising them early can help you respond before things feel unmanageable.',
     learningGoals: [
       'Understand early warning signs.',
       'Identify personal signs of decline.',
@@ -353,23 +353,23 @@ const LESSON_CONTENT = {
       'Build a prevention mindset.'
     ],
     sections: [
-      { heading: 'What are early warning signs?', body: 'Early warning signs are changes that may appear before a bigger drop in wellbeing. They can happen in thoughts, feelings, body sensations, behaviour, sleep, relationships, or daily routines.' },
+      { heading: 'What are early warning signs?', body: 'Early warning signs are changes that may appear before a bigger process error or performance drop. They can show up in process accuracy, task timing, tool handling, communication, or shift readiness.' },
       { heading: 'Common warning signs', body: 'Examples include sleeping much more or less, withdrawing, skipping meals, feeling unusually irritable, avoiding messages, racing thoughts, feeling hopeless, losing interest, increased worry, or stopping helpful routines.' },
       { heading: 'Your signs may be unique', body: 'Everyone\'s signs are different. Some people become restless, while others shut down. Some become more emotional, while others feel numb.' },
-      { heading: 'Respond early', body: 'When warning signs appear, use your support plan early. This might include reducing pressure, using grounding, contacting support, completing a check-in, or telling your therapist.' },
+      { heading: 'Respond early', body: 'When warning signs appear, use your support plan early. This might include reducing pressure, using grounding, contacting support, completing a check-in, or telling your supervisor.' },
       { heading: 'No shame', body: 'Warning signs are information, not failure. Noticing them is a skill.' }
     ],
     reflectionPrompt: 'What are your early warning signs that things may be getting harder?',
-    patientExercise: 'List three early warning signs and one action you can take for each.',
-    therapistNote: 'Help the patient connect warning signs to specific support steps.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    learnerTask: 'List three early warning signs and one action you can take for each.',
+    supervisorNote: 'Help the patient connect warning signs to specific support steps.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I can identify early warning signs'
   },
 
   m3l3: {
     id: 'm3l3', moduleId: 3, lessonNumber: 13,
-    moduleTitle: 'Module 3 — Progress, Reflection, and Relapse Prevention',
-    title: 'Strengthening Coping Strategies',
+    moduleTitle: 'Module 3 — Competency Assessment and Development',
+    title: 'Strengthening Core Process Skills',
     estimatedTime: '8–10 minutes',
     summary: 'Coping strategies are skills or actions that help you manage difficult moments. This lesson helps you review what works, what does not, and how to build a practical coping toolkit.',
     learningGoals: [
@@ -379,27 +379,27 @@ const LESSON_CONTENT = {
       'Match strategies to different needs.'
     ],
     sections: [
-      { heading: 'Coping strategies are tools', body: 'No single coping strategy works for every situation. A toolkit gives you options depending on what you need: calming, distraction, connection, expression, rest, problem-solving, or support.' },
-      { heading: 'Different types of coping', body: 'Calming strategies include breathing, grounding, music, or quiet time. Practical strategies include making a list or reducing tasks. Connection strategies include messaging someone safe. Expression strategies include journaling, art, or talking.' },
+      { heading: 'Process skills are tools', body: 'No single process skill covers every situation. A skills toolkit gives you options depending on what you need: quality checking, process review, supervisor escalation, documentation, or hands-on practice.' },
+      { heading: 'Different types of coping', body: 'Process-focused strategies include workstation checks, process review, or a supervised step-through. Practical strategies include making a list or reducing tasks. Connection strategies include messaging someone safe. Expression strategies include journaling, art, or talking.' },
       { heading: 'Notice what works', body: 'After using a strategy, ask: Did this help a little, a lot, or not today? A strategy that does not work once may still help another time.' },
-      { heading: 'Make strategies easy to access', body: 'Keep coping strategies visible and simple. Add them to your support plan or TherapyLink™ notes so you do not have to remember them during distress.' },
-      { heading: 'Review with your therapist', body: 'Your therapist can help adjust coping strategies and explore why some feel easier or harder.' }
+      { heading: 'Make strategies easy to access', body: 'Keep coping strategies visible and simple. Add them to your support plan or AutoSkill OS™ notes so you do not have to remember them during distress.' },
+      { heading: 'Review with your supervisor', body: 'Your supervisor can help adjust coping strategies and explore why some feel easier or harder.' }
     ],
     reflectionPrompt: 'Which coping strategy has helped you even slightly?',
-    patientExercise: 'Create a coping toolkit with five strategies: one calming, one practical, one connection-based, one expressive, and one rest-based.',
-    therapistNote: 'Review whether coping strategies are accessible, safe, and realistic for the patient\'s context.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
+    learnerTask: 'Create a skills toolkit with five process skills: one quality-focused, one safety-focused, one communication-based, one documentation-based, and one hands-on practice.',
+    supervisorNote: 'Review whether coping strategies are accessible, safe, and realistic for the employee\'s context.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I have strengthened my coping toolkit'
   },
 
   m3l4: {
     id: 'm3l4', moduleId: 3, lessonNumber: 14,
-    moduleTitle: 'Module 3 — Progress, Reflection, and Relapse Prevention',
-    title: 'Preparing for Therapy Sessions',
+    moduleTitle: 'Module 3 — Competency Assessment and Development',
+    title: 'Preparing for Supervisor Check-In',
     estimatedTime: '8–10 minutes',
-    summary: 'Preparing for therapy can help you make better use of your session time. This lesson helps you collect reflections, questions, progress notes, and concerns before meeting your therapist.',
+    summary: 'Preparing for your supervisor check-in can help you make better use of the session. This module helps you collect training reflections, questions, progress evidence, and concerns before your review.',
     learningGoals: [
-      'Prepare useful notes for therapy.',
+      'Prepare useful notes for your supervisor check-in.',
       'Identify topics to discuss.',
       'Review check-in patterns.',
       'Communicate support needs clearly.'
@@ -408,22 +408,22 @@ const LESSON_CONTENT = {
       { heading: 'Why preparation helps', body: 'When emotions are high or time is limited, it can be hard to remember everything you wanted to say. Preparing notes can help you feel more organised and supported.' },
       { heading: 'Review recent check-ins', body: 'Look at mood, anxiety, stress, sleep, coping strategy use, and support flags. Notice anything that changed or repeated.' },
       { heading: 'Choose key topics', body: 'You might discuss triggers, difficult moments, progress, questions, coping strategies, medication concerns if relevant to your healthcare provider, relationship issues, work stress, or support needs.' },
-      { heading: 'Share what feels hard to say', body: 'If something feels difficult to say aloud, writing it down can help. You might show your therapist your notes or use them as a starting point.' },
-      { heading: 'End with next steps', body: 'After therapy, it can help to record one or two next steps so you know what to focus on before the next session.' }
+      { heading: 'Share what feels hard to say', body: 'If something feels difficult to say aloud, writing it down can help. You might show your supervisor your notes or use them as a starting point.' },
+      { heading: 'End with next steps', body: 'After your supervisor check-in, record one or two next steps so you know what to focus on before your next shift or review.' }
     ],
-    reflectionPrompt: 'What is one thing you want your therapist to understand at your next session?',
-    patientExercise: 'Write three notes for your next session: one progress update, one difficulty, and one question.',
-    therapistNote: 'Patient preparation notes may improve session focus and reveal concerns that are hard to verbalise.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
-    completionLabel: 'I have prepared for my next therapy session'
+    reflectionPrompt: 'What is one thing you want your supervisor to understand at your next session?',
+    learnerTask: 'Write three notes for your next session: one progress update, one difficulty, and one question.',
+    supervisorNote: 'Patient preparation notes may improve session focus and reveal concerns that are hard to verbalise.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I have prepared for my next supervisor check-in'
   },
 
   m3l5: {
     id: 'm3l5', moduleId: 3, lessonNumber: 15,
-    moduleTitle: 'Module 3 — Progress, Reflection, and Relapse Prevention',
-    title: 'Building a Personal Recovery Plan',
+    moduleTitle: 'Module 3 — Competency Assessment and Development',
+    title: 'Final Competency Check',
     estimatedTime: '12–15 minutes',
-    summary: 'A personal recovery plan brings together what you have learned about your wellbeing, triggers, coping strategies, support needs, and goals. This lesson helps you create a practical plan you can review with your therapist.',
+    summary: 'A personal competency plan brings together what you have learned about your performance, triggers, coping strategies, support needs, and goals. This lesson helps you create a practical plan you can review with your supervisor.',
     learningGoals: [
       'Bring together learning from the pathway.',
       'Identify strengths, triggers, and coping strategies.',
@@ -431,17 +431,17 @@ const LESSON_CONTENT = {
       'Build a plan for continued support.'
     ],
     sections: [
-      { heading: 'What is a recovery plan?', body: 'A recovery plan is a personal guide for supporting your wellbeing. It can include what helps, what makes things harder, who can support you, what to do during difficult moments, and what progress means to you.' },
+      { heading: 'What is a competency plan?', body: 'A competency plan is a personal guide for supporting your performance. It can include what helps, what makes things harder, who can support you, what to do during difficult moments, and what progress means to you.' },
       { heading: 'Include your strengths', body: 'Your strengths are part of the plan. These might include persistence, creativity, honesty, care for others, problem-solving, humour, patience, or the ability to keep trying.' },
-      { heading: 'Include triggers and warning signs', body: 'List the situations, feelings, thoughts, or patterns that may affect your wellbeing. Include early warning signs so you can respond sooner.' },
-      { heading: 'Include coping and support', body: 'Add coping strategies, daily routine anchors, support contacts, therapy goals, and crisis steps. Make the plan realistic and easy to follow.' },
-      { heading: 'Keep the plan flexible', body: 'A recovery plan can change. Review it with your therapist and update it when you learn more about yourself.' }
+      { heading: 'Include triggers and warning signs', body: 'List the situations, feelings, thoughts, or patterns that may affect your performance. Include early warning signs so you can respond sooner.' },
+      { heading: 'Include process skills and support', body: 'Add key process skills, daily workstation anchors, supervisor contacts, training goals, and escalation steps. Make the plan realistic and easy to follow.' },
+      { heading: 'Keep the plan flexible', body: 'A competency plan can change. Review it with your supervisor and update it when you learn more about yourself.' }
     ],
-    reflectionPrompt: 'What are the most important things your recovery plan should include?',
-    patientExercise: 'Create a personal recovery plan with five sections: strengths, triggers, warning signs, coping strategies, and support contacts.',
-    therapistNote: 'Use the recovery plan as a collaborative tool. Review for realism, safety, and patient ownership.',
-    safetyNote: 'This lesson is for education and reflection only. It does not replace therapy, medical advice, diagnosis, emergency support, or professional judgement. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.',
-    completionLabel: 'I have built my personal recovery plan'
+    reflectionPrompt: 'What are the most important things your competency plan should include?',
+    learnerTask: 'Create a personal competency plan with five sections: strengths, triggers, warning signs, coping strategies, and support contacts.',
+    supervisorNote: 'Use the competency plan as a collaborative tool. Review for realism, safety, and patient ownership.',
+    platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
+    completionLabel: 'I have built my personal competency plan'
   }
 
 };
@@ -461,15 +461,15 @@ const COPING = [
 ];
 
 const INSIGHTS = [
-  'Recovery is not a straight line. Every small step forward matters, even when it does not feel like it.',
+  'Progress in training builds over time. Every check-in and module completed moves you forward.',
   'Your nervous system needs rest to heal. Small moments of calm each day add up to lasting change.',
   'Noticing how you feel without judging it is a skill — and you can get better at it with practice.',
   'Coping strategies work best when practised before crisis. Rehearsal builds resilience.',
   'Asking for support is a sign of self-awareness, not weakness. It takes courage to reach out.',
   'Difficult feelings are not permanent. They rise, peak, and pass like waves.',
-  'Small, consistent actions build the foundation for recovery. You do not need to change everything at once.',
+  'Small, consistent practice builds the foundation for competency. Focus on one process step at a time.',
   'Your experiences are valid. What you are feeling makes sense in the context of what you have been through.',
-  'Sleep and physical rest are essential components of mental health recovery, not luxuries.',
+  'Sleep and physical rest are essential components of workplace competency development, not luxuries.',
   'Every check-in you complete is an act of self-care. Well done for showing up today.',
 ];
 
@@ -514,14 +514,14 @@ function buildOnboarding() {
   document.getElementById('onboarding').innerHTML = `
   <div class="ob-inner">
     <div class="ob-step active" id="ob1">
-      <div class="ob-logo"><div style="font-size:48px">🧠</div><div class="ob-brand">TherapyLink™</div><div class="ob-brand-sub">My Recovery Support</div></div>
-      <h1 class="ob-title">Welcome to your Mental Health Recovery Portal</h1>
-      <p class="ob-desc">Guided daily check-ins, wellbeing lessons, coping strategies, and progress tracking — all built around your recovery.</p>
+      <div class="ob-logo"><div style="font-size:48px">🧠</div><div class="ob-brand">AutoSkill OS™</div><div class="ob-brand-sub">My Recovery Support</div></div>
+      <h1 class="ob-title">Welcome to your Employee Learning Portal</h1>
+      <p class="ob-desc">Guided daily check-ins, process modules, coping strategies, and progress tracking — all built around your recovery.</p>
       <div class="ob-feats">
-        <div class="ob-feat"><span>📋</span>Daily wellbeing check-in (10 questions)</div>
-        <div class="ob-feat"><span>🎓</span>Mental Health Recovery Pathway — 3 modules</div>
+        <div class="ob-feat"><span>📋</span>Daily training check-in (10 questions)</div>
+        <div class="ob-feat"><span>🎓</span>Manufacturing Training Pathway — 3 modules</div>
         <div class="ob-feat"><span>📈</span>Mood, anxiety &amp; sleep tracking</div>
-        <div class="ob-feat"><span>🧘</span>Coping strategies &amp; wellbeing exercises</div>
+        <div class="ob-feat"><span>🛠️</span>Skill practices &amp; process checkpoints</div>
       </div>
       <button class="btn-primary" onclick="obGo(1,2)">Set up my recovery profile →</button>
       <button class="ob-skip" onclick="obSkip()">Skip — already set up</button>
@@ -542,8 +542,8 @@ function buildOnboarding() {
     <div class="ob-step" id="ob3">
       <button class="ob-back" onclick="obGo(3,2)">‹ Back</button>
       <div class="ob-step-num">Step 2 of 3</div>
-      <h2 class="ob-step-title">What are your wellbeing goals?</h2>
-      <p class="ob-step-sub">Select everything relevant — helps personalise your Recovery Pathway.</p>
+      <h2 class="ob-step-title">What are your training goals?</h2>
+      <p class="ob-step-sub">Select everything relevant — helps personalise your Training Pathway.</p>
       <div class="ob-goals-grid" id="ob-goals">
         ${['Managing anxiety','Improving mood','Better sleep','Reducing stress','Building coping skills','Processing difficult feelings','Improving relationships','Building confidence','Managing intrusive thoughts','Trauma recovery'].map(g=>`<button class="ob-goal-btn" data-g="${g}" onclick="this.classList.toggle('active')">${g}</button>`).join('')}
       </div>
@@ -552,25 +552,25 @@ function buildOnboarding() {
     <div class="ob-step" id="ob4">
       <button class="ob-back" onclick="obGo(4,3)">‹ Back</button>
       <div class="ob-step-num">Step 3 of 3</div>
-      <h2 class="ob-step-title">Your experience with mental health support</h2>
+      <h2 class="ob-step-title">Your experience with manufacturing training support</h2>
       <p class="ob-step-sub">Helps calibrate lesson depth and guidance.</p>
       <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px" id="ob-exp">
-        <button class="ob-goal-btn" style="padding:14px;text-align:left;border-radius:var(--r)" data-e="new" onclick="selOb(this,'ob-exp')"><strong>New to mental health support</strong><br/><span style="font-size:12px;color:var(--muted)">Just starting to explore therapy and wellbeing</span></button>
-        <button class="ob-goal-btn" style="padding:14px;text-align:left;border-radius:var(--r)" data-e="some" onclick="selOb(this,'ob-exp')"><strong>Some experience</strong><br/><span style="font-size:12px;color:var(--muted)">Had some therapy or tried wellbeing tools before</span></button>
-        <button class="ob-goal-btn" style="padding:14px;text-align:left;border-radius:var(--r)" data-e="ongoing" onclick="selOb(this,'ob-exp')"><strong>Ongoing support</strong><br/><span style="font-size:12px;color:var(--muted)">Currently working with a therapist, want extra support</span></button>
+        <button class="ob-goal-btn" style="padding:14px;text-align:left;border-radius:var(--r)" data-e="new" onclick="selOb(this,'ob-exp')"><strong>New to this training programme</strong><br/><span style="font-size:12px;color:var(--muted)">Just starting this training programme and new to this type of learning</span></button>
+        <button class="ob-goal-btn" style="padding:14px;text-align:left;border-radius:var(--r)" data-e="some" onclick="selOb(this,'ob-exp')"><strong>Some experience</strong><br/><span style="font-size:12px;color:var(--muted)">Had some workplace training or onboarding before</span></button>
+        <button class="ob-goal-btn" style="padding:14px;text-align:left;border-radius:var(--r)" data-e="ongoing" onclick="selOb(this,'ob-exp')"><strong>Ongoing support</strong><br/><span style="font-size:12px;color:var(--muted)">Currently working with a supervisor, want extra support</span></button>
       </div>
-      <button class="btn-primary" onclick="obFinish()">Set up my recovery portal →</button>
+      <button class="btn-primary" onclick="obFinish()">Set up my training portal →</button>
     </div>
     <div class="ob-step" id="ob5">
       <div class="ob-ready-icon">✨</div>
       <div class="ob-ready-title">You're all set!</div>
-      <div class="ob-ready-sub">Your personalised recovery portal is ready.</div>
+      <div class="ob-ready-sub">Your personalised training portal is ready.</div>
       <div class="ob-summary" id="ob-summary"></div>
       <div class="safety-notice">
         <h4>⚠️ Important</h4>
-        <p>This app supports mental health education, reflection, and therapist-guided monitoring. It does not provide emergency support or replace professional care. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.</p>
+        <p>AutoSkill OS™ supports manufacturing workforce training and competency tracking. It does not replace site-specific safety protocols or emergency procedures. For on-site emergencies, follow your site emergency procedure immedes or a crisis support line immediately.</p>
       </div>
-      <button class="btn-primary" onclick="launchPortal()">Open My Recovery Portal →</button>
+      <button class="btn-primary" onclick="launchPortal()">Open My Training Portal →</button>
     </div>
   </div>`;
 }
@@ -610,7 +610,7 @@ function buildPortal() {
   applyTheme();
   document.getElementById('portal-root').innerHTML = `
     <header class="portal-header">
-      <div class="ph-brand"><div class="brand-dot"></div><div><div class="brand-name">TherapyLink™</div><div class="brand-sub">My Recovery Support</div></div></div>
+      <div class="ph-brand"><div class="brand-dot"></div><div><div class="brand-name">AutoSkill OS™</div><div class="brand-sub">My Recovery Support</div></div></div>
       <div class="ph-right">
         <span class="xp-chip" id="xp-chip">⚡ 0 XP</span>
         <button class="btn-icon" onclick="toggleTheme()">🌙</button>
@@ -679,18 +679,18 @@ function renderHome() {
   document.getElementById('tab-home').innerHTML = `
     <div class="home-hero">
       <div class="hh-title">${greet}, ${profile ? profile.name : 'Friend'} 👋</div>
-      <div class="hh-sub">Your recovery journey continues today.</div>
+      <div class="hh-sub">Your training journey continues today.</div>
     </div>
     <div class="quick-grid">
       <button class="qa-btn" onclick="switchTab('checkin')"><div class="qa-icon">📋</div><div class="qa-label">Daily Check-In</div><div class="qa-desc">${todayDone ? '✅ Completed today' : 'Complete today\'s check-in'}</div></button>
-      <button class="qa-btn" onclick="switchTab('lessons')"><div class="qa-icon">🎓</div><div class="qa-label">Recovery Pathway</div><div class="qa-desc">${totalLessons}/15 lessons complete</div></button>
+      <button class="qa-btn" onclick="switchTab('lessons')"><div class="qa-icon">🎓</div><div class="qa-label">Training Pathway</div><div class="qa-desc">${totalLessons}/15 lessons complete</div></button>
       <button class="qa-btn" onclick="switchTab('coping')"><div class="qa-icon">🧘</div><div class="qa-label">Coping Strategies</div><div class="qa-desc">10 techniques available</div></button>
       <button class="qa-btn" onclick="switchTab('progress')"><div class="qa-icon">📈</div><div class="qa-label">My Progress</div><div class="qa-desc">${checkins.length} check-ins logged</div></button>
     </div>
     <div class="insight-card"><h4>💡 Today's Insight</h4><p>${insight}</p></div>
     <div class="safety-notice">
       <h4>⚠️ Support Notice</h4>
-      <p>This app supports your wellbeing between therapy sessions. It does not replace professional care. If you are in crisis or immediate danger, contact emergency services or a crisis support line now.</p>
+      <p>AutoSkill OS™ supports your learning between supervisor sessions. For on-site emergencies, follow your site emergency procedure immediately.</p>
       ${crisisName && crisisContact ? `<p style="margin-top:6px;font-size:12px;color:var(--muted)">Crisis support: <strong>${crisisName} — ${crisisContact}</strong></p>` : ''}
     </div>`;
 }
@@ -759,17 +759,17 @@ function buildCheckinHTML() {
       <div class="btn-row"><button class="btn-secondary" onclick="ciBack(7)">Back</button><button class="btn-primary" onclick="ciNext(7)">Next →</button></div>
     </div>
     <div class="ci-step hidden" id="ci-8">
-      <div class="ci-q">8. Have you connected with anyone supportive today?</div><div class="ci-sub">A friend, family member, therapist, or support group</div>
+      <div class="ci-q">8. Have you connected with anyone supportive today?</div><div class="ci-sub">A colleague, team leader, or support contact</div>
       <div class="form-card"><div class="yn-row"><button class="yn-btn yes" id="yn-conn-yes" onclick="ynPick('conn','yes')">✓ Yes</button><button class="yn-btn no" id="yn-conn-no" onclick="ynPick('conn','no')">✗ Not today</button></div></div>
       <div class="btn-row"><button class="btn-secondary" onclick="ciBack(8)">Back</button><button class="btn-primary" onclick="ciNext(8)">Next →</button></div>
     </div>
     <div class="ci-step hidden" id="ci-9">
-      <div class="ci-q">9. Is there anything you want your therapist to know?</div><div class="ci-sub">Optional — visible in your therapist's review dashboard</div>
+      <div class="ci-q">9. Is there anything you want your supervisor to know?</div><div class="ci-sub">Optional — visible in your supervisor's review dashboard</div>
       <div class="form-card"><textarea id="ci-note" class="form-textarea" placeholder="e.g. I've been finding mornings really hard this week…" rows="4"></textarea></div>
       <div class="btn-row"><button class="btn-secondary" onclick="ciBack(9)">Back</button><button class="btn-primary" onclick="ciNext(9)">Next →</button></div>
     </div>
     <div class="ci-step hidden" id="ci-10">
-      <div class="ci-q">10. Do you feel you need extra support before your next session?</div><div class="ci-sub">Flags to your therapist that you may need earlier contact</div>
+      <div class="ci-q">10. Do you feel you need extra support before your next session?</div><div class="ci-sub">Flags to your supervisor that you may need earlier contact</div>
       <div class="form-card">
         <div class="yn-row"><button class="yn-btn yes" id="yn-support-yes" onclick="ynPick('support','yes')">✓ Yes, I need support</button><button class="yn-btn no" id="yn-support-no" onclick="ynPick('support','no')">✗ I'm okay until then</button></div>
         <div style="margin-top:14px;padding:12px;background:rgba(239,68,68,.08);border-radius:var(--rs);border:1px solid rgba(239,68,68,.2);font-size:12px;color:var(--muted);line-height:1.6">⚠️ If you are in immediate danger or crisis, do not wait — contact local emergency services or a crisis support line <strong>now</strong>. This check-in is not monitored in real-time.</div>
@@ -824,7 +824,7 @@ function ynPick(key, val) {
   if (yEl) yEl.classList.toggle('sel', val === 'yes');
   if (nEl) nEl.classList.toggle('sel', val === 'no');
   if (key === 'coping') document.getElementById('coping-which').style.display = val === 'yes' ? 'block' : 'none';
-  if (key === 'support' && val === 'yes') showToast('⚠️ Your therapist will see this. If in crisis, contact emergency services now.');
+  if (key === 'support' && val === 'yes') showToast('⚠️ Your supervisor will see this. If in crisis, contact emergency services now.');
 }
 
 function ciNext(step) {
@@ -874,10 +874,10 @@ function calcRisk(d) {
 function showCheckinResult(record, risk) {
   document.getElementById('ci-form').style.display = 'none';
   const tips = {
-    LOW:      ['Well done on completing your check-in today.','Keep using the coping strategies that are working for you.','Consistency is key — every check-in adds to your recovery.'],
+    LOW:      ['Well done on completing your training check-in today.','Keep practising the process skills that are working for you.','Consistency is key — every check-in adds to your recovery.'],
     MEDIUM:   ['You showed real self-awareness by completing your check-in.','Consider a grounding exercise if feelings intensify.','Reaching out to someone supportive today could help.'],
-    HIGH:     ['Thank you for being honest in your check-in. That takes courage.','Try a breathing exercise now — even 2 minutes can help.','If feelings intensify, please contact your therapist or support line.'],
-    CRITICAL: ['Your responses suggest you may be having a very hard time right now.','Please reach out to your therapist or a trusted person as soon as possible.','If you are in immediate danger, contact emergency services now.']
+    HIGH:     ['Thank you for completing your check-in honestly. That shows professional awareness.','Try a breathing exercise now — even 2 minutes can help.','If the issue persists or feels unsafe, contact your supervisor or site safety officer immediately.'],
+    CRITICAL: ['Your check-in suggests you may be finding things very difficult right now.','Please reach out to your supervisor or training manager as soon as possible.','If there is an on-site emergency, follow your site emergency procedure immediately.']
   };
   const labels = { LOW: '✅ Low', MEDIUM: '⚡ Medium', HIGH: '⚠️ High', CRITICAL: '🚨 Needs Review' };
   document.getElementById('ci-result').style.display = 'block';
@@ -886,7 +886,7 @@ function showCheckinResult(record, risk) {
     <div class="feedback-card risk-${risk.toLowerCase()}">
       <div style="margin-bottom:8px"><span class="risk-badge ${risk}">${labels[risk]}</span></div>
       <div class="fc-tips">${(tips[risk]||tips.LOW).map(t=>`<div class="fc-tip">${t}</div>`).join('')}</div>
-      ${risk==='CRITICAL'||risk==='HIGH'?`<button class="btn-emergency" onclick="showToast('Contact your therapist or local emergency services immediately.')">🆘 Access Crisis Support Info</button>`:''}
+      ${risk==='CRITICAL'||risk==='HIGH'?`<button class="btn-emergency" onclick="showToast('Contact your supervisor or local emergency services immediately.')">🆘 Access Crisis Support Info</button>`:''}
     </div>
     <button class="btn-secondary" style="margin-top:16px" onclick="renderCheckin()">Complete Another Check-In</button>`;
 }
@@ -896,7 +896,7 @@ function renderLessons() {
   const existing = document.getElementById('lesson-detail-panel');
   if (existing) existing.remove();
   document.getElementById('tab-lessons').innerHTML = `
-    <div class="section-title">Mental Health Recovery Pathway</div>
+    <div class="section-title">Manufacturing Training Pathway</div>
     <div class="section-sub">3 modules  &middot;  15 guided support lessons</div>
     ${CURRICULUM.map(mod => {
       const done = mod.lessons.filter(l => lessonDone[l.id]).length;
@@ -1009,7 +1009,7 @@ function completeLessonFromDetail(id, xpVal) {
 function renderCoping() {
   document.getElementById('tab-coping').innerHTML = `
     <div class="section-title">Coping Strategies</div>
-    <div class="section-sub">Wellbeing exercises for everyday support</div>
+    <div class="section-sub">Skill practices and process checkpoints for everyday work</div>
     ${COPING.map(s => `<div class="coping-card">
       <div class="coping-icon">${s.icon}</div>
       <div class="coping-body">
@@ -1036,7 +1036,7 @@ function renderProgress() {
 
   document.getElementById('tab-progress').innerHTML = `
     <div class="section-title">My Progress</div>
-    <div class="section-sub">Your personal recovery journey at a glance</div>
+    <div class="section-sub">Your personal training journey at a glance</div>
     <div class="prog-grid">
       <div class="prog-stat"><div class="prog-val">${checkins.length}</div><div class="prog-lbl">Check-Ins</div></div>
       <div class="prog-stat"><div class="prog-val">${streak}</div><div class="prog-lbl">Day Streak</div></div>
@@ -1063,7 +1063,7 @@ function renderProgress() {
         }).join('')}
     <div class="safety-notice" style="margin-top:20px">
       <h4>⚠️ Recovery Support Notice</h4>
-      <p>This app supports mental health education, reflection, and therapist-guided monitoring. It does not provide emergency support or replace professional care. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately. Created by Kyzel Kreates · Powered by 4P3X Intelligent AI.</p>
+      <p>AutoSkill OS™ supports manufacturing workforce training and competency tracking. It does not replace site-specific safety protocols or emergency procedures. For on-site emergencies, follow your site emergency procedure immedes or a crisis support line immediately. Created by Kyzel Kreates · Powered by 4P3X Intelligent AI.</p>
     </div>`;
 }
 

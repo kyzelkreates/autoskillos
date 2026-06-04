@@ -77,7 +77,7 @@ export function evaluateAnxietyTrend(recentLogs) {
   if (allMedium) {
     risk = RISK_LEVELS.MEDIUM;
     flags.push("CONSECUTIVE_MEDIUM_SCORES");
-    suggestions.push("You've had elevated anxiety for several days. A clinician review has been flagged.");
+    suggestions.push("You've had elevated check-in scores for several days. A supervisor review has been flagged.");
   }
 
   return { risk, flags, suggestions };
