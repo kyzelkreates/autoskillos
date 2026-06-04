@@ -199,10 +199,17 @@ tr:hover td{background:var(--surface2)}
 }
 @media(max-width:520px){.stats-row{grid-template-columns:1fr 1fr}}
 
-/* ── Run 3: Manufacturing Training Centre CSS ──────────────────── */
+/* ── Run 3: Manufacturing Training Centre ──────────────────── */
+.tc-hero-banner{background:linear-gradient(135deg,var(--surface) 0%,var(--surface2) 100%);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:16px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.tc-hero-left{flex:1;min-width:0}
+.tc-hero-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.tc-hero-title{font-size:18px;font-weight:900;color:var(--text);letter-spacing:-.4px;margin-bottom:4px}
+.tc-hero-tag{color:var(--gold);font-size:13px;font-weight:700;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.25);border-radius:99px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.tc-hero-desc{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:6px;max-width:520px}
+.tc-hero-brand{font-size:11px;color:var(--gold);font-weight:600;opacity:.8}
+.tc-hero-phrase{font-size:11px;color:var(--muted);font-style:italic;text-align:right;max-width:180px}
 .safety-notice{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:var(--muted);line-height:1.6}
 .info-notice{background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.18);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:var(--muted);line-height:1.6}
-.tc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:20px}
 .tc-card{background:var(--surface);border-radius:var(--r);padding:16px;border:1px solid var(--border);box-shadow:var(--shadow);transition:box-shadow var(--t)}
 .tc-card:hover{box-shadow:var(--shadow-md)}
 .tc-card-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px}
@@ -214,9 +221,6 @@ tr:hover td{background:var(--surface2)}
 .tc-meta-label{color:var(--muted)}
 .tc-meta-val{font-weight:600;color:var(--text);text-align:right}
 .tc-progress-bar{height:6px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-top:6px}
-.tc-progress-fill{height:100%;border-radius:99px;background:var(--gold);transition:width .3s}
-.tc-progress-fill.green{background:var(--green)}
-.tc-progress-fill.warn{background:var(--warn)}
 .tc-section-title{font-size:13px;font-weight:700;color:var(--text);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
 .tc-table{width:100%;border-collapse:collapse;font-size:13px}
 .tc-table th{text-align:left;padding:10px 12px;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--border);white-space:nowrap}
@@ -264,12 +268,15 @@ tr:hover td{background:var(--surface2)}
 .stn-name{font-size:12px;font-weight:700;color:var(--text)}
 .stn-desc{font-size:11px;color:var(--muted);margin-top:2px}
 .ppe-tag{font-size:10px;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.25);border-radius:99px;padding:1px 8px;color:var(--gold)}
+.ssot-alerts-section{margin-top:8px}
 @media(max-width:700px){
-  .tc-grid{grid-template-columns:1fr}
+  .tc-hero-banner{flex-direction:column}
+  .tc-hero-right{align-items:flex-start}
+  .tc-hero-phrase{text-align:left}
   .dl-status-grid{grid-template-columns:1fr 1fr}
   .tc-table{font-size:12px}
   .tc-table th,.tc-table td{padding:8px 8px}
-  .tc-table .hide-mobile{display:none}
+  .hide-mobile{display:none!important}
 }
 </style>
 </head>
@@ -300,12 +307,12 @@ tr:hover td{background:var(--surface2)}
     <button class="nav-item" id="nav-notes" onclick="showView('notes')"><span>📝</span><span>Notes</span></button>
     <button class="nav-item" id="nav-settings" onclick="showView('settings')"><span>⚙️</span><span>Settings</span><span class="nav-badge warn" id="syncNavBadge" style="display:none">!</span></button>
     <div class="sb-section">Training Centre</div>
-    <button class="nav-item" id="nav-pathways" onclick="showView('pathways')"><span>🗺️</span><span>Pathways</span></button>
-    <button class="nav-item" id="nav-departments" onclick="showView('departments')"><span>🏭</span><span>Departments</span></button>
-    <button class="nav-item" id="nav-safety" onclick="showView('safety')"><span>🦺</span><span>Safety Checks</span><span class="nav-badge warn" id="safetyNavBadge" style="display:none">!</span></button>
-    <button class="nav-item" id="nav-reviews" onclick="showView('reviews')"><span>✅</span><span>Supervisor Reviews</span><span class="nav-badge" id="reviewNavBadge" style="display:none">0</span></button>
-    <button class="nav-item" id="nav-evidence" onclick="showView('evidence')"><span>📁</span><span>Evidence</span></button>
-    <button class="nav-item" id="nav-demolive" onclick="showView('demolive')"><span>🔄</span><span>Demo / Live</span></button>
+    <button class="nav-item" id="nav-pathways" onclick="showView('pathways')"><span>&#x1F5FA;</span><span>Pathways</span></button>
+    <button class="nav-item" id="nav-departments" onclick="showView('departments')"><span>&#x1F3ED;</span><span>Departments</span></button>
+    <button class="nav-item" id="nav-safety" onclick="showView('safety')"><span>&#x1F9BA;</span><span>Safety Checks</span><span class="nav-badge warn" id="safetyNavBadge" style="display:none">!</span></button>
+    <button class="nav-item" id="nav-reviews" onclick="showView('reviews')"><span>&#x2705;</span><span>Supervisor Reviews</span><span class="nav-badge" id="reviewNavBadge" style="display:none">0</span></button>
+    <button class="nav-item" id="nav-evidence" onclick="showView('evidence')"><span>&#x1F4C1;</span><span>Evidence</span></button>
+    <button class="nav-item" id="nav-demolive" onclick="showView('demolive')"><span>&#x1F504;</span><span>Demo / Live</span></button>
   </nav>
   <div class="sb-footer">
     <div class="clin-chip">
@@ -339,7 +346,7 @@ tr:hover td{background:var(--surface2)}
   <!-- OVERVIEW -->
   <div class="view" id="view-overview">
     <div class="view-header">
-      <div><div class="view-title" id="overviewGreeting">Good morning 👋</div><div class="view-sub">Manufacturing training control centre — employee progress, pathway completion, safety checks, and supervisor review.</div></div>
+      <div><div class="view-title" id="overviewGreeting">Good morning 👋</div><div class="view-sub">Manufacturing training control centre for employee onboarding, process learning, safety checks, competency tracking, and supervisor review.</div></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn-secondary" onclick="showView('checkins')">📋 Check-Ins</button>
         <button class="btn-primary" onclick="showView('alerts')">🔔 Training Flags</button>
@@ -508,7 +515,7 @@ tr:hover td{background:var(--surface2)}
             <button class="btn-secondary sm" onclick="clearBackendConfig('supabase')">🗑️ Clear</button>
           </div>
           <div id="sbStatusMsg" style="font-size:12px;color:var(--muted);display:none;padding:8px;background:var(--surface2);border-radius:var(--rs)"></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px">📄 <a href="#" onclick="showToast('Backend SQL setup file available in /docs/ — available for backend integration in a future run');return false;" style="color:var(--gold)">View Supabase SQL Setup File →</a></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">📄 <a href="#" onclick="showToast('Backend SQL setup file in /docs/ — available for backend integration in a future run');return false;" style="color:var(--gold)">View Supabase SQL Setup File →</a></div>
         </div>
       </div>
 
@@ -620,14 +627,12 @@ tr:hover td{background:var(--surface2)}
       <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:var(--rs);padding:10px 12px;font-size:11px;color:var(--muted);line-height:1.6">⚠️ Competency indicators are based on patient self-report and are <strong>not a clinical diagnosis</strong>. Always apply clinical judgement. If a patient is in immediate danger, contact emergency services.</div>
     </div>
   </div>
-  <footer class="cli-footer"><img src="../../icons/tl-72.png" alt="" style="width:20px;height:20px;border-radius:4px;vertical-align:middle;margin-right:8px"/>AutoSkill OS™ — Powered by 4P3X Intelligent AI™ · Created by Kyzel Kreates™ · Supervisor-guided competency monitoring. Does not replace site-specific safety protocols or emergency procedures.
-  <!-- ═══════════════════════════════════════════════════════════════
-       TRAINING PATHWAYS VIEW — Run 3
-  ══════════════════════════════════════════════════════════════════ -->
+  <footer class="cli-footer"><img src="../../icons/tl-72.png" alt="" style="width:20px;height:20px;border-radius:4px;vertical-align:middle;margin-right:8px"/>AutoSkill OS™ — Powered by 4P3X Intelligent AI™ · Created by Kyzel Kreates™ · Supervisor-guided competency monitoring. Does not replace site-
+  <!-- RUN 3: TRAINING PATHWAYS -->
   <div class="view hidden" id="view-pathways">
     <div class="view-header">
-      <div><div class="view-title">🗺️ Training Pathways</div>
-      <div class="view-sub">Manufacturing training pathways — required roles, modules, and completion status</div></div>
+      <div><div class="view-title">&#x1F5FA; Training Pathways</div>
+      <div class="view-sub">Manufacturing training pathways &#x2014; required roles, modules, and completion status</div></div>
       <select class="filter-sel" id="pathwayDeptFilter" onchange="renderPathways()">
         <option value="">All Departments</option>
         <option value="dept-assembly">Assembly Line</option>
@@ -637,40 +642,34 @@ tr:hover td{background:var(--surface2)}
       </select>
     </div>
     <div id="pathwaysContent"></div>
-    <div class="safety-notice" style="margin-top:16px">AutoSkill OS™ supports training awareness, supervisor review, and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility.</div>
+    <div class="safety-notice" style="margin-top:16px">AutoSkill OS&#x2122; supports training awareness, supervisor review, and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility.</div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       DEPARTMENTS & STATIONS VIEW — Run 3
-  ══════════════════════════════════════════════════════════════════ -->
+  <!-- RUN 3: DEPARTMENTS & STATIONS -->
   <div class="view hidden" id="view-departments">
     <div class="view-header">
-      <div><div class="view-title">🏭 Departments &amp; Stations</div>
+      <div><div class="view-title">&#x1F3ED; Departments &amp; Stations</div>
       <div class="view-sub">Manufacturing departments, workstations, PPE requirements, and linked training modules</div></div>
     </div>
     <div id="departmentsContent"></div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       SAFETY CHECKS VIEW — Run 3
-  ══════════════════════════════════════════════════════════════════ -->
+  <!-- RUN 3: SAFETY CHECKS -->
   <div class="view hidden" id="view-safety">
     <div class="view-header">
-      <div><div class="view-title">🦺 Safety Checks</div>
-      <div class="view-sub">Required safety acknowledgements — employees must confirm understanding before production</div></div>
-      <span class="risk-badge" id="safetyMissingBadge" style="display:none">0 missing</span>
+      <div><div class="view-title">&#x1F9BA; Safety Checks</div>
+      <div class="view-sub">Required safety acknowledgements &#x2014; employees must confirm understanding before production</div></div>
+      <span class="risk-badge HIGH" id="safetyMissingBadge" style="display:none">0 missing</span>
     </div>
     <div class="safety-notice">Safety checks support training awareness and supervisor review. They do not replace workplace safety procedures, legal duties, or human supervision.</div>
     <div id="safetyContent" style="margin-top:16px"></div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       SUPERVISOR REVIEWS VIEW — Run 3
-  ══════════════════════════════════════════════════════════════════ -->
+  <!-- RUN 3: SUPERVISOR REVIEWS -->
   <div class="view hidden" id="view-reviews">
     <div class="view-header">
-      <div><div class="view-title">✅ Supervisor Reviews</div>
-      <div class="view-sub">Competency review queue — pending, approved, and requiring further evidence</div></div>
+      <div><div class="view-title">&#x2705; Supervisor Reviews</div>
+      <div class="view-sub">Competency review queue &#x2014; pending, approved, and requiring further evidence</div></div>
       <select class="filter-sel" id="reviewStatusFilter" onchange="renderReviews()">
         <option value="">All Statuses</option>
         <option value="pending">Pending</option>
@@ -683,31 +682,27 @@ tr:hover td{background:var(--surface2)}
     <div class="info-notice" style="margin-top:16px">Review approval actions will be expanded in a later run. This queue is currently read-only.</div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       TRAINING EVIDENCE VIEW — Run 3
-  ══════════════════════════════════════════════════════════════════ -->
+  <!-- RUN 3: TRAINING EVIDENCE -->
   <div class="view hidden" id="view-evidence">
     <div class="view-header">
-      <div><div class="view-title">📁 Training Evidence</div>
+      <div><div class="view-title">&#x1F4C1; Training Evidence</div>
       <div class="view-sub">Evidence records captured via dashboard and Employee Learning PWA</div></div>
     </div>
     <div class="info-notice" style="margin-bottom:16px">Evidence metadata is prepared for future PWA/dashboard sync. File upload will be added in a later run.</div>
     <div id="evidenceContent"></div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       DEMO / LIVE STATUS VIEW — Run 3
-  ══════════════════════════════════════════════════════════════════ -->
+  <!-- RUN 3: DEMO / LIVE STATUS -->
   <div class="view hidden" id="view-demolive">
     <div class="view-header">
-      <div><div class="view-title">🔄 Demo / Live Status</div>
+      <div><div class="view-title">&#x1F504; Demo / Live Status</div>
       <div class="view-sub">Current data mode, demo record status, backend readiness, and sync queue</div></div>
     </div>
     <div id="demoliveContent"></div>
     <div class="info-notice" style="margin-top:16px">Live backend configuration is prepared for a later run. This dashboard currently remains local-first unless an existing backend is already configured. Employee PWA to Control Dashboard sync will be implemented in a later run.</div>
   </div>
 
-</footer>
+specific safety protocols or emergency procedures.</footer>
 </div>
 </div>
 
@@ -937,42 +932,32 @@ function updateTherapistProfile(){
 }
 
 function renderStats(){
-  // Legacy check-in stats (preserved for existing charts/tables)
   const total=PATIENTS.length,critical=PATIENTS.filter(p=>p.risk==='CRITICAL').length,high=PATIENTS.filter(p=>p.risk==='HIGH').length,missing=PATIENTS.filter(p=>p.risk==='MISSING'||p.risk==='MISSING_DATA').length;
-  // ── Run 3: Manufacturing SSOT stats ──────────────────────────────
-  const dmEmployees  = dmGetAll('ap3x_dm_employees');
-  const dmPathways   = dmGetAll('ap3x_dm_pathways');
-  const dmAcks       = dmGetAll('ap3x_dm_safety_acks');
-  const dmReviews    = dmGetAll('ap3x_dm_supervisor_reviews');
-  const dmSyncQ      = dmGetAll('ap3x_dm_pwa_sync_queue');
-  const dmAlerts     = dmGetAll('ap3x_dm_dashboard_alerts').filter(a=>!a.resolved);
-  const activeEmp    = dmEmployees.filter(e=>e.status==='active').length || total;
-  const pathwayCount = dmPathways.length || 4;
-  const avgProg      = dmEmployees.length
-    ? Math.round(dmEmployees.reduce((s,e)=>s+(e.progressPercent||0),0)/dmEmployees.length)
-    : (PATIENTS.length ? Math.round(PATIENTS.reduce((s,p)=>s+(p.pathwayPct||0),0)/PATIENTS.length) : 0);
-  const missingAcks  = dmAcks.reduce((n,a)=>n+(dmEmployees.filter(e=>!(a.acknowledgedByEmployeeIds||[]).includes(e.id)).length),0);
-  const pendingRevs  = dmReviews.filter(r=>r.status==='pending').length;
-  const syncPending  = dmSyncQ.length + getSyncQueue().length;
-  const demoRecs     = demoMode ? dmEmployees.filter(e=>e.isDemo).length : 0;
-
-  document.getElementById('statsRow').innerHTML=`
-    <div class="stat-card"><div class="stat-val">${activeEmp}</div><div class="stat-lbl">Active Employees</div></div>
-    <div class="stat-card g"><div class="stat-val">${pathwayCount}</div><div class="stat-lbl">Training Pathways</div></div>
-    <div class="stat-card m"><div class="stat-val">${avgProg}%</div><div class="stat-lbl">Avg Completion</div></div>
-    <div class="stat-card w"><div class="stat-val">${missingAcks}</div><div class="stat-lbl">Safety Acks Missing</div></div>
-    <div class="stat-card d"><div class="stat-val">${pendingRevs}</div><div class="stat-lbl">Reviews Pending</div></div>
-    <div class="stat-card"><div class="stat-val">${syncPending}</div><div class="stat-lbl">Sync Queue</div></div>`;
-
+  const dmEmployees  =dmGetAll('ap3x_dm_employees');
+  const dmPathways   =dmGetAll('ap3x_dm_pathways');
+  const dmAcks       =dmGetAll('ap3x_dm_safety_acks');
+  const dmReviews    =dmGetAll('ap3x_dm_supervisor_reviews');
+  const dmSyncQ      =dmGetAll('ap3x_dm_pwa_sync_queue');
+  const activeEmp    =dmEmployees.filter(e=>e.status==='active').length||total;
+  const pathwayCount =dmPathways.length||4;
+  const avgProg      =dmEmployees.length?Math.round(dmEmployees.reduce((s,e)=>s+(e.progressPercent||0),0)/dmEmployees.length):(PATIENTS.length?Math.round(PATIENTS.reduce((s,p)=>s+(p.pathwayPct||0),0)/PATIENTS.length):0);
+  const missingAcks  =dmAcks.reduce((n,a)=>n+(dmEmployees.filter(e=>!(a.acknowledgedByEmployeeIds||[]).includes(e.id)).length),0);
+  const pendingRevs  =dmReviews.filter(r=>r.status==='pending').length;
+  const syncPending  =dmSyncQ.length+getSyncQueue().length;
+  const demoRecs     =demoMode?dmEmployees.filter(e=>e.isDemo).length:0;
+  document.getElementById('statsRow').innerHTML=
+    '<div class="stat-card"><div class="stat-val">'+activeEmp+'</div><div class="stat-lbl">Active Employees</div></div>'+
+    '<div class="stat-card g"><div class="stat-val">'+pathwayCount+'</div><div class="stat-lbl">Training Pathways</div></div>'+
+    '<div class="stat-card m"><div class="stat-val">'+avgProg+'%</div><div class="stat-lbl">Avg Completion</div></div>'+
+    '<div class="stat-card w"><div class="stat-val">'+missingAcks+'</div><div class="stat-lbl">Safety Acks Missing</div></div>'+
+    '<div class="stat-card d"><div class="stat-val">'+pendingRevs+'</div><div class="stat-lbl">Reviews Pending</div></div>'+
+    '<div class="stat-card"><div class="stat-val">'+syncPending+'</div><div class="stat-lbl">Sync Queue</div></div>';
   document.getElementById('hrBadge').textContent=high+critical;
   document.getElementById('ciBadge').textContent=ALL_CHECKINS.length;
-  // Update safety nav badge
-  const snb=document.getElementById('safetyNavBadge');
-  if(snb){snb.style.display=missingAcks>0?'inline':'none';snb.textContent=missingAcks;}
-  const rnb=document.getElementById('reviewNavBadge');
-  if(rnb){rnb.style.display=pendingRevs>0?'inline':'none';rnb.textContent=pendingRevs;}
+  var snb=document.getElementById('safetyNavBadge');if(snb){snb.style.display=missingAcks>0?'inline':'none';snb.textContent=missingAcks;}
+  var rnb=document.getElementById('reviewNavBadge');if(rnb){rnb.style.display=pendingRevs>0?'inline':'none';rnb.textContent=pendingRevs;}
+  var hmb=document.getElementById('heroModeBadge');if(hmb){hmb.textContent=demoMode?'Demo Mode':'Live Mode';hmb.className='risk-badge '+(demoMode?'MEDIUM':'LOW');}
 }
-
 function renderOverviewChart(){
   const canvas=document.getElementById('overviewChart');if(!canvas)return;
   const days=7,labels=Array.from({length:days},(_,i)=>{const d=new Date(Date.now()-86400000*(days-1-i));return d.toLocaleDateString([],{weekday:'short'});});
@@ -1393,7 +1378,7 @@ function openDetail(id){
   const b=document.getElementById('detailRiskBadge');b.className=`risk-badge ${p.risk}`;b.textContent=rLbl(p.risk);
   document.getElementById('detailLastSeen').textContent=p.checkins[0]?`Last check-in: ${tAgo(p.checkins[0].date)}`:'No check-in data';
   setTimeout(()=>drawLine(document.getElementById('detailChart'),p.scores.map((_,i)=>`Day ${i+1}`),p.scores,'#c9a84c',false,10),50);
-  document.getElementById('detailMetrics').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="pc-metric"><div class="pcm-val">${p.streak}d</div><div class="pcm-lbl">Streak</div></div><div class="pc-metric"><div class="pcm-val">${p.pathwayPct||0}%</div><div class="pcm-lbl">Pathway</div></div><div class="pc-metric"><div class="pcm-val">${p.checkins.length}</div><div class="pcm-lbl">Check-Ins</div></div></div><div style="font-size:12px;color:var(--muted);margin-top:8px">Training Pathway: <strong style="color:var(--text)">${p.pathway||'Not started'}</strong></div>`;
+  document.getElementById('detailMetrics').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="pc-metric"><div class="pcm-val">${p.streak}d</div><div class="pcm-lbl">Streak</div></div><div class="pc-metric"><div class="pcm-val">${p.pathwayPct||0}%</div><div class="pcm-lbl">Pathway</div></div><div class="pc-metric"><div class="pcm-val">${p.checkins.length}</div><div class="pcm-lbl">Check-Ins</div></div></div><div style="font-size:12px;color:var(--muted);margin-top:8px">Recovery Pathway: <strong style="color:var(--text)">${p.pathway||'Not started'}</strong></div>`;
   const ml=document.getElementById('detailMoodList'),nc=p.checkins.filter(c=>c.note).slice(0,5);
   ml.innerHTML=nc.length?nc.map(c=>`<div class="detail-note"><div class="note-by">${tAgo(c.date)} · Anxiety: ${c.anxiety}/10</div><div>${c.note}</div></div>`).join(''):'<p class="empty-state">No notes.</p>';
   const fl=document.getElementById('detailFlags');fl.innerHTML=p.flags.length?p.flags.map(f=>`<span class="pc-flag warn">${f.replace(/_/g,' ')}</span>`).join(''):'<span style="font-size:12px;color:var(--muted)">No active flags</span>';
@@ -1443,622 +1428,378 @@ function tAgo(ts){const s=Math.floor((Date.now()-ts)/1000);if(s<60)return'Just n
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),2500);}
 
 
-// ════════════════════════════════════════════════════════════════════════════
-// RUN 3 — MANUFACTURING TRAINING CENTRE JS
-// All functions read from the Run 2 SSOT (ap3x_dm_* localStorage keys).
+// ======================================================================
+// RUN 3 — AutoSkill OS Manufacturing Training Centre JS
+// Reads from Run 2 SSOT (ap3x_dm_* localStorage keys).
 // No duplicate store. No fake backend. Local-first. Demo-safe.
-// ════════════════════════════════════════════════════════════════════════════
+// ======================================================================
 
-// ── SSOT helper — reads from ap3x_dm_ namespace ──────────────────────────────
-function dmGetAll(key) {
-  try {
-    const v = localStorage.getItem(key);
-    return v ? JSON.parse(v) : [];
-  } catch { return []; }
-}
-function dmGetObj(key, fallback) {
-  try {
-    const v = localStorage.getItem(key);
-    return v ? JSON.parse(v) : (fallback || {});
-  } catch { return fallback || {}; }
-}
-function dmSaveAll(key, arr) {
-  try { localStorage.setItem(key, JSON.stringify(arr)); } catch {}
-}
+function dmGetAll(key){try{var v=localStorage.getItem(key);return v?JSON.parse(v):[];}catch(e){return[];}}
+function dmGetObj(key,fb){try{var v=localStorage.getItem(key);return v?JSON.parse(v):(fb||{});}catch(e){return fb||{};}}
+function dmSaveAll(key,arr){try{localStorage.setItem(key,JSON.stringify(arr));}catch(e){}}
 
-// ── Employee colour palette (consistent with existing patCard colours) ──────
-const EMP_COLOURS = ['#ef4444','#f59e0b','#10b981','#7c3aed','#2563eb','#64748b','#0891b2','#dc2626'];
-function empColour(idx) { return EMP_COLOURS[idx % EMP_COLOURS.length]; }
-function empInitials(name) {
-  return (name||'?').split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+var EMP_COLOURS=['#ef4444','#f59e0b','#10b981','#7c3aed','#2563eb','#64748b','#0891b2','#dc2626'];
+function empColour(i){return EMP_COLOURS[i%EMP_COLOURS.length];}
+function empInitials(n){return (n||'?').split(' ').filter(Boolean).map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();}
+
+function tcBadge(text,type){
+  var cls={active:'LOW',completed:'LOW',approved:'LOW',in_progress:'MEDIUM',pending:'MEDIUM',partial:'MEDIUM',
+    configured:'MEDIUM',not_started:'MISSING',missing:'MISSING',not_configured:'MISSING',CRITICAL:'CRITICAL',
+    HIGH:'HIGH',critical:'CRITICAL',high:'HIGH',demo:'MEDIUM',local:'MISSING',queued:'MEDIUM',
+    needs_more_evidence:'HIGH',rejected:'HIGH',complete:'LOW'}[type||text]||'MISSING';
+  return '<span class="risk-badge '+cls+'">'+text+'</span>';
 }
 
-// ── Status badge HTML helper ─────────────────────────────────────────────────
-function tcBadge(text, type) {
-  const cls = {
-    active:'LOW', completed:'LOW', approved:'LOW',
-    in_progress:'MEDIUM', pending:'MEDIUM', partial:'MEDIUM', configured:'MEDIUM',
-    not_started:'MISSING', missing:'MISSING', not_configured:'MISSING',
-    CRITICAL:'CRITICAL', HIGH:'HIGH', critical:'CRITICAL', high:'HIGH',
-    demo:'MEDIUM', local:'MISSING', queued:'MEDIUM',
-    needs_more_evidence:'HIGH', rejected:'HIGH',
-    complete:'LOW', 'safety-critical':'HIGH'
-  }[type||text] || 'MISSING';
-  return `<span class="risk-badge ${cls}">${text}</span>`;
+function fmtDate(iso){
+  if(!iso)return'--';
+  try{return new Date(iso).toLocaleDateString([],{day:'numeric',month:'short',year:'2-digit'});}catch(e){return'--';}
+}
+function fmtAgo(iso){
+  if(!iso)return'--';
+  try{
+    var diff=Date.now()-new Date(iso).getTime(),h=Math.floor(diff/3600000);
+    if(h<1)return'Just now';if(h<24)return h+'h ago';
+    var d=Math.floor(h/24);if(d<7)return d+'d ago';return Math.floor(d/7)+'w ago';
+  }catch(e){return'--';}
 }
 
-// ── Time format helpers ───────────────────────────────────────────────────────
-function fmtDate(iso) {
-  if (!iso) return '—';
-  try { return new Date(iso).toLocaleDateString([], {day:'numeric',month:'short',year:'2-digit'}); }
-  catch { return '—'; }
-}
-function fmtAgo(iso) {
-  if (!iso) return '—';
-  try {
-    const diff = Date.now() - new Date(iso).getTime();
-    const h = Math.floor(diff / 3600000);
-    if (h < 1) return 'Just now';
-    if (h < 24) return h + 'h ago';
-    const d = Math.floor(h / 24);
-    if (d < 7) return d + 'd ago';
-    return Math.floor(d/7) + 'w ago';
-  } catch { return '—'; }
+function pctBar(pct){
+  var p=Math.min(100,Math.max(0,pct||0));
+  var col=p>=80?'var(--green)':p>=40?'var(--gold)':'var(--warn)';
+  return '<div class="tc-pct"><div class="tc-pct-bar"><div class="tc-pct-fill" style="width:'+p+'%;background:'+col+'"></div></div><span style="font-size:11px;font-weight:700;color:var(--text);min-width:28px">'+p+'%</span></div>';
 }
 
-// ── Progress bar HTML helper ──────────────────────────────────────────────────
-function pctBar(pct, cls) {
-  const p = Math.min(100, Math.max(0, pct || 0));
-  const c = p >= 80 ? 'green' : p >= 40 ? '' : 'warn';
-  return `<div class="tc-pct">
-    <div class="tc-pct-bar"><div class="tc-pct-fill ${cls||c}" style="width:${p}%;background:${p>=80?'var(--green)':p>=40?'var(--gold)':'var(--warn)'}"></div></div>
-    <span style="font-size:11px;font-weight:700;color:var(--text);min-width:28px">${p}%</span>
-  </div>`;
+function tcEmptyState(icon,title,sub){
+  return '<div class="empty-state-block" style="padding:32px 0"><div class="es-icon">'+icon+'</div><div class="es-title">'+title+'</div><div class="es-sub">'+sub+'</div></div>';
 }
 
-// ── Empty state HTML helper ───────────────────────────────────────────────────
-function emptyState(icon, title, sub) {
-  return `<div class="empty-state-block" style="padding:32px 0">
-    <div class="es-icon">${icon}</div>
-    <div class="es-title">${title}</div>
-    <div class="es-sub">${sub}</div>
-  </div>`;
-}
-
-// ════════════════════════════════════════════════════════════════════
-// RENDER: TRAINING PATHWAYS
-// ════════════════════════════════════════════════════════════════════
-function renderPathways() {
-  const el = document.getElementById('pathwaysContent');
-  if (!el) return;
-  const deptFilter = (document.getElementById('pathwayDeptFilter')||{}).value || '';
-  let pathways = dmGetAll('ap3x_dm_pathways');
-  const modules  = dmGetAll('ap3x_dm_process_modules');
-  const employees= dmGetAll('ap3x_dm_employees');
-  const progress = dmGetAll('ap3x_dm_progress_records');
-  const depts    = dmGetAll('ap3x_dm_departments');
-
-  if (!pathways.length) {
-    el.innerHTML = emptyState('🗺️','No training pathways found.',
-      'Demo pathways appear when Demo Mode is active. Live pathways will appear after backend/live setup.');
-    return;
-  }
-  if (deptFilter) pathways = pathways.filter(p => p.departmentId === deptFilter);
-  if (!pathways.length) {
-    el.innerHTML = emptyState('🔍','No pathways match this filter.','Try a different department or clear the filter.');
-    return;
-  }
-
-  el.innerHTML = pathways.map(path => {
-    const dept      = depts.find(d => d.id === path.departmentId);
-    const mods      = modules.filter(m => (path.moduleIds||[]).includes(m.id));
-    const empOnPath = employees.filter(e => (e.assignedPathwayIds||[]).includes(path.id));
-    const completed = empOnPath.filter(e => (e.completedModuleIds||[]).length >= mods.length && mods.length > 0);
-    const compRate  = empOnPath.length ? Math.round((completed.length / empOnPath.length) * 100) : 0;
-    const hasSafety = mods.some(m => m.safetyCritical);
-    const statusCls = path.status === 'active' ? 'LOW' : path.status === 'draft' ? 'MEDIUM' : 'MISSING';
-
-    return `<div class="tc-card" style="margin-bottom:14px">
-      <div class="tc-card-hdr">
-        <div>
-          <div class="tc-card-title">${path.title}</div>
-          <div class="tc-card-sub">${dept ? dept.name : path.departmentId} · ${mods.length} module${mods.length!==1?'s':''} · ${path.estimatedDuration||'—'}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-          ${tcBadge(path.status||'active', path.status||'active')}
-          ${hasSafety ? '<span class="risk-badge HIGH" style="font-size:10px">⚠️ Safety-critical</span>' : ''}
-        </div>
-      </div>
-      <div class="tc-meta-row">
-        <div class="tc-meta-item"><span class="tc-meta-label">Assigned employees</span><span class="tc-meta-val">${empOnPath.length}</span></div>
-        <div class="tc-meta-item"><span class="tc-meta-label">Completion rate</span><span class="tc-meta-val">${compRate}%</span></div>
-        <div class="tc-meta-item"><span class="tc-meta-label">Required for</span><span class="tc-meta-val" style="font-size:11px">${(path.requiredForRoles||[]).join(', ')||'All roles'}</span></div>
-      </div>
-      <div style="margin-top:8px">${pctBar(compRate)}</div>
-      <div class="tc-badge-row" style="margin-top:10px">
-        ${mods.map(m=>`<span class="tc-chip${m.safetyCritical?' missing':''}">${m.title}</span>`).join('')}
-        ${!mods.length ? '<span class="tc-chip missing">No modules linked</span>' : ''}
-      </div>
-    </div>`;
+// ── RENDER: TRAINING PATHWAYS ───────────────────────────────────────
+function renderPathways(){
+  var el=document.getElementById('pathwaysContent');if(!el)return;
+  var deptF=(document.getElementById('pathwayDeptFilter')||{}).value||'';
+  var pathways=dmGetAll('ap3x_dm_pathways');
+  var modules=dmGetAll('ap3x_dm_process_modules');
+  var employees=dmGetAll('ap3x_dm_employees');
+  var depts=dmGetAll('ap3x_dm_departments');
+  if(!pathways.length){el.innerHTML=tcEmptyState('&#x1F5FA;','No training pathways found.','Demo pathways appear when Demo Mode is active. Live pathways will appear after backend/live setup is configured.');return;}
+  if(deptF)pathways=pathways.filter(function(p){return p.departmentId===deptF;});
+  if(!pathways.length){el.innerHTML=tcEmptyState('&#x1F50D;','No pathways match this filter.','Try a different department or clear the filter.');return;}
+  el.innerHTML=pathways.map(function(path){
+    var dept=depts.find(function(d){return d.id===path.departmentId;});
+    var mods=modules.filter(function(m){return(path.moduleIds||[]).includes(m.id);});
+    var empOnPath=employees.filter(function(e){return(e.assignedPathwayIds||[]).includes(path.id);});
+    var completed=empOnPath.filter(function(e){return(e.completedModuleIds||[]).length>=mods.length&&mods.length>0;});
+    var compRate=empOnPath.length?Math.round((completed.length/empOnPath.length)*100):0;
+    var hasSafety=mods.some(function(m){return m.safetyCritical;});
+    return '<div class="tc-card" style="margin-bottom:14px">'+
+      '<div class="tc-card-hdr">'+
+        '<div><div class="tc-card-title">'+path.title+'</div>'+
+        '<div class="tc-card-sub">'+(dept?dept.name:path.departmentId||'General')+' &middot; '+mods.length+' module'+(mods.length!==1?'s':'')+' &middot; '+(path.estimatedDuration||'--')+'</div></div>'+
+        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">'+
+          tcBadge(path.status||'active',path.status||'active')+
+          (hasSafety?'<span class="risk-badge HIGH" style="font-size:10px">&#x26A0; Safety-critical</span>':'')+
+        '</div>'+
+      '</div>'+
+      '<div class="tc-meta-row">'+
+        '<div class="tc-meta-item"><span class="tc-meta-label">Assigned employees</span><span class="tc-meta-val">'+empOnPath.length+'</span></div>'+
+        '<div class="tc-meta-item"><span class="tc-meta-label">Completion rate</span>'+pctBar(compRate)+'</div>'+
+        '<div class="tc-meta-item"><span class="tc-meta-label">Required for</span><span class="tc-meta-val" style="font-size:11px">'+((path.requiredForRoles||[]).join(', ')||'All roles')+'</span></div>'+
+      '</div>'+
+      '<div class="tc-badge-row" style="margin-top:10px">'+
+        mods.map(function(m){return'<span class="tc-chip'+(m.safetyCritical?' missing':'')+'">'+m.title+'</span>';}).join('')+
+        (!mods.length?'<span class="tc-chip missing">No modules linked</span>':'')+
+      '</div>'+
+    '</div>';
   }).join('');
 }
 
-// ════════════════════════════════════════════════════════════════════
-// RENDER: DEPARTMENTS & STATIONS
-// ════════════════════════════════════════════════════════════════════
-function renderDepartments() {
-  const el = document.getElementById('departmentsContent');
-  if (!el) return;
-  const depts    = dmGetAll('ap3x_dm_departments');
-  const stations = dmGetAll('ap3x_dm_stations');
-  const pathways = dmGetAll('ap3x_dm_pathways');
-
-  if (!depts.length) {
-    el.innerHTML = emptyState('🏭','No departments found.',
-      'Departments appear when Demo Mode is active. Live departments added via backend in a later run.');
-    return;
-  }
-
-  el.innerHTML = depts.map((dept, di) => {
-    const deptStations = stations.filter(s => s.departmentId === dept.id);
-    const deptPathways = pathways.filter(p => (dept.activePathwayIds||[]).includes(p.id));
-    return `<div class="dept-card">
-      <div class="dept-hdr">
-        <div>
-          <div class="dept-name">🏭 ${dept.name}</div>
-          <div class="dept-site">${dept.site||'Site A'} · Manager: ${dept.managerName||'—'}</div>
-          ${dept.description ? `<div style="font-size:12px;color:var(--muted);margin-top:4px">${dept.description}</div>` : ''}
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-          ${tcBadge('Active','active')}
-          ${dept.isDemo ? tcBadge('Demo','demo') : ''}
-        </div>
-      </div>
-      <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">ACTIVE PATHWAYS</div>
-      <div class="tc-badge-row" style="margin-bottom:10px">
-        ${deptPathways.map(p=>`<span class="tc-chip">${p.title}</span>`).join('')}
-        ${!deptPathways.length ? '<span class="tc-chip missing">No active pathways</span>' : ''}
-      </div>
-      <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">WORKSTATIONS (${deptStations.length})</div>
-      ${deptStations.map(stn => `
-        <div class="stn-row">
-          <div style="flex:1;min-width:0">
-            <div class="stn-name">${stn.safetyCritical?'⚠️ ':'🔧 '}${stn.name}</div>
-            <div class="stn-desc">${stn.description||'—'}</div>
-            ${stn.requiredPpe&&stn.requiredPpe.length ? `<div class="tc-badge-row" style="margin-top:6px">${stn.requiredPpe.map(p=>`<span class="ppe-tag">🦺 ${p}</span>`).join('')}</div>` : ''}
-          </div>
-          <div style="flex-shrink:0">
-            ${stn.safetyCritical ? '<span class="risk-badge HIGH" style="font-size:10px">Safety-critical</span>' : '<span class="risk-badge LOW" style="font-size:10px">Standard</span>'}
-          </div>
-        </div>`).join('')}
-      ${!deptStations.length ? '<div class="stn-row"><span class="tc-chip missing">No stations defined</span></div>' : ''}
-    </div>`;
+// ── RENDER: DEPARTMENTS & STATIONS ──────────────────────────────────
+function renderDepartments(){
+  var el=document.getElementById('departmentsContent');if(!el)return;
+  var depts=dmGetAll('ap3x_dm_departments');
+  var stations=dmGetAll('ap3x_dm_stations');
+  var pathways=dmGetAll('ap3x_dm_pathways');
+  if(!depts.length){el.innerHTML=tcEmptyState('&#x1F3ED;','No departments found.','Departments appear when Demo Mode is active. Live departments are added via backend in a later run.');return;}
+  el.innerHTML=depts.map(function(dept){
+    var deptStations=stations.filter(function(s){return s.departmentId===dept.id;});
+    var deptPathways=pathways.filter(function(p){return(dept.activePathwayIds||[]).includes(p.id);});
+    return '<div class="dept-card">'+
+      '<div class="dept-hdr">'+
+        '<div><div class="dept-name">&#x1F3ED; '+dept.name+'</div>'+
+        '<div class="dept-site">'+(dept.site||'Site A')+' &middot; Manager: '+(dept.managerName||'--')+'</div>'+
+        (dept.description?'<div style="font-size:12px;color:var(--muted);margin-top:4px">'+dept.description+'</div>':'')+
+        '</div>'+
+        '<div style="flex-shrink:0">'+tcBadge('Active','active')+(dept.isDemo?tcBadge('Demo','demo'):'')+
+        '</div>'+
+      '</div>'+
+      '<div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">ACTIVE PATHWAYS</div>'+
+      '<div class="tc-badge-row" style="margin-bottom:10px">'+
+        deptPathways.map(function(p){return'<span class="tc-chip">'+p.title+'</span>';}).join('')+
+        (!deptPathways.length?'<span class="tc-chip missing">No active pathways</span>':'')+
+      '</div>'+
+      '<div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">WORKSTATIONS ('+deptStations.length+')</div>'+
+      deptStations.map(function(stn){
+        return '<div class="stn-row">'+
+          '<div style="flex:1;min-width:0">'+
+            '<div class="stn-name">'+(stn.safetyCritical?'&#x26A0; ':'&#x1F527; ')+stn.name+'</div>'+
+            '<div class="stn-desc">'+(stn.description||'--')+'</div>'+
+            (stn.requiredPpe&&stn.requiredPpe.length?'<div class="tc-badge-row" style="margin-top:6px">'+stn.requiredPpe.map(function(p){return'<span class="ppe-tag">&#x1F9BA; '+p+'</span>';}).join('')+'</div>':'')+
+          '</div>'+
+          '<div style="flex-shrink:0">'+(stn.safetyCritical?'<span class="risk-badge HIGH" style="font-size:10px">Safety-critical</span>':'<span class="risk-badge LOW" style="font-size:10px">Standard</span>')+'</div>'+
+        '</div>';
+      }).join('')+
+      (!deptStations.length?'<div class="stn-row"><span class="tc-chip missing">No stations defined</span></div>':'')+
+    '</div>';
   }).join('');
 }
 
-// ════════════════════════════════════════════════════════════════════
-// RENDER: SAFETY CHECKS
-// ════════════════════════════════════════════════════════════════════
-function renderSafetyChecks() {
-  const el = document.getElementById('safetyContent');
-  if (!el) return;
-  const acks     = dmGetAll('ap3x_dm_safety_acks');
-  const employees= dmGetAll('ap3x_dm_employees');
-  const modules  = dmGetAll('ap3x_dm_process_modules');
-  const lessons  = dmGetAll('ap3x_dm_process_lessons');
-
-  if (!acks.length) {
-    el.innerHTML = emptyState('🦺','No safety acknowledgements found.',
-      'Safety acknowledgements appear when Demo Mode is active.');
-    return;
-  }
-
-  let totalMissing = 0;
-  const html = acks.map(ack => {
-    const missing = employees.filter(e => !(ack.acknowledgedByEmployeeIds||[]).includes(e.id));
-    const completed= employees.filter(e => (ack.acknowledgedByEmployeeIds||[]).includes(e.id));
-    totalMissing += missing.length;
-    const mod = modules.find(m => m.id === ack.linkedModuleId);
-    const les = lessons.find(l => l.id === ack.linkedLessonId);
-    const compRate = employees.length ? Math.round((completed.length/employees.length)*100) : 0;
-    return `<div class="tc-ack-row">
-      <div class="tc-ack-hdr">
-        <div style="flex:1">
-          <div class="tc-ack-title">${ack.legalCritical?'⚠️ ':'✅ '}${ack.title}</div>
-          ${ack.description ? `<div class="tc-ack-desc">${ack.description}</div>` : ''}
-          <div style="font-size:11px;color:var(--muted)">
-            ${mod ? `Module: ${mod.title}` : ''}${les ? ` · Lesson: ${les.title}` : ''}
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-          ${ack.legalCritical ? '<span class="risk-badge HIGH">Legal-critical</span>' : '<span class="risk-badge LOW">Standard</span>'}
-          ${ack.requiredForCompletion ? '<span class="risk-badge MEDIUM" style="font-size:10px">Required</span>' : ''}
-        </div>
-      </div>
-      <div class="tc-meta-row" style="margin-bottom:8px">
-        <div class="tc-meta-item"><span class="tc-meta-label">Completion</span>${pctBar(compRate)}</div>
-        <div class="tc-meta-item"><span class="tc-meta-label">Acknowledged</span><span class="tc-meta-val" style="color:var(--green)">${completed.length} of ${employees.length}</span></div>
-        <div class="tc-meta-item"><span class="tc-meta-label">Missing</span><span class="tc-meta-val" style="color:${missing.length>0?'var(--high)':'var(--green)'}">${missing.length}</span></div>
-      </div>
-      ${missing.length ? `<div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px">MISSING FROM:</div>
-        <div class="tc-ack-missing">${missing.map((e,i)=>`<span class="tc-chip missing">${e.displayName}</span>`).join('')}</div>` : ''}
-      ${completed.length ? `<div style="font-size:11px;font-weight:700;color:var(--muted);margin-top:8px;margin-bottom:6px">CONFIRMED BY:</div>
-        <div class="tc-ack-missing">${completed.map(e=>`<span class="tc-chip ok">✓ ${e.displayName}</span>`).join('')}</div>` : ''}
-    </div>`;
+// ── RENDER: SAFETY CHECKS ──────────────────────────────────────────
+function renderSafetyChecks(){
+  var el=document.getElementById('safetyContent');if(!el)return;
+  var acks=dmGetAll('ap3x_dm_safety_acks');
+  var employees=dmGetAll('ap3x_dm_employees');
+  var modules=dmGetAll('ap3x_dm_process_modules');
+  var lessons=dmGetAll('ap3x_dm_process_lessons');
+  if(!acks.length){el.innerHTML=tcEmptyState('&#x1F9BA;','No safety acknowledgements found.','Safety acknowledgements appear when Demo Mode is active.');return;}
+  var totalMissing=0;
+  var html=acks.map(function(ack){
+    var missing=employees.filter(function(e){return!(ack.acknowledgedByEmployeeIds||[]).includes(e.id);});
+    var completed=employees.filter(function(e){return(ack.acknowledgedByEmployeeIds||[]).includes(e.id);});
+    totalMissing+=missing.length;
+    var mod=modules.find(function(m){return m.id===ack.linkedModuleId;});
+    var les=lessons.find(function(l){return l.id===ack.linkedLessonId;});
+    var compRate=employees.length?Math.round((completed.length/employees.length)*100):0;
+    return '<div class="tc-ack-row">'+
+      '<div class="tc-ack-hdr">'+
+        '<div style="flex:1">'+
+          '<div class="tc-ack-title">'+(ack.legalCritical?'&#x26A0; ':'&#x2705; ')+ack.title+'</div>'+
+          (ack.description?'<div class="tc-ack-desc">'+ack.description+'</div>':'')+
+          '<div style="font-size:11px;color:var(--muted)">'+(mod?'Module: '+mod.title:'')+(les?' &middot; Lesson: '+les.title:'')+'</div>'+
+        '</div>'+
+        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">'+
+          (ack.legalCritical?'<span class="risk-badge HIGH">Legal-critical</span>':'<span class="risk-badge LOW">Standard</span>')+
+          (ack.requiredForCompletion?'<span class="risk-badge MEDIUM" style="font-size:10px">Required</span>':'')+
+        '</div>'+
+      '</div>'+
+      '<div class="tc-meta-row" style="margin-bottom:8px">'+
+        '<div class="tc-meta-item"><span class="tc-meta-label">Completion</span>'+pctBar(compRate)+'</div>'+
+        '<div class="tc-meta-item"><span class="tc-meta-label">Acknowledged</span><span class="tc-meta-val" style="color:var(--green)">'+completed.length+' of '+employees.length+'</span></div>'+
+        '<div class="tc-meta-item"><span class="tc-meta-label">Missing</span><span class="tc-meta-val" style="color:'+(missing.length>0?'var(--high)':'var(--green)')+'">'+missing.length+'</span></div>'+
+      '</div>'+
+      (missing.length?'<div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px">MISSING FROM:</div><div class="tc-ack-missing">'+missing.map(function(e){return'<span class="tc-chip missing">'+e.displayName+'</span>';}).join('')+'</div>':'')+
+      (completed.length?'<div style="font-size:11px;font-weight:700;color:var(--muted);margin-top:8px;margin-bottom:6px">CONFIRMED BY:</div><div class="tc-ack-missing">'+completed.map(function(e){return'<span class="tc-chip ok">&#x2713; '+e.displayName+'</span>';}).join('')+'</div>':'')+
+    '</div>';
   }).join('');
-
-  el.innerHTML = html;
-  // Update badge
-  const smb = document.getElementById('safetyMissingBadge');
-  if (smb) {
-    smb.style.display = totalMissing > 0 ? 'inline' : 'none';
-    smb.textContent = totalMissing + ' missing';
-    smb.className = 'risk-badge ' + (totalMissing > 0 ? 'HIGH' : 'LOW');
-  }
+  el.innerHTML=html;
+  var smb=document.getElementById('safetyMissingBadge');
+  if(smb){smb.style.display=totalMissing>0?'inline':'none';smb.textContent=totalMissing+' missing';smb.className='risk-badge '+(totalMissing>0?'HIGH':'LOW');}
 }
 
-// ════════════════════════════════════════════════════════════════════
-// RENDER: SUPERVISOR REVIEWS
-// ════════════════════════════════════════════════════════════════════
-function renderReviews() {
-  const el = document.getElementById('reviewsContent');
-  if (!el) return;
-  const statusFilter = (document.getElementById('reviewStatusFilter')||{}).value || '';
-  const reviews    = dmGetAll('ap3x_dm_supervisor_reviews');
-  const employees  = dmGetAll('ap3x_dm_employees');
-  const trainers   = dmGetAll('ap3x_dm_trainers');
-  const pathways   = dmGetAll('ap3x_dm_pathways');
-  const modules    = dmGetAll('ap3x_dm_process_modules');
-  const competencies = dmGetAll('ap3x_dm_competencies');
-  const evidence   = dmGetAll('ap3x_dm_evidence_records');
-
-  let revs = reviews;
-  if (statusFilter) revs = revs.filter(r => r.status === statusFilter);
-
-  if (!revs.length) {
-    el.innerHTML = emptyState('✅','No reviews found.',
-      statusFilter ? 'No reviews match this status filter.' :
-      'Supervisor review records appear when Demo Mode is active or when employees submit evidence via the Employee Learning PWA.');
-    return;
-  }
-
-  const statusLabel = {pending:'Pending',approved:'Approved ✓',rejected:'Rejected',needs_more_evidence:'Needs More Evidence'};
-
-  el.innerHTML = revs.map(rev => {
-    const emp  = employees.find(e => e.id === rev.employeeId);
-    const sup  = trainers.find(t => t.id === rev.supervisorId);
-    const path = pathways.find(p => p.id === rev.pathwayId);
-    const mod  = modules.find(m => m.id === rev.moduleId);
-    const comp = competencies.find(c => c.id === rev.competencyId);
-    const evs  = evidence.filter(e => (rev.evidenceRecordIds||[]).includes(e.id));
-    return `<div class="rev-card ${rev.status}">
-      <div class="rev-hdr">
-        <div style="flex:1">
-          <div class="rev-title">${emp ? emp.displayName : rev.employeeId}</div>
-          <div class="rev-meta">
-            ${comp ? `Competency: <strong>${comp.title}</strong>` : ''}
-            ${mod ? ` · Module: ${mod.title}` : ''}
-            ${path ? ` · Pathway: ${path.title}` : ''}
-          </div>
-          <div class="rev-meta">
-            Supervisor: ${sup ? sup.displayName : rev.supervisorId||'—'} ·
-            ${rev.reviewedAt ? `Reviewed: ${fmtDate(rev.reviewedAt)}` : 'Not yet reviewed'} ·
-            Evidence: ${evs.length} record${evs.length!==1?'s':''}
-          </div>
-        </div>
-        <div style="flex-shrink:0">${tcBadge(statusLabel[rev.status]||rev.status, rev.status)}</div>
-      </div>
-      ${rev.notes ? `<div class="rev-notes">📝 ${rev.notes}</div>` : ''}
-      ${evs.length ? `<div style="margin-top:8px">
-        <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px">EVIDENCE</div>
-        ${evs.map(e=>`<div style="font-size:12px;color:var(--muted);padding:4px 0;border-bottom:1px solid var(--border)">
-          <span style="color:var(--text);font-weight:600">${e.title}</span> — ${e.type} · ${fmtDate(e.createdAt)}
-        </div>`).join('')}
-      </div>` : ''}
-    </div>`;
+// ── RENDER: SUPERVISOR REVIEWS ──────────────────────────────────────
+function renderReviews(){
+  var el=document.getElementById('reviewsContent');if(!el)return;
+  var statusF=(document.getElementById('reviewStatusFilter')||{}).value||'';
+  var reviews=dmGetAll('ap3x_dm_supervisor_reviews');
+  var employees=dmGetAll('ap3x_dm_employees');
+  var trainers=dmGetAll('ap3x_dm_trainers');
+  var pathways=dmGetAll('ap3x_dm_pathways');
+  var modules=dmGetAll('ap3x_dm_process_modules');
+  var competencies=dmGetAll('ap3x_dm_competencies');
+  var evidence=dmGetAll('ap3x_dm_evidence_records');
+  var revs=statusF?reviews.filter(function(r){return r.status===statusF;}):reviews;
+  if(!revs.length){el.innerHTML=tcEmptyState('&#x2705;','No reviews found.',statusF?'No reviews match this status filter.':'Supervisor review records appear when Demo Mode is active or when employees submit evidence via the Employee Learning PWA.');return;}
+  var statusLabel={pending:'Pending',approved:'Approved',rejected:'Rejected',needs_more_evidence:'Needs More Evidence'};
+  el.innerHTML=revs.map(function(rev){
+    var emp=employees.find(function(e){return e.id===rev.employeeId;});
+    var sup=trainers.find(function(t){return t.id===rev.supervisorId;});
+    var path=pathways.find(function(p){return p.id===rev.pathwayId;});
+    var mod=modules.find(function(m){return m.id===rev.moduleId;});
+    var comp=competencies.find(function(c){return c.id===rev.competencyId;});
+    var evs=evidence.filter(function(e){return(rev.evidenceRecordIds||[]).includes(e.id);});
+    return '<div class="rev-card '+(rev.status||'pending')+'">'+
+      '<div class="rev-hdr">'+
+        '<div style="flex:1">'+
+          '<div class="rev-title">'+(emp?emp.displayName:rev.employeeId)+'</div>'+
+          '<div class="rev-meta">'+(comp?'Competency: <strong>'+comp.title+'</strong>':'')+(mod?' &middot; Module: '+mod.title:'')+(path?' &middot; Pathway: '+path.title:'')+'</div>'+
+          '<div class="rev-meta">Supervisor: '+(sup?sup.displayName:rev.supervisorId||'--')+' &middot; '+(rev.reviewedAt?'Reviewed: '+fmtDate(rev.reviewedAt):'Not yet reviewed')+' &middot; Evidence: '+evs.length+' record'+(evs.length!==1?'s':'')+'</div>'+
+        '</div>'+
+        '<div style="flex-shrink:0">'+tcBadge(statusLabel[rev.status]||rev.status,rev.status)+'</div>'+
+      '</div>'+
+      (rev.notes?'<div class="rev-notes">&#x1F4DD; '+rev.notes+'</div>':'')+
+      (evs.length?'<div style="margin-top:8px"><div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px">EVIDENCE</div>'+evs.map(function(e){return'<div style="font-size:12px;color:var(--muted);padding:4px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text);font-weight:600">'+e.title+'</span> &mdash; '+e.type+' &middot; '+fmtDate(e.createdAt)+'</div>';}).join('')+'</div>':'')+
+    '</div>';
   }).join('');
 }
 
-// ════════════════════════════════════════════════════════════════════
-// RENDER: TRAINING EVIDENCE
-// ════════════════════════════════════════════════════════════════════
-function renderEvidence() {
-  const el = document.getElementById('evidenceContent');
-  if (!el) return;
-  const evidence  = dmGetAll('ap3x_dm_evidence_records');
-  const employees = dmGetAll('ap3x_dm_employees');
-  const modules   = dmGetAll('ap3x_dm_process_modules');
-  const lessons   = dmGetAll('ap3x_dm_process_lessons');
-  const pathways  = dmGetAll('ap3x_dm_pathways');
-
-  if (!evidence.length) {
-    el.innerHTML = emptyState('📁','No evidence records found.',
-      'Evidence records appear when Demo Mode is active or when employees complete lessons via the Employee Learning PWA.');
-    return;
-  }
-
-  const sourceLabel = {dashboard:'Control Dashboard','employee-pwa':'Employee Learning PWA',demo:'Demo'};
-  const typeIcon = {note:'📝',checklist:'✅','photo-placeholder':'📷','supervisor-note':'👁️','quiz-result':'🎯'};
-
-  el.innerHTML = evidence.map(ev => {
-    const emp  = employees.find(e => e.id === ev.employeeId);
-    const mod  = modules.find(m => m.id === ev.moduleId);
-    const les  = lessons.find(l => l.id === ev.lessonId);
-    const path = pathways.find(p => p.id === ev.pathwayId);
-    return `<div class="ev-card">
-      <div class="ev-hdr">
-        <div style="flex:1">
-          <div class="ev-title">${typeIcon[ev.type]||'📄'} ${ev.title}</div>
-          <div class="ev-desc">${ev.description||'—'}</div>
-        </div>
-        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-          ${tcBadge(ev.type.replace(/-/g,' '), ev.type)}
-          ${tcBadge(ev.syncStatus||'local', ev.syncStatus||'local')}
-        </div>
-      </div>
-      <div class="ev-meta">
-        ${emp ? `<span class="tc-chip">${emp.displayName}</span>` : ''}
-        ${mod ? `<span class="tc-chip">${mod.title}</span>` : ''}
-        ${les ? `<span class="tc-chip">${les.title}</span>` : ''}
-        ${path ? `<span class="tc-chip">${path.title}</span>` : ''}
-        <span class="tc-chip">${sourceLabel[ev.source]||ev.source}</span>
-        <span class="tc-chip">${fmtDate(ev.createdAt)}</span>
-      </div>
-    </div>`;
+// ── RENDER: TRAINING EVIDENCE ──────────────────────────────────────
+function renderEvidence(){
+  var el=document.getElementById('evidenceContent');if(!el)return;
+  var evidence=dmGetAll('ap3x_dm_evidence_records');
+  var employees=dmGetAll('ap3x_dm_employees');
+  var modules=dmGetAll('ap3x_dm_process_modules');
+  var lessons=dmGetAll('ap3x_dm_process_lessons');
+  var pathways=dmGetAll('ap3x_dm_pathways');
+  if(!evidence.length){el.innerHTML=tcEmptyState('&#x1F4C1;','No evidence records found.','Evidence records appear when Demo Mode is active or when employees complete lessons via the Employee Learning PWA.');return;}
+  var sourceLabel={dashboard:'Control Dashboard','employee-pwa':'Employee Learning PWA',demo:'Demo'};
+  var typeIcon={note:'&#x1F4DD;',checklist:'&#x2705;','photo-placeholder':'&#x1F4F7;','supervisor-note':'&#x1F441;','quiz-result':'&#x1F3AF;'};
+  el.innerHTML=evidence.map(function(ev){
+    var emp=employees.find(function(e){return e.id===ev.employeeId;});
+    var mod=modules.find(function(m){return m.id===ev.moduleId;});
+    var les=lessons.find(function(l){return l.id===ev.lessonId;});
+    var path=pathways.find(function(p){return p.id===ev.pathwayId;});
+    return '<div class="ev-card">'+
+      '<div class="ev-hdr">'+
+        '<div style="flex:1">'+
+          '<div class="ev-title">'+(typeIcon[ev.type]||'&#x1F4C4;')+' '+ev.title+'</div>'+
+          '<div class="ev-desc">'+(ev.description||'--')+'</div>'+
+        '</div>'+
+        '<div style="flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:4px">'+
+          tcBadge(ev.type.replace(/-/g,' '),ev.type)+
+          tcBadge(ev.syncStatus||'local',ev.syncStatus||'local')+
+        '</div>'+
+      '</div>'+
+      '<div class="ev-meta">'+
+        (emp?'<span class="tc-chip">'+emp.displayName+'</span>':'')+
+        (mod?'<span class="tc-chip">'+mod.title+'</span>':'')+
+        (les?'<span class="tc-chip">'+les.title+'</span>':'')+
+        (path?'<span class="tc-chip">'+path.title+'</span>':'')+
+        '<span class="tc-chip">'+(sourceLabel[ev.source]||ev.source||'--')+'</span>'+
+        '<span class="tc-chip">'+fmtDate(ev.createdAt)+'</span>'+
+      '</div>'+
+    '</div>';
   }).join('');
 }
 
-// ════════════════════════════════════════════════════════════════════
-// RENDER: DEMO / LIVE STATUS
-// ════════════════════════════════════════════════════════════════════
-function renderDemoLive() {
-  const el = document.getElementById('demoliveContent');
-  if (!el) return;
-  const bs         = loadBackendSettings();
-  const dataMode   = dmGetObj('ap3x_dm_data_mode','demo');
-  const beCfg      = dmGetObj('ap3x_dm_backend_config',{});
-  const employees  = dmGetAll('ap3x_dm_employees');
-  const pathways   = dmGetAll('ap3x_dm_pathways');
-  const progress   = dmGetAll('ap3x_dm_progress_records');
-  const dmSyncQ    = dmGetAll('ap3x_dm_pwa_sync_queue');
-  const syncQ      = getSyncQueue();
-  const demoEmps   = employees.filter(e=>e.isDemo).length;
-  const demoPaths  = pathways.filter(p=>p.isDemo).length;
-  const modeLabel  = {demo:'Demo Mode 🎭',live:'Live Mode 🟢',local:'Local Mode 💾'}[dataMode]||'Demo Mode 🎭';
-  const provLabel  = {local:'Local-only (no backend)','local-only':'Local-only (no backend)',supabase:'Supabase',firebase:'Firebase',aws:'AWS / Amplify','rest-endpoint':'Custom REST',custom:'Custom REST'}[beCfg.provider||bs.mode||'local']||'Local-only';
-  const connStatus = bs.mode&&bs.mode!=='local'&&bs[bs.mode] ? bs[bs.mode].status : 'not_configured';
-  const lastTest   = bs.mode&&bs.mode!=='local'&&bs[bs.mode]&&bs[bs.mode].lastTestedAt ? fmtDate(bs[bs.mode].lastTestedAt) : 'Never';
-
-  el.innerHTML = `
-    <div class="dl-status-grid">
-      <div class="dl-status-card">
-        <div class="dl-status-title">Data Mode</div>
-        <div class="dl-status-val">${modeLabel}</div>
-        <div class="dl-status-sub">Demo Mode shows the product. Live Mode runs the product.</div>
-        <div style="margin-top:10px">${tcBadge(dataMode, dataMode)}</div>
-      </div>
-      <div class="dl-status-card">
-        <div class="dl-status-title">Demo Records Active</div>
-        <div class="dl-status-val">${demoMode ? demoEmps : 0}</div>
-        <div class="dl-status-sub">${demoMode ? `${demoEmps} demo employees · ${demoPaths} demo pathways` : 'Demo Mode is off — live data only'}</div>
-        <div style="margin-top:10px">${tcBadge(demoMode?'Demo active':'Demo off', demoMode?'demo':'not_configured')}</div>
-      </div>
-      <div class="dl-status-card">
-        <div class="dl-status-title">Backend Provider</div>
-        <div class="dl-status-val" style="font-size:14px">${provLabel}</div>
-        <div class="dl-status-sub">Connection status: ${connStatus.replace('_',' ')}</div>
-        <div style="margin-top:10px">${tcBadge(connStatus.replace('_',' '), connStatus)}</div>
-      </div>
-      <div class="dl-status-card">
-        <div class="dl-status-title">Sync Queue</div>
-        <div class="dl-status-val">${dmSyncQ.length + syncQ.length}</div>
-        <div class="dl-status-sub">${dmSyncQ.length} structured records + ${syncQ.length} legacy records queued locally</div>
-        <div style="margin-top:10px">${tcBadge((dmSyncQ.length+syncQ.length)>0?'Records queued':'Queue empty',(dmSyncQ.length+syncQ.length)>0?'queued':'active')}</div>
-      </div>
-      <div class="dl-status-card">
-        <div class="dl-status-title">PWA Progress Model</div>
-        <div class="dl-status-val">Ready</div>
-        <div class="dl-status-sub">Employee PWA generates structured progress records. Sync wiring comes in Run 7.</div>
-        <div style="margin-top:10px">${tcBadge('Prepared','configured')}</div>
-      </div>
-      <div class="dl-status-card">
-        <div class="dl-status-title">Last Backend Test</div>
-        <div class="dl-status-val" style="font-size:14px">${lastTest}</div>
-        <div class="dl-status-sub">Configure backend in Settings to enable live sync</div>
-        <div style="margin-top:10px"><button class="btn-secondary sm" onclick="showView('settings')">⚙️ Go to Settings</button></div>
-      </div>
-    </div>
-    <div class="tc-section-title">📊 SSOT Data Summary</div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden">
-      <table class="tc-table">
-        <thead><tr><th>Entity</th><th>Records</th><th>Demo</th><th>Status</th></tr></thead>
-        <tbody>
-          ${[
-            ['Employees',         dmGetAll('ap3x_dm_employees')],
-            ['Training Pathways', dmGetAll('ap3x_dm_pathways')],
-            ['Process Modules',   dmGetAll('ap3x_dm_process_modules')],
-            ['Process Lessons',   dmGetAll('ap3x_dm_process_lessons')],
-            ['Competencies',      dmGetAll('ap3x_dm_competencies')],
-            ['Safety Acks',       dmGetAll('ap3x_dm_safety_acks')],
-            ['Progress Records',  dmGetAll('ap3x_dm_progress_records')],
-            ['Supervisor Reviews',dmGetAll('ap3x_dm_supervisor_reviews')],
-            ['Evidence Records',  dmGetAll('ap3x_dm_evidence_records')],
-            ['Dashboard Alerts',  dmGetAll('ap3x_dm_dashboard_alerts')],
-          ].map(([name, arr]) => {
-            const total = arr.length;
-            const demoCount = arr.filter(r=>r.isDemo).length;
-            return `<tr>
-              <td style="font-weight:600">${name}</td>
-              <td>${total}</td>
-              <td>${demoCount}</td>
-              <td>${tcBadge(total>0?'Seeded':'Empty',total>0?'active':'missing')}</td>
-            </tr>`;
-          }).join('')}
-        </tbody>
-      </table>
-    </div>`;
+// ── RENDER: DEMO / LIVE STATUS ─────────────────────────────────────
+function renderDemoLive(){
+  var el=document.getElementById('demoliveContent');if(!el)return;
+  var bs=loadBackendSettings();
+  var employees=dmGetAll('ap3x_dm_employees');
+  var pathways=dmGetAll('ap3x_dm_pathways');
+  var dmSyncQ=dmGetAll('ap3x_dm_pwa_sync_queue');
+  var syncQ=getSyncQueue();
+  var demoEmps=employees.filter(function(e){return e.isDemo;}).length;
+  var demoPaths=pathways.filter(function(p){return p.isDemo;}).length;
+  var provLabel={local:'Local-only (no backend)',supabase:'Supabase',firebase:'Firebase',aws:'AWS / Amplify',custom:'Custom REST'}[bs.mode||'local']||'Local-only';
+  var connStatus=bs.mode&&bs.mode!=='local'&&bs[bs.mode]?bs[bs.mode].status:'not_configured';
+  var lastTest=bs.mode&&bs.mode!=='local'&&bs[bs.mode]&&bs[bs.mode].lastTestedAt?fmtDate(bs[bs.mode].lastTestedAt):'Never';
+  var totalSync=dmSyncQ.length+syncQ.length;
+  el.innerHTML=
+    '<div class="dl-status-grid">'+
+      '<div class="dl-status-card"><div class="dl-status-title">Data Mode</div><div class="dl-status-val">'+(demoMode?'Demo Mode':'Live Mode')+'</div><div class="dl-status-sub">Demo Mode shows the product. Live Mode runs the product.</div><div style="margin-top:10px">'+tcBadge(demoMode?'Demo active':'Live mode',demoMode?'demo':'active')+'</div></div>'+
+      '<div class="dl-status-card"><div class="dl-status-title">Demo Records Active</div><div class="dl-status-val">'+(demoMode?demoEmps:0)+'</div><div class="dl-status-sub">'+(demoMode?demoEmps+' demo employees &middot; '+demoPaths+' demo pathways':'Demo Mode is off &mdash; live data only')+'</div><div style="margin-top:10px">'+tcBadge(demoMode?'Demo active':'Demo off',demoMode?'demo':'not_configured')+'</div></div>'+
+      '<div class="dl-status-card"><div class="dl-status-title">Backend Provider</div><div class="dl-status-val" style="font-size:14px">'+provLabel+'</div><div class="dl-status-sub">Connection: '+connStatus.replace(/_/g,' ')+'</div><div style="margin-top:10px">'+tcBadge(connStatus.replace(/_/g,' '),connStatus)+'</div></div>'+
+      '<div class="dl-status-card"><div class="dl-status-title">Sync Queue</div><div class="dl-status-val">'+totalSync+'</div><div class="dl-status-sub">'+dmSyncQ.length+' structured + '+syncQ.length+' legacy records queued locally</div><div style="margin-top:10px">'+tcBadge(totalSync>0?'Records queued':'Queue empty',totalSync>0?'queued':'active')+'</div></div>'+
+      '<div class="dl-status-card"><div class="dl-status-title">PWA Progress Model</div><div class="dl-status-val">Ready</div><div class="dl-status-sub">Employee PWA generates structured progress records. Full sync wiring in Run 7.</div><div style="margin-top:10px">'+tcBadge('Prepared','configured')+'</div></div>'+
+      '<div class="dl-status-card"><div class="dl-status-title">Last Backend Test</div><div class="dl-status-val" style="font-size:14px">'+lastTest+'</div><div class="dl-status-sub">Configure backend in Settings to enable live sync</div><div style="margin-top:10px"><button class="btn-secondary sm" onclick="showView(\'settings\')" aria-label="Go to Settings">&#x2699; Settings</button></div></div>'+
+    '</div>'+
+    '<div class="tc-section-title">&#x1F4CA; SSOT Data Summary</div>'+
+    '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden">'+
+    '<table class="tc-table"><thead><tr><th>Entity</th><th>Records</th><th>Demo</th><th>Status</th></tr></thead><tbody>'+
+    [['Employees','ap3x_dm_employees'],['Training Pathways','ap3x_dm_pathways'],['Process Modules','ap3x_dm_process_modules'],
+     ['Process Lessons','ap3x_dm_process_lessons'],['Competencies','ap3x_dm_competencies'],['Safety Acks','ap3x_dm_safety_acks'],
+     ['Progress Records','ap3x_dm_progress_records'],['Supervisor Reviews','ap3x_dm_supervisor_reviews'],
+     ['Evidence Records','ap3x_dm_evidence_records'],['Dashboard Alerts','ap3x_dm_dashboard_alerts']
+    ].map(function(pair){
+      var arr=dmGetAll(pair[1]),demoCount=arr.filter(function(r){return r.isDemo;}).length;
+      return '<tr><td style="font-weight:600">'+pair[0]+'</td><td>'+arr.length+'</td><td>'+demoCount+'</td><td>'+tcBadge(arr.length>0?'Seeded':'Empty',arr.length>0?'active':'missing')+'</td></tr>';
+    }).join('')+
+    '</tbody></table></div>';
 }
 
-// ════════════════════════════════════════════════════════════════════
-// RENDER: EMPLOYEE PROGRESS (upgraded version replaces existing table)
-// ════════════════════════════════════════════════════════════════════
-// Called on patient view open — adds SSOT data-driven rows beneath legacy header
-function renderEmployeeProgressPanel() {
-  // Inject a SSOT employee panel into the existing patients view
-  const existing = document.getElementById('view-patients');
-  if (!existing) return;
-  // Check if already injected
-  if (document.getElementById('ssotEmpPanel')) return;
-  const panel = document.createElement('div');
-  panel.id = 'ssotEmpPanel';
-  panel.style.marginBottom = '20px';
-  renderSsotEmpPanel(panel);
-  // Insert before the legacy table
-  const tblWrap = existing.querySelector('.tbl-wrap');
-  if (tblWrap) {
-    existing.insertBefore(panel, tblWrap);
-  }
+// ── RENDER: EMPLOYEE PROGRESS (SSOT panel in Employees view) ────────
+function renderEmployeeProgressPanel(){
+  var existing=document.getElementById('view-patients');if(!existing)return;
+  var prev=document.getElementById('ssotEmpPanel');if(prev)prev.remove();
+  var employees=dmGetAll('ap3x_dm_employees');
+  var pathways=dmGetAll('ap3x_dm_pathways');
+  var reviews=dmGetAll('ap3x_dm_supervisor_reviews');
+  var acks=dmGetAll('ap3x_dm_safety_acks');
+  if(!employees.length)return;
+  var panel=document.createElement('div');panel.id='ssotEmpPanel';panel.style.marginBottom='20px';
+  panel.innerHTML=
+    '<div class="tc-section-title">&#x1F4CA; Manufacturing Training Progress &mdash; SSOT Records</div>'+
+    '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px">'+
+    '<table class="tc-table">'+
+    '<thead><tr><th>Employee</th><th>Department</th><th class="hide-mobile">Pathway</th><th>Progress</th><th>Competency</th><th class="hide-mobile">Safety Acks</th><th class="hide-mobile">Last Active</th><th>Sync</th></tr></thead>'+
+    '<tbody>'+employees.map(function(emp,ei){
+      var path=pathways.find(function(p){return(emp.assignedPathwayIds||[])[0]===p.id;});
+      var ackDone=acks.filter(function(a){return(a.acknowledgedByEmployeeIds||[]).includes(emp.id);}).length;
+      var ackTotal=acks.length;
+      var colour=empColour(ei);
+      return '<tr>'+
+        '<td><div class="tc-emp-chip"><div class="tc-avatar" style="background:'+colour+'">'+empInitials(emp.displayName)+'</div><div><div class="tc-emp-name">'+emp.displayName+'</div><div class="tc-emp-role">'+emp.roleTitle+' &middot; '+(emp.employeeNumber||emp.id)+'</div></div></div></td>'+
+        '<td style="font-size:12px">'+(emp.departmentId||'--').replace('dept-','').replace(/-/g,' ')+'</td>'+
+        '<td class="hide-mobile" style="font-size:12px">'+(path?path.title:'<span class="tc-chip missing">Not assigned</span>')+'</td>'+
+        '<td>'+pctBar(emp.progressPercent)+'</td>'+
+        '<td>'+tcBadge((emp.competencyStatus||'not_started').replace(/_/g,' '),emp.competencyStatus)+'</td>'+
+        '<td class="hide-mobile" style="font-size:12px"><span class="tc-chip '+(emp.safetyAcknowledgementStatus==='complete'?'ok':'missing')+'">'+ackDone+'/'+ackTotal+' acks</span></td>'+
+        '<td class="hide-mobile" style="font-size:12px;color:var(--muted)">'+fmtAgo(emp.lastActivityAt)+'</td>'+
+        '<td>'+tcBadge(emp.syncStatus||'local',emp.syncStatus||'local')+'</td>'+
+      '</tr>';
+    }).join('')+
+    '</tbody></table></div>';
+  var tblWrap=existing.querySelector('.tbl-wrap');
+  if(tblWrap)existing.insertBefore(panel,tblWrap);else existing.appendChild(panel);
 }
 
-function renderSsotEmpPanel(container) {
-  const employees = dmGetAll('ap3x_dm_employees');
-  const pathways  = dmGetAll('ap3x_dm_pathways');
-  const reviews   = dmGetAll('ap3x_dm_supervisor_reviews');
-  const acks      = dmGetAll('ap3x_dm_safety_acks');
-
-  if (!employees.length) return; // leave legacy table alone if SSOT has no data
-
-  const html = `
-    <div class="tc-section-title">📊 Manufacturing Training Progress — SSOT Records</div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px">
-      <table class="tc-table">
-        <thead>
-          <tr>
-            <th>Employee</th>
-            <th>Department</th>
-            <th class="hide-mobile">Pathway</th>
-            <th>Progress</th>
-            <th>Competency</th>
-            <th class="hide-mobile">Safety Acks</th>
-            <th class="hide-mobile">Last Active</th>
-            <th>Sync</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${employees.map((emp, ei) => {
-            const path    = pathways.find(p => (emp.assignedPathwayIds||[])[0] === p.id);
-            const rev     = reviews.find(r => r.employeeId === emp.id && r.status === 'pending');
-            const ackDone = acks.filter(a => (a.acknowledgedByEmployeeIds||[]).includes(emp.id)).length;
-            const ackTotal= acks.length;
-            const colour  = empColour(ei);
-            const statusCls = {active:'LOW',paused:'MEDIUM',completed:'LOW',archived:'MISSING'}[emp.status]||'MISSING';
-            const compCls   = {not_started:'MISSING',in_progress:'MEDIUM',competent:'LOW',needs_review:'HIGH'}[emp.competencyStatus]||'MISSING';
-            const ackCls    = emp.safetyAcknowledgementStatus==='complete'?'LOW':emp.safetyAcknowledgementStatus==='partial'?'MEDIUM':'HIGH';
-            return `<tr>
-              <td>
-                <div class="tc-emp-chip">
-                  <div class="tc-avatar" style="background:${colour}">${empInitials(emp.displayName)}</div>
-                  <div>
-                    <div class="tc-emp-name">${emp.displayName}</div>
-                    <div class="tc-emp-role">${emp.roleTitle} · ${emp.employeeNumber||emp.id}</div>
-                  </div>
-                </div>
-              </td>
-              <td style="font-size:12px">${emp.departmentId.replace('dept-','').replace(/-/g,' ')}</td>
-              <td class="hide-mobile" style="font-size:12px">${path ? path.title : '<span class="tc-chip missing">Not assigned</span>'}</td>
-              <td>${pctBar(emp.progressPercent)}</td>
-              <td>${tcBadge((emp.competencyStatus||'not_started').replace(/_/g,' '), emp.competencyStatus)}</td>
-              <td class="hide-mobile" style="font-size:12px"><span class="tc-chip ${ackCls==='LOW'?'ok':ackCls==='MEDIUM'?'':'missing'}">${ackDone}/${ackTotal} acks</span></td>
-              <td class="hide-mobile" style="font-size:12px;color:var(--muted)">${fmtAgo(emp.lastActivityAt)}</td>
-              <td>${tcBadge(emp.syncStatus||'local', emp.syncStatus||'local')}</td>
-            </tr>`;
-          }).join('')}
-        </tbody>
-      </table>
-    </div>`;
-  container.innerHTML = html;
-}
-
-// ════════════════════════════════════════════════════════════════════
-// RENDER: DASHBOARD ALERTS (supplement existing renderAlerts)
-// ════════════════════════════════════════════════════════════════════
-function renderSsotAlerts() {
-  // Append SSOT alerts to existing alertsList if present
-  const alertsEl = document.getElementById('alertsList');
-  if (!alertsEl) return;
-  const ssotAlerts = dmGetAll('ap3x_dm_dashboard_alerts').filter(a => !a.resolved);
-  if (!ssotAlerts.length) return;
-
-  const employees = dmGetAll('ap3x_dm_employees');
-  const pathways  = dmGetAll('ap3x_dm_pathways');
-  const sevCls    = {info:'MEDIUM',warning:'HIGH',critical:'CRITICAL'};
-  const sevIcon   = {info:'ℹ️',warning:'⚠️',critical:'🚨'};
-  const typeIcon  = {
-    'overdue-training':'⏰','safety-ack-missing':'🦺','review-required':'✅',
-    'sync-error':'🔄','incomplete-pathway':'🗺️','demo-warning':'🎭'
-  };
-
-  // Remove previous SSOT section if present to avoid duplicates
-  const prevSsot = alertsEl.querySelector('.ssot-alerts-section');
-  if (prevSsot) prevSsot.remove();
-  const existing = alertsEl.innerHTML;
-  const ssotHtml = `
-    <div class="tc-section-title" style="margin-top:16px">🚨 Manufacturing Training Alerts — SSOT</div>
-    ${ssotAlerts.map(alert => {
-      const emp  = employees.find(e => e.id === alert.linkedEmployeeId);
-      const path = pathways.find(p => p.id === alert.linkedPathwayId);
-      return `<div class="alert-card ${sevCls[alert.severity]||'MEDIUM'}" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;border-left:4px solid ${alert.severity==='critical'?'var(--critical)':alert.severity==='warning'?'var(--warn)':'var(--gold)'}">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
-          <div style="flex:1">
-            <div style="font-size:13px;font-weight:700;margin-bottom:4px">${typeIcon[alert.type]||'🔔'} ${alert.title}</div>
-            <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:6px">${alert.message}</div>
-            <div style="font-size:11px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap">
-              ${emp ? `<span>👤 ${emp.displayName}</span>` : ''}
-              ${path ? `<span>🗺️ ${path.title}</span>` : ''}
-              <span>🕐 ${fmtAgo(alert.createdAt)}</span>
-            </div>
-          </div>
-          <div style="flex-shrink:0;display:flex;flex-direction:column;gap:4px;align-items:flex-end">
-            ${tcBadge(alert.severity, alert.severity)}
-            <button class="btn-secondary sm" onclick="resolveSsotAlert('${alert.id}')" style="font-size:11px;padding:3px 8px">✓ Resolve</button>
-          </div>
-        </div>
-      </div>`;
-    }).join('')}`;
-
-  const wrapper = document.createElement('div');
-  wrapper.className = 'ssot-alerts-section';
-  wrapper.innerHTML = ssotHtml;
+// ── RENDER: SSOT ALERTS (append to alertsList) ─────────────────────
+function renderSsotAlerts(){
+  var alertsEl=document.getElementById('alertsList');if(!alertsEl)return;
+  var prev=alertsEl.querySelector('.ssot-alerts-section');if(prev)prev.remove();
+  var ssotAlerts=dmGetAll('ap3x_dm_dashboard_alerts').filter(function(a){return!a.resolved;});
+  if(!ssotAlerts.length)return;
+  var employees=dmGetAll('ap3x_dm_employees');
+  var pathways=dmGetAll('ap3x_dm_pathways');
+  var sevCol={info:'var(--gold)',warning:'var(--warn)',critical:'var(--critical)'};
+  var typeIcon={'overdue-training':'&#x23F0;','safety-ack-missing':'&#x1F9BA;','review-required':'&#x2705;','sync-error':'&#x1F504;','incomplete-pathway':'&#x1F5FA;','demo-warning':'&#x1F3AD;'};
+  var wrapper=document.createElement('div');wrapper.className='ssot-alerts-section';
+  wrapper.innerHTML=
+    '<div class="tc-section-title" style="margin-top:16px">&#x1F6A8; Manufacturing Training Alerts &mdash; SSOT</div>'+
+    ssotAlerts.map(function(alert){
+      var emp=employees.find(function(e){return e.id===alert.linkedEmployeeId;});
+      var path=pathways.find(function(p){return p.id===alert.linkedPathwayId;});
+      return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;border-left:4px solid '+(sevCol[alert.severity]||'var(--gold)')+'">'+
+        '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">'+
+          '<div style="flex:1">'+
+            '<div style="font-size:13px;font-weight:700;margin-bottom:4px">'+(typeIcon[alert.type]||'&#x1F514;')+' '+alert.title+'</div>'+
+            '<div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:6px">'+alert.message+'</div>'+
+            '<div style="font-size:11px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap">'+
+              (emp?'<span>&#x1F464; '+emp.displayName+'</span>':'')+
+              (path?'<span>&#x1F5FA; '+path.title+'</span>':'')+
+              '<span>&#x1F550; '+fmtAgo(alert.createdAt)+'</span>'+
+            '</div>'+
+          '</div>'+
+          '<div style="flex-shrink:0;display:flex;flex-direction:column;gap:4px;align-items:flex-end">'+
+            tcBadge(alert.severity,alert.severity)+
+            '<button class="btn-secondary sm" onclick="resolveSsotAlert(\''+alert.id+'\')" aria-label="Resolve alert" style="font-size:11px;padding:3px 8px">&#x2713; Resolve</button>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+    }).join('');
   alertsEl.appendChild(wrapper);
 }
 
-function resolveSsotAlert(id) {
-  const alerts = dmGetAll('ap3x_dm_dashboard_alerts');
-  const updated = alerts.map(a => a.id === id ? {...a, resolved: true} : a);
-  dmSaveAll('ap3x_dm_dashboard_alerts', updated);
+function resolveSsotAlert(id){
+  var alerts=dmGetAll('ap3x_dm_dashboard_alerts');
+  var updated=alerts.map(function(a){return a.id===id?Object.assign({},a,{resolved:true}):a;});
+  dmSaveAll('ap3x_dm_dashboard_alerts',updated);
   renderSsotAlerts();
-  showToast('Alert resolved ✓');
+  showToast('Alert resolved \u2713');
 }
 
-// ════════════════════════════════════════════════════════════════════
-// INIT HOOKS — called from renderAll() and view switches
-// ════════════════════════════════════════════════════════════════════
-// Extend existing renderAll to include SSOT rendering
-// Run 3: extend renderAll to also trigger SSOT alert rendering
-const _r3_origRenderAll = renderAll;
-window.renderAll = function renderAll() {
-  _r3_origRenderAll();
-  renderSsotAlerts();
-};
+// ── INIT HOOKS ─────────────────────────────────────────────────────
+// Safe extend renderAll — called after DOMContentLoaded sets up original
+document.addEventListener('DOMContentLoaded',function(){
+  // Wait one tick for original renderAll to complete
+  setTimeout(function(){renderSsotAlerts();},100);
+});
 
-// Hook: inject SSOT employee panel when patients view opens
-// Run 3: extend showView to inject SSOT employee panel on patients tab
-const _r3_origShowView = showView;
-window.showView = function showView(v) {
+// Extend showView for new views and employee panel injection
+var _r3_origShowView=window.showView||function(){};
+window.showView=function(v){
   _r3_origShowView(v);
-  if (v === 'patients') {
-    setTimeout(renderEmployeeProgressPanel, 50);
-  }
+  if(v==='patients'){setTimeout(renderEmployeeProgressPanel,50);}
 };
 
 </script>
