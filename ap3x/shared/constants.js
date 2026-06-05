@@ -44,10 +44,10 @@ export const RISK_LEVELS = {
 
 // ── Rule thresholds ───────────────────────────────────────────────
 export const THRESHOLDS = {
-  ANXIETY_CRITICAL:      8,   // single score >= this -> CRITICAL flag
-  ANXIETY_HIGH:          6,   // single score >= this -> HIGH flag
-  ANXIETY_MEDIUM_RUN:    5,   // 3 consecutive >= this -> MEDIUM flag
-  ANXIETY_MEDIUM_COUNT:  3,   // consecutive entries for medium trend
+  ANXIETY_CRITICAL:      8,   // readiness score: if low score >= this threshold -> CRITICAL flag
+  ANXIETY_HIGH:          6,   // readiness score: if low score >= this threshold -> HIGH flag
+  ANXIETY_MEDIUM_RUN:    5,   // 3 consecutive below threshold -> MEDIUM flag
+  ANXIETY_MEDIUM_COUNT:  3,   // consecutive entries for trend detection
   SLEEP_LOW:             4,   // sleep score < this -> low flag
   MISSING_DATA_HOURS:   48    // no check-in in this many hours -> MISSING
 };

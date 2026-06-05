@@ -978,11 +978,11 @@ function buildOnboarding() {
     <div class="ob-step active" id="ob1">
       <div class="ob-logo"><img src="../../icons/as-logo.png" alt="AutoSkill OS™" style="width:88px;height:88px;object-fit:contain;filter:drop-shadow(0 0 12px rgba(201,168,76,0.25))"/><div class="ob-brand">AutoSkill OS™</div><div class="ob-brand-sub">Employee Learning PWA</div></div>
       <h1 class="ob-title">Welcome to your Employee Learning Portal</h1>
-      <p class="ob-desc">Manufacturing training check-ins, process modules, skill techniques, and competency tracking — all built around your recovery.</p>
+      <p class="ob-desc">Manufacturing training check-ins, process modules, skill techniques, and competency tracking — all built around your competency development.</p>
       <div class="ob-feats">
         <div class="ob-feat"><span>📋</span>Daily training check-in (10 questions)</div>
         <div class="ob-feat"><span>🎓</span>Manufacturing Training Pathway — 3 modules</div>
-        <div class="ob-feat"><span>📈</span>Mood, anxiety &amp; sleep tracking</div>
+        <div class="ob-feat"><span>📈</span>Competency and skills tracking</div>
         <div class="ob-feat"><span>🛠️</span>Skill practices &amp; process checkpoints</div>
       </div>
       <button class="btn-primary" onclick="obGo(1,2)">Set up my training profile →</button>
@@ -1495,7 +1495,7 @@ function completeLessonFromDetail(id, xpVal) {
   renderLessons();
 }
 
-// ── COPING ─────────────────────────────────────────────
+// ── SKILL ACTIONS (internal key: COPING, preserved for JS refs) ──────────────
 
 // ── PATHWAY TAB ────────────────────────────────────────────────────
 function renderPathway() {

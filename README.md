@@ -271,7 +271,7 @@ If using Supabase, add your Vercel/Netlify domain to your Supabase project's **A
 
 | Run | Focus | Status |
 |---|---|---|
-| Run 1 | Branding + language refactor (TherapyLink → AutoSkill OS) | ✅ Complete |
+| Run 1 | Branding + language refactor (AutoSkill OS™ → AutoSkill OS) | ✅ Complete |
 | Run 2 | Manufacturing SSOT / data model | ✅ Complete |
 | Run 3 | Control Dashboard upgrade | ✅ Complete |
 | Run 4 | Employee Learning PWA upgrade | ✅ Complete |
@@ -303,11 +303,11 @@ If using Supabase, add your Vercel/Netlify domain to your Supabase project's **A
 4p3x_carelink/
 ├── ap3x/
 │   ├── demo/
-│   │   └── clinician-demo.html        ← Control Dashboard (single-file app, ~4200 lines)
+│   │   └── clinician-demo.html        ← Control Dashboard (filename preserved for deployment)
 │   ├── patient-pwa/
 │   │   ├── index.html                 ← PWA shell
-│   │   ├── patient-app.js             ← PWA logic (~2600 lines, Runs 4–12)
-│   │   ├── patient.css                ← PWA styles
+│   │   ├── patient-app.js             ← Employee PWA logic (filename preserved for deployment)
+│   │   ├── patient.css                ← Employee PWA styles (filename preserved for deployment)
 │   │   ├── manifest.json              ← PWA manifest (AutoSkill OS™)
 │   │   └── ap3x-sw.js                 ← Service worker (v5, offline cache)
 │   └── shared/

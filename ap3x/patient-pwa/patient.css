@@ -1,5 +1,5 @@
-/* TherapyLink™ — Patient Recovery PWA Styles
-   Black / Gold / Silver / Green / Purple futuristic clinical theme
+/* AutoSkill OS™ — Employee Training PWA Styles
+   Black / Gold / Silver / Green / Purple futuristic manufacturing theme
    Created by Kyzel Kreates · Powered by 4P3X Intelligent AI      */
 
 :root {
@@ -195,6 +195,7 @@ body {
 .ci-q   { font-size: 18px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
 .ci-sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
 
+/* training readiness check-in buttons (internal class: mood-* preserved for JS) */
 .mood-row { display: flex; gap: 8px; justify-content: space-between; margin-bottom: 16px; }
 .mood-btn {
   flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px;
@@ -318,7 +319,7 @@ body {
 }
 .lesson-check.done { background: var(--green); border-color: var(--green); color: #fff; }
 
-/* ── Coping strategies ───────────────────────────────────────── */
+/* ── Skill Actions (CSS class names preserved: coping-*, mood-*) ─── */
 .coping-card {
   background: var(--surface); border-radius: var(--r); padding: 14px;
   margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border);

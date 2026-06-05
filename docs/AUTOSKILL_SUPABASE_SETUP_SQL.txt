@@ -12,15 +12,15 @@
 -- Current app runs local-first. No remote backend connection is active.
 -- ════════════════════════════════════════════════════════════════════
 
-THERAPYLINK™ SUPABASE SETUP SQL
-Therapist Dashboard + Patient Mental Health PWA
+AUTOSKILL OS™ SUPABASE SETUP SQL
+Control Dashboard + Employee Learning PWA
 Powered by 4P3X Intelligent AI™ Created by Kyzel Kreates™
 
 SQL TYPE:
 Full backend setup SQL reference for Supabase.
 
 RLS STATUS:
-RLS ENABLED on all patient/user data tables.
+RLS ENABLED on all employee/user data tables.
 
 IMPORTANT:
 Run this SQL manually inside the Supabase SQL editor.
@@ -282,8 +282,8 @@ create policy "Profiles can update own profile"
   using (auth_user_id = auth.uid())
   with check (auth_user_id = auth.uid());
 
-drop policy if exists "Therapists can read linked patient profiles" on public.autoskill_os_profiles;
-create policy "Therapists can read linked patient profiles"
+drop policy if exists "Trainers/Supervisors can read linked employee profiles" on public.autoskill_os_profiles;
+create policy "Trainers/Supervisors can read linked employee profiles"
   on public.autoskill_os_profiles for select to authenticated
   using (
     exists (
@@ -295,8 +295,8 @@ create policy "Therapists can read linked patient profiles"
     )
   );
 
-drop policy if exists "Therapists can read own patient links" on public.autoskill_os_patient_links;
-create policy "Therapists can read own patient links"
+drop policy if exists "Trainers/Supervisors can read own employee links" on public.autoskill_os_patient_links;
+create policy "Trainers/Supervisors can read own employee links"
   on public.autoskill_os_patient_links for select to authenticated
   using (
     exists (
@@ -307,8 +307,8 @@ create policy "Therapists can read own patient links"
     )
   );
 
-drop policy if exists "Patients can read own patient links" on public.autoskill_os_patient_links;
-create policy "Patients can read own patient links"
+drop policy if exists "Employees can read own employee links" on public.autoskill_os_patient_links;
+create policy "Employees can read own employee links"
   on public.autoskill_os_patient_links for select to authenticated
   using (
     exists (
@@ -517,5 +517,5 @@ order by tablename, policyname;
 
 ====================================================
 END OF SQL FILE
-THERAPYLINK™ — Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
+AUTOSKILL OS™ — Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
 ====================================================

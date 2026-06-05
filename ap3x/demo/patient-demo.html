@@ -272,7 +272,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
       <div class="ob-feature-list">
         <div class="ob-feat"><span>📋</span>Daily training check-in (10 questions)</div>
         <div class="ob-feat"><span>🎓</span>Manufacturing Training Pathway — 3 modules</div>
-        <div class="ob-feat"><span>📈</span>Mood, anxiety &amp; sleep tracking</div>
+        <div class="ob-feat"><span>📈</span>Competency and skills tracking</div>
         <div class="ob-feat"><span>🛠️</span>Skill practices &amp; process checkpoints</div>
       </div>
       <button class="btn-primary" onclick="obNext(1)">Set up my training profile →</button>
@@ -462,7 +462,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
       <!-- Q5 Coping -->
       <div class="checkin-step hidden" id="ci-step-5">
         <div class="ci-question">5. Have you used any coping strategies today?</div>
-        <div class="ci-sub">e.g. breathing exercises, journaling, talking to someone</div>
+        <div class="ci-sub">e.g. focus breaks, journaling, talking to someone</div>
         <div class="form-card">
           <div class="yn-row">
             <button class="yn-btn yes" id="ci-coping-yes" onclick="selectYN('coping','yes')">✓ Yes</button>
@@ -803,15 +803,15 @@ const LESSON_CONTENT = {
     moduleTitle: 'Module 1 — Manufacturing Site Orientation',
     title: 'Understanding Your Workstation',
     estimatedTime: '8–10 minutes',
-    summary: 'Recovery is not always a straight line. Some days may feel easier, while others may feel more difficult. This lesson helps you understand recovery as a process of learning, noticing patterns, building support, and taking small steps that help you feel safer and more able to cope.',
+    summary: 'Progress is not always a straight line. Some days may feel easier, while others may feel more difficult. This lesson helps you understand training progress as a process of learning, noticing patterns, building support, and taking small steps that help you feel safer and more able to cope.',
     learningGoals: [
-      'Understand that recovery can look different for every person.',
+      'Understand that skill development can look different for every person.',
       'Recognise that progress can happen gradually.',
       'Learn why small steps matter.',
       'Understand how AutoSkill OS™ can support learning between supervisor sessions.'
     ],
     sections: [
-      { heading: 'Recovery is personal', body: 'Workplace competency development does not mean feeling perfect all the time. It can mean understanding yourself better, recognising what affects your progress, learning coping strategies, and feeling more able to ask for help when needed. Everyone\'s recovery looks different.' },
+      { heading: 'Progress is personal', body: 'Workplace competency development does not mean feeling perfect all the time. It can mean understanding yourself better, recognising what affects your progress, learning coping strategies, and feeling more able to ask for help when needed. Everyone\'s training progress looks different.' },
       { heading: 'Progress is not always linear', body: 'It is normal to have good days, difficult days, and days that feel somewhere in between. A difficult day does not mean you have failed. It may simply show that your mind and body need care, rest, support, or a different strategy.' },
       { heading: 'Small steps count', body: 'Small actions can support competency development. This might include completing a check-in, reviewing a process step, practising a tool procedure, writing down a question, contacting your supervisor, or attending a training session. These steps can build confidence over time.' },
       { heading: 'Why tracking helps', body: 'Tracking mood, stress, sleep, coping strategies, and reflections can help you and your supervisor notice patterns. These patterns may help guide future training and make supervisor check-ins more focused.' },
@@ -819,7 +819,7 @@ const LESSON_CONTENT = {
     ],
     reflectionPrompt: 'What is one workstation or process area you want to improve this week?',
     learnerTask: 'Write down one small action you can take today to support your performance.',
-    supervisorNote: 'Review the patient\'s definition of progress. It may reveal expectations, pressure points, or opportunities for realistic goal-setting.',
+    supervisorNote: 'Review the employee\'s definition of progress. It may reveal expectations, pressure points, or opportunities for realistic goal-setting.',
     platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I understand my workstation layout and responsibilities'
   },
@@ -831,7 +831,7 @@ const LESSON_CONTENT = {
     estimatedTime: '8–10 minutes',
     summary: 'Correct PPE use, workstation readiness, and safety checks are essential before entering the production area. This module helps you understand the key requirements and why checking them matters for your safety and your team's.',
     learningGoals: [
-      'Understand the difference between mood, anxiety, and stress.',
+      'Understand how confidence, energy, and focus affect training.',
       'Notice how emotional experiences can affect the body.',
       'Learn why rating mood and stress can be useful.',
       'Build confidence in describing your experience.'
@@ -951,7 +951,7 @@ const LESSON_CONTENT = {
     ],
     reflectionPrompt: 'Which grounding or breathing technique feels most manageable for you?',
     learnerTask: 'Try one breathing or grounding technique for two minutes and record how you feel afterwards.',
-    supervisorNote: 'Check whether breathing exercises feel safe for the patient. Some patients may prefer grounding over breath focus.',
+    supervisorNote: 'Check whether focus breaks feel safe for the patient. Some patients may prefer grounding over breath focus.',
     platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I have tried a grounding technique'
   },
@@ -970,7 +970,7 @@ const LESSON_CONTENT = {
     ],
     sections: [
       { heading: 'Why routine helps', body: 'Routine can reduce decision pressure and create small anchors in the day. Predictable actions can support sleep, mood, energy, and emotional regulation.' },
-      { heading: 'Start small', body: 'A helpful routine might begin with one or two actions, such as drinking water, opening curtains, taking medication as prescribed, completing a check-in, stepping outside, eating something nourishing, or doing a grounding exercise.' },
+      { heading: 'Start small', body: 'A helpful routine might begin with one or two actions, such as drinking water, opening curtains, taking medication as prescribed, completing a check-in, stepping outside, eating something nourishing, or doing a grounding check.' },
       { heading: 'Make a difficult-day version', body: 'Training routines should include a low-energy version. For example, if a walk feels too much, sitting near a window may be enough. If journaling feels too much, writing one word may be enough.' },
       { heading: 'Link actions together', body: 'Routines are easier when connected to something you already do. For example: after brushing teeth, complete a check-in. After breakfast, take two slow breaths. Before bed, write one reflection.' },
       { heading: 'Review and adjust', body: 'A routine should support you, not punish you. If it does not work, adjust it with curiosity rather than self-criticism.' }
@@ -1055,7 +1055,7 @@ const LESSON_CONTENT = {
     ],
     reflectionPrompt: 'What are your early signs that you may need extra support?',
     learnerTask: 'Create a simple support plan with three coping actions and two support contacts.',
-    supervisorNote: 'Review the patient\'s support plan and help make it specific, realistic, and safe.',
+    supervisorNote: 'Review the employee\'s support plan and help make it specific, realistic, and safe.',
     platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I have created a support plan'
   },
@@ -1076,7 +1076,7 @@ const LESSON_CONTENT = {
     ],
     sections: [
       { heading: 'Progress can be subtle', body: 'Progress may look like completing a process step more accurately, spotting an error sooner, asking a supervisor for guidance, finishing a module, or practising a skill consistently across multiple shifts. These all count more kindly.' },
-      { heading: 'Progress is not perfection', body: 'You can be making progress and still have difficult days. Recovery does not require constant improvement. It often involves learning how to respond differently when difficulties appear.' },
+      { heading: 'Progress is not perfection', body: 'You can be making progress and still have difficult days. Progress does not require constant improvement. It often involves learning how to respond differently when difficulties appear.' },
       { heading: 'Look at evidence', body: 'Use check-ins, lesson completion, mood trends, notes, and coping strategy use as evidence. This can help you see change more clearly over time.' },
       { heading: 'Name strengths', body: 'Strengths might include persistence, honesty, courage, awareness, patience, creativity, care for others, or willingness to try. These strengths can support recovery.' },
       { heading: 'Bring progress to your check-in', body: 'Progress reflections can help your supervisor understand what is changing and what still needs support.' }
@@ -1175,7 +1175,7 @@ const LESSON_CONTENT = {
     learningGoals: [
       'Bring together learning from the pathway.',
       'Identify strengths, triggers, and coping strategies.',
-      'Create realistic recovery goals.',
+      'Create realistic training progress goals.',
       'Build a plan for continued support.'
     ],
     sections: [
@@ -1351,7 +1351,7 @@ function renderProgress(){
     ${checkins.length===0?'<p style="color:var(--muted);font-size:13px;padding:20px 0;text-align:center">No check-ins yet. Complete your first check-in to see your progress here.</p>':
     checkins.slice(0,10).map(c=>{const sc=c.anxiety<=3?'sl':c.anxiety<=5?'sm':c.anxiety<=7?'sh':'sc';return`<div class="history-item"><div class="hi-score pc-score ${sc}">${c.anxiety}</div><div class="hi-info"><div style="font-size:13px;font-weight:600">${new Date(c.date).toLocaleDateString()} <span class="risk-badge ${c.risk}" style="font-size:10px;padding:2px 8px">${c.risk}</span></div><div class="hi-date">Mood: ${c.mood}/10 · Sleep: ${c.sleep}/10 · Energy: ${c.energy}/10</div>${c.note?`<div class="hi-note" style="color:var(--muted)">📝 ${c.note}</div>`:''}</div></div>`;}).join('')}
     <div class="safety-notice" style="margin-top:20px">
-      <h4>⚠️ Recovery Support Notice</h4>
+      <h4>⚠️ Progress Support Notice</h4>
       <p>AutoSkill OS™ supports manufacturing workforce training and competency tracking. It does not replace site-specific safety protocols or emergency proal care. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.</p>
     </div>`;
 }

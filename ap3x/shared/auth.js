@@ -22,7 +22,8 @@ async function hashPassword(password) {
 // ── Register ──────────────────────────────────────────────────────
 /**
  * register({ username, password, name, role })
- * role: 'patient' (employee) | 'therapist' (trainer/supervisor)
+ * role: 'patient' (maps to Employee) | 'therapist' (maps to Trainer/Supervisor)
+ * Note: internal role values preserved for localStorage backward-compatibility.
  */
 export async function register({ username, password, name, role }) {
   if (!username || !password) return { ok: false, error: 'Username and password required.' };

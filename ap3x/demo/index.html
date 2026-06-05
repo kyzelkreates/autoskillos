@@ -42,8 +42,8 @@ a{color:inherit;text-decoration:none}
 .nav-link{padding:8px 18px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;transition:all var(--t);border:none}
 .nav-link.outline{border:2px solid var(--border);background:transparent;color:var(--muted)}
 .nav-link.outline:hover{border-color:var(--gold);color:var(--gold)}
-.nav-link.patient{background:linear-gradient(135deg,var(--purple),var(--purple-d));color:#fff}
-.nav-link.patient:hover{opacity:.9}
+.nav-link.employee-pwa{background:linear-gradient(135deg,var(--purple),var(--purple-d));color:#fff}
+.nav-link.employee-pwa:hover{opacity:.9}
 .nav-link.trainer{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#000}
 .nav-link.trainer:hover{opacity:.9}
 
@@ -86,7 +86,7 @@ a{color:inherit;text-decoration:none}
 .dc-title{font-size:18px;font-weight:800;color:#fff;position:relative;z-index:1}
 .dc-sub{font-size:12px;color:rgba(255,255,255,.75);margin-top:3px;position:relative;z-index:1}
 .dc-trainer .dc-header{background:linear-gradient(135deg,#3a2800,#c9a84c)}
-.dc-patient .dc-header{background:linear-gradient(135deg,var(--purple-xl),var(--purple-d))}
+.dc-employee-pwa .dc-header{background:linear-gradient(135deg,var(--purple-xl),var(--purple-d))}
 .dc-body{padding:20px 22px;background:var(--surface);flex:1}
 .dc-features{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
 .dc-features li{font-size:13px;color:var(--muted);display:flex;align-items:flex-start;gap:8px}
@@ -140,7 +140,7 @@ a{color:inherit;text-decoration:none}
   </div>
   <div class="nav-links">
     <a href="clinician-demo.html" class="nav-link trainer">Control Dashboard</a>
-    <a href="../patient-pwa/" class="nav-link patient">Employee Learning PWA</a>
+    <a href="../patient-pwa/" class="nav-link employee-pwa">Employee Learning PWA</a>
   </div>
 </nav>
 
@@ -199,8 +199,8 @@ a{color:inherit;text-decoration:none}
       </div>
     </a>
 
-    <!-- Patient -->
-    <a href="../patient-pwa/" class="demo-card dc-patient">
+    <!-- Employee Learning PWA -->
+    <a href="../patient-pwa/" class="demo-card dc-employee-pwa">
       <div class="dc-header">
         <div class="dc-icon">🧘</div>
         <div class="dc-title">Employee Learning PWA</div>
@@ -210,7 +210,7 @@ a{color:inherit;text-decoration:none}
         <ul class="dc-features">
           <li>Daily training check-in (10 questions)</li>
           <li>Manufacturing Training Pathway modules</li>
-          <li>Mood, anxiety &amp; sleep tracking</li>
+          <li>Competency and skills tracking</li>
           <li>Skill practices &amp; process checkpoints</li>
           <li>Progress summary &amp; streak tracking</li>
           <li>Installable as a PWA on any device</li>
@@ -228,10 +228,10 @@ a{color:inherit;text-decoration:none}
     <h2 class="section-title-lg" style="color:var(--text)">Built for Real Manufacturing Training Workflows</h2>
     <div class="feature-grid">
       <div class="feature-item"><div class="feature-icon">🔒</div><div class="feature-name">Local-First Privacy</div><div class="feature-desc">All data stored locally. Nothing leaves the device without explicit sync.</div></div>
-      <div class="feature-item"><div class="feature-icon">📊</div><div class="feature-name">Risk Monitoring</div><div class="feature-desc">Automated support flags for high anxiety, low mood, and missed check-ins.</div></div>
+      <div class="feature-item"><div class="feature-icon">📊</div><div class="feature-name">Progress Tracking</div><div class="feature-desc">Automated training flags for low competency scores, missing safety checks, and overdue training.</div></div>
       <div class="feature-item"><div class="feature-icon">📋</div><div class="feature-name">Training Check-Ins</div><div class="feature-desc">10-question employee training check-in with performance, readiness, and engagement and coping tracking.</div></div>
       <div class="feature-item"><div class="feature-icon">🎓</div><div class="feature-name">Training Pathway</div><div class="feature-desc">Structured process training modules across 3 progressive pathways with completion tracking.</div></div>
-      <div class="feature-item"><div class="feature-icon">📱</div><div class="feature-name">Installable PWA</div><div class="feature-desc">Patient app installs on iOS and Android as a standalone app — no app store required.</div></div>
+      <div class="feature-item"><div class="feature-icon">📱</div><div class="feature-name">Installable PWA</div><div class="feature-desc">Employee Learning PWA installs on iOS and Android as a standalone app — no app store required.</div></div>
       <div class="feature-item"><div class="feature-icon">🎛️</div><div class="feature-name">Demo Mode</div><div class="feature-desc">Toggle demo data ON/OFF. Present with realistic sample data or use with real patients.</div></div>
     </div>
   </div>

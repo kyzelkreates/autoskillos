@@ -3,7 +3,7 @@
 // Lightweight, pure-function rule evaluator.
 // Plugs into BCO's existing rule system via module registration
 // (see anxietycore.module.js) AND can be called directly from the
-// Patient PWA for instant local feedback.
+// Employee Learning PWA for instant local feedback.
 //
 // Architecture contract (BCO Run 2):
 //   Rules evaluate before every action. Rule engine has authority.
@@ -31,10 +31,10 @@ export function evaluateAnxietyEntry(entry) {
   if (anxiety_score >= THRESHOLDS.ANXIETY_HIGH) {
     risk = RISK_LEVELS.HIGH;
     flags.push("HIGH_SINGLE_SCORE");
-    suggestions.push("Try a breathing or grounding exercise now.");
+    suggestions.push("Take a short focus break or grounding check now.");
   }
 
-  // Rule 2: Low sleep + elevated anxiety
+  // Rule 2: Low rest + elevated work pressure signal
   if (
     sleep_hours !== undefined &&
     sleep_hours < THRESHOLDS.SLEEP_LOW_HOURS &&
@@ -42,7 +42,7 @@ export function evaluateAnxietyEntry(entry) {
   ) {
     risk = RISK_LEVELS.HIGH;
     flags.push("LOW_SLEEP_HIGH_ANXIETY");
-    suggestions.push("Your sleep was low. Consider a recovery rest period today.");
+    suggestions.push("Your sleep was low. Consider a training progress rest period today.");
   }
 
   return { risk, suggestions, flags };
@@ -85,7 +85,7 @@ export function evaluateAnxietyTrend(recentLogs) {
 
 // ─────────────────────────────────────────────────────────────────
 // MISSING DATA RULE
-// Called by the clinician dashboard risk aggregator, not the PWA.
+// Called by the Control Dashboard risk aggregator, not the PWA.
 // ─────────────────────────────────────────────────────────────────
 
 /**

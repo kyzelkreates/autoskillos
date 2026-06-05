@@ -345,7 +345,7 @@ export const DEMO_DEPARTMENTS = [
     name: 'Assembly Line',
     description: 'Core production assembly stations including line setup, process steps, and quality checks.',
     site: 'Site A',
-    managerName: 'Dr. Reyes',
+    managerName: 'M. Torres',
     activePathwayIds: ['path-assembly', 'path-induction'],
     isDemo: true
   },
@@ -354,7 +354,7 @@ export const DEMO_DEPARTMENTS = [
     name: 'Quality Control',
     description: 'Incoming inspection, in-process QC, defect reporting, and final inspection sign-off.',
     site: 'Site A',
-    managerName: 'Dr. Reyes',
+    managerName: 'M. Torres',
     activePathwayIds: ['path-qc'],
     isDemo: true
   },
@@ -363,7 +363,7 @@ export const DEMO_DEPARTMENTS = [
     name: 'Safety Induction',
     description: 'Site-wide safety, PPE compliance, hazard awareness, and emergency procedures.',
     site: 'Site A',
-    managerName: 'Dr. Reyes',
+    managerName: 'M. Torres',
     activePathwayIds: ['path-safety'],
     isDemo: true
   },
@@ -372,7 +372,7 @@ export const DEMO_DEPARTMENTS = [
     name: 'Logistics',
     description: 'Materials handling, warehousing, dispatch readiness, and shift handover processes.',
     site: 'Site A',
-    managerName: 'Dr. Reyes',
+    managerName: 'M. Torres',
     activePathwayIds: ['path-induction'],
     isDemo: true
   }
@@ -1580,7 +1580,7 @@ export const DEMO_EMPLOYEES = [
 export const DEMO_TRAINERS = [
   {
     id: 'trainer-reyes',
-    displayName: 'Dr. Reyes',
+    displayName: 'M. Torres',
     roleTitle: 'Training Manager',
     departmentId: 'dept-assembly',
     permissions: {
@@ -2139,7 +2139,7 @@ export function recordSafetyAckCompleted({ employeeId, ackId, isDemo = false }) 
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 24: COMPATIBILITY BRIDGE — Legacy key aliases
-// The existing dashboard and PWA use internal keys like 'patients', 'patient'.
+// The existing dashboard and PWA use internal JS keys like 'patients', 'patient' — preserved for backward-compat.
 // These helpers provide the bridge so the data model is visible
 // without requiring a full rename of the dashboard internals.
 // ─────────────────────────────────────────────────────────────────────────────

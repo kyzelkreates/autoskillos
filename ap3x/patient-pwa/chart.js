@@ -1,12 +1,12 @@
-// AP3X AnxietyCore — Minimal Anxiety Chart
+// AP3X — Minimal Training Score Chart
 // ─────────────────────────────────────────────────────────────────
-// Zero-dependency canvas sparkline for the Patient PWA history tab.
+// Zero-dependency canvas sparkline for the Employee Learning PWA history tab.
 // No external charting library required.
 
 /**
- * createAnxietyChart(canvasId, dataPoints)
+ * createAnxietyChart(canvasId, dataPoints)  [function name preserved for JS callers]
  * @param {string} canvasId — ID of <canvas> element
- * @param {number[]} dataPoints — anxiety scores (oldest first)
+ * @param {number[]} dataPoints — training/readiness scores (oldest first)
  */
 export function createAnxietyChart(canvasId, dataPoints) {
   const canvas = document.getElementById(canvasId);

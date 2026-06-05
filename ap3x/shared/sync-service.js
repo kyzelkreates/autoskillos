@@ -6,9 +6,9 @@
 // the network is available.
 //
 // Data flow:
-//   Patient PWA → local storage → SyncService → Supabase backend
+//   Employee Learning PWA → local storage → SyncService → Supabase backend
 //
-// Clinician dashboard NEVER calls this — it reads Supabase directly.
+// Control Dashboard NEVER calls this — it reads Supabase directly.
 
 import { storage } from "../../bco/core/storage.js";
 import { AP3X_KEYS } from "./constants.js";
