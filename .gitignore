@@ -1,0 +1,24 @@
+# Backup files
+*.r1backup
+*.r2backup
+*.r4backup
+*.r5backup
+*.r6backup
+*.r7backup
+*.r8backup
+
+# Environment secrets (NEVER commit real values)
+.env
+.env.local
+.env.production
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node (if ever added)
+node_modules/
+dist/
+.cache/
