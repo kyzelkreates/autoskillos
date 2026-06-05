@@ -2770,15 +2770,10 @@ function updateSyncUI(){
 // ════════════════════════════════════════════════════════════════════
 
 function getPwaUrl(){
-  const bs=loadBackendSettings();
-  let base='';
-  if(bs.mode==='supabase'&&bs.supabase.url) base=bs.supabase.url;
-  else if(bs.mode==='custom'&&bs.custom.baseUrl) base=bs.custom.baseUrl;
-  else if(bs.mode==='aws'&&bs.aws.endpoint) base=bs.aws.endpoint;
-  else base=window.location.origin+window.location.pathname.replace(/[^/]+$/,'')+'..'+'/../ap3x/patient-pwa/index.html';
-  // Safe fallback to GitHub Pages or current deployment
-  if(!base||base==='local') base=window.location.href.replace(/clinician-demo\.html.*/,'')+'patient-pwa/index.html';
-  return base;
+  // EMPLOYEE_PWA_ROUTE — canonical path, absolute from domain root
+  // Always resolves to the Employee Learning PWA regardless of dashboard URL
+  const EMPLOYEE_PWA_ROUTE = '/ap3x/patient-pwa/';
+  return window.location.origin + EMPLOYEE_PWA_ROUTE;
 }
 
 function getInviteCode(){

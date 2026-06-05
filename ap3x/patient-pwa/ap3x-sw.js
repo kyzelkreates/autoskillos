@@ -1,17 +1,19 @@
 // AutoSkill OS™ — Employee Learning PWA Service Worker
 // Offline-first caching for Employee Learning Portal
-// v3 — force reload lesson content
+// Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
+// v6 — Run 12 fix: bumped to force manifest/start_url update on existing installs
 
-const CACHE_NAME   = 'autoskill-employee-v5';
-const OFFLINE_PAGE = './index.html';
+const CACHE_NAME   = 'autoskill-employee-v6';
+const PWA_SCOPE    = '/ap3x/patient-pwa/';
+const OFFLINE_PAGE = '/ap3x/patient-pwa/index.html';
 
 const PRECACHE_ASSETS = [
-  './index.html',
-  './patient.css',
-  './patient-app.js?v=3',
-  './manifest.json',
-  './ap3x-sw.js',
-  './chart.js',
+  '/ap3x/patient-pwa/index.html',
+  '/ap3x/patient-pwa/patient.css',
+  '/ap3x/patient-pwa/patient-app.js?v=6',
+  '/ap3x/patient-pwa/manifest.json',
+  '/ap3x/patient-pwa/ap3x-sw.js',
+  '/ap3x/patient-pwa/chart.js',
 ];
 
 // ── Install: pre-cache core assets ────────────────────────────────
@@ -23,13 +25,13 @@ self.addEventListener('install', event => {
   );
 });
 
-// ── Activate: purge ALL old caches ───────────────────────────────
+// ── Activate: purge ALL old caches ────────────────────────────────
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
       .then(keys => Promise.all(
         keys.filter(k => k !== CACHE_NAME).map(k => {
-          console.log('[SW] Deleting old cache:', k);
+          console.log('[AutoSkill SW v6] Deleting old cache:', k);
           return caches.delete(k);
         })
       ))
@@ -37,13 +39,27 @@ self.addEventListener('activate', event => {
   );
 });
 
-// ── Fetch: NETWORK-FIRST for JS/CSS so updates land immediately ──
+// ── Fetch: handle navigation + assets ─────────────────────────────
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   if (!event.request.url.startsWith('http')) return;
 
-  const url = event.request.url;
-  const isAsset = /\.(js|css|json)(\?.*)?$/.test(url);
+  const url      = new URL(event.request.url);
+  const isAsset  = /\.(js|css|json|png|ico|webp|svg)(\?.*)?$/.test(url.pathname);
+  const isNavReq = event.request.mode === 'navigate';
+
+  // Navigation requests within PWA scope → serve PWA index.html
+  // This allows refresh at /ap3x/patient-pwa/ to work offline
+  if (isNavReq && url.pathname.startsWith(PWA_SCOPE)) {
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => caches.match(OFFLINE_PAGE).then(r => r || caches.match('/ap3x/patient-pwa/index.html')))
+    );
+    return;
+  }
+
+  // DO NOT intercept navigation outside PWA scope (dashboard stays separate)
+  if (isNavReq && !url.pathname.startsWith(PWA_SCOPE)) return;
 
   if (isAsset) {
     // Network-first for scripts/styles — always fresh, fallback to cache
@@ -56,10 +72,10 @@ self.addEventListener('fetch', event => {
           }
           return response;
         })
-        .catch(() => caches.match(event.request).then(cached => cached || caches.match(OFFLINE_PAGE)))
+        .catch(() => caches.match(event.request))
     );
   } else {
-    // Cache-first for HTML/images
+    // Cache-first for HTML/images within scope
     event.respondWith(
       caches.match(event.request).then(cached => {
         const networkFetch = fetch(event.request)
@@ -76,3 +92,6 @@ self.addEventListener('fetch', event => {
     );
   }
 });
+
+// AutoSkill OS™ — Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
+// SW scope: /ap3x/patient-pwa/ — does NOT intercept dashboard routes

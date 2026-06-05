@@ -44,12 +44,14 @@
 // Register service worker for offline/installable PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./ap3x-sw.js')
-      .then(reg => console.log('[AutoSkill SW] Registered:', reg.scope))
+    // Register with explicit scope — scoped to /ap3x/patient-pwa/ only
+    // ?v=6 busts the SW cache so updated manifest/start_url takes effect
+    navigator.serviceWorker.register('./ap3x-sw.js?v=6', { scope: '/ap3x/patient-pwa/' })
+      .then(reg => console.log('[AutoSkill SW v6] Registered:', reg.scope))
       .catch(err => console.warn('[AutoSkill SW] Registration failed:', err));
   });
 }
 </script>
-<script src="./patient-app.js?v=3"></script>
+<script src="./patient-app.js?v=6"></script>
 </body>
 </html>
