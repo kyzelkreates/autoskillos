@@ -54,7 +54,9 @@ create table if not exists public.autoskill_os_profiles (
   auth_user_id    uuid unique,
   display_name    text not null,
   email           text,
-  role            text not null check (role in ('therapist', 'patient')),
+  -- Internal role values: 'therapist' maps to Trainer/Supervisor, 'patient' maps to Employee
+  -- These values are preserved in the DB to maintain backward-compat with localStorage.
+  role            text not null check (role in ('therapist', 'patient')), -- internal DB enum: 'therapist'=Trainer/Supervisor, 'patient'=Employee
   status          text not null default 'active' check (status in ('active', 'inactive', 'archived')),
   created_at      timestamptz not null default now(),
   updated_at      timestamptz not null default now()
@@ -288,9 +290,9 @@ create policy "Trainers/Supervisors can read linked employee profiles"
   using (
     exists (
       select 1 from public.autoskill_os_patient_links link
-      join public.autoskill_os_profiles therapist on therapist.id = link.therapist_id
+      join public.autoskill_os_profiles supervisor on supervisor.id = link.therapist_id
       where link.patient_id = autoskill_os_profiles.id
-        and therapist.auth_user_id = auth.uid()
+        and supervisor.auth_user_id = auth.uid()
         and link.status = 'active'
     )
   );
@@ -300,10 +302,10 @@ create policy "Trainers/Supervisors can read own employee links"
   on public.autoskill_os_patient_links for select to authenticated
   using (
     exists (
-      select 1 from public.autoskill_os_profiles therapist
-      where therapist.id = therapist_id
-        and therapist.auth_user_id = auth.uid()
-        and therapist.role = 'therapist'
+      select 1 from public.autoskill_os_profiles supervisor
+      where supervisor.id = therapist_id
+        and supervisor.auth_user_id = auth.uid()
+        and supervisor.role = 'therapist' -- internal role value: maps to Trainer/Supervisor
     )
   );
 
@@ -342,15 +344,15 @@ create policy "Patients can read own checkins"
     )
   );
 
-drop policy if exists "Therapists can read linked patient checkins" on public.autoskill_os_checkins;
-create policy "Therapists can read linked patient checkins"
+drop policy if exists "Supervisors/Trainers can read linked employee checkins" on public.autoskill_os_checkins;
+create policy "Supervisors/Trainers can read linked employee checkins"
   on public.autoskill_os_checkins for select to authenticated
   using (
     exists (
       select 1 from public.autoskill_os_patient_links link
-      join public.autoskill_os_profiles therapist on therapist.id = link.therapist_id
+      join public.autoskill_os_profiles supervisor on supervisor.id = link.therapist_id
       where link.patient_id = autoskill_os_checkins.patient_id
-        and therapist.auth_user_id = auth.uid()
+        and supervisor.auth_user_id = auth.uid()
         and link.status = 'active'
     )
   );
@@ -380,28 +382,28 @@ create policy "Patients can manage own lesson progress"
     )
   );
 
-drop policy if exists "Therapists can read linked patient lesson progress" on public.autoskill_os_lesson_progress;
-create policy "Therapists can read linked patient lesson progress"
+drop policy if exists "Supervisors/Trainers can read linked employee lesson progress" on public.autoskill_os_lesson_progress;
+create policy "Supervisors/Trainers can read linked employee lesson progress"
   on public.autoskill_os_lesson_progress for select to authenticated
   using (
     exists (
       select 1 from public.autoskill_os_patient_links link
-      join public.autoskill_os_profiles therapist on therapist.id = link.therapist_id
+      join public.autoskill_os_profiles supervisor on supervisor.id = link.therapist_id
       where link.patient_id = autoskill_os_lesson_progress.patient_id
-        and therapist.auth_user_id = auth.uid()
+        and supervisor.auth_user_id = auth.uid()
         and link.status = 'active'
     )
   );
 
-drop policy if exists "Therapists can read linked support flags" on public.autoskill_os_support_flags;
-create policy "Therapists can read linked support flags"
+drop policy if exists "Supervisors/Trainers can read linked support flags" on public.autoskill_os_support_flags;
+create policy "Supervisors/Trainers can read linked support flags"
   on public.autoskill_os_support_flags for select to authenticated
   using (
     exists (
       select 1 from public.autoskill_os_patient_links link
-      join public.autoskill_os_profiles therapist on therapist.id = link.therapist_id
+      join public.autoskill_os_profiles supervisor on supervisor.id = link.therapist_id
       where link.patient_id = autoskill_os_support_flags.patient_id
-        and therapist.auth_user_id = auth.uid()
+        and supervisor.auth_user_id = auth.uid()
         and link.status = 'active'
     )
   );
@@ -442,24 +444,24 @@ create policy "Patients can read own visible notes"
     )
   );
 
-drop policy if exists "Therapists can manage linked patient notes" on public.autoskill_os_patient_notes;
-create policy "Therapists can manage linked patient notes"
+drop policy if exists "Supervisors/Trainers can manage linked employee notes" on public.autoskill_os_patient_notes;
+create policy "Supervisors/Trainers can manage linked employee notes"
   on public.autoskill_os_patient_notes for all to authenticated
   using (
     exists (
       select 1 from public.autoskill_os_patient_links link
-      join public.autoskill_os_profiles therapist on therapist.id = link.therapist_id
+      join public.autoskill_os_profiles supervisor on supervisor.id = link.therapist_id
       where link.patient_id = autoskill_os_patient_notes.patient_id
-        and therapist.auth_user_id = auth.uid()
+        and supervisor.auth_user_id = auth.uid()
         and link.status = 'active'
     )
   )
   with check (
     exists (
       select 1 from public.autoskill_os_patient_links link
-      join public.autoskill_os_profiles therapist on therapist.id = link.therapist_id
+      join public.autoskill_os_profiles supervisor on supervisor.id = link.therapist_id
       where link.patient_id = autoskill_os_patient_notes.patient_id
-        and therapist.auth_user_id = auth.uid()
+        and supervisor.auth_user_id = auth.uid()
         and link.status = 'active'
     )
   );
@@ -477,15 +479,15 @@ create policy "Patients can insert own sync events"
     )
   );
 
-drop policy if exists "Therapists can read linked patient sync events" on public.autoskill_os_sync_events;
-create policy "Therapists can read linked patient sync events"
+drop policy if exists "Supervisors/Trainers can read linked employee sync events" on public.autoskill_os_sync_events;
+create policy "Supervisors/Trainers can read linked employee sync events"
   on public.autoskill_os_sync_events for select to authenticated
   using (
     exists (
       select 1 from public.autoskill_os_patient_links link
-      join public.autoskill_os_profiles therapist on therapist.id = link.therapist_id
+      join public.autoskill_os_profiles supervisor on supervisor.id = link.therapist_id
       where link.patient_id = autoskill_os_sync_events.patient_id
-        and therapist.auth_user_id = auth.uid()
+        and supervisor.auth_user_id = auth.uid()
         and link.status = 'active'
     )
   );
