@@ -1007,7 +1007,7 @@ function buildOnboarding() {
       <h2 class="ob-step-title">What are your training goals?</h2>
       <p class="ob-step-sub">Select everything relevant — helps personalise your Training Pathway.</p>
       <div class="ob-goals-grid" id="ob-goals">
-        ${['Site orientation','Quality control','Safety induction','Workstation readiness','Supervisor sign-off','Processing difficult feelings','Improving relationships','Building confidence','Managing intrusive thoughts','Trauma recovery'].map(g=>`<button class="ob-goal-btn" data-g="${g}" onclick="this.classList.toggle('active')">${g}</button>`).join('')}
+        ${['Site orientation','Quality control','Safety induction','Workstation readiness','Supervisor sign-off','Process verification','Equipment handling','Defect identification','Team communication','Continuous improvement'].map(g=>`<button class="ob-goal-btn" data-g="${g}" onclick="this.classList.toggle('active')">${g}</button>`).join('')}
       </div>
       <button class="btn-primary" style="margin-top:16px" onclick="obGo(3,4)">Next →</button>
     </div>
