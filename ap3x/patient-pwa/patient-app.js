@@ -7,6 +7,7 @@
 
 // ── Sync Queue (backend-ready local-first) ───────────────────────
 const TL_SYNC_QUEUE_KEY = 'ap3x_sync_queue';
+const AUTOSKILL_BUILD = 'Run15-r1'; // Progress tab fix
 function tlEnqueueSync(eventType, data) {
   try {
     const q = JSON.parse(localStorage.getItem(TL_SYNC_QUEUE_KEY) || '[]');

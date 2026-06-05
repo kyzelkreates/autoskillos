@@ -3,7 +3,7 @@
 // Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
 // v7 — Cleanup run: contamination fix + beforeinstallprompt install handler added
 
-const CACHE_NAME   = 'autoskill-employee-v15';
+const CACHE_NAME   = 'autoskill-employee-v16';
 const PWA_SCOPE    = '/ap3x/patient-pwa/';
 const PWA_SCOPE_NEW = '/ap3x/employee-pwa/'; // canonical alias — served via Vercel rewrite
 const OFFLINE_PAGE = '/ap3x/patient-pwa/index.html';
