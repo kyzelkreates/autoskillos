@@ -43,16 +43,59 @@
 <div class="toast hidden" id="toast"></div>
 
 <script>
-// Register service worker for offline/installable PWA
+// ── Service Worker Registration ──────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    // Register with explicit scope — scoped to /ap3x/patient-pwa/ only
-    // ?v=6 busts the SW cache so updated manifest/start_url takes effect
-    navigator.serviceWorker.register('./ap3x-sw.js?v=6', { scope: '/ap3x/patient-pwa/' })
-      .then(reg => console.log('[AutoSkill SW v6] Registered:', reg.scope))
+    navigator.serviceWorker.register('./ap3x-sw.js?v=7', { scope: '/ap3x/patient-pwa/' })
+      .then(reg => console.log('[AutoSkill SW v7] Registered:', reg.scope))
       .catch(err => console.warn('[AutoSkill SW] Registration failed:', err));
   });
 }
+
+// ── PWA Install Prompt Handler ────────────────────────────────────────────────
+// Captures the beforeinstallprompt event so we can trigger it from a button
+window._asInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault(); // prevent auto-prompt
+  window._asInstallPrompt = e;
+  // Show the install button if the PWA UI is already rendered
+  var btn = document.getElementById('as-install-btn');
+  var tip = document.getElementById('as-install-tip');
+  if (btn) { btn.style.display = 'flex'; }
+  if (tip) { tip.style.display = 'none'; }
+  console.log('[AutoSkill] Install prompt ready');
+});
+
+// Triggered by the install button inside patient-app.js UI
+window.asPromptInstall = function() {
+  if (window._asInstallPrompt) {
+    window._asInstallPrompt.prompt();
+    window._asInstallPrompt.userChoice.then(function(result) {
+      console.log('[AutoSkill] Install result:', result.outcome);
+      window._asInstallPrompt = null;
+      var btn = document.getElementById('as-install-btn');
+      var tip = document.getElementById('as-install-tip');
+      if (result.outcome === 'accepted') {
+        if (btn) btn.style.display = 'none';
+        if (tip) { tip.textContent = '✅ AutoSkill OS™ installed successfully!'; tip.style.display = 'block'; }
+      }
+    });
+  }
+};
+
+// Hide install button if already running as standalone PWA
+if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+  window.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('as-install-btn');
+    if (btn) btn.style.display = 'none';
+  });
+}
+
+// Fired after successful install
+window.addEventListener('appinstalled', function() {
+  window._asInstallPrompt = null;
+  console.log('[AutoSkill] App installed successfully');
+});
 </script>
 <script src="./patient-app.js?v=6"></script>
 </body>

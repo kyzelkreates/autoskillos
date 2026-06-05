@@ -1811,11 +1811,12 @@ function renderProgress() {
         '</div>' +
       '</div>';
     })() +
-    '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px">' +
+    '<button id="as-install-btn" onclick="window.asPromptInstall && window.asPromptInstall()" aria-label="Install AutoSkill OS™" style="display:none;width:100%;padding:11px 14px;background:rgba(201,168,76,0.12);color:var(--gold);border:1.5px solid rgba(201,168,76,0.4);border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:10px;align-items:center;justify-content:center;gap:8px">&#x1F4F2; Install AutoSkill OS&#x2122; — Tap to Add to Home Screen</button>' +
+  '<div id="as-install-tip" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px">' +
     '<span style="font-size:18px">&#x1F4F2;</span>' +
     '<div style="flex:1">' +
       '<div style="font-size:12px;font-weight:700;color:var(--gold)">Install AutoSkill OS&#x2122;</div>' +
-      '<div style="font-size:11px;color:var(--muted)">Tap your browser menu and select <strong>“Add to Home Screen”</strong> to install this app and use it offline.</div>' +
+      '<div style="font-size:11px;color:var(--muted)">Tap your browser menu and select <strong>"Add to Home Screen"</strong> to install this app and use it offline.</div>' +
     '</div>' +
   '</div>' +
   '<button onclick="submitCheckin()" aria-label="Log training check-in" style="width:100%;padding:13px;background:var(--gold);color:#000;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px">&#x1F4CB; Log Training Check-In (+10 XP)</button>' +
