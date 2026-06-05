@@ -1,6 +1,5 @@
 /* AutoSkill OS™ — Employee Learning PWA App
-   AutoSkill OS™ Employee Learning PWA — employee-app logic
-   File path: ap3x/patient-pwa/patient-app.js (preserved for deployment / service worker compatibility)
+   Standalone installable PWA version (ap3x/patient-pwa/index.html) — Employee Learning PWA
    All data via localStorage SSOT — no backend required
    Created by Kyzel Kreates™ · Powered by 4P3X Intelligent AI™     */
 'use strict';
@@ -1019,7 +1018,7 @@ function buildOnboarding() {
       <div class="ob-step-num">Step 1 of 3</div>
       <h2 class="ob-step-title">Tell us about yourself</h2>
       <p class="ob-step-sub">Only stored locally on this device — never shared.</p>
-      <div class="ob-field"><label class="ob-label">Full Name</label><input type="text" id="ob-name" class="ob-input" placeholder="e.g. Alex Johnson"/></div>
+      <div class="ob-field"><label class="ob-label">First name or nickname</label><input type="text" id="ob-name" class="ob-input" placeholder="e.g. Alex, Jordan…"/></div>
       <div class="ob-field"><label class="ob-label">Age range</label>
         <div style="display:flex;flex-wrap:wrap;gap:8px" id="ob-age">
           ${['Under 18','18–24','25–34','35–44','45+'].map(a=>`<button class="ob-goal-btn" data-age="${a}" onclick="selOb(this,'ob-age')">${a}</button>`).join('')}
@@ -1250,14 +1249,14 @@ function renderHome() {
       '</div>' +
     '</div>' +
     '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">' + '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Quick Access</div>' + '<span style="font-size:10px;padding:2px 8px;border-radius:99px;font-weight:700;background:' + (demoOn?'rgba(201,168,76,.15)':'rgba(34,197,94,.12)') + ';color:' + (demoOn?'var(--gold)':'var(--green)') + ';border:1px solid ' + (demoOn?'rgba(201,168,76,.3)':'rgba(34,197,94,.25)') + '">' + (demoOn ? '\ud83c\udfad Demo' : '\ud83d\udfe2 Live') + '</span></div>' + '<div class="quick-grid">' +
-      (function(){
+      (function() {
         var pathRec = sGet('ap3x_pathway_completed', null);
-        var doneL   = Object.values(lessonDone).filter(Boolean).length;
+        var doneL = Object.values(lessonDone).filter(Boolean).length;
         var btnDesc = pathRec
           ? '\u2705 Pathway Complete!'
           : (doneL > 0 ? doneL + '/15 lessons done' : (firstPath ? firstPath.title.substring(0,28) + (firstPath.title.length>28?'...':'') : 'No pathway assigned'));
-        var bdr = pathRec ? 'border:2px solid var(--green)' : '';
-        return '<button class="qa-btn" onclick="switchTab(\'pathway\')" aria-label="View Training Pathway" style="' + bdr + '">' +
+        var btnBorder = pathRec ? '2px solid var(--green)' : '';
+        return '<button class="qa-btn" onclick="switchTab(\'pathway\')" aria-label="View Training Pathway" style="border:' + btnBorder + '">' +
           '<div class="qa-icon">&#x1F5FA;</div><div class="qa-label">My Training</div>' +
           '<div class="qa-desc" style="color:' + (pathRec ? 'var(--green)' : '') + '">' + btnDesc + '</div>' +
           '</button>';
@@ -1275,14 +1274,13 @@ function renderHome() {
         '<div class="qa-desc">' + pathPct + '% pathway complete</div>' +
       '</button>' +
     '</div>' +
-    (function(){
+    // Pathway completion banner on home screen
+    (function() {
       var pathRec = sGet('ap3x_pathway_completed', null);
       if (!pathRec) return '';
-      var dateStr = pathRec.completedAt
-        ? new Date(pathRec.completedAt).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})
-        : '';
+      var dateStr = pathRec.completedAt ? new Date(pathRec.completedAt).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' }) : '';
       return '<div style="background:rgba(34,197,94,.08);border:1.5px solid rgba(34,197,94,.35);border-radius:var(--r);padding:14px;margin-bottom:12px">' +
-        '<div style="font-size:13px;font-weight:800;color:var(--green);margin-bottom:4px">\u2705 New Starter Manufacturing Training Pathway \u2014 Complete</div>' +
+        '<div style="font-size:13px;font-weight:800;color:var(--green);margin-bottom:4px">\u2705 New Starter Manufacturing Training Pathway — Complete</div>' +
         (dateStr ? '<div style="font-size:11px;color:var(--muted);margin-bottom:10px">Completed ' + dateStr + '</div>' : '') +
         '<div style="display:flex;gap:8px">' +
           '<button onclick="switchTab(\'lessons\')" style="flex:1;padding:9px 8px;background:transparent;border:1px solid var(--green);color:var(--green);border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer">Revisit Lessons</button>' +
@@ -1296,58 +1294,8 @@ function renderHome() {
     '</div>' +
     (emp && emp.isDemo ? '<div style="font-size:11px;color:var(--muted);background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);border-radius:var(--rs);padding:8px 12px;margin-bottom:12px">&#x1F3AD; Demo employee profile &mdash; Demo Mode shows the product. Live Mode runs the product.</div>' : '') +
     '<div class="safety-notice"><div style="font-weight:700;margin-bottom:4px">&#x26A0;&#xFE0F; Training Notice</div>' +
-    '<div>AutoSkill OS&#x2122; supports your learning between supervisor sessions. For on-site emergencies, follow your site emergency procedure immediately.</div></div>' +
-    // ── Install card — only shown when not in standalone mode ───────────────
-    (function() {
-      var isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
-      var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-      var isDismissed = sGet('ap3x_install_dismissed', false);
-      if (isStandalone || isDismissed) return '';
-      var hasPrompt = !!window._asInstallPrompt;
-      return '<div id="as-home-install-card" style="background:rgba(201,168,76,.08);border:1.5px solid rgba(201,168,76,.35);border-radius:var(--r);padding:14px;margin-top:12px">' +
-        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">' +
-          '<div style="font-size:13px;font-weight:800;color:var(--gold)">&#x1F4F2; Install AutoSkill OS&#x2122;</div>' +
-          '<button onclick="sSet(\'ap3x_install_dismissed\',true);var c=document.getElementById(\'as-home-install-card\');if(c)c.remove();" ' +
-            'style="background:transparent;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:0 4px" aria-label="Dismiss">&#x2715;</button>' +
-        '</div>' +
-        '<div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5">' +
-          'Add AutoSkill OS&#x2122; to your home screen for the full offline training experience.' +
-        '</div>' +
-        (hasPrompt
-          ? '<button onclick="window.asPromptInstall && window.asPromptInstall()" ' +
-              'style="width:100%;padding:11px;background:var(--gold);color:#000;border:none;border-radius:var(--rs);font-size:14px;font-weight:800;cursor:pointer">' +
-              '&#x2B07; Add to Home Screen' +
-            '</button>'
-          : (isIOS
-              ? '<div style="font-size:12px;color:var(--text);line-height:1.7;background:var(--surface2);border-radius:var(--rs);padding:10px 12px">' +
-                  '&#x1F4F1; On iPhone/iPad: tap <strong>&#x2B06; Share</strong> then select <strong>\"Add to Home Screen\"</strong>.' +
-                '</div>'
-              : '<div style="font-size:12px;color:var(--text);line-height:1.7;background:var(--surface2);border-radius:var(--rs);padding:10px 12px">' +
-                  '&#x1F4F2; Open this page in your browser (Chrome or Edge) then tap <strong>&#x22EE; Menu &#x2192; Add to Home Screen</strong>.' +
-                '</div>'
-            )
-        ) +
-      '</div>';
-    })();
-  setTimeout(function(){
-    if(window.asRefreshInstallUI)window.asRefreshInstallUI();
-    // Also re-render home install card if prompt just became available
-    var card = document.getElementById('as-home-install-card');
-    if (card && window._asInstallPrompt) {
-      var btn = card.querySelector('button[onclick*="asPromptInstall"]');
-      if (!btn) {
-        // Replace tip with install button
-        var tipDiv = card.querySelector('div[style*="surface2"]');
-        if (tipDiv) {
-          var installBtn = document.createElement('button');
-          installBtn.setAttribute('onclick', 'window.asPromptInstall && window.asPromptInstall()');
-          installBtn.style.cssText = 'width:100%;padding:11px;background:var(--gold);color:#000;border:none;border-radius:8px;font-size:14px;font-weight:800;cursor:pointer';
-          installBtn.textContent = '⬇ Add to Home Screen';
-          card.replaceChild(installBtn, tipDiv);
-        }
-      }
-    }
-  },0);
+    '<div>AutoSkill OS&#x2122; supports your learning between supervisor sessions. For on-site emergencies, follow your site emergency procedure immediately.</div></div>';
+  setTimeout(function(){if(window.asRefreshInstallUI)window.asRefreshInstallUI();},0);
 }
 
 
@@ -1498,16 +1446,16 @@ function renderLessons() {
         + '</div>';
     }).join('')}
     ${(function() {
-      var pathRec   = sGet('ap3x_pathway_completed', null);
+      var pathRec  = sGet('ap3x_pathway_completed', null);
       var totalDone = Object.values(lessonDone).filter(Boolean).length;
       if (totalDone < 15 && !pathRec) return '';
       var dateStr = pathRec && pathRec.completedAt
-        ? new Date(pathRec.completedAt).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})
+        ? new Date(pathRec.completedAt).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })
         : '';
       return '<div style="background:rgba(34,197,94,.08);border:1.5px solid rgba(34,197,94,.35);border-radius:var(--r);padding:18px 16px;margin:12px 0;text-align:center">' +
         '<div style="font-size:36px;margin-bottom:8px">\u2705</div>' +
         '<div style="font-size:16px;font-weight:800;color:var(--green);margin-bottom:4px">All Lessons Complete!</div>' +
-        '<div style="font-size:13px;color:var(--text);margin-bottom:4px">New Starter Manufacturing Training Pathway</div>' +
+        '<div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">New Starter Manufacturing Training Pathway</div>' +
         (dateStr ? '<div style="font-size:11px;color:var(--muted);margin-bottom:12px">Completed ' + dateStr + '</div>' : '<div style="margin-bottom:12px"></div>') +
         '<div style="display:flex;gap:10px;max-width:360px;margin:0 auto">' +
           '<button onclick="switchTab(\'home\')" style="flex:1;padding:11px;background:var(--green);color:#000;border:none;border-radius:var(--r);font-size:13px;font-weight:800;cursor:pointer">\u2302 Home</button>' +
@@ -1560,11 +1508,7 @@ function openLesson(id, xpVal) {
     + sectionsHTML
     + '<div style="background:var(--surface);border-radius:var(--r);padding:14px;margin-bottom:14px;border:1px solid var(--border)"><div style="font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">\ud83d\udcad Reflection</div><div style="font-size:14px;line-height:1.7">' + lc.reflectionPrompt + '</div></div>'
     + '<div style="background:var(--surface);border-radius:var(--r);padding:14px;margin-bottom:14px;border:1px solid var(--border)"><div style="font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">\u270f\ufe0f Your Exercise</div><div style="font-size:14px;line-height:1.7;margin-bottom:10px">' + lc.patientExercise + '</div>'
-    + '<textarea id="ld-note-field" style="width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--text);font-family:inherit;resize:none;min-height:60px;outline:none" placeholder="Write your reflection or notes here\u2026" rows="3">' + savedNote + '</textarea>'
-    + '<div style="margin-top:8px">'
-    + '<button onclick="saveExerciseAnswer(\'' + id + '\')" style="width:100%;padding:11px 14px;background:var(--gold);color:#000;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer">💾 Save &amp; Send to Dashboard</button>'
-    + '</div>'
-    + '</div>'
+    + '<textarea id="ld-note-field" style="width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--text);font-family:inherit;resize:none;min-height:60px;outline:none" placeholder="Write your reflection or notes here\u2026" rows="3">' + savedNote + '</textarea></div>'
     + '<div style="background:rgba(239,68,68,.06);border:1.5px solid rgba(239,68,68,.2);border-radius:var(--r);padding:14px;margin-bottom:14px"><div style="font-size:12px;font-weight:700;color:var(--high);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">\u26a0\ufe0f Safety Notice</div><div style="font-size:12px;color:var(--muted);line-height:1.6">' + lc.safetyNote + '</div></div>'
     + (lc.checkpoint ? '<div class="chk-container">' + buildCheckpointHTML(lc.checkpoint, id) + '</div>' : '')
     + '</div>'
@@ -1710,53 +1654,18 @@ function completeLessonFromDetail(id, xpVal) {
   var lc = LESSON_CONTENT[id];
   if (btn && lc) { btn.textContent = '\u2713 ' + lc.completionLabel; btn.style.background = 'var(--green)'; }
   renderLessons();
-  // ── Pathway completion detection ────────────────────────────────────────────
+  // ── Pathway completion detection ─────────────────────────────────────────────
   if (id === LAST_LESSON) {
     var allLessonsDone = LESSON_ORDER.every(function(lid) { return !!lessonDone[lid]; });
     if (allLessonsDone) { triggerPathwayCompletion(); }
   }
 }
 
-// ── saveExerciseAnswer: save note + queue to dashboard ───────────────────────
-function saveExerciseAnswer(id) {
-  var field = document.getElementById('ld-note-field');
-  if (!field) return;
-  var noteText = field.value.trim();
-  if (!noteText) { showToast('Please write your answer first.'); return; }
-  sSet('tl_lesson_note_' + id, noteText);
-  try {
-    var item = {
-      id: 'sq_reflect_' + id + '_' + Date.now(),
-      type: 'reflection_submitted',
-      entityType: 'lessonReflection',
-      entityId: id,
-      status: 'queued',
-      priority: 'normal',
-      isDemo: isPwaDemoMode ? isPwaDemoMode() : sGet('4p3x_demo_mode', true),
-      data: {
-        lessonId: id,
-        noteText: noteText,
-        lessonTitle: (LESSON_CONTENT[id] || {}).title || id,
-        submittedAt: new Date().toISOString(),
-        employeeId: profile && profile.userId ? profile.userId : 'anon'
-      },
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    var queue = dmGet(AP3X_SYNC_QUEUE_KEY, []);
-    queue.push(item);
-    dmSet(AP3X_SYNC_QUEUE_KEY, queue);
-  } catch(e) {}
-  showToast('\u2713 Answer saved — queued for supervisor review');
-  var btn = field.parentNode && field.parentNode.querySelector('button');
-  if (btn) { btn.textContent = '\u2713 Saved — queued for dashboard'; btn.style.background = 'var(--green)'; btn.disabled = true; }
-}
-
-// ── PATHWAY COMPLETION ────────────────────────────────────────────────────────
+// ── PATHWAY COMPLETION ─────────────────────────────────────────────────────────────────────────
 function triggerPathwayCompletion() {
   var existing = sGet('ap3x_pathway_completed', null);
   if (!existing) {
-    var rec = {
+    var completionRecord = {
       pathwayId: 'new-starter-manufacturing',
       pathwayName: 'New Starter Manufacturing Training Pathway',
       completedAt: new Date().toISOString(),
@@ -1765,8 +1674,8 @@ function triggerPathwayCompletion() {
       percentComplete: 100,
       xpTotal: xp
     };
-    sSet('ap3x_pathway_completed', rec);
-    tlEnqueueSync('pathway_completed', rec);
+    sSet('ap3x_pathway_completed', completionRecord);
+    tlEnqueueSync('pathway_completed', completionRecord);
   }
   var panel = document.getElementById('lesson-detail-panel');
   if (panel) panel.remove();
@@ -1774,12 +1683,10 @@ function triggerPathwayCompletion() {
 }
 
 function showPathwayCompletionModal() {
-  var old = document.getElementById('pathway-completion-modal');
-  if (old) old.remove();
+  var existing = document.getElementById('pathway-completion-modal');
+  if (existing) existing.remove();
   var rec = sGet('ap3x_pathway_completed', {});
-  var dateStr = rec.completedAt
-    ? new Date(rec.completedAt).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })
-    : 'Today';
+  var dateStr = rec.completedAt ? new Date(rec.completedAt).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' }) : 'Today';
 
   var overlay = document.createElement('div');
   overlay.id = 'pathway-completion-modal';
@@ -1796,7 +1703,7 @@ function showPathwayCompletionModal() {
         '<div style="font-size:12px;font-weight:800;color:var(--green)">✓ Queued for supervisor review</div>' +
       '</div>' +
       '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:18px;font-size:12px;color:var(--muted);line-height:1.6">' +
-        'Skills Readiness: Training pathway complete. Supervisor sign-off required for full workplace competency confirmation.' +
+        'Skills Readiness: Training complete. Supervisor sign-off required for full workplace competency sign-off.' +
       '</div>' +
       '<button onclick="dismissPathwayCompletionModal()" ' +
         'style="width:100%;padding:14px;background:var(--gold);color:#000;border:none;border-radius:var(--r);font-size:15px;font-weight:800;cursor:pointer;margin-bottom:10px">' +
@@ -1823,7 +1730,6 @@ function dismissToRevisit() {
   switchTab('lessons');
   renderLessons();
 }
-
 
 // ── SKILL ACTIONS (internal key: COPING, preserved for JS refs) ──────────────
 
@@ -2073,7 +1979,6 @@ function renderProgress() {
   var r10label= (window.r10_getActiveDataSourceLabel ? window.r10_getActiveDataSourceLabel() : (status.isDemo ? '🎭 Demo' : '🖥️ Local'));
   var r11liveStatus = (window.getPwaLiveSyncStatus ? window.getPwaLiveSyncStatus() : { statusLabel: r10mode === 'demo' ? 'Demo local' : 'Local fallback', statusClass: 'neutral' });
   var lastSaved = sGet('ap3x_last_checkin_date', null);
-  var demoOn = isPwaDemoMode ? isPwaDemoMode() : sGet('4p3x_demo_mode', true);
 
   el.innerHTML =
     '<div class="section-title">&#x1F4C8; My Progress</div>' +
@@ -2095,12 +2000,12 @@ function renderProgress() {
       '<div class="prog-stat"><div class="prog-val" style="font-size:20px">' + streak + '</div><div class="prog-lbl">Day Streak</div></div>' +
       '<div class="prog-stat"><div class="prog-val" style="font-size:20px">' + syncQ + '</div><div class="prog-lbl">Queued Updates</div></div>' +
     '</div>' +
-        (function() {
-      var pathRec   = sGet('ap3x_pathway_completed', null);
+    // ── Pathway Completion Card ────────────────────────────────────────────────
+    (function() {
+      var pathRec  = sGet('ap3x_pathway_completed', null);
       var doneCount = Object.values(lessonDone).filter(Boolean).length;
-      var pct = pathRec ? 100 : Math.round((doneCount / 15) * 100);
       var statusLabel, statusColor, statusBg;
-      if (pathRec) {
+      if (pathRec && pathRec.percentComplete === 100) {
         statusLabel = '\u2705 Completed'; statusColor = 'var(--green)'; statusBg = 'rgba(34,197,94,.1)';
       } else if (doneCount > 0) {
         statusLabel = '\u23F3 In Progress'; statusColor = 'var(--gold)'; statusBg = 'rgba(201,168,76,.1)';
@@ -2110,19 +2015,23 @@ function renderProgress() {
       var completedDate = pathRec && pathRec.completedAt
         ? new Date(pathRec.completedAt).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })
         : null;
+      var pct = doneCount === 0 ? 0 : (pathRec && pathRec.percentComplete === 100 ? 100 : Math.round((doneCount / 15) * 100));
 
       var completedIds = LESSON_ORDER.filter(function(lid) { return !!lessonDone[lid]; });
       var remainingIds = LESSON_ORDER.filter(function(lid) { return !lessonDone[lid]; });
 
       var completedListHtml = completedIds.length === 0
-        ? '<div style="font-size:12px;color:var(--muted);padding:12px 0;text-align:center">No lessons completed yet. Start your first lesson to begin tracking progress.</div>'
+        ? '<div style="font-size:12px;color:var(--muted);padding:6px 0">No lessons completed yet.</div>'
         : completedIds.map(function(lid) {
             var lc = LESSON_CONTENT[lid];
-            var ts = lessonDone[lid];
-            var d  = ts ? new Date(ts).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '';
+            var doneTs = lessonDone[lid];
+            var doneDate = doneTs ? new Date(doneTs).toLocaleDateString('en-GB', { day:'numeric', month:'short' }) : '';
             return '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);gap:8px">' +
-              '<div style="font-size:13px;color:var(--text)"><span style="color:var(--green);margin-right:6px">\u2713</span>' + (lc ? lc.title : lid) + '</div>' +
-              (d ? '<div style="font-size:11px;color:var(--muted);white-space:nowrap">' + d + '</div>' : '') +
+              '<div style="font-size:13px;color:var(--text)">' +
+                '<span style="color:var(--green);margin-right:6px">\u2713</span>' +
+                (lc ? lc.title : lid) +
+              '</div>' +
+              (doneDate ? '<div style="font-size:11px;color:var(--muted);white-space:nowrap">' + doneDate + '</div>' : '') +
             '</div>';
           }).join('');
 
@@ -2130,16 +2039,19 @@ function renderProgress() {
         ? '<div style="font-size:12px;color:var(--green);padding:6px 0">\u2713 All lessons complete!</div>'
         : remainingIds.map(function(lid) {
             var lc = LESSON_CONTENT[lid];
-            return '<div style="display:flex;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)">' +
-              '<div style="font-size:13px;color:var(--muted)"><span style="margin-right:6px">\u25CB</span>' + (lc ? lc.title : lid) + '</div>' +
+            return '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)">' +
+              '<div style="font-size:13px;color:var(--muted)">' +
+                '<span style="margin-right:6px">\u25CB</span>' +
+                (lc ? lc.title : lid) +
+              '</div>' +
             '</div>';
           }).join('');
 
       return (
         '<div style="background:var(--surface);border:1.5px solid ' + (pathRec ? 'var(--gold)' : 'var(--border)') + ';border-radius:var(--r);padding:16px;margin-bottom:16px">' +
-          '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Training Pathway Status</div>' +
+          '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">\u1F4CB Training Pathway Status</div>' +
           '<div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">New Starter Manufacturing Training Pathway</div>' +
-          '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">' +
+          '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">' +
             '<span style="font-size:12px;font-weight:700;background:' + statusBg + ';color:' + statusColor + ';border-radius:99px;padding:3px 12px;border:1px solid ' + statusColor + '">' + statusLabel + '</span>' +
             '<span style="font-size:12px;color:var(--muted)">' + doneCount + '/15 lessons</span>' +
             '<span style="font-size:12px;font-weight:700;color:' + statusColor + '">' + pct + '%</span>' +
@@ -2148,14 +2060,17 @@ function renderProgress() {
             '<div style="height:100%;width:' + pct + '%;background:' + (pct === 100 ? 'var(--green)' : 'var(--gold)') + ';border-radius:99px;transition:width .4s"></div>' +
           '</div>' +
           (completedDate ? '<div style="font-size:12px;color:var(--green);margin-bottom:8px">\u2713 Completed: ' + completedDate + '</div>' : '') +
-          (pathRec ? '<div style="font-size:12px;color:var(--muted);background:var(--surface2);border-radius:var(--rs);padding:8px 10px;margin-bottom:10px">Skills Readiness: Training pathway complete. Supervisor sign-off confirms full workplace competency.</div>' : '') +
-          '<button onclick="switchTab(\'lessons\')" style="width:100%;padding:10px;background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer">' +
+          (pathRec ? '<div style="font-size:12px;color:var(--muted);background:var(--surface2);border-radius:var(--rs);padding:8px 10px;margin-bottom:8px">Skills Readiness: Training pathway complete. Supervisor sign-off confirms full workplace competency.</div>' : '') +
+          '<button onclick="switchTab(\'lessons\')" style="width:100%;padding:10px;background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:0">' +
             (pathRec ? 'Revisit Training Lessons \u2192' : 'Continue Training \u2192') +
           '</button>' +
         '</div>' +
         '<div style="font-size:14px;font-weight:700;margin:4px 0 10px">\u2705 Completed Lessons (' + completedIds.length + '/15)</div>' +
         '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:16px">' +
-          completedListHtml +
+          (doneCount === 0
+            ? '<div style="font-size:13px;color:var(--muted);text-align:center;padding:16px 0">No training progress has been recorded yet.<br>Start your first lesson to begin tracking progress.</div>'
+            : completedListHtml
+          ) +
         '</div>' +
         (remainingIds.length > 0
           ? '<div style="font-size:14px;font-weight:700;margin:4px 0 10px">\u25CB Remaining Lessons (' + remainingIds.length + ')</div>' +
