@@ -3,14 +3,14 @@
 // Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
 // v7 — Cleanup run: contamination fix + beforeinstallprompt install handler added
 
-const CACHE_NAME   = 'autoskill-employee-v9';
+const CACHE_NAME   = 'autoskill-employee-v10';
 const PWA_SCOPE    = '/ap3x/patient-pwa/';
 const OFFLINE_PAGE = '/ap3x/patient-pwa/index.html';
 
 const PRECACHE_ASSETS = [
   '/ap3x/patient-pwa/index.html',
   '/ap3x/patient-pwa/patient.css',
-  '/ap3x/patient-pwa/patient-app.js?v=9',
+  '/ap3x/patient-pwa/patient-app.js?v=10',
   '/ap3x/patient-pwa/manifest.json',
   '/ap3x/patient-pwa/ap3x-sw.js',
   '/ap3x/patient-pwa/chart.js',
@@ -38,7 +38,7 @@ self.addEventListener('activate', event => {
     caches.keys()
       .then(keys => Promise.all(
         keys.filter(k => k !== CACHE_NAME).map(k => {
-          console.log('[AutoSkill SW v9] Deleting old cache:', k);
+          console.log('[AutoSkill SW v10] Deleting old cache:', k);
           return caches.delete(k);
         })
       ))
