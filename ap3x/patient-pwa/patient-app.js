@@ -953,7 +953,7 @@ function acknowledgeLocalSafetyItem(ackId, employeeId) {
 var pwaNav = { pathwayId: null, moduleId: null, lessonId: null };
 
 function freshCIData() {
-  return { mood: null, anxiety: null, sleep: null, energy: null, coping: null, copingList: [], overwhelmed: null, conc: null, conn: null, note: '', support: null };
+  return { mood: null, anxiety: null /* internal key — maps to training-confidence question; preserved for localStorage compat */, sleep: null, energy: null, coping: null, copingList: [], overwhelmed: null, conc: null, conn: null, note: '', support: null };
 }
 
 // ── Boot ──────────────────────────────────────────────────────────
