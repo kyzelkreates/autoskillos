@@ -976,7 +976,7 @@ function buildOnboarding() {
   document.getElementById('onboarding').innerHTML = `
   <div class="ob-inner">
     <div class="ob-step active" id="ob1">
-      <div class="ob-logo"><div style="font-size:48px">🧠</div><div class="ob-brand">AutoSkill OS™</div><div class="ob-brand-sub">Employee Learning PWA</div></div>
+      <div class="ob-logo"><img src="../../icons/as-logo.png" alt="AutoSkill OS™" style="width:88px;height:88px;object-fit:contain;filter:drop-shadow(0 0 12px rgba(201,168,76,0.25))"/><div class="ob-brand">AutoSkill OS™</div><div class="ob-brand-sub">Employee Learning PWA</div></div>
       <h1 class="ob-title">Welcome to your Employee Learning Portal</h1>
       <p class="ob-desc">Manufacturing training check-ins, process modules, skill techniques, and competency tracking — all built around your recovery.</p>
       <div class="ob-feats">
@@ -1148,6 +1148,10 @@ function switchTab(name) {
   if (name === 'progress') renderProgress();
   if (name === 'lessons')  renderLessons();
   if (name === 'home')     renderHome();
+  // Scroll to top of PWA content area on every tab switch
+  var scrollTarget = document.getElementById('portal-root') || document.documentElement;
+  scrollTarget.scrollTop = 0;
+  window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
 function renderAll() {

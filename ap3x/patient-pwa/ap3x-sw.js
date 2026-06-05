@@ -14,6 +14,13 @@ const PRECACHE_ASSETS = [
   '/ap3x/patient-pwa/manifest.json',
   '/ap3x/patient-pwa/ap3x-sw.js',
   '/ap3x/patient-pwa/chart.js',
+  '/icons/as-logo.png',
+  '/icons/as-192.png',
+  '/icons/as-512.png',
+  '/icons/as-maskable-192.png',
+  '/icons/as-maskable-512.png',
+  '/icons/as-apple-touch.png',
+  '/icons/favicon.ico',
 ];
 
 // ── Install: pre-cache core assets ────────────────────────────────

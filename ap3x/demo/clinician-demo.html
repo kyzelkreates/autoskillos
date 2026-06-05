@@ -2,16 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-  <link rel="apple-touch-icon" sizes="180x180" href="../../icons/tl-180.png"/>
-  <link rel="apple-touch-icon" sizes="152x152" href="../../icons/tl-152.png"/>
-  <link rel="apple-touch-icon" sizes="144x144" href="../../icons/tl-144.png"/>
-  <link rel="icon" type="image/png" sizes="32x32" href="../../icons/tl-96.png"/>
-  <link rel="icon" type="image/png" sizes="192x192" href="../../icons/tl-192.png"/>
+  <link rel="icon" type="image/x-icon"     href="../../icons/favicon.ico"/>
+  <link rel="icon" type="image/png" sizes="32x32"    href="../../icons/as-favicon-32.png"/>
+  <link rel="icon" type="image/png" sizes="192x192"  href="../../icons/as-192.png"/>
+  <link rel="icon" type="image/png" sizes="512x512"  href="../../icons/as-512.png"/>
+  <link rel="apple-touch-icon" sizes="180x180"       href="../../icons/as-apple-touch.png"/>
+  <link rel="apple-touch-icon" sizes="152x152"       href="../../icons/as-152.png"/>
+  <link rel="apple-touch-icon" sizes="144x144"       href="../../icons/as-144.png"/>
+  <meta name="apple-mobile-web-app-title"            content="AutoSkill OS™"/>
+  <meta name="msapplication-TileImage"               content="../../icons/as-144.png"/>
+  <meta name="msapplication-TileColor"               content="#0a0a0a"/>
+  <meta name="msapplication-square150x150logo"       content="../../icons/as-152.png"/>
+  <meta name="msapplication-square310x310logo"       content="../../icons/as-512.png"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="AutoSkill OS™"/>
-  <meta name="msapplication-TileImage" content="../../icons/tl-144.png"/>
-  <meta name="msapplication-TileColor" content="#0a0a0a"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <!-- Control Dashboard is not a PWA — no manifest. Employee Learning PWA: /ap3x/patient-pwa/ -->
 <title>AutoSkill OS™ — Control Dashboard</title>
@@ -325,7 +329,7 @@ tr:hover td{background:var(--surface2)}
 
 <aside class="sidebar" id="sidebar">
   <div class="sb-brand">
-    <img src="../../icons/tl-72.png" alt="AutoSkill OS™" style="width:36px;height:36px;border-radius:8px;flex-shrink:0"/>
+    <img src="../../icons/as-logo.png" alt="AutoSkill OS™" style="width:48px;height:48px;flex-shrink:0;object-fit:contain;image-rendering:auto"/>
     <div><div class="sb-name">AutoSkill OS™</div><div class="sb-sub">Control Dashboard<br/>Powered by 4P3X Intelligent AI™</div></div>
   </div>
   <nav class="sb-nav">
@@ -368,7 +372,7 @@ tr:hover td{background:var(--surface2)}
 <div class="main-area">
   <div class="topbar">
     <div class="topbar-left">
-      <img src="../../icons/tl-72.png" alt="" class="topbar-logo" style="width:28px;height:28px;border-radius:6px;display:none"/>
+      <img src="../../icons/as-logo.png" alt="AutoSkill OS™" class="topbar-logo" style="width:32px;height:32px;object-fit:contain;display:block;margin-right:4px"/>
       <div class="topbar-title" id="topbarTitle">Training Control Dashboard</div>
       <div class="rt-ind"><div class="pulse-dot" id="r10PulseDot"></div><span id="demoIndicator">Demo Mode</span>&nbsp;<span id="activeDataSourceBadge" style="font-size:10px;padding:1px 6px;border-radius:8px;background:rgba(255,255,255,.07);color:var(--muted);border:1px solid rgba(255,255,255,.12)"></span></div>
     </div>
@@ -671,7 +675,7 @@ tr:hover td{background:var(--surface2)}
       <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:var(--rs);padding:10px 12px;font-size:11px;color:var(--muted);line-height:1.6">⚠️ Competency indicators are based on patient self-report and are <strong>not a clinical diagnosis</strong>. Always apply clinical judgement. If a patient is in immediate danger, contact emergency services.</div>
     </div>
   </div>
-  <footer class="cli-footer"><img src="../../icons/tl-72.png" alt="" style="width:20px;height:20px;border-radius:4px;vertical-align:middle;margin-right:8px"/>AutoSkill OS™ — Powered by 4P3X Intelligent AI™ · Created by Kyzel Kreates™ · Supervisor-guided competency monitoring. Does not replace site-
+  <footer class="cli-footer"><img src="../../icons/as-logo.png" alt="AutoSkill OS™" style="width:24px;height:24px;object-fit:contain;flex-shrink:0;opacity:.8"/>AutoSkill OS™ — Powered by 4P3X Intelligent AI™ · Created by Kyzel Kreates™ · Supervisor-guided competency monitoring. Does not replace site-
   <!-- RUN 3: TRAINING PATHWAYS -->
   <div class="view hidden" id="view-pathways">
     <div class="view-header">
@@ -1015,6 +1019,10 @@ function showView(v){
   if(v==='syncqueue'){renderSyncQueueView();}
   if(v==='reports'){renderReportsView();}
   closeSidebar();
+  // Scroll main-area to top on every view change
+  var mainArea = document.querySelector('.main-area') || document.documentElement;
+  mainArea.scrollTop = 0;
+  window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
 function toggleDemoMode(){
