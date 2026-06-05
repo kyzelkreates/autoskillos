@@ -306,6 +306,10 @@ function queueLessonStarted(lessonId) {
       priority:  'normal'
     });
     var q = dmGet(AP3X_SYNC_QUEUE_KEY, []); q.push(item); sSet(AP3X_SYNC_QUEUE_KEY, q);
+    // Run 11: attempt live write if live mode active
+    if (typeof r11_syncPwaLessonStartedLive === 'function') {
+      r11_syncPwaLessonStartedLive(item).catch(function(){});
+    }
   } catch(e) {}
 }
 
@@ -329,6 +333,10 @@ function queueLessonCompleted(lessonId, xpAwarded) {
     });
     var q = dmGet(AP3X_SYNC_QUEUE_KEY, []); q.push(item); sSet(AP3X_SYNC_QUEUE_KEY, q);
     sSet('ap3x_last_queue_at', new Date().toISOString());
+    // Run 11: attempt live write
+    if (typeof r11_syncPwaLessonCompletedLive === 'function') {
+      r11_syncPwaLessonCompletedLive(item).catch(function(){});
+    }
   } catch(e) {}
 }
 
@@ -352,6 +360,9 @@ function queueCheckpointSubmitted(lessonId, answer, isCorrect, checkpointId) {
       priority: sc ? 'safety-critical' : 'normal'
     });
     var q = dmGet(AP3X_SYNC_QUEUE_KEY, []); q.push(item); sSet(AP3X_SYNC_QUEUE_KEY, q);
+    if (typeof r11_syncPwaCheckpointSubmittedLive === 'function') {
+      r11_syncPwaCheckpointSubmittedLive(item).catch(function(){});
+    }
   } catch(e) {}
 }
 
@@ -370,6 +381,9 @@ function queueSafetyAcknowledged(ackId, ackTitle) {
       priority: 'safety-critical'
     });
     var q = dmGet(AP3X_SYNC_QUEUE_KEY, []); q.push(item); sSet(AP3X_SYNC_QUEUE_KEY, q);
+    if (typeof r11_syncPwaSafetyAcknowledgedLive === 'function') {
+      r11_syncPwaSafetyAcknowledgedLive(item).catch(function(){});
+    }
   } catch(e) {}
 }
 
@@ -1449,7 +1463,14 @@ function closeLessonDetail() {
 
 function completeLessonFromDetail(id, xpVal) {
   var field = document.getElementById('ld-note-field');
-  if (field && field.value.trim()) sSet('tl_lesson_note_' + id, field.value.trim());
+  var noteText = field && field.value.trim() ? field.value.trim() : null;
+  if (noteText) {
+    sSet('tl_lesson_note_' + id, noteText);
+    // Run 11: attempt live evidence record write
+    if (typeof r11_syncPwaEvidenceSubmittedLive === 'function') {
+      try { r11_syncPwaEvidenceSubmittedLive({ lessonId: id, noteText: noteText, type: 'lesson_note' }).catch(function(){}); } catch(e) {}
+    }
+  }
   if (!lessonDone[id]) {
     lessonDone[id] = Date.now();
     xp += xpVal;
@@ -1627,7 +1648,7 @@ function handleSafetyAck(ackId) {
   var acks = dmGetAll('ap3x_dm_safety_acks');
   var ack  = acks.filter(function(a) { return a.id === ackId; })[0] || {};
   queueSafetyAcknowledged(ackId, ack.title || ackId);
-  showToast('✓ Safety acknowledgement queued for Dashboard review');
+  showToast(r11_getLiveSyncStatusMessage ? r11_getLiveSyncStatusMessage('safety_acknowledged') : '✓ Safety acknowledgement queued for Dashboard review');
   renderSafetyChecks();
   updateHeader();
 }
@@ -1689,7 +1710,11 @@ function requestSupervisorReview() {
     null,
     'Employee requested review after ' + Object.values(lessonDone).filter(Boolean).length + ' lessons completed.'
   );
-  showToast('✓ Supervisor review request queued for Control Dashboard');
+  // Run 11: attempt live supervisor review write
+  if (typeof r11_syncPwaSupervisorReviewRequestedLive === 'function') {
+    try { r11_syncPwaSupervisorReviewRequestedLive({ reviewId: revId, emp: emp }).catch(function(){}); } catch(e) {}
+  }
+  showToast(r11_getLiveSyncStatusMessage ? r11_getLiveSyncStatusMessage('supervisor_review_requested') : '✓ Supervisor review request queued for Control Dashboard');
   renderProgress();
 }
 
@@ -1712,6 +1737,7 @@ function renderProgress() {
   // Run 10: live data source label for progress view
   var r10mode = (window.r10_getActiveDataMode ? window.r10_getActiveDataMode() : (status.isDemo ? 'demo' : 'local'));
   var r10label= (window.r10_getActiveDataSourceLabel ? window.r10_getActiveDataSourceLabel() : (status.isDemo ? '🎭 Demo' : '🖥️ Local'));
+  var r11liveStatus = (window.getPwaLiveSyncStatus ? window.getPwaLiveSyncStatus() : { statusLabel: r10mode === 'demo' ? 'Demo local' : 'Local fallback', statusClass: 'neutral' });
   var lastSaved = sGet('ap3x_last_checkin_date', null);
 
   el.innerHTML =
@@ -1836,6 +1862,708 @@ function pwa_r10_getStatusSummary() {
 function pwa_r10_isLiveMode() { return pwa_r10_getDataMode() === 'live'; }
 function pwa_r10_isDemoMode() { return pwa_r10_getDataMode() === 'demo'; }
 
+// AutoSkill OS™ supports training awareness, supervisor review, and evidence
+// capture. It does not replace workplace safety procedures, legal duties,
+// qualified supervision, employer responsibility, or site-specific training.
+// ════════════════════════════════════════════════════════════════════════════
+
+
+// ════════════════════════════════════════════════════════════════════════════
+// AutoSkill OS™ — Run 11: Employee PWA Live Sync
+// ────────────────────────────────────────────────────────────────────────────
+// Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
+//
+// ARCHITECTURE: Live write layer injected at end of PWA JS.
+// Works alongside Run 10 connector (r10_*) and Run 7 local queue.
+// Demo Mode → local queue only. Live Mode → Supabase anon client.
+// Offline/failed → local fallback queue, honest status shown.
+//
+// SECURITY: 4P3X API Config Guard™. Anon key only. Never service role.
+// ════════════════════════════════════════════════════════════════════════════
+
+// ── R11.0: FAILED WRITE LOCAL QUEUE ─────────────────────────────────────────
+// Stores items that failed to write to live backend for retry.
+
+var R11_FAILED_QUEUE_KEY = 'ap3x_r11_failed_live_writes';
+var R11_MAX_RETRY        = 3;
+
+function r11_getFailedQueue() {
+  try { return JSON.parse(localStorage.getItem(R11_FAILED_QUEUE_KEY) || '[]'); } catch(e) { return []; }
+}
+
+function r11_saveFailedQueue(q) {
+  try { localStorage.setItem(R11_FAILED_QUEUE_KEY, JSON.stringify(q)); } catch(e) {}
+}
+
+function r11_queueFailedLiveSyncLocally(payload, errorMessage) {
+  // Stores a failed live write for later retry.
+  // Does NOT accept demo records.
+  if (payload && payload.isDemo) return;
+  var q    = r11_getFailedQueue();
+  var item = {
+    id:           payload.id || ('fail_' + Date.now() + '_' + Math.random().toString(36).slice(2,5)),
+    eventType:    payload.eventType || 'unknown',
+    payload:      payload,
+    errorMessage: (errorMessage || '').substring(0, 200).replace(/eyJ[A-Za-z0-9_\-\.]{10,}/g,'[token_redacted]'),
+    retryCount:   (payload.retryCount || 0),
+    status:       'failed',
+    failedAt:     new Date().toISOString(),
+    updatedAt:    new Date().toISOString()
+  };
+  // De-duplicate by id
+  q = q.filter(function(i) { return i.id !== item.id; });
+  q.push(item);
+  r11_saveFailedQueue(q);
+}
+
+function r11_markFailedItemSynced(itemId) {
+  var q = r11_getFailedQueue().filter(function(i) { return i.id !== itemId; });
+  r11_saveFailedQueue(q);
+}
+
+function r11_updateFailedItemRetry(itemId, error) {
+  var q = r11_getFailedQueue().map(function(item) {
+    if (item.id !== itemId) return item;
+    return Object.assign({}, item, {
+      retryCount:   (item.retryCount || 0) + 1,
+      errorMessage: (error || '').substring(0, 200),
+      updatedAt:    new Date().toISOString()
+    });
+  });
+  r11_saveFailedQueue(q);
+}
+
+// ── R11.1: LIVE SYNC GUARDS ───────────────────────────────────────────────────
+
+function r11_canWriteLive() {
+  // Returns true only when: live mode + Supabase configured + SDK available
+  if (isPwaDemoMode && isPwaDemoMode()) return false;
+  if (window.r10_shouldUseRemoteBackend) return window.r10_shouldUseRemoteBackend();
+  if (window.pwa_r10_isLiveMode && !window.pwa_r10_isLiveMode()) return false;
+  // Check Supabase config directly
+  if (typeof sGet !== 'function') return false;
+  var bs = sGet('4p3x_backend_settings', null);
+  if (!bs || bs.mode !== 'supabase') return false;
+  var cfg = bs.supabase || {};
+  return !!(cfg.url && cfg.anonKey && ['configured','connected','rls_required'].includes(cfg.status));
+}
+
+function r11_getSupabaseClientForPwa() {
+  // Use Run 10's initialised client if available
+  if (window.r10_getSupabaseClient) {
+    var client = window.r10_getSupabaseClient();
+    if (client) return client;
+  }
+  // Attempt direct init if window.supabase loaded and config present
+  if (window.supabase && window.supabase.createClient) {
+    var bs  = typeof sGet === 'function' ? sGet('4p3x_backend_settings', null) : null;
+    var cfg = bs && bs.supabase;
+    if (cfg && cfg.url && cfg.anonKey) {
+      try { return window.supabase.createClient(cfg.url, cfg.anonKey, { auth: { persistSession: true } }); }
+      catch(e) { return null; }
+    }
+  }
+  return null;
+}
+
+function r11_buildLiveSyncQueuePayload(localItem) {
+  // Maps local sync queue item to Supabase autoskill_sync_queue schema (Run 9)
+  return {
+    event_type:        localItem.eventType || 'unknown',
+    source:            'employee-pwa',
+    target:            'control-dashboard',
+    employee_id:       localItem.employeeId    || null,
+    pathway_id:        localItem.pathwayId     || null,
+    module_id:         localItem.moduleId      || null,
+    lesson_id:         localItem.lessonId      || null,
+    checkpoint_id:     localItem.checkpointId  || null,
+    acknowledgement_id:localItem.acknowledgementId || null,
+    evidence_record_id:localItem.evidenceRecordId  || null,
+    supervisor_review_id: localItem.supervisorReviewId || null,
+    payload:           localItem.payload       || {},
+    status:            'queued',
+    priority:          localItem.priority      || 'normal',
+    data_mode:         'live',
+    is_demo:           false,
+    local_device_id:   localItem.localDeviceId || ('pwa_' + (navigator.userAgent.length % 999)),
+    provider:          'supabase',
+    notes:             localItem.notes         || null,
+    retry_count:       localItem.retryCount    || 0,
+    error_message:     null
+  };
+}
+
+// ── R11.2: CORE LIVE WRITE FUNCTION ──────────────────────────────────────────
+
+async function r11_writeLiveSyncQueueEvent(localItem) {
+  // Returns { ok: bool, remoteId: string|null, error: string|null }
+  if (!r11_canWriteLive()) {
+    return { ok: false, reason: 'not_live', error: null };
+  }
+  var client = r11_getSupabaseClientForPwa();
+  if (!client) {
+    return { ok: false, reason: 'no_client', error: 'Supabase client not initialised.' };
+  }
+  // Guard: never write demo items to live backend
+  if (localItem.isDemo || localItem.dataMode === 'demo') {
+    return { ok: false, reason: 'demo_record', error: null };
+  }
+  try {
+    var row    = r11_buildLiveSyncQueuePayload(localItem);
+    var result = await client.from('autoskill_sync_queue').insert(row).select('id').single();
+    if (result.error) {
+      var errMsg = result.error.message || JSON.stringify(result.error).substring(0, 150);
+      // Guard: never log or return secret-looking values
+      errMsg = errMsg.replace(/eyJ[A-Za-z0-9_\-\.]{10,}/g, '[token_redacted]');
+      return { ok: false, reason: result.status === 401 ? 'rls_blocked' : 'insert_failed', error: errMsg };
+    }
+    return { ok: true, remoteId: result.data && result.data.id || null, error: null };
+  } catch(e) {
+    var msg = e.message || 'Unknown error';
+    if (msg.includes('service_role')) msg = 'Auth error — check anon key configuration.';
+    return { ok: false, reason: 'exception', error: msg.substring(0, 200) };
+  }
+}
+
+async function r11_writeLiveProgressRecord(payload) {
+  if (!r11_canWriteLive()) return { ok: false, reason: 'not_live' };
+  var client = r11_getSupabaseClientForPwa();
+  if (!client) return { ok: false, reason: 'no_client', error: 'Client not ready.' };
+  if (payload.isDemo) return { ok: false, reason: 'demo_record' };
+  try {
+    var result = await client.from('autoskill_progress_records').upsert({
+      employee_id:       payload.employeeId       || null,
+      pathway_id:        payload.pathwayId        || null,
+      module_id:         payload.moduleId         || null,
+      lesson_id:         payload.lessonId         || null,
+      status:            payload.status           || 'completed',
+      progress_percent:  payload.progressPercent  !== undefined ? payload.progressPercent : 100,
+      score:             payload.score            !== undefined ? payload.score : null,
+      time_spent_minutes:payload.timeSpentMinutes || 0,
+      completed_at:      payload.completedAt      || new Date().toISOString(),
+      source:            'employee-pwa',
+      sync_status:       'synced',
+      is_demo:           false,
+      data_mode:         'live',
+      updated_at:        new Date().toISOString()
+    });
+    if (result.error) {
+      return { ok: false, reason: 'upsert_failed', error: (result.error.message || '').substring(0,150) };
+    }
+    return { ok: true };
+  } catch(e) { return { ok: false, reason: 'exception', error: e.message }; }
+}
+
+async function r11_writeLiveCheckpointSubmission(payload) {
+  if (!r11_canWriteLive()) return { ok: false, reason: 'not_live' };
+  var client = r11_getSupabaseClientForPwa();
+  if (!client) return { ok: false, reason: 'no_client', error: 'Client not ready.' };
+  if (payload.isDemo) return { ok: false, reason: 'demo_record' };
+  try {
+    var result = await client.from('autoskill_checkpoint_submissions').insert({
+      employee_id:   payload.employeeId    || null,
+      checkpoint_id: payload.checkpointId  || null,
+      pathway_id:    payload.pathwayId     || null,
+      module_id:     payload.moduleId      || null,
+      lesson_id:     payload.lessonId      || null,
+      answer:        payload.answer        || {},
+      is_correct:    payload.isCorrect     !== undefined ? payload.isCorrect : null,
+      status:        'completed',
+      submitted_at:  new Date().toISOString(),
+      source:        'employee-pwa',
+      sync_status:   'synced',
+      is_demo:       false,
+      data_mode:     'live'
+    });
+    if (result.error) return { ok: false, reason: 'insert_failed', error: (result.error.message||'').substring(0,150) };
+    return { ok: true };
+  } catch(e) { return { ok: false, reason: 'exception', error: e.message }; }
+}
+
+async function r11_writeLiveSafetyAcknowledgement(payload) {
+  if (!r11_canWriteLive()) return { ok: false, reason: 'not_live' };
+  var client = r11_getSupabaseClientForPwa();
+  if (!client) return { ok: false, reason: 'no_client', error: 'Client not ready.' };
+  if (payload.isDemo) return { ok: false, reason: 'demo_record' };
+  try {
+    var result = await client.from('autoskill_employee_safety_acknowledgements').upsert({
+      employee_id:        payload.employeeId       || null,
+      acknowledgement_id: payload.acknowledgementId|| null,
+      pathway_id:         payload.pathwayId        || null,
+      module_id:          payload.moduleId         || null,
+      lesson_id:          payload.lessonId         || null,
+      acknowledged_text:  payload.acknowledgedText || 'Confirmed',
+      acknowledged_at:    new Date().toISOString(),
+      source:             'employee-pwa',
+      sync_status:        'synced',
+      is_demo:            false,
+      data_mode:          'live'
+    });
+    if (result.error) return { ok: false, reason: 'upsert_failed', error: (result.error.message||'').substring(0,150) };
+    return { ok: true };
+  } catch(e) { return { ok: false, reason: 'exception', error: e.message }; }
+}
+
+async function r11_writeLiveEvidenceRecord(payload) {
+  if (!r11_canWriteLive()) return { ok: false, reason: 'not_live' };
+  var client = r11_getSupabaseClientForPwa();
+  if (!client) return { ok: false, reason: 'no_client', error: 'Client not ready.' };
+  if (payload.isDemo) return { ok: false, reason: 'demo_record' };
+  try {
+    var result = await client.from('autoskill_evidence_records').insert({
+      employee_id:   payload.employeeId  || null,
+      pathway_id:    payload.pathwayId   || null,
+      module_id:     payload.moduleId    || null,
+      lesson_id:     payload.lessonId    || null,
+      evidence_type: payload.type        || 'lesson_note',
+      title:         payload.title       || 'Training note',
+      description:   payload.noteText    || payload.description || '',
+      submitted_at:  new Date().toISOString(),
+      source:        'employee-pwa',
+      sync_status:   'synced',
+      is_demo:       false,
+      data_mode:     'live'
+    });
+    if (result.error) return { ok: false, reason: 'insert_failed', error: (result.error.message||'').substring(0,150) };
+    return { ok: true };
+  } catch(e) { return { ok: false, reason: 'exception', error: e.message }; }
+}
+
+async function r11_writeLiveSupervisorReview(payload) {
+  if (!r11_canWriteLive()) return { ok: false, reason: 'not_live' };
+  var client = r11_getSupabaseClientForPwa();
+  if (!client) return { ok: false, reason: 'no_client', error: 'Client not ready.' };
+  if (payload.isDemo) return { ok: false, reason: 'demo_record' };
+  try {
+    var result = await client.from('autoskill_supervisor_reviews').insert({
+      employee_id:     payload.employeeId  || null,
+      reviewer_id:     null,  // awaits supervisor assignment
+      pathway_id:      payload.pathwayId   || null,
+      module_id:       payload.moduleId    || null,
+      status:          'pending',
+      notes:           payload.notes       || null,
+      requested_at:    new Date().toISOString(),
+      source:          'employee-pwa',
+      sync_status:     'synced',
+      is_demo:         false,
+      data_mode:       'live'
+    });
+    if (result.error) return { ok: false, reason: 'insert_failed', error: (result.error.message||'').substring(0,150) };
+    return { ok: true, remoteId: result.data && result.data[0] && result.data[0].id || null };
+  } catch(e) { return { ok: false, reason: 'exception', error: e.message }; }
+}
+
+// ── R11.3: HIGH-LEVEL SYNC FUNCTIONS ─────────────────────────────────────────
+// Called from patched Run 7 queue functions above.
+// Each: writes queue event + specific record, handles fallback.
+
+async function r11_syncPwaLessonStartedLive(localItem) {
+  if (!r11_canWriteLive()) return;
+  var result = await r11_writeLiveSyncQueueEvent(localItem);
+  if (!result.ok) {
+    if (result.reason !== 'not_live' && result.reason !== 'demo_record') {
+      r11_queueFailedLiveSyncLocally(localItem, result.error || result.reason);
+      r11_showPwaSyncToast('started', false, result.reason);
+    }
+    return;
+  }
+  // Mark local item as remote-synced
+  r11_markLocalItemSynced(localItem.id, result.remoteId);
+  r11_showPwaSyncToast('started', true, null);
+}
+
+async function r11_syncPwaLessonCompletedLive(localItem) {
+  if (!r11_canWriteLive()) return;
+  // 1. Write sync queue event
+  var qResult = await r11_writeLiveSyncQueueEvent(localItem);
+  // 2. Write progress record
+  var emp = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : null;
+  var pResult = await r11_writeLiveProgressRecord({
+    employeeId:      emp && emp.id || localItem.employeeId,
+    pathwayId:       localItem.pathwayId,
+    moduleId:        localItem.moduleId,
+    lessonId:        localItem.lessonId,
+    status:          'completed',
+    progressPercent: 100,
+    score:           localItem.payload && localItem.payload.score !== undefined ? localItem.payload.score : null,
+    completedAt:     localItem.payload && localItem.payload.completedAt || new Date().toISOString(),
+    isDemo:          false
+  });
+  var ok = qResult.ok || pResult.ok;
+  if (ok) {
+    r11_markLocalItemSynced(localItem.id, qResult.remoteId);
+    r11_showPwaSyncToast('completed', true, null);
+  } else {
+    r11_queueFailedLiveSyncLocally(localItem, qResult.error || pResult.error || 'Write failed');
+    r11_showPwaSyncToast('completed', false, qResult.reason || pResult.reason);
+  }
+}
+
+async function r11_syncPwaCheckpointSubmittedLive(localItem) {
+  if (!r11_canWriteLive()) return;
+  var payload = localItem.payload || {};
+  var emp     = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : null;
+  var qResult = await r11_writeLiveSyncQueueEvent(localItem);
+  var cResult = await r11_writeLiveCheckpointSubmission({
+    employeeId:   emp && emp.id || localItem.employeeId,
+    checkpointId: localItem.checkpointId,
+    pathwayId:    localItem.pathwayId,
+    moduleId:     localItem.moduleId,
+    lessonId:     localItem.lessonId,
+    answer:       { answer: payload.answer, question: payload.question },
+    isCorrect:    payload.isCorrect !== undefined ? payload.isCorrect : null,
+    isDemo:       false
+  });
+  var ok = qResult.ok || cResult.ok;
+  if (ok) {
+    r11_markLocalItemSynced(localItem.id, qResult.remoteId);
+    r11_showPwaSyncToast('checkpoint', true, null);
+  } else {
+    r11_queueFailedLiveSyncLocally(localItem, qResult.error || cResult.error || 'Checkpoint write failed');
+    r11_showPwaSyncToast('checkpoint', false, qResult.reason || cResult.reason);
+  }
+}
+
+async function r11_syncPwaSafetyAcknowledgedLive(localItem) {
+  if (!r11_canWriteLive()) return;
+  var payload = localItem.payload || {};
+  var emp     = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : null;
+  var qResult = await r11_writeLiveSyncQueueEvent(localItem);
+  var aResult = await r11_writeLiveSafetyAcknowledgement({
+    employeeId:        emp && emp.id || payload.employeeId,
+    acknowledgementId: localItem.acknowledgementId || payload.ackId,
+    pathwayId:         localItem.pathwayId,
+    moduleId:          localItem.moduleId,
+    lessonId:          localItem.lessonId,
+    acknowledgedText:  'I confirm I have read and understood this requirement',
+    isDemo:            false
+  });
+  var ok = qResult.ok || aResult.ok;
+  if (ok) {
+    r11_markLocalItemSynced(localItem.id, qResult.remoteId);
+    r11_showPwaSyncToast('safety', true, null);
+  } else {
+    r11_queueFailedLiveSyncLocally(localItem, qResult.error || aResult.error || 'Safety ack write failed');
+    r11_showPwaSyncToast('safety', false, qResult.reason || aResult.reason);
+  }
+}
+
+async function r11_syncPwaEvidenceSubmittedLive(payload) {
+  if (!r11_canWriteLive()) return;
+  var emp     = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : null;
+  var eResult = await r11_writeLiveEvidenceRecord({
+    employeeId:  emp && emp.id || null,
+    lessonId:    payload.lessonId,
+    type:        payload.type || 'lesson_note',
+    title:       'Training note — ' + (payload.lessonId || ''),
+    noteText:    payload.noteText,
+    isDemo:      false
+  });
+  if (eResult.ok) {
+    // also write a sync queue event for dashboard visibility
+    var emp2 = emp || {};
+    var qItem = createSyncQueueItem({
+      eventType: 'evidence_submitted',
+      lessonId:  payload.lessonId,
+      payload:   { type: payload.type || 'lesson_note', hasNote: !!payload.noteText },
+      priority:  'normal'
+    });
+    r11_writeLiveSyncQueueEvent(qItem).catch(function(){});
+    r11_showPwaSyncToast('note', true, null);
+  } else {
+    r11_showPwaSyncToast('note', false, eResult.reason);
+  }
+}
+
+async function r11_syncPwaSupervisorReviewRequestedLive(opts) {
+  if (!r11_canWriteLive()) return;
+  var emp    = opts.emp || (getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : null);
+  var revResult = await r11_writeLiveSupervisorReview({
+    employeeId: emp && emp.id || null,
+    pathwayId:  emp && emp.assignedPathwayIds && emp.assignedPathwayIds[0] || null,
+    notes:      'Employee requested review via PWA',
+    isDemo:     false
+  });
+  var qItem = createSyncQueueItem({
+    eventType:         'supervisor_review_requested',
+    supervisorReviewId: revResult.ok ? revResult.remoteId : null,
+    payload:           { employeeId: emp && emp.id, requestedAt: new Date().toISOString(), remoteReviewId: revResult.remoteId || null },
+    priority:          'high'
+  });
+  r11_writeLiveSyncQueueEvent(qItem).catch(function(){});
+  if (revResult.ok) {
+    r11_showPwaSyncToast('review', true, null);
+  } else {
+    r11_queueFailedLiveSyncLocally(qItem, revResult.error || 'Review write failed');
+    r11_showPwaSyncToast('review', false, revResult.reason);
+  }
+}
+
+// ── R11.4: LOCAL ITEM SYNC STATUS UPDATE ─────────────────────────────────────
+
+function r11_markLocalItemSynced(localId, remoteId) {
+  // Marks a local sync queue item as remote_synced
+  try {
+    var q = dmGet(AP3X_SYNC_QUEUE_KEY, []);
+    q = q.map(function(item) {
+      if (item.id !== localId) return item;
+      return Object.assign({}, item, {
+        status:    'remote_synced',
+        remoteId:  remoteId || null,
+        updatedAt: new Date().toISOString(),
+        syncedAt:  new Date().toISOString()
+      });
+    });
+    sSet(AP3X_SYNC_QUEUE_KEY, q);
+  } catch(e) {}
+}
+
+// ── R11.5: STATUS HELPERS ─────────────────────────────────────────────────────
+
+function getPwaLiveSyncStatus() {
+  // Returns current live sync status for UI display
+  if (isPwaDemoMode && isPwaDemoMode()) {
+    return { statusLabel: 'Demo local', statusClass: 'demo', statusEmoji: '🎭',
+             message: 'Demo Mode — local demo data only. Demo Mode shows the product. Live Mode runs the product.' };
+  }
+  if (!r11_canWriteLive()) {
+    var bs = typeof sGet === 'function' ? sGet('4p3x_backend_settings', null) : null;
+    if (!bs || bs.mode === 'local') {
+      return { statusLabel: 'Local fallback', statusClass: 'local', statusEmoji: '🖥️',
+               message: 'Local-only mode. AutoSkill OS™ remains local-first until a live backend is configured.' };
+    }
+    var cfg = bs[bs.mode] || {};
+    if (cfg.status === 'rls_required' || cfg.status === 'auth_required') {
+      return { statusLabel: 'Auth required', statusClass: 'auth', statusEmoji: '🔑',
+               message: 'Live backend requires authorised employee profile access before this update can sync.' };
+    }
+    return { statusLabel: 'Backend required', statusClass: 'warning', statusEmoji: '⚙️',
+             message: 'Live backend is not configured. Progress is saved locally.' };
+  }
+  var failedQ = r11_getFailedQueue().filter(function(i) { return i.retryCount < R11_MAX_RETRY; });
+  if (failedQ.length > 0) {
+    return { statusLabel: 'Sync pending retry', statusClass: 'pending', statusEmoji: '⟳',
+             message: 'Some updates failed to sync. Saved locally for retry. ' + failedQ.length + ' item(s) pending.', failedCount: failedQ.length };
+  }
+  return { statusLabel: 'Live backend connected', statusClass: 'live', statusEmoji: '✅',
+           message: 'Live Mode — training activity syncs to the configured backend when authorised and available.' };
+}
+
+function getEmployeeLiveProfileStatus() {
+  // Returns auth/profile status for the current employee in live mode
+  if (isPwaDemoMode && isPwaDemoMode()) {
+    return { type: 'demo', message: 'Demo employee profile active.' };
+  }
+  var emp = getPwaActiveEmployeeByMode ? getPwaActiveEmployeeByMode() : null;
+  if (!emp) {
+    return { type: 'no_profile', message: 'No live employee profile found. Ask a training manager to set up your employee record in AutoSkill OS™.' };
+  }
+  if (!r11_canWriteLive()) {
+    return { type: 'local', message: 'Employee record loaded locally. Live backend not connected.' };
+  }
+  return { type: 'live', message: 'Live employee profile active. Training activity syncs to backend.' };
+}
+
+function r11_getLiveSyncStatusMessage(eventType) {
+  // Short toast message based on current sync capability and event type
+  if (isPwaDemoMode && isPwaDemoMode()) {
+    return '🎭 Demo Mode — update saved locally';
+  }
+  if (!r11_canWriteLive()) {
+    var bs  = typeof sGet === 'function' ? sGet('4p3x_backend_settings', null) : null;
+    var cfg = bs && bs[bs && bs.mode] || {};
+    if (cfg.status === 'rls_required') return '🔑 Auth required — saved locally';
+    return '💾 Saved locally';
+  }
+  var labels = {
+    lesson_started:             '▶ Lesson start queued for live backend',
+    lesson_completed:           '✅ Lesson synced to live backend',
+    checkpoint_submitted:       '✅ Checkpoint synced to live backend',
+    safety_acknowledged:        '✅ Safety acknowledgement synced to live backend',
+    evidence_submitted:         '📝 Training note synced to live backend',
+    supervisor_review_requested:'✅ Review request queued for live backend'
+  };
+  return labels[eventType] || '✅ Saved';
+}
+
+function r11_showPwaSyncToast(action, success, reason) {
+  if (typeof showToast !== 'function') return;
+  var isDemo = isPwaDemoMode && isPwaDemoMode();
+  if (isDemo) return; // demo mode toasts are handled by existing logic
+  if (success) {
+    var successMsgs = {
+      started:    '▶ Lesson start queued for live dashboard.',
+      completed:  '✅ Lesson completion synced to live backend.',
+      checkpoint: '✅ Checkpoint synced to live backend.',
+      safety:     '✅ Safety acknowledgement synced to live backend.',
+      note:       '📝 Training note synced to live backend.',
+      review:     '✅ Review request synced to live backend.'
+    };
+    showToast(successMsgs[action] || '✅ Training update synced to live backend.');
+  } else {
+    var rlsReasons = ['rls_blocked','rls_required','auth_required'];
+    if (rlsReasons.includes(reason)) {
+      showToast('🔑 Live backend requires authorised access. Saved locally for retry.');
+    } else if (reason === 'no_client' || reason === 'sdk_not_loaded') {
+      showToast('⚙️ Backend not ready. Saved locally. Live sync pending.');
+    } else if (reason === 'not_live' || reason === 'demo_record') {
+      // silent — demo / local-only is expected
+    } else {
+      showToast('💾 Saved locally. Live sync failed and is queued for retry.');
+    }
+  }
+}
+
+// ── R11.6: RETRY SUPPORT ──────────────────────────────────────────────────────
+
+async function retryFailedLiveSyncItem(itemId) {
+  var q    = r11_getFailedQueue();
+  var item = q.find(function(i) { return i.id === itemId; });
+  if (!item) { showToast && showToast('Item not found in retry queue.'); return; }
+  if (item.retryCount >= R11_MAX_RETRY) {
+    showToast && showToast('⚠ Max retries reached for this item. Manual intervention required.');
+    return;
+  }
+  if (!r11_canWriteLive()) {
+    showToast && showToast('⚙️ Backend not available for retry right now.');
+    return;
+  }
+  showToast && showToast('Retrying live sync…');
+  var result = await r11_writeLiveSyncQueueEvent(item.payload || item);
+  if (result.ok) {
+    r11_markFailedItemSynced(itemId);
+    r11_markLocalItemSynced(itemId, result.remoteId);
+    showToast && showToast('✅ Retry succeeded. Item synced to live backend.');
+    if (typeof r11_renderPwaLiveSyncBadge === 'function') r11_renderPwaLiveSyncBadge();
+  } else {
+    r11_updateFailedItemRetry(itemId, result.error);
+    showToast && showToast('⚠ Retry failed. Item remains in local retry queue (' + ((item.retryCount||0)+1) + '/' + R11_MAX_RETRY + ').');
+  }
+}
+
+async function retryAllFailedLiveSyncItems() {
+  var q = r11_getFailedQueue().filter(function(i) { return (i.retryCount || 0) < R11_MAX_RETRY; });
+  if (!q.length) { showToast && showToast('No failed items to retry.'); return; }
+  showToast && showToast('Retrying ' + q.length + ' failed item(s)…');
+  var ok = 0, fail = 0;
+  for (var i = 0; i < q.length; i++) {
+    var result = await r11_writeLiveSyncQueueEvent(q[i].payload || q[i]);
+    if (result.ok) { r11_markFailedItemSynced(q[i].id); ok++; }
+    else { r11_updateFailedItemRetry(q[i].id, result.error); fail++; }
+  }
+  showToast && showToast('Retry complete: ' + ok + ' synced, ' + fail + ' still pending.');
+  if (typeof r11_renderPwaLiveSyncBadge === 'function') r11_renderPwaLiveSyncBadge();
+}
+
+// ── R11.7: PWA LIVE SYNC BADGE UI ────────────────────────────────────────────
+
+function r11_renderPwaLiveSyncBadge() {
+  var el = document.getElementById('r11-pwa-sync-badge');
+  if (!el) return;
+  var st       = getPwaLiveSyncStatus();
+  var failedQ  = r11_getFailedQueue();
+  var retryable= failedQ.filter(function(i){ return (i.retryCount||0) < R11_MAX_RETRY; });
+
+  var bgColors = {
+    demo:    'rgba(201,168,76,.1)',
+    local:   'rgba(148,163,184,.08)',
+    live:    'rgba(34,197,94,.1)',
+    auth:    'rgba(201,168,76,.1)',
+    warning: 'rgba(239,68,68,.08)',
+    pending: 'rgba(201,168,76,.1)'
+  };
+  var borderColors = {
+    demo:    'rgba(201,168,76,.25)',
+    local:   'rgba(148,163,184,.2)',
+    live:    'rgba(34,197,94,.25)',
+    auth:    'rgba(201,168,76,.25)',
+    warning: 'rgba(239,68,68,.2)',
+    pending: 'rgba(201,168,76,.25)'
+  };
+  var bg  = bgColors[st.statusClass]  || bgColors['local'];
+  var brd = borderColors[st.statusClass] || borderColors['local'];
+
+  el.innerHTML =
+    '<div style="background:' + bg + ';border:1px solid ' + brd + ';border-radius:var(--rs);padding:10px 14px;font-size:12px;line-height:1.5">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px">' +
+        '<span style="font-weight:700">' + st.statusEmoji + ' ' + st.statusLabel + '</span>' +
+        (retryable.length > 0
+          ? '<button onclick="retryAllFailedLiveSyncItems()" style="font-size:11px;padding:2px 8px;border-radius:6px;background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3);cursor:pointer" aria-label="Retry failed sync items">Retry ' + retryable.length + '</button>'
+          : '') +
+      '</div>' +
+      '<div style="color:var(--muted);font-size:11px">' + st.message + '</div>' +
+      '<div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.4">' +
+        'Demo Mode shows the product. Live Mode runs the product.<br/>' +
+        'AutoSkill OS™ supports training awareness — it does not replace workplace safety procedures or supervisor oversight.' +
+      '</div>' +
+    '</div>';
+}
+
+// ── R11.8: INJECT SYNC BADGE INTO PROGRESS TAB ───────────────────────────────
+// Extends renderProgress to inject the live sync badge.
+
+var _r11_origRenderProgress = null;
+function r11_extendRenderProgress() {
+  var progressEl = document.getElementById('tab-progress');
+  if (!progressEl) return;
+  // Inject badge container after existing content if not present
+  if (!document.getElementById('r11-pwa-sync-badge')) {
+    var badgeDiv = document.createElement('div');
+    badgeDiv.id  = 'r11-pwa-sync-badge';
+    badgeDiv.style.marginTop = '16px';
+    progressEl.appendChild(badgeDiv);
+  }
+  r11_renderPwaLiveSyncBadge();
+}
+
+// ── R11.9: DASHBOARD SYNC QUEUE COMPATIBILITY ─────────────────────────────────
+// No dashboard rebuild. Just expose status function for dashboard if it reads from PWA context.
+// Dashboard's renderSyncQueueView() already reads AP3X_SYNC_QUEUE_KEY items.
+// Run 11 adds 'remote_synced' status — dashboard should handle it gracefully.
+
+function r11_getDashboardCompatSyncStatus() {
+  // Returns count summary for dashboard compatibility
+  var q         = dmGet(AP3X_SYNC_QUEUE_KEY, []);
+  var failed    = r11_getFailedQueue();
+  return {
+    total:          q.length,
+    queued:         q.filter(function(i){return i.status==='queued';}).length,
+    remoteSynced:   q.filter(function(i){return i.status==='remote_synced';}).length,
+    failedLive:     failed.length,
+    retryable:      failed.filter(function(i){return (i.retryCount||0) < R11_MAX_RETRY;}).length,
+    hasLiveItems:   q.some(function(i){return i.provider==='supabase';}),
+    lastSyncAt:     sGet('ap3x_last_queue_at', null)
+  };
+}
+
+// ── R11.10: INITIALISATION ────────────────────────────────────────────────────
+
+function r11_init() {
+  // Attempt Supabase CDN load if configured and not yet loaded
+  if (window.r10_loadSupabaseSdkIfNeeded) {
+    window.r10_loadSupabaseSdkIfNeeded(function() {
+      if (typeof r11_renderPwaLiveSyncBadge === 'function') r11_renderPwaLiveSyncBadge();
+    });
+  }
+  // Extend renderProgress to include sync badge (called after DOMContentLoaded)
+  var _origRP = window.renderProgress;
+  if (typeof _origRP === 'function') {
+    window.renderProgress = function() {
+      _origRP.apply(this, arguments);
+      setTimeout(r11_extendRenderProgress, 0);
+    };
+  }
+  var liveStatus = getPwaLiveSyncStatus();
+  console.info('[AutoSkill OS™ R11] PWA live sync initialised. Status:', liveStatus.statusLabel);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', r11_init);
+} else {
+  r11_init();
+}
+
+// ── End of Run 11 PWA Live Sync Block ────────────────────────────────────────
 // AutoSkill OS™ supports training awareness, supervisor review, and evidence
 // capture. It does not replace workplace safety procedures, legal duties,
 // qualified supervision, employer responsibility, or site-specific training.

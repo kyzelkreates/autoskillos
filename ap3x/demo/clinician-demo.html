@@ -1368,6 +1368,7 @@ function renderDemoLiveView() {
   const pathways      = dmGetAll('ap3x_dm_pathways');
   const safetyAcks    = dmGetAll('ap3x_dm_safety_acks');
   const syncQueue     = getSyncQueue ? getSyncQueue() : [];
+  const failedLive    = (typeof r11_getFailedQueue === 'function') ? r11_getFailedQueue() : [];
   const providerCfg   = bs[bs.mode] || {};
   const connSt        = bs.mode === 'local' ? 'local_only' : (providerCfg.status || 'not_configured');
 
@@ -2212,18 +2213,22 @@ function getDmPwaSyncQueue(filters) {
 
 function getSyncQueueStats() {
   const all = dmGetAll(DM_PWA_SYNC_KEY);
-  const r = { total:0, queued:0, processed:0, failed:0, conflict:0, ignored:0, safetyCritical:0, demo:0, live:0 };
+  // Run 11: include failed live queue from PWA
+  const failedLive = (typeof r11_getFailedQueue === 'function') ? r11_getFailedQueue() : [];
+  const r = { total:0, queued:0, processed:0, remoteSynced:0, failed:0, failedLive:0, conflict:0, ignored:0, safetyCritical:0, demo:0, live:0 };
   all.forEach(item => {
     r.total++;
     if (item.status==='queued'||item.status==='processing') r.queued++;
-    if (item.status==='synced')   r.processed++;
-    if (item.status==='failed')   r.failed++;
-    if (item.status==='conflict') r.conflict++;
-    if (item.status==='ignored')  r.ignored++;
+    if (item.status==='synced')          r.processed++;
+    if (item.status==='remote_synced')   { r.remoteSynced++; r.processed++; }
+    if (item.status==='failed')          r.failed++;
+    if (item.status==='conflict')        r.conflict++;
+    if (item.status==='ignored')         r.ignored++;
     if (item.priority==='safety-critical') r.safetyCritical++;
     if (item.isDemo)  r.demo++;
     else              r.live++;
   });
+  r.failedLive = failedLive.length;
   return r;
 }
 
@@ -2527,8 +2532,8 @@ function renderSyncQueueView() {
   };
   const statusBadge = {
     queued: badge('Queued','MEDIUM'), processing: badge('Processing','MEDIUM'),
-    synced: badge('Synced Locally','LOW'), failed: badge('Failed','CRITICAL'),
-    conflict: badge('Conflict','HIGH'), ignored: badge('Ignored','MISSING')
+    synced: badge('Synced Locally','LOW'), remote_synced: badge('✅ Live Synced','LOW'),
+    failed: badge('Failed','CRITICAL'), conflict: badge('Conflict','HIGH'), ignored: badge('Ignored','MISSING')
   };
   const priorityBadge = {
     low: badge('Low','MISSING'), normal: badge('Normal','LOW'),
@@ -2549,7 +2554,9 @@ function renderSyncQueueView() {
       ${[
         ['Queued',           stats.queued,        stats.queued>0?'MEDIUM':'LOW'],
         ['Processed',        stats.processed,     'LOW'],
+        ['Live Synced',      stats.remoteSynced,  stats.remoteSynced>0?'LOW':'MISSING'],
         ['Failed',           stats.failed,        stats.failed>0?'CRITICAL':'LOW'],
+        ['Live Failed',      stats.failedLive,    stats.failedLive>0?'HIGH':'MISSING'],
         ['Safety-Critical',  stats.safetyCritical,stats.safetyCritical>0?'HIGH':'LOW'],
         ['Demo Items',       stats.demo,          demoOn?'MEDIUM':'MISSING'],
         ['Live Items',       stats.live,          stats.live>0?'LOW':'MISSING'],
