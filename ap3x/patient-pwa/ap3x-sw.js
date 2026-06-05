@@ -12,6 +12,7 @@ const PRECACHE_ASSETS = [
   '/ap3x/patient-pwa/index.html',
   '/ap3x/patient-pwa/patient.css',
   '/ap3x/patient-pwa/ai-coach-engine.js?v=14',
+  '/ap3x/employee-pwa/ai-coach-engine.js?v=14',
   '/ap3x/patient-pwa/patient-app.js?v=14',
   '/ap3x/patient-pwa/manifest.json',
   '/ap3x/patient-pwa/ap3x-sw.js',
