@@ -1,9 +1,9 @@
 {
-  "name": "AutoSkill OS™ — Employee Training",
-  "short_name": "AutoSkill",
-  "description": "Employee Learning PWA — manufacturing training, process modules, safety checks, and competency tracking. Powered by 4P3X Intelligent AI™. Created by Kyzel Kreates™.",
-  "start_url": "../patient-pwa/index.html",
-  "display": "standalone",
+  "name": "AutoSkill OS™ — Trainer Dashboard",
+  "short_name": "AS Trainer",
+  "description": "AutoSkill OS™ Training Control Dashboard. Powered by 4P3X Intelligent AI™. Created by Kyzel Kreates™.",
+  "start_url": "./clinician-demo.html",
+  "display": "browser",
   "orientation": "portrait-primary",
   "background_color": "#0a0a0a",
   "theme_color": "#c9a84c",
@@ -79,5 +79,5 @@
       ]
     }
   ],
-  "scope": "../patient-pwa/"
+  "scope": "./"
 }

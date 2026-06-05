@@ -3,11 +3,11 @@
 // The installable Employee Learning PWA SW is at: /ap3x/patient-pwa/ap3x-sw.js
 // v6 — Run 12: removed patient-demo, updated cache list
 
-const CACHE_NAME = 'autoskill-dashboard-v6';
+const CACHE_NAME = 'autoskill-dashboard-v7';
 const PRECACHE_ASSETS = [
   './index.html',
   './clinician-demo.html',
-  './manifest.json',
+  // manifest.json NOT cached — belongs to Employee PWA scope only
 ];
 
 self.addEventListener('install', event => {

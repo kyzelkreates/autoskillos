@@ -963,6 +963,8 @@ document.addEventListener('DOMContentLoaded', () => {
     buildPortal();
     document.getElementById('portal-root').style.display = 'block';
     renderAll();
+    // Show install banner if beforeinstallprompt already fired
+    setTimeout(function(){if(window.asRefreshInstallUI)window.asRefreshInstallUI();},300);
   }
 });
 
@@ -1127,7 +1129,10 @@ function buildPortal() {
     <div id="tab-pathway" class="tab-page hidden"></div>
     <div id="tab-lessons" class="tab-page hidden"></div>
     <div id="tab-safety" class="tab-page hidden"></div>
-    <div id="tab-progress" class="tab-page hidden"></div>`;
+    <div id="tab-progress" class="tab-page hidden"></div>
+<div id="as-install-banner" style="display:none;position:fixed;bottom:64px;left:0;right:0;z-index:999;padding:0 12px 8px;pointer-events:none">
+  <button id="as-install-btn" onclick="window.asPromptInstall && window.asPromptInstall()" style="width:100%;padding:12px 16px;background:var(--gold);color:#000;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 20px rgba(201,168,76,0.4);pointer-events:all">📲 Install AutoSkill OS™ — Add to Home Screen</button>
+</div>`;
 }
 
 function toggleTheme() { dark = !dark; sSet('ap3x_patient_theme', dark ? 'dark' : 'light'); applyTheme(); }
@@ -1245,6 +1250,7 @@ function renderHome() {
     (emp && emp.isDemo ? '<div style="font-size:11px;color:var(--muted);background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);border-radius:var(--rs);padding:8px 12px;margin-bottom:12px">&#x1F3AD; Demo employee profile &mdash; Demo Mode shows the product. Live Mode runs the product.</div>' : '') +
     '<div class="safety-notice"><div style="font-weight:700;margin-bottom:4px">&#x26A0;&#xFE0F; Training Notice</div>' +
     '<div>AutoSkill OS&#x2122; supports your learning between supervisor sessions. For on-site emergencies, follow your site emergency procedure immediately.</div></div>';
+  setTimeout(function(){if(window.asRefreshInstallUI)window.asRefreshInstallUI();},0);
 }
 
 // ── CHECK-IN ─────────────────────────────────────────────
@@ -1825,6 +1831,7 @@ function renderProgress() {
       '<div style="font-weight:700;margin-bottom:4px">&#x26A0;&#xFE0F; AutoSkill OS&#x2122; Notice</div>' +
       '<div>AutoSkill OS&#x2122; supports training awareness, supervisor review, and evidence capture. It does not replace workplace safety procedures, legal duties, qualified supervision, or employer responsibility.</div>' +
     '</div>';
+  setTimeout(function(){if(window.asRefreshInstallUI)window.asRefreshInstallUI();},0);
 }
 
 // ── Toast ─────────────────────────────────────────────────────────

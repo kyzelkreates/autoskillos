@@ -46,7 +46,7 @@
 // ── Service Worker Registration ──────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./ap3x-sw.js?v=7', { scope: '/ap3x/patient-pwa/' })
+    navigator.serviceWorker.register('./ap3x-sw.js?v=8', { scope: '/ap3x/patient-pwa/' })
       .then(reg => console.log('[AutoSkill SW v7] Registered:', reg.scope))
       .catch(err => console.warn('[AutoSkill SW] Registration failed:', err));
   });
@@ -56,14 +56,19 @@ if ('serviceWorker' in navigator) {
 // Captures the beforeinstallprompt event so we can trigger it from a button
 window._asInstallPrompt = null;
 window.addEventListener('beforeinstallprompt', function(e) {
-  e.preventDefault(); // prevent auto-prompt
+  e.preventDefault();
   window._asInstallPrompt = e;
-  // Show the install button if the PWA UI is already rendered
-  var btn = document.getElementById('as-install-btn');
-  var tip = document.getElementById('as-install-tip');
-  if (btn) { btn.style.display = 'flex'; }
-  if (tip) { tip.style.display = 'none'; }
-  console.log('[AutoSkill] Install prompt ready');
+  console.log('[AutoSkill] Install prompt ready — calling asRefreshInstallUI if available');
+  if (window.asRefreshInstallUI) window.asRefreshInstallUI();
+  else {
+    // UI not yet rendered — set up a retry
+    var retryCount = 0;
+    var retryInterval = setInterval(function() {
+      retryCount++;
+      if (window.asRefreshInstallUI) { window.asRefreshInstallUI(); clearInterval(retryInterval); }
+      if (retryCount > 20) clearInterval(retryInterval);
+    }, 300);
+  }
 });
 
 // Triggered by the install button inside patient-app.js UI
@@ -96,7 +101,31 @@ window.addEventListener('appinstalled', function() {
   window._asInstallPrompt = null;
   console.log('[AutoSkill] App installed successfully');
 });
+
+// ── Install UI refresh — called by patient-app.js after tab renders ───────────
+window.asRefreshInstallUI = function() {
+  var banner = document.getElementById('as-install-banner');
+  var btn    = document.getElementById('as-install-btn');
+  var tip    = document.getElementById('as-install-tip'); // legacy — in progress tab
+  var isStandalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  if (isStandalone) {
+    // Already installed — hide everything
+    if (banner) banner.style.display = 'none';
+    if (btn)    btn.style.display = 'none';
+    if (tip)    tip.style.display = 'none';
+  } else if (window._asInstallPrompt) {
+    // Prompt available — show the install banner
+    if (banner) banner.style.display = 'block';
+    if (btn)    btn.style.display = 'flex';
+    if (tip)    tip.style.display = 'none';
+  } else {
+    // No prompt yet — hide banner, show manual tip fallback
+    if (banner) banner.style.display = 'none';
+    if (btn)    btn.style.display = 'none';
+    if (tip)    tip.style.display = 'flex';
+  }
+};
 </script>
-<script src="./patient-app.js?v=6"></script>
+<script src="./patient-app.js?v=8"></script>
 </body>
 </html>
