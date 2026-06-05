@@ -1,10 +1,10 @@
 {
-  "name": "AutoSkill OS™",
+  "name": "AutoSkill OS™ — Employee Training",
   "short_name": "AutoSkill",
-  "description": "Manufacturing training Control Dashboard and Employee Learning PWA. Powered by 4P3X Intelligent AI™. Created by Kyzel Kreates™.",
-  "start_url": "./clinician-demo.html",
+  "description": "Employee Learning PWA — manufacturing training, process modules, safety checks, and competency tracking. Powered by 4P3X Intelligent AI™. Created by Kyzel Kreates™.",
+  "start_url": "../patient-pwa/index.html",
   "display": "standalone",
-  "orientation": "any",
+  "orientation": "portrait-primary",
   "background_color": "#0a0a0a",
   "theme_color": "#c9a84c",
   "categories": [
@@ -67,14 +67,25 @@
       "short_name": "Dashboard",
       "description": "Open Training Control Dashboard",
       "url": "./clinician-demo.html",
-      "icons": [{"src": "../../icons/tl-96.png", "sizes": "96x96"}]
+      "icons": [
+        {
+          "src": "../../icons/tl-96.png",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
       "name": "Employee Learning PWA",
       "short_name": "Learner",
       "description": "Open Employee Training Portal",
       "url": "../patient-pwa/index.html",
-      "icons": [{"src": "../../icons/tl-96.png", "sizes": "96x96"}]
+      "icons": [
+        {
+          "src": "../../icons/tl-96.png",
+          "sizes": "96x96"
+        }
+      ]
     }
-  ]
+  ],
+  "scope": "../patient-pwa/"
 }

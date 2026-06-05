@@ -1,0 +1,2887 @@
+-- ════════════════════════════════════════════════════════════════════════════
+-- AutoSkill OS™ — FULL COMBINED SUPABASE SQL
+-- ────────────────────────────────────────────────────────────────────────────
+-- Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
+-- ────────────────────────────────────────────────────────────────────────────
+--
+-- PURPOSE:
+--   Single combined SQL file for setting up the complete AutoSkill OS™
+--   Supabase backend in one pass. Run this in the Supabase SQL Editor.
+--
+-- HOW TO USE:
+--   1. Open your Supabase project → SQL Editor
+--   2. Paste the full contents of this file
+--   3. Click Run
+--   4. Check the output — all tables, RLS policies, indexes, and views
+--      should be confirmed with NOTICE messages
+--   5. Optionally run Section 2 (seed data) in a separate pass
+--   6. Enter your Supabase URL and anon key in AutoSkill OS™ Settings
+--
+-- SECTIONS:
+--   Section 1 — Full Schema Setup + RLS (Run 9)
+--   Section 2 — Demo / Live Seed Data (optional)
+--   Section 3 — Final Validation Patch: Indexes + Views (Run 12)
+--   Section 4 — Verification Queries
+--   Section 5 — Rollback Notes
+--
+-- SECURITY:
+--   ✅ RLS ENABLED on all tables
+--   ✅ Uses anon/public client only in frontend
+--   ⛔ NEVER use SUPABASE_SERVICE_ROLE_KEY in frontend
+--   ⛔ NEVER place admin tokens in browser-accessible config
+--
+-- ENVIRONMENT VARIABLES (public-safe, frontend only):
+--   VITE_SUPABASE_URL      = your_supabase_project_url
+--   VITE_SUPABASE_ANON_KEY = your_anon_public_key
+--
+-- AutoSkill OS™ supports training awareness, supervisor review, and
+-- evidence capture. It does not replace workplace safety procedures,
+-- legal duties, qualified supervision, or employer responsibility.
+-- ════════════════════════════════════════════════════════════════════════════
+
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- SECTION 1 — Full Schema Setup + RLS
+-- Source: 001_autoskill_full_backend_setup.sql
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- AutoSkill OS™ — Full Supabase Backend Setup SQL
+-- Run 9 — Supabase Backend Schema + SQL Setup Pack
+-- ────────────────────────────────────────────────────────────────────────────
+-- Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
+-- ────────────────────────────────────────────────────────────────────────────
+-- PURPOSE:
+--   Complete PostgreSQL/Supabase schema for AutoSkill OS™ live backend.
+--   Supports Control Dashboard + Employee Learning PWA in Live Mode.
+--
+-- EXECUTION:
+--   Run inside Supabase SQL Editor on a clean project.
+--   NEVER run from frontend code.
+--   NEVER include SUPABASE_SERVICE_ROLE_KEY, DATABASE_URL, JWT_SECRET,
+--   PRIVATE_KEY, WEBHOOK_SECRET, or any admin token anywhere in frontend.
+--
+-- EXECUTION ORDER (ENFORCED IN THIS FILE):
+--   1.  Extensions
+--   2.  Custom Types / Enums
+--   3.  Tables (in dependency order)
+--   4.  Indexes
+--   5.  Functions
+--   6.  Triggers
+--   7.  RLS Enablement
+--   8.  Policies
+--
+-- SAFETY DISCLAIMER:
+--   AutoSkill OS™ supports training awareness, supervisor review, and evidence
+--   capture. It does not replace workplace safety procedures, legal duties,
+--   qualified supervision, employer responsibility, or site-specific training.
+-- ════════════════════════════════════════════════════════════════════════════
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- STEP 1: EXTENSIONS
+-- ════════════════════════════════════════════════════════════════════════════
+
+create extension if not exists "pgcrypto";
+create extension if not exists "uuid-ossp";
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- STEP 2: CUSTOM TYPES / ENUMS
+-- Create all enums before any table references them.
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- User/profile role within an organisation
+do $$ begin
+  create type autoskill_profile_role as enum (
+    'owner', 'admin', 'training_manager', 'supervisor', 'trainer', 'employee'
+  );
+exception when duplicate_object then null; end $$;
+
+-- General record lifecycle status
+do $$ begin
+  create type autoskill_record_status as enum (
+    'active', 'paused', 'completed', 'archived', 'draft'
+  );
+exception when duplicate_object then null; end $$;
+
+-- Training progress state
+do $$ begin
+  create type autoskill_progress_status as enum (
+    'not_started', 'in_progress', 'completed', 'needs_review', 'failed', 'conflict'
+  );
+exception when duplicate_object then null; end $$;
+
+-- Sync queue item lifecycle
+do $$ begin
+  create type autoskill_sync_status as enum (
+    'local', 'queued', 'processing', 'synced', 'failed', 'ignored', 'conflict'
+  );
+exception when duplicate_object then null; end $$;
+
+-- Data mode separation (critical for demo/live split)
+do $$ begin
+  create type autoskill_data_mode as enum (
+    'demo', 'live', 'local'
+  );
+exception when duplicate_object then null; end $$;
+
+-- Dashboard alert severity
+do $$ begin
+  create type autoskill_alert_severity as enum (
+    'info', 'warning', 'critical'
+  );
+exception when duplicate_object then null; end $$;
+
+-- Supervisor review workflow states
+do $$ begin
+  create type autoskill_review_status as enum (
+    'pending', 'approved', 'rejected', 'needs_more_evidence'
+  );
+exception when duplicate_object then null; end $$;
+
+-- Evidence record types
+do $$ begin
+  create type autoskill_evidence_type as enum (
+    'note', 'checklist', 'photo_placeholder', 'supervisor_note', 'quiz_result', 'training_note'
+  );
+exception when duplicate_object then null; end $$;
+
+-- Checkpoint/quiz question types
+do $$ begin
+  create type autoskill_checkpoint_type as enum (
+    'multipleChoice', 'checklist', 'acknowledgement', 'supervisorSignoff'
+  );
+exception when duplicate_object then null; end $$;
+
+-- Sync queue event priority
+do $$ begin
+  create type autoskill_sync_priority as enum (
+    'low', 'normal', 'high', 'safety_critical'
+  );
+exception when duplicate_object then null; end $$;
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- STEP 3: TABLES (in strict foreign-key dependency order)
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- ── 3.01 autoskill_organisations ─────────────────────────────────────────
+-- Top-level employer / organisation container. Future-ready for multi-tenant.
+create table if not exists public.autoskill_organisations (
+  id            uuid        primary key default gen_random_uuid(),
+  name          text        not null,
+  slug          text        unique,
+  status        autoskill_record_status not null default 'active',
+  created_by    uuid        references auth.users(id) on delete set null,
+  created_at    timestamptz not null default now(),
+  updated_at    timestamptz not null default now()
+);
+comment on table public.autoskill_organisations is
+  'AutoSkill OS™ — Organisation/employer container. One org per employer.';
+
+-- ── 3.02 autoskill_sites ─────────────────────────────────────────────────
+-- Manufacturing sites or physical locations within an organisation.
+create table if not exists public.autoskill_sites (
+  id              uuid        primary key default gen_random_uuid(),
+  organisation_id uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  name            text        not null,
+  description     text,
+  location_label  text,
+  status          autoskill_record_status not null default 'active',
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+comment on table public.autoskill_sites is
+  'AutoSkill OS™ — Manufacturing sites or locations within an organisation.';
+
+-- ── 3.03 autoskill_profiles ──────────────────────────────────────────────
+-- Maps Supabase auth.users to AutoSkill OS™ roles. One profile per auth user.
+create table if not exists public.autoskill_profiles (
+  id              uuid        primary key references auth.users(id) on delete cascade,
+  organisation_id uuid        references public.autoskill_organisations(id) on delete set null,
+  site_id         uuid        references public.autoskill_sites(id) on delete set null,
+  display_name    text        not null,
+  email           text,
+  role            autoskill_profile_role not null default 'employee',
+  department_id   uuid,       -- FK added later after autoskill_departments exists
+  employee_number text,
+  status          autoskill_record_status not null default 'active',
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+comment on table public.autoskill_profiles is
+  'AutoSkill OS™ — Auth user to role mapping. Drives all RLS decisions.';
+
+-- ── 3.04 autoskill_departments ───────────────────────────────────────────
+-- Departments: Assembly Line, Quality Control, Safety Induction, Logistics, etc.
+create table if not exists public.autoskill_departments (
+  id                uuid        primary key default gen_random_uuid(),
+  organisation_id   uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  site_id           uuid        references public.autoskill_sites(id) on delete set null,
+  name              text        not null,
+  description       text,
+  manager_profile_id uuid       references public.autoskill_profiles(id) on delete set null,
+  status            autoskill_record_status not null default 'active',
+  created_at        timestamptz not null default now(),
+  updated_at        timestamptz not null default now()
+);
+comment on table public.autoskill_departments is
+  'AutoSkill OS™ — Manufacturing departments (Assembly, QC, Safety, Logistics, etc.).';
+
+-- Now add the deferred FK on profiles.department_id
+alter table public.autoskill_profiles
+  add column if not exists department_id_fk uuid references public.autoskill_departments(id) on delete set null;
+-- Note: department_id column already created above as plain uuid; we add the constrained column.
+-- If profiles.department_id should be the FK column, alter it:
+alter table public.autoskill_profiles
+  drop column if exists department_id;
+alter table public.autoskill_profiles
+  rename column department_id_fk to department_id;
+
+-- ── 3.05 autoskill_manufacturing_stations ────────────────────────────────
+-- Workstations / process areas within departments.
+create table if not exists public.autoskill_manufacturing_stations (
+  id              uuid        primary key default gen_random_uuid(),
+  organisation_id uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  site_id         uuid        references public.autoskill_sites(id) on delete set null,
+  department_id   uuid        references public.autoskill_departments(id) on delete set null,
+  name            text        not null,
+  description     text,
+  safety_critical boolean     not null default false,
+  required_ppe    jsonb       not null default '[]',
+  status          autoskill_record_status not null default 'active',
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+comment on table public.autoskill_manufacturing_stations is
+  'AutoSkill OS™ — Manufacturing workstations and process areas.';
+
+-- ── 3.06 autoskill_employees ─────────────────────────────────────────────
+-- Live employee / trainee records used by dashboard and PWA.
+create table if not exists public.autoskill_employees (
+  id                          uuid        primary key default gen_random_uuid(),
+  organisation_id             uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  site_id                     uuid        references public.autoskill_sites(id) on delete set null,
+  profile_id                  uuid        references public.autoskill_profiles(id) on delete set null,
+  display_name                text        not null,
+  email                       text,
+  employee_number             text,
+  role_title                  text,
+  department_id               uuid        references public.autoskill_departments(id) on delete set null,
+  shift                       text,
+  employment_status           autoskill_record_status not null default 'active',
+  competency_status           text        check (competency_status in ('not_assessed','in_progress','competent','needs_review','failed')),
+  safety_acknowledgement_status text      check (safety_acknowledgement_status in ('pending','partial','complete','overdue')),
+  last_activity_at            timestamptz,
+  progress_percent            numeric     not null default 0 check (progress_percent between 0 and 100),
+  sync_status                 autoskill_sync_status not null default 'local',
+  is_demo                     boolean     not null default false,
+  created_at                  timestamptz not null default now(),
+  updated_at                  timestamptz not null default now()
+);
+comment on table public.autoskill_employees is
+  'AutoSkill OS™ — Live employee/trainee records. is_demo=true for demo data.';
+
+-- ── 3.07 autoskill_trainers_supervisors ──────────────────────────────────
+-- Trainer / supervisor records (may also be autoskill_profiles).
+create table if not exists public.autoskill_trainers_supervisors (
+  id              uuid        primary key default gen_random_uuid(),
+  organisation_id uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  site_id         uuid        references public.autoskill_sites(id) on delete set null,
+  profile_id      uuid        references public.autoskill_profiles(id) on delete set null,
+  display_name    text        not null,
+  role_title      text,
+  department_id   uuid        references public.autoskill_departments(id) on delete set null,
+  permissions     jsonb       not null default '{}',
+  status          autoskill_record_status not null default 'active',
+  is_demo         boolean     not null default false,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+comment on table public.autoskill_trainers_supervisors is
+  'AutoSkill OS™ — Trainer and supervisor records within an organisation.';
+
+-- ── 3.08 autoskill_training_pathways ─────────────────────────────────────
+-- Training pathway definitions (e.g. New Starter Induction).
+create table if not exists public.autoskill_training_pathways (
+  id                  uuid        primary key default gen_random_uuid(),
+  organisation_id     uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  site_id             uuid        references public.autoskill_sites(id) on delete set null,
+  department_id       uuid        references public.autoskill_departments(id) on delete set null,
+  title               text        not null,
+  description         text,
+  required_for_roles  jsonb       not null default '[]',
+  estimated_duration  text,
+  status              autoskill_record_status not null default 'active',
+  safety_critical     boolean     not null default false,
+  is_demo             boolean     not null default false,
+  created_at          timestamptz not null default now(),
+  updated_at          timestamptz not null default now()
+);
+comment on table public.autoskill_training_pathways is
+  'AutoSkill OS™ — Training pathway definitions assigned to employees.';
+
+-- ── 3.09 autoskill_pathway_assignments ───────────────────────────────────
+-- Assigns specific employees to specific training pathways.
+create table if not exists public.autoskill_pathway_assignments (
+  id              uuid        primary key default gen_random_uuid(),
+  organisation_id uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  employee_id     uuid        not null references public.autoskill_employees(id) on delete cascade,
+  pathway_id      uuid        not null references public.autoskill_training_pathways(id) on delete cascade,
+  assigned_by     uuid        references public.autoskill_profiles(id) on delete set null,
+  status          autoskill_record_status not null default 'active',
+  assigned_at     timestamptz not null default now(),
+  due_at          timestamptz,
+  completed_at    timestamptz,
+  progress_percent numeric     not null default 0 check (progress_percent between 0 and 100),
+  is_demo         boolean     not null default false,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now(),
+  unique (employee_id, pathway_id)
+);
+comment on table public.autoskill_pathway_assignments is
+  'AutoSkill OS™ — Employee-to-pathway assignment records.';
+
+-- ── 3.10 autoskill_process_modules ───────────────────────────────────────
+-- Training modules within a pathway.
+create table if not exists public.autoskill_process_modules (
+  id                  uuid        primary key default gen_random_uuid(),
+  organisation_id     uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  pathway_id          uuid        not null references public.autoskill_training_pathways(id) on delete cascade,
+  title               text        not null,
+  description         text,
+  module_order        integer     not null default 1,
+  estimated_duration  text,
+  safety_critical     boolean     not null default false,
+  completion_required boolean     not null default true,
+  is_demo             boolean     not null default false,
+  created_at          timestamptz not null default now(),
+  updated_at          timestamptz not null default now()
+);
+comment on table public.autoskill_process_modules is
+  'AutoSkill OS™ — Training modules within a pathway.';
+
+-- ── 3.11 autoskill_process_lessons ───────────────────────────────────────
+-- Individual lessons within a training module.
+create table if not exists public.autoskill_process_lessons (
+  id                          uuid        primary key default gen_random_uuid(),
+  organisation_id             uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  module_id                   uuid        not null references public.autoskill_process_modules(id) on delete cascade,
+  pathway_id                  uuid        not null references public.autoskill_training_pathways(id) on delete cascade,
+  title                       text        not null,
+  summary                     text,
+  content                     text,
+  key_points                  jsonb       not null default '[]',
+  lesson_order                integer     not null default 1,
+  estimated_duration          text,
+  lesson_type                 text        not null default 'standard'
+                                          check (lesson_type in ('standard','safety','checkpoint','acknowledgement','video')),
+  safety_critical             boolean     not null default false,
+  required_acknowledgement_id uuid,       -- FK added after safety_acknowledgements table
+  completion_rules            jsonb       not null default '{}',
+  is_demo                     boolean     not null default false,
+  created_at                  timestamptz not null default now(),
+  updated_at                  timestamptz not null default now()
+);
+comment on table public.autoskill_process_lessons is
+  'AutoSkill OS™ — Individual training lessons within a module.';
+
+-- ── 3.12 autoskill_skill_checkpoints ─────────────────────────────────────
+-- Quiz/checkpoint questions linked to lessons/modules.
+create table if not exists public.autoskill_skill_checkpoints (
+  id              uuid        primary key default gen_random_uuid(),
+  organisation_id uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  pathway_id      uuid        references public.autoskill_training_pathways(id) on delete cascade,
+  module_id       uuid        references public.autoskill_process_modules(id) on delete cascade,
+  lesson_id       uuid        references public.autoskill_process_lessons(id) on delete cascade,
+  question        text        not null,
+  checkpoint_type autoskill_checkpoint_type not null default 'multipleChoice',
+  options         jsonb       not null default '[]',
+  correct_answer  text,
+  required        boolean     not null default true,
+  safety_critical boolean     not null default false,
+  pass_required   boolean     not null default true,
+  feedback_text   text,
+  is_demo         boolean     not null default false,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+comment on table public.autoskill_skill_checkpoints is
+  'AutoSkill OS™ — Checkpoint/quiz questions linked to lessons or modules.';
+
+-- ── 3.13 autoskill_safety_acknowledgements ───────────────────────────────
+-- Defined safety acknowledgements employees must confirm.
+create table if not exists public.autoskill_safety_acknowledgements (
+  id                        uuid        primary key default gen_random_uuid(),
+  organisation_id           uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  pathway_id                uuid        references public.autoskill_training_pathways(id) on delete set null,
+  module_id                 uuid        references public.autoskill_process_modules(id) on delete set null,
+  lesson_id                 uuid        references public.autoskill_process_lessons(id) on delete set null,
+  title                     text        not null,
+  description               text,
+  acknowledgement_text      text        not null,
+  required_for_completion   boolean     not null default true,
+  legal_critical            boolean     not null default false,
+  safety_critical           boolean     not null default true,
+  is_demo                   boolean     not null default false,
+  created_at                timestamptz not null default now(),
+  updated_at                timestamptz not null default now()
+);
+comment on table public.autoskill_safety_acknowledgements is
+  'AutoSkill OS™ — Safety acknowledgement definitions. Not a legal compliance record.';
+
+-- Add deferred FK from process_lessons.required_acknowledgement_id
+alter table public.autoskill_process_lessons
+  add constraint if not exists fk_lesson_required_ack
+  foreign key (required_acknowledgement_id)
+  references public.autoskill_safety_acknowledgements(id) on delete set null;
+
+-- ── 3.14 autoskill_employee_safety_acknowledgements ──────────────────────
+-- Employee completion records for each safety acknowledgement.
+create table if not exists public.autoskill_employee_safety_acknowledgements (
+  id                  uuid        primary key default gen_random_uuid(),
+  organisation_id     uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  employee_id         uuid        not null references public.autoskill_employees(id) on delete cascade,
+  acknowledgement_id  uuid        not null references public.autoskill_safety_acknowledgements(id) on delete cascade,
+  pathway_id          uuid        references public.autoskill_training_pathways(id) on delete set null,
+  module_id           uuid        references public.autoskill_process_modules(id) on delete set null,
+  lesson_id           uuid        references public.autoskill_process_lessons(id) on delete set null,
+  acknowledged_text   text,
+  acknowledged_at     timestamptz not null default now(),
+  source              text        not null default 'employee-pwa'
+                                  check (source in ('employee-pwa','control-dashboard','sync_queue')),
+  sync_status         autoskill_sync_status not null default 'local',
+  is_demo             boolean     not null default false,
+  created_at          timestamptz not null default now(),
+  updated_at          timestamptz not null default now(),
+  unique (employee_id, acknowledgement_id)
+);
+comment on table public.autoskill_employee_safety_acknowledgements is
+  'AutoSkill OS™ — Employee safety acknowledgement completion records.';
+
+-- ── 3.15 autoskill_competencies ──────────────────────────────────────────
+-- Competency definitions linked to departments/stations.
+create table if not exists public.autoskill_competencies (
+  id                        uuid        primary key default gen_random_uuid(),
+  organisation_id           uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  department_id             uuid        references public.autoskill_departments(id) on delete set null,
+  station_id                uuid        references public.autoskill_manufacturing_stations(id) on delete set null,
+  title                     text        not null,
+  description               text,
+  required_evidence         jsonb       not null default '[]',
+  supervisor_signoff_required boolean   not null default false,
+  status                    autoskill_record_status not null default 'active',
+  is_demo                   boolean     not null default false,
+  created_at                timestamptz not null default now(),
+  updated_at                timestamptz not null default now()
+);
+comment on table public.autoskill_competencies is
+  'AutoSkill OS™ — Competency definitions for departments and manufacturing stations.';
+
+-- ── 3.16 autoskill_competency_links ──────────────────────────────────────
+-- Links competencies to pathways/modules/lessons.
+create table if not exists public.autoskill_competency_links (
+  id              uuid        primary key default gen_random_uuid(),
+  organisation_id uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  competency_id   uuid        not null references public.autoskill_competencies(id) on delete cascade,
+  pathway_id      uuid        references public.autoskill_training_pathways(id) on delete cascade,
+  module_id       uuid        references public.autoskill_process_modules(id) on delete cascade,
+  lesson_id       uuid        references public.autoskill_process_lessons(id) on delete cascade,
+  created_at      timestamptz not null default now()
+);
+comment on table public.autoskill_competency_links is
+  'AutoSkill OS™ — Competency-to-pathway/module/lesson linkage table.';
+
+-- ── 3.17 autoskill_progress_records ──────────────────────────────────────
+-- Employee progress through pathways, modules, and lessons.
+create table if not exists public.autoskill_progress_records (
+  id               uuid        primary key default gen_random_uuid(),
+  organisation_id  uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  employee_id      uuid        not null references public.autoskill_employees(id) on delete cascade,
+  pathway_id       uuid        not null references public.autoskill_training_pathways(id) on delete cascade,
+  module_id        uuid        references public.autoskill_process_modules(id) on delete set null,
+  lesson_id        uuid        references public.autoskill_process_lessons(id) on delete set null,
+  status           autoskill_progress_status not null default 'not_started',
+  progress_percent numeric     not null default 0 check (progress_percent between 0 and 100),
+  score            numeric     check (score between 0 and 100),
+  time_spent_minutes integer   not null default 0 check (time_spent_minutes >= 0),
+  source           text        not null default 'employee-pwa'
+                               check (source in ('employee-pwa','control-dashboard','sync_queue','import')),
+  sync_status      autoskill_sync_status not null default 'local',
+  completed_at     timestamptz,
+  last_updated_at  timestamptz not null default now(),
+  is_demo          boolean     not null default false,
+  created_at       timestamptz not null default now(),
+  updated_at       timestamptz not null default now()
+);
+comment on table public.autoskill_progress_records is
+  'AutoSkill OS™ — Employee pathway/module/lesson progress. Populated from PWA sync queue.';
+
+-- ── 3.18 autoskill_checkpoint_submissions ────────────────────────────────
+-- Employee checkpoint/quiz answer submissions and results.
+create table if not exists public.autoskill_checkpoint_submissions (
+  id              uuid        primary key default gen_random_uuid(),
+  organisation_id uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  employee_id     uuid        not null references public.autoskill_employees(id) on delete cascade,
+  checkpoint_id   uuid        not null references public.autoskill_skill_checkpoints(id) on delete cascade,
+  pathway_id      uuid        references public.autoskill_training_pathways(id) on delete set null,
+  module_id       uuid        references public.autoskill_process_modules(id) on delete set null,
+  lesson_id       uuid        references public.autoskill_process_lessons(id) on delete set null,
+  answer          jsonb       not null default '{}',
+  is_correct      boolean,
+  status          autoskill_progress_status not null default 'in_progress',
+  submitted_at    timestamptz not null default now(),
+  source          text        not null default 'employee-pwa',
+  sync_status     autoskill_sync_status not null default 'local',
+  is_demo         boolean     not null default false,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+comment on table public.autoskill_checkpoint_submissions is
+  'AutoSkill OS™ — Employee checkpoint answer submissions.';
+
+-- ── 3.19 autoskill_supervisor_reviews ────────────────────────────────────
+-- Supervisor review / sign-off workflow records.
+create table if not exists public.autoskill_supervisor_reviews (
+  id                  uuid        primary key default gen_random_uuid(),
+  organisation_id     uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  employee_id         uuid        not null references public.autoskill_employees(id) on delete cascade,
+  supervisor_id       uuid        references public.autoskill_trainers_supervisors(id) on delete set null,
+  reviewer_profile_id uuid        references public.autoskill_profiles(id) on delete set null,
+  pathway_id          uuid        references public.autoskill_training_pathways(id) on delete set null,
+  module_id           uuid        references public.autoskill_process_modules(id) on delete set null,
+  lesson_id           uuid        references public.autoskill_process_lessons(id) on delete set null,
+  competency_id       uuid        references public.autoskill_competencies(id) on delete set null,
+  status              autoskill_review_status not null default 'pending',
+  notes               text,
+  reviewed_at         timestamptz,
+  evidence_count      integer     not null default 0 check (evidence_count >= 0),
+  is_demo             boolean     not null default false,
+  created_at          timestamptz not null default now(),
+  updated_at          timestamptz not null default now()
+);
+comment on table public.autoskill_supervisor_reviews is
+  'AutoSkill OS™ — Supervisor review workflow. Does not constitute legal sign-off.';
+
+-- ── 3.20 autoskill_evidence_records ──────────────────────────────────────
+-- Training evidence metadata. No unsafe file upload yet.
+create table if not exists public.autoskill_evidence_records (
+  id                  uuid        primary key default gen_random_uuid(),
+  organisation_id     uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  employee_id         uuid        not null references public.autoskill_employees(id) on delete cascade,
+  pathway_id          uuid        references public.autoskill_training_pathways(id) on delete set null,
+  module_id           uuid        references public.autoskill_process_modules(id) on delete set null,
+  lesson_id           uuid        references public.autoskill_process_lessons(id) on delete set null,
+  supervisor_review_id uuid       references public.autoskill_supervisor_reviews(id) on delete set null,
+  evidence_type       autoskill_evidence_type not null default 'note',
+  title               text        not null,
+  description         text,
+  source              text        not null default 'employee-pwa'
+                                  check (source in ('employee-pwa','control-dashboard','sync_queue','import')),
+  sync_status         autoskill_sync_status not null default 'local',
+  metadata            jsonb       not null default '{}',
+  is_demo             boolean     not null default false,
+  created_at          timestamptz not null default now(),
+  updated_at          timestamptz not null default now()
+);
+comment on table public.autoskill_evidence_records is
+  'AutoSkill OS™ — Training evidence metadata. Not a legal compliance record.';
+
+-- ── 3.21 autoskill_dashboard_alerts ──────────────────────────────────────
+-- Dashboard alert and review flag records.
+create table if not exists public.autoskill_dashboard_alerts (
+  id                  uuid        primary key default gen_random_uuid(),
+  organisation_id     uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  alert_type          text        not null
+                                  check (alert_type in (
+                                    'overdue_training','missing_safety_ack','review_required',
+                                    'sync_error','incomplete_pathway','demo_warning',
+                                    'safety_checkpoint_failed','employee_inactive'
+                                  )),
+  title               text        not null,
+  message             text,
+  severity            autoskill_alert_severity not null default 'info',
+  linked_employee_id  uuid        references public.autoskill_employees(id) on delete set null,
+  linked_pathway_id   uuid        references public.autoskill_training_pathways(id) on delete set null,
+  linked_module_id    uuid        references public.autoskill_process_modules(id) on delete set null,
+  linked_lesson_id    uuid        references public.autoskill_process_lessons(id) on delete set null,
+  resolved            boolean     not null default false,
+  resolved_at         timestamptz,
+  is_demo             boolean     not null default false,
+  created_at          timestamptz not null default now(),
+  updated_at          timestamptz not null default now()
+);
+comment on table public.autoskill_dashboard_alerts is
+  'AutoSkill OS™ — Dashboard training flags and alert records.';
+
+-- ── 3.22 autoskill_sync_queue ────────────────────────────────────────────
+-- Backend-ready sync queue. Matches Run 7 PWA local queue shape exactly.
+-- local queue key: ap3x_dm_pwa_sync_queue
+create table if not exists public.autoskill_sync_queue (
+  id                  uuid        primary key default gen_random_uuid(),
+  organisation_id     uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  -- Event classification (matches PWA createSyncQueueItem eventType field)
+  event_type          text        not null
+                                  check (event_type in (
+                                    'lesson_started','lesson_completed','progress_updated',
+                                    'checkpoint_submitted','safety_acknowledged','safety_ack_completed',
+                                    'supervisor_review_requested','evidence_submitted',
+                                    'note_submitted','sync_test_local'
+                                  )),
+  source              text        not null default 'employee-pwa',
+  target              text        not null default 'control-dashboard',
+  -- Entity references (all nullable — not all events reference all entities)
+  employee_id         uuid        references public.autoskill_employees(id) on delete set null,
+  pathway_id          uuid        references public.autoskill_training_pathways(id) on delete set null,
+  module_id           uuid        references public.autoskill_process_modules(id) on delete set null,
+  lesson_id           uuid        references public.autoskill_process_lessons(id) on delete set null,
+  checkpoint_id       uuid        references public.autoskill_skill_checkpoints(id) on delete set null,
+  acknowledgement_id  uuid        references public.autoskill_safety_acknowledgements(id) on delete set null,
+  evidence_record_id  uuid        references public.autoskill_evidence_records(id) on delete set null,
+  supervisor_review_id uuid       references public.autoskill_supervisor_reviews(id) on delete set null,
+  -- Payload (flexible jsonb — matches PWA payload field)
+  payload             jsonb       not null default '{}',
+  -- Queue lifecycle
+  status              autoskill_sync_status not null default 'queued',
+  priority            autoskill_sync_priority not null default 'normal',
+  data_mode           autoskill_data_mode not null default 'live',
+  is_demo             boolean     not null default false,
+  -- Origin tracking
+  local_device_id     text,
+  remote_id           text,
+  provider            text        not null default 'supabase',
+  -- Error handling
+  retry_count         integer     not null default 0 check (retry_count >= 0),
+  error_message       text,
+  notes               text,
+  -- Timestamps
+  created_at          timestamptz not null default now(),
+  updated_at          timestamptz not null default now(),
+  processed_at        timestamptz
+);
+comment on table public.autoskill_sync_queue is
+  'AutoSkill OS™ — Backend-ready sync queue. Matches PWA local queue shape (Run 7).';
+
+-- ── 3.23 autoskill_backend_events ────────────────────────────────────────
+-- Audit / event log for backend processing activity.
+create table if not exists public.autoskill_backend_events (
+  id                uuid        primary key default gen_random_uuid(),
+  organisation_id   uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  actor_profile_id  uuid        references public.autoskill_profiles(id) on delete set null,
+  event_type        text        not null,
+  event_summary     text,
+  payload           jsonb       not null default '{}',
+  source            text        not null default 'system',
+  severity          autoskill_alert_severity not null default 'info',
+  created_at        timestamptz not null default now()
+);
+comment on table public.autoskill_backend_events is
+  'AutoSkill OS™ — Backend audit/event log. No user-editable data.';
+
+-- ── 3.24 autoskill_app_settings ──────────────────────────────────────────
+-- Organisation-level public-safe settings. NEVER store secrets here.
+create table if not exists public.autoskill_app_settings (
+  id              uuid        primary key default gen_random_uuid(),
+  organisation_id uuid        not null references public.autoskill_organisations(id) on delete cascade,
+  setting_key     text        not null,
+  setting_value   jsonb       not null default '{}',
+  public_safe     boolean     not null default true,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now(),
+  -- Enforce one setting per key per org
+  unique (organisation_id, setting_key),
+  -- Only public-safe settings allowed in this table
+  constraint settings_must_be_public_safe check (public_safe = true)
+);
+comment on table public.autoskill_app_settings is
+  'AutoSkill OS™ — Public-safe org settings ONLY. ⛔ NEVER store secrets here.';
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- STEP 4: INDEXES (after tables, before functions)
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- autoskill_organisations
+create index if not exists idx_orgs_slug
+  on public.autoskill_organisations (slug);
+create index if not exists idx_orgs_status
+  on public.autoskill_organisations (status);
+
+-- autoskill_sites
+create index if not exists idx_sites_org
+  on public.autoskill_sites (organisation_id);
+
+-- autoskill_profiles
+create index if not exists idx_profiles_org
+  on public.autoskill_profiles (organisation_id);
+create index if not exists idx_profiles_role
+  on public.autoskill_profiles (role);
+create index if not exists idx_profiles_site
+  on public.autoskill_profiles (site_id);
+
+-- autoskill_departments
+create index if not exists idx_depts_org
+  on public.autoskill_departments (organisation_id);
+create index if not exists idx_depts_site
+  on public.autoskill_departments (site_id);
+
+-- autoskill_manufacturing_stations
+create index if not exists idx_stations_org
+  on public.autoskill_manufacturing_stations (organisation_id);
+create index if not exists idx_stations_dept
+  on public.autoskill_manufacturing_stations (department_id);
+create index if not exists idx_stations_safety
+  on public.autoskill_manufacturing_stations (safety_critical);
+
+-- autoskill_employees
+create index if not exists idx_emp_org
+  on public.autoskill_employees (organisation_id);
+create index if not exists idx_emp_site
+  on public.autoskill_employees (site_id);
+create index if not exists idx_emp_dept
+  on public.autoskill_employees (department_id);
+create index if not exists idx_emp_profile
+  on public.autoskill_employees (profile_id);
+create index if not exists idx_emp_is_demo
+  on public.autoskill_employees (is_demo);
+create index if not exists idx_emp_status
+  on public.autoskill_employees (employment_status);
+
+-- autoskill_trainers_supervisors
+create index if not exists idx_ts_org
+  on public.autoskill_trainers_supervisors (organisation_id);
+create index if not exists idx_ts_profile
+  on public.autoskill_trainers_supervisors (profile_id);
+create index if not exists idx_ts_dept
+  on public.autoskill_trainers_supervisors (department_id);
+
+-- autoskill_training_pathways
+create index if not exists idx_pathways_org
+  on public.autoskill_training_pathways (organisation_id);
+create index if not exists idx_pathways_dept
+  on public.autoskill_training_pathways (department_id);
+create index if not exists idx_pathways_status
+  on public.autoskill_training_pathways (status);
+create index if not exists idx_pathways_demo
+  on public.autoskill_training_pathways (is_demo);
+
+-- autoskill_pathway_assignments
+create index if not exists idx_pa_org
+  on public.autoskill_pathway_assignments (organisation_id);
+create index if not exists idx_pa_employee
+  on public.autoskill_pathway_assignments (employee_id);
+create index if not exists idx_pa_pathway
+  on public.autoskill_pathway_assignments (pathway_id);
+create index if not exists idx_pa_status
+  on public.autoskill_pathway_assignments (status);
+
+-- autoskill_process_modules
+create index if not exists idx_modules_org
+  on public.autoskill_process_modules (organisation_id);
+create index if not exists idx_modules_pathway
+  on public.autoskill_process_modules (pathway_id);
+create index if not exists idx_modules_order
+  on public.autoskill_process_modules (pathway_id, module_order);
+
+-- autoskill_process_lessons
+create index if not exists idx_lessons_org
+  on public.autoskill_process_lessons (organisation_id);
+create index if not exists idx_lessons_module
+  on public.autoskill_process_lessons (module_id);
+create index if not exists idx_lessons_pathway
+  on public.autoskill_process_lessons (pathway_id);
+create index if not exists idx_lessons_order
+  on public.autoskill_process_lessons (module_id, lesson_order);
+
+-- autoskill_skill_checkpoints
+create index if not exists idx_chk_org
+  on public.autoskill_skill_checkpoints (organisation_id);
+create index if not exists idx_chk_lesson
+  on public.autoskill_skill_checkpoints (lesson_id);
+create index if not exists idx_chk_module
+  on public.autoskill_skill_checkpoints (module_id);
+create index if not exists idx_chk_pathway
+  on public.autoskill_skill_checkpoints (pathway_id);
+
+-- autoskill_safety_acknowledgements
+create index if not exists idx_acks_org
+  on public.autoskill_safety_acknowledgements (organisation_id);
+create index if not exists idx_acks_pathway
+  on public.autoskill_safety_acknowledgements (pathway_id);
+create index if not exists idx_acks_module
+  on public.autoskill_safety_acknowledgements (module_id);
+
+-- autoskill_employee_safety_acknowledgements
+create index if not exists idx_emp_acks_org
+  on public.autoskill_employee_safety_acknowledgements (organisation_id);
+create index if not exists idx_emp_acks_employee
+  on public.autoskill_employee_safety_acknowledgements (employee_id);
+create index if not exists idx_emp_acks_ack
+  on public.autoskill_employee_safety_acknowledgements (acknowledgement_id);
+
+-- autoskill_competencies
+create index if not exists idx_comp_org
+  on public.autoskill_competencies (organisation_id);
+create index if not exists idx_comp_dept
+  on public.autoskill_competencies (department_id);
+
+-- autoskill_competency_links
+create index if not exists idx_cl_org
+  on public.autoskill_competency_links (organisation_id);
+create index if not exists idx_cl_competency
+  on public.autoskill_competency_links (competency_id);
+create index if not exists idx_cl_pathway
+  on public.autoskill_competency_links (pathway_id);
+
+-- autoskill_progress_records
+create index if not exists idx_prog_org
+  on public.autoskill_progress_records (organisation_id);
+create index if not exists idx_prog_employee
+  on public.autoskill_progress_records (employee_id);
+create index if not exists idx_prog_pathway
+  on public.autoskill_progress_records (pathway_id);
+create index if not exists idx_prog_module
+  on public.autoskill_progress_records (module_id);
+create index if not exists idx_prog_lesson
+  on public.autoskill_progress_records (lesson_id);
+create index if not exists idx_prog_status
+  on public.autoskill_progress_records (status);
+create index if not exists idx_prog_demo
+  on public.autoskill_progress_records (is_demo);
+
+-- autoskill_checkpoint_submissions
+create index if not exists idx_sub_org
+  on public.autoskill_checkpoint_submissions (organisation_id);
+create index if not exists idx_sub_employee
+  on public.autoskill_checkpoint_submissions (employee_id);
+create index if not exists idx_sub_checkpoint
+  on public.autoskill_checkpoint_submissions (checkpoint_id);
+create index if not exists idx_sub_lesson
+  on public.autoskill_checkpoint_submissions (lesson_id);
+
+-- autoskill_supervisor_reviews
+create index if not exists idx_rev_org
+  on public.autoskill_supervisor_reviews (organisation_id);
+create index if not exists idx_rev_employee
+  on public.autoskill_supervisor_reviews (employee_id);
+create index if not exists idx_rev_status
+  on public.autoskill_supervisor_reviews (status);
+create index if not exists idx_rev_supervisor
+  on public.autoskill_supervisor_reviews (supervisor_id);
+create index if not exists idx_rev_pathway
+  on public.autoskill_supervisor_reviews (pathway_id);
+
+-- autoskill_evidence_records
+create index if not exists idx_ev_org
+  on public.autoskill_evidence_records (organisation_id);
+create index if not exists idx_ev_employee
+  on public.autoskill_evidence_records (employee_id);
+create index if not exists idx_ev_review
+  on public.autoskill_evidence_records (supervisor_review_id);
+
+-- autoskill_dashboard_alerts
+create index if not exists idx_alert_org
+  on public.autoskill_dashboard_alerts (organisation_id);
+create index if not exists idx_alert_severity
+  on public.autoskill_dashboard_alerts (severity);
+create index if not exists idx_alert_resolved
+  on public.autoskill_dashboard_alerts (resolved);
+create index if not exists idx_alert_employee
+  on public.autoskill_dashboard_alerts (linked_employee_id);
+
+-- autoskill_sync_queue
+create index if not exists idx_sq_org
+  on public.autoskill_sync_queue (organisation_id);
+create index if not exists idx_sq_employee
+  on public.autoskill_sync_queue (employee_id);
+create index if not exists idx_sq_status
+  on public.autoskill_sync_queue (status);
+create index if not exists idx_sq_event_type
+  on public.autoskill_sync_queue (event_type);
+create index if not exists idx_sq_created
+  on public.autoskill_sync_queue (created_at desc);
+create index if not exists idx_sq_priority
+  on public.autoskill_sync_queue (priority);
+create index if not exists idx_sq_demo
+  on public.autoskill_sync_queue (is_demo);
+
+-- autoskill_backend_events
+create index if not exists idx_be_org
+  on public.autoskill_backend_events (organisation_id);
+create index if not exists idx_be_created
+  on public.autoskill_backend_events (created_at desc);
+
+-- autoskill_app_settings
+create index if not exists idx_settings_org_key
+  on public.autoskill_app_settings (organisation_id, setting_key);
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- STEP 5: FUNCTIONS (before triggers that call them)
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- ── 5.01 touch_updated_at ────────────────────────────────────────────────
+-- Generic updated_at trigger function used by all mutable tables.
+create or replace function public.touch_updated_at()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+comment on function public.touch_updated_at() is
+  'AutoSkill OS™ — Generic updated_at trigger. Applied to all mutable tables.';
+
+-- ── 5.02 user_organisation_id ────────────────────────────────────────────
+-- Returns organisation_id for the current authenticated user.
+-- Used in RLS policies to scope records to the user's org.
+create or replace function public.user_organisation_id()
+returns uuid
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select organisation_id
+  from   public.autoskill_profiles
+  where  id = auth.uid()
+  limit  1;
+$$;
+comment on function public.user_organisation_id() is
+  'AutoSkill OS™ — Returns organisation_id for auth.uid(). Used in RLS.';
+
+-- ── 5.03 is_org_admin_or_manager ─────────────────────────────────────────
+-- Returns true if current user is owner, admin, or training_manager.
+create or replace function public.is_org_admin_or_manager()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from   public.autoskill_profiles
+    where  id   = auth.uid()
+    and    role in ('owner', 'admin', 'training_manager')
+  );
+$$;
+comment on function public.is_org_admin_or_manager() is
+  'AutoSkill OS™ — True if current user is owner/admin/training_manager.';
+
+-- ── 5.04 is_supervisor_or_trainer ────────────────────────────────────────
+-- Returns true if current user has supervisor-or-above access.
+create or replace function public.is_supervisor_or_trainer()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from   public.autoskill_profiles
+    where  id   = auth.uid()
+    and    role in ('owner', 'admin', 'training_manager', 'supervisor', 'trainer')
+  );
+$$;
+comment on function public.is_supervisor_or_trainer() is
+  'AutoSkill OS™ — True if current user has supervisor/trainer/manager/admin/owner role.';
+
+-- ── 5.05 is_employee_self ────────────────────────────────────────────────
+-- Returns true if the given employee_id is linked to the current auth user.
+create or replace function public.is_employee_self(p_employee_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from   public.autoskill_employees e
+    join   public.autoskill_profiles  p on p.id = e.profile_id
+    where  e.id = p_employee_id
+    and    p.id = auth.uid()
+  );
+$$;
+comment on function public.is_employee_self(uuid) is
+  'AutoSkill OS™ — True if employee_id belongs to the current auth user.';
+
+-- ── 5.06 calculate_employee_progress ─────────────────────────────────────
+-- Safe read-only function. Returns avg completion % across pathway assignments.
+create or replace function public.calculate_employee_progress(p_employee_id uuid)
+returns numeric
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select coalesce(
+    round(avg(progress_percent)::numeric, 1),
+    0
+  )
+  from public.autoskill_pathway_assignments
+  where employee_id = p_employee_id
+  and   status      = 'active';
+$$;
+comment on function public.calculate_employee_progress(uuid) is
+  'AutoSkill OS™ — Returns average pathway progress % for an employee (read-only).';
+
+-- ── 5.07 create_dashboard_alert_fn ───────────────────────────────────────
+-- Helper to insert a dashboard alert safely.
+create or replace function public.create_dashboard_alert_fn(
+  p_organisation_id  uuid,
+  p_alert_type       text,
+  p_title            text,
+  p_message          text,
+  p_severity         autoskill_alert_severity default 'info',
+  p_linked_employee  uuid  default null,
+  p_linked_pathway   uuid  default null,
+  p_is_demo          boolean default false
+)
+returns uuid
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_id uuid;
+begin
+  insert into public.autoskill_dashboard_alerts (
+    organisation_id, alert_type, title, message, severity,
+    linked_employee_id, linked_pathway_id, is_demo
+  ) values (
+    p_organisation_id, p_alert_type, p_title, p_message, p_severity,
+    p_linked_employee, p_linked_pathway, p_is_demo
+  )
+  returning id into v_id;
+  return v_id;
+end;
+$$;
+comment on function public.create_dashboard_alert_fn is
+  'AutoSkill OS™ — Safely inserts a dashboard alert record.';
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- STEP 6: TRIGGERS (after functions, before RLS)
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- Helper macro: create an updated_at trigger for a table.
+-- Applied to every mutable table below.
+
+create or replace function public._autoskill_make_updated_at_trigger(
+  p_table text
+)
+returns void
+language plpgsql
+as $$
+begin
+  execute format(
+    'drop trigger if exists trg_updated_at on public.%I;
+     create trigger trg_updated_at
+     before update on public.%I
+     for each row execute function public.touch_updated_at();',
+    p_table, p_table
+  );
+end;
+$$;
+
+select public._autoskill_make_updated_at_trigger('autoskill_organisations');
+select public._autoskill_make_updated_at_trigger('autoskill_sites');
+select public._autoskill_make_updated_at_trigger('autoskill_profiles');
+select public._autoskill_make_updated_at_trigger('autoskill_departments');
+select public._autoskill_make_updated_at_trigger('autoskill_manufacturing_stations');
+select public._autoskill_make_updated_at_trigger('autoskill_employees');
+select public._autoskill_make_updated_at_trigger('autoskill_trainers_supervisors');
+select public._autoskill_make_updated_at_trigger('autoskill_training_pathways');
+select public._autoskill_make_updated_at_trigger('autoskill_pathway_assignments');
+select public._autoskill_make_updated_at_trigger('autoskill_process_modules');
+select public._autoskill_make_updated_at_trigger('autoskill_process_lessons');
+select public._autoskill_make_updated_at_trigger('autoskill_skill_checkpoints');
+select public._autoskill_make_updated_at_trigger('autoskill_safety_acknowledgements');
+select public._autoskill_make_updated_at_trigger('autoskill_employee_safety_acknowledgements');
+select public._autoskill_make_updated_at_trigger('autoskill_competencies');
+select public._autoskill_make_updated_at_trigger('autoskill_progress_records');
+select public._autoskill_make_updated_at_trigger('autoskill_checkpoint_submissions');
+select public._autoskill_make_updated_at_trigger('autoskill_supervisor_reviews');
+select public._autoskill_make_updated_at_trigger('autoskill_evidence_records');
+select public._autoskill_make_updated_at_trigger('autoskill_dashboard_alerts');
+select public._autoskill_make_updated_at_trigger('autoskill_sync_queue');
+select public._autoskill_make_updated_at_trigger('autoskill_app_settings');
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- STEP 7: ROW LEVEL SECURITY — ENABLEMENT
+-- Enable RLS on every table before adding policies.
+-- ════════════════════════════════════════════════════════════════════════════
+
+alter table public.autoskill_organisations                    enable row level security;
+alter table public.autoskill_sites                            enable row level security;
+alter table public.autoskill_profiles                         enable row level security;
+alter table public.autoskill_departments                      enable row level security;
+alter table public.autoskill_manufacturing_stations           enable row level security;
+alter table public.autoskill_employees                        enable row level security;
+alter table public.autoskill_trainers_supervisors             enable row level security;
+alter table public.autoskill_training_pathways                enable row level security;
+alter table public.autoskill_pathway_assignments              enable row level security;
+alter table public.autoskill_process_modules                  enable row level security;
+alter table public.autoskill_process_lessons                  enable row level security;
+alter table public.autoskill_skill_checkpoints                enable row level security;
+alter table public.autoskill_safety_acknowledgements          enable row level security;
+alter table public.autoskill_employee_safety_acknowledgements enable row level security;
+alter table public.autoskill_competencies                     enable row level security;
+alter table public.autoskill_competency_links                 enable row level security;
+alter table public.autoskill_progress_records                 enable row level security;
+alter table public.autoskill_checkpoint_submissions           enable row level security;
+alter table public.autoskill_supervisor_reviews               enable row level security;
+alter table public.autoskill_evidence_records                 enable row level security;
+alter table public.autoskill_dashboard_alerts                 enable row level security;
+alter table public.autoskill_sync_queue                       enable row level security;
+alter table public.autoskill_backend_events                   enable row level security;
+alter table public.autoskill_app_settings                     enable row level security;
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- STEP 8: ROW LEVEL SECURITY — POLICIES
+-- Policies enforce organisation scoping and role-based access.
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- ── autoskill_organisations ───────────────────────────────────────────────
+create policy "org_members_read_own_org"
+  on public.autoskill_organisations for select
+  using ( id = public.user_organisation_id() );
+
+create policy "org_admins_update_own_org"
+  on public.autoskill_organisations for update
+  using ( id = public.user_organisation_id() and public.is_org_admin_or_manager() );
+
+-- ── autoskill_sites ───────────────────────────────────────────────────────
+create policy "org_members_read_sites"
+  on public.autoskill_sites for select
+  using ( organisation_id = public.user_organisation_id() );
+
+create policy "org_admins_manage_sites"
+  on public.autoskill_sites for all
+  using ( organisation_id = public.user_organisation_id() and public.is_org_admin_or_manager() );
+
+-- ── autoskill_profiles ────────────────────────────────────────────────────
+create policy "user_read_own_profile"
+  on public.autoskill_profiles for select
+  using ( id = auth.uid() );
+
+create policy "managers_read_org_profiles"
+  on public.autoskill_profiles for select
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+create policy "user_update_own_profile"
+  on public.autoskill_profiles for update
+  using ( id = auth.uid() )
+  with check ( id = auth.uid() and role = (select role from public.autoskill_profiles where id = auth.uid()) );
+  -- Employees cannot escalate their own role.
+
+create policy "admins_manage_org_profiles"
+  on public.autoskill_profiles for all
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_org_admin_or_manager()
+  );
+
+create policy "profile_insert_on_signup"
+  on public.autoskill_profiles for insert
+  with check ( id = auth.uid() );
+
+-- ── autoskill_departments ─────────────────────────────────────────────────
+create policy "org_members_read_depts"
+  on public.autoskill_departments for select
+  using ( organisation_id = public.user_organisation_id() );
+
+create policy "admins_manage_depts"
+  on public.autoskill_departments for all
+  using ( organisation_id = public.user_organisation_id() and public.is_org_admin_or_manager() );
+
+-- ── autoskill_manufacturing_stations ─────────────────────────────────────
+create policy "org_members_read_stations"
+  on public.autoskill_manufacturing_stations for select
+  using ( organisation_id = public.user_organisation_id() );
+
+create policy "admins_manage_stations"
+  on public.autoskill_manufacturing_stations for all
+  using ( organisation_id = public.user_organisation_id() and public.is_org_admin_or_manager() );
+
+-- ── autoskill_employees ───────────────────────────────────────────────────
+create policy "employee_read_own_record"
+  on public.autoskill_employees for select
+  using ( public.is_employee_self(id) );
+
+create policy "supervisors_read_org_employees"
+  on public.autoskill_employees for select
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+create policy "admins_manage_org_employees"
+  on public.autoskill_employees for all
+  using ( organisation_id = public.user_organisation_id() and public.is_org_admin_or_manager() );
+
+-- ── autoskill_trainers_supervisors ────────────────────────────────────────
+create policy "supervisors_read_org_trainers"
+  on public.autoskill_trainers_supervisors for select
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+create policy "admins_manage_org_trainers"
+  on public.autoskill_trainers_supervisors for all
+  using ( organisation_id = public.user_organisation_id() and public.is_org_admin_or_manager() );
+
+-- ── autoskill_training_pathways ───────────────────────────────────────────
+create policy "org_users_read_active_pathways"
+  on public.autoskill_training_pathways for select
+  using (
+    organisation_id = public.user_organisation_id()
+    and status = 'active'
+  );
+
+create policy "trainers_manage_pathways"
+  on public.autoskill_training_pathways for all
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_pathway_assignments ─────────────────────────────────────────
+create policy "employee_read_own_assignments"
+  on public.autoskill_pathway_assignments for select
+  using ( public.is_employee_self(employee_id) );
+
+create policy "supervisors_read_org_assignments"
+  on public.autoskill_pathway_assignments for select
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+create policy "trainers_manage_assignments"
+  on public.autoskill_pathway_assignments for all
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_process_modules ─────────────────────────────────────────────
+create policy "org_users_read_modules"
+  on public.autoskill_process_modules for select
+  using ( organisation_id = public.user_organisation_id() );
+
+create policy "trainers_manage_modules"
+  on public.autoskill_process_modules for all
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_process_lessons ─────────────────────────────────────────────
+create policy "org_users_read_lessons"
+  on public.autoskill_process_lessons for select
+  using ( organisation_id = public.user_organisation_id() );
+
+create policy "trainers_manage_lessons"
+  on public.autoskill_process_lessons for all
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_skill_checkpoints ───────────────────────────────────────────
+create policy "org_users_read_checkpoints"
+  on public.autoskill_skill_checkpoints for select
+  using ( organisation_id = public.user_organisation_id() );
+
+create policy "trainers_manage_checkpoints"
+  on public.autoskill_skill_checkpoints for all
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_safety_acknowledgements ─────────────────────────────────────
+create policy "org_users_read_safety_acks"
+  on public.autoskill_safety_acknowledgements for select
+  using ( organisation_id = public.user_organisation_id() );
+
+create policy "trainers_manage_safety_acks"
+  on public.autoskill_safety_acknowledgements for all
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_employee_safety_acknowledgements ────────────────────────────
+create policy "employee_insert_own_acks"
+  on public.autoskill_employee_safety_acknowledgements for insert
+  with check (
+    public.is_employee_self(employee_id)
+    and organisation_id = public.user_organisation_id()
+  );
+
+create policy "employee_read_own_acks"
+  on public.autoskill_employee_safety_acknowledgements for select
+  using ( public.is_employee_self(employee_id) );
+
+create policy "supervisors_read_org_acks"
+  on public.autoskill_employee_safety_acknowledgements for select
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+create policy "supervisors_update_ack_sync_status"
+  on public.autoskill_employee_safety_acknowledgements for update
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_competencies ────────────────────────────────────────────────
+create policy "org_users_read_competencies"
+  on public.autoskill_competencies for select
+  using ( organisation_id = public.user_organisation_id() );
+
+create policy "trainers_manage_competencies"
+  on public.autoskill_competencies for all
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_competency_links ────────────────────────────────────────────
+create policy "org_users_read_comp_links"
+  on public.autoskill_competency_links for select
+  using ( organisation_id = public.user_organisation_id() );
+
+create policy "trainers_manage_comp_links"
+  on public.autoskill_competency_links for all
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_progress_records ────────────────────────────────────────────
+create policy "employee_insert_own_progress"
+  on public.autoskill_progress_records for insert
+  with check (
+    public.is_employee_self(employee_id)
+    and organisation_id = public.user_organisation_id()
+  );
+
+create policy "employee_read_own_progress"
+  on public.autoskill_progress_records for select
+  using ( public.is_employee_self(employee_id) );
+
+create policy "employee_update_own_progress"
+  on public.autoskill_progress_records for update
+  using ( public.is_employee_self(employee_id) )
+  with check ( public.is_employee_self(employee_id) );
+
+create policy "supervisors_read_org_progress"
+  on public.autoskill_progress_records for select
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+create policy "supervisors_update_progress_status"
+  on public.autoskill_progress_records for update
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_checkpoint_submissions ─────────────────────────────────────
+create policy "employee_insert_own_submissions"
+  on public.autoskill_checkpoint_submissions for insert
+  with check (
+    public.is_employee_self(employee_id)
+    and organisation_id = public.user_organisation_id()
+  );
+
+create policy "employee_read_own_submissions"
+  on public.autoskill_checkpoint_submissions for select
+  using ( public.is_employee_self(employee_id) );
+
+create policy "supervisors_read_org_submissions"
+  on public.autoskill_checkpoint_submissions for select
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_supervisor_reviews ──────────────────────────────────────────
+create policy "employee_read_own_review_status"
+  on public.autoskill_supervisor_reviews for select
+  using ( public.is_employee_self(employee_id) );
+  -- Employees can see status of their own reviews but cannot approve them.
+
+create policy "supervisors_read_org_reviews"
+  on public.autoskill_supervisor_reviews for select
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+create policy "supervisors_create_reviews"
+  on public.autoskill_supervisor_reviews for insert
+  with check (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+create policy "employee_request_review"
+  on public.autoskill_supervisor_reviews for insert
+  with check (
+    public.is_employee_self(employee_id)
+    and organisation_id = public.user_organisation_id()
+    and status = 'pending'
+    -- Employees can only create pending reviews — not approve them.
+  );
+
+create policy "supervisors_update_reviews"
+  on public.autoskill_supervisor_reviews for update
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_evidence_records ────────────────────────────────────────────
+create policy "employee_insert_own_evidence"
+  on public.autoskill_evidence_records for insert
+  with check (
+    public.is_employee_self(employee_id)
+    and organisation_id = public.user_organisation_id()
+    and evidence_type != 'supervisor_note'  -- employees cannot create supervisor notes
+  );
+
+create policy "employee_read_own_evidence"
+  on public.autoskill_evidence_records for select
+  using ( public.is_employee_self(employee_id) );
+
+create policy "supervisors_read_org_evidence"
+  on public.autoskill_evidence_records for select
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+create policy "supervisors_manage_evidence"
+  on public.autoskill_evidence_records for all
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_dashboard_alerts ────────────────────────────────────────────
+create policy "supervisors_read_org_alerts"
+  on public.autoskill_dashboard_alerts for select
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+create policy "employee_read_own_linked_alerts"
+  on public.autoskill_dashboard_alerts for select
+  using (
+    public.is_employee_self(linked_employee_id)
+    and severity != 'critical'  -- employees do not see critical org-wide alerts
+  );
+
+create policy "supervisors_manage_alerts"
+  on public.autoskill_dashboard_alerts for all
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_sync_queue ──────────────────────────────────────────────────
+create policy "employee_insert_own_queue_items"
+  on public.autoskill_sync_queue for insert
+  with check (
+    public.is_employee_self(employee_id)
+    and organisation_id = public.user_organisation_id()
+    and status = 'queued'
+    -- Employees insert queued items only — cannot process or mark synced.
+  );
+
+create policy "employee_read_own_queue_items"
+  on public.autoskill_sync_queue for select
+  using ( public.is_employee_self(employee_id) );
+
+create policy "supervisors_read_org_queue"
+  on public.autoskill_sync_queue for select
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+create policy "supervisors_process_org_queue"
+  on public.autoskill_sync_queue for update
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_backend_events ──────────────────────────────────────────────
+create policy "admins_read_backend_events"
+  on public.autoskill_backend_events for select
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_org_admin_or_manager()
+  );
+
+create policy "system_insert_backend_events"
+  on public.autoskill_backend_events for insert
+  with check (
+    organisation_id = public.user_organisation_id()
+    and public.is_supervisor_or_trainer()
+  );
+
+-- ── autoskill_app_settings ────────────────────────────────────────────────
+create policy "org_users_read_public_settings"
+  on public.autoskill_app_settings for select
+  using (
+    organisation_id = public.user_organisation_id()
+    and public_safe = true
+  );
+
+create policy "admins_manage_public_settings"
+  on public.autoskill_app_settings for all
+  using (
+    organisation_id = public.user_organisation_id()
+    and public.is_org_admin_or_manager()
+    and public_safe = true
+  );
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- END OF 001_autoskill_full_backend_setup.sql
+-- ════════════════════════════════════════════════════════════════════════════
+-- Next step: Run 002_autoskill_seed_demo_live_data.sql (optional — demo only)
+-- Then run:  099_autoskill_verification_queries.sql to confirm setup.
+-- ════════════════════════════════════════════════════════════════════════════
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- SECTION 2 — Demo / Live Seed Data
+-- Source: 002_autoskill_seed_demo_live_data.sql
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- AutoSkill OS™ — Demo Seed Data
+-- 002_autoskill_seed_demo_live_data.sql
+-- ────────────────────────────────────────────────────────────────────────────
+-- Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
+-- ────────────────────────────────────────────────────────────────────────────
+-- ⚠ OPTIONAL — Run ONLY on development/demo environments.
+-- ⚠ Skip this file entirely for production setup without demo data.
+-- ⚠ All records have is_demo = true. They NEVER mix with live records.
+--
+-- REQUIRES: 001_autoskill_full_backend_setup.sql must be run first.
+--
+-- SAFETY DISCLAIMER:
+--   AutoSkill OS™ supports training awareness, supervisor review, and evidence
+--   capture. It does not replace workplace safety procedures, legal duties,
+--   qualified supervision, employer responsibility, or site-specific training.
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- ── All demo records use these UUIDs for cross-table consistency ───────────
+-- We use fixed UUIDs so seed data is idempotent (safe to re-run).
+-- Production data will use gen_random_uuid() dynamically.
+
+do $$
+declare
+  -- Organisation
+  v_org_id   uuid := '00000000-0000-0000-0001-000000000001';
+  -- Site
+  v_site_id  uuid := '00000000-0000-0000-0002-000000000001';
+  -- Departments
+  v_dept_assembly  uuid := '00000000-0000-0000-0003-000000000001';
+  v_dept_qc        uuid := '00000000-0000-0000-0003-000000000002';
+  v_dept_safety    uuid := '00000000-0000-0000-0003-000000000003';
+  v_dept_logistics uuid := '00000000-0000-0000-0003-000000000004';
+  -- Stations
+  v_st_assembly_a  uuid := '00000000-0000-0000-0004-000000000001';
+  v_st_qc_line     uuid := '00000000-0000-0000-0004-000000000002';
+  v_st_induction   uuid := '00000000-0000-0000-0004-000000000003';
+  -- Employees
+  v_emp_jamie  uuid := '00000000-0000-0000-0005-000000000001';
+  v_emp_aisha  uuid := '00000000-0000-0000-0005-000000000002';
+  v_emp_morgan uuid := '00000000-0000-0000-0005-000000000003';
+  v_emp_riley  uuid := '00000000-0000-0000-0005-000000000004';
+  -- Pathway
+  v_path_induction uuid := '00000000-0000-0000-0006-000000000001';
+  -- Modules
+  v_mod_1 uuid := '00000000-0000-0000-0007-000000000001'; -- Orientation & Induction
+  v_mod_2 uuid := '00000000-0000-0000-0007-000000000002'; -- Quality Control & PPE
+  v_mod_3 uuid := '00000000-0000-0000-0007-000000000003'; -- Competency & Final Check
+  -- Lessons (3 per module for seed)
+  v_les_m1_1 uuid := '00000000-0000-0000-0008-000000000101';
+  v_les_m1_2 uuid := '00000000-0000-0000-0008-000000000102';
+  v_les_m1_3 uuid := '00000000-0000-0000-0008-000000000103';
+  v_les_m2_1 uuid := '00000000-0000-0000-0008-000000000201';
+  v_les_m2_2 uuid := '00000000-0000-0000-0008-000000000202';
+  v_les_m2_3 uuid := '00000000-0000-0000-0008-000000000203';
+  v_les_m3_1 uuid := '00000000-0000-0000-0008-000000000301';
+  v_les_m3_2 uuid := '00000000-0000-0000-0008-000000000302';
+  v_les_m3_3 uuid := '00000000-0000-0000-0008-000000000303';
+  -- Checkpoints
+  v_chk_1 uuid := '00000000-0000-0000-0009-000000000001';
+  v_chk_2 uuid := '00000000-0000-0000-0009-000000000002';
+  v_chk_3 uuid := '00000000-0000-0000-0009-000000000003';
+  -- Safety Acknowledgements
+  v_ack_ppe    uuid := '00000000-0000-0000-0010-000000000001';
+  v_ack_hazard uuid := '00000000-0000-0000-0010-000000000002';
+  v_ack_site   uuid := '00000000-0000-0000-0010-000000000003';
+  -- Supervisor reviews
+  v_rev_jamie uuid := '00000000-0000-0000-0011-000000000001';
+  v_rev_aisha uuid := '00000000-0000-0000-0011-000000000002';
+  -- Competency
+  v_comp_assembly uuid := '00000000-0000-0000-0012-000000000001';
+begin
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 1. ORGANISATION
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_organisations (id, name, slug, status, is_demo)
+  values (v_org_id, 'AutoSkill Demo Manufacturing Ltd', 'autoskill-demo', 'active', true)
+  on conflict (id) do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 2. SITE
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_sites (id, organisation_id, name, description, location_label, status)
+  values (v_site_id, v_org_id, 'Demo Site — Main Manufacturing Plant',
+    'Primary demo manufacturing site for AutoSkill OS™ presentations.',
+    'Unit 1, Demo Industrial Estate, Demo City', 'active')
+  on conflict (id) do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 3. DEPARTMENTS
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_departments (id, organisation_id, site_id, name, description, status)
+  values
+    (v_dept_assembly,  v_org_id, v_site_id, 'Assembly Line',      'Main product assembly and build operations.', 'active'),
+    (v_dept_qc,        v_org_id, v_site_id, 'Quality Control',    'Product inspection, defect reporting, and QC standards.', 'active'),
+    (v_dept_safety,    v_org_id, v_site_id, 'Safety Induction',   'Health, safety, PPE, and site hazard awareness training.', 'active'),
+    (v_dept_logistics, v_org_id, v_site_id, 'Logistics',          'Goods receipt, dispatch, and warehouse operations.', 'active')
+  on conflict (id) do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 4. MANUFACTURING STATIONS
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_manufacturing_stations
+    (id, organisation_id, site_id, department_id, name, description, safety_critical, required_ppe, status)
+  values
+    (v_st_assembly_a, v_org_id, v_site_id, v_dept_assembly,
+      'Assembly Station A — Automotive',
+      'Primary vehicle component assembly workstation.',
+      true, '["hard_hat","high_vis_vest","safety_boots","gloves"]', 'active'),
+    (v_st_qc_line, v_org_id, v_site_id, v_dept_qc,
+      'QC Inspection Line',
+      'Final quality inspection and defect-reporting station.',
+      false, '["safety_glasses","gloves"]', 'active'),
+    (v_st_induction, v_org_id, v_site_id, v_dept_safety,
+      'Safety Induction Suite',
+      'New starter safety induction and training assessment area.',
+      false, '[]', 'active')
+  on conflict (id) do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 5. EMPLOYEES (is_demo = true — not real people)
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_employees
+    (id, organisation_id, site_id, display_name, employee_number, role_title,
+     department_id, employment_status, progress_percent, competency_status,
+     safety_acknowledgement_status, is_demo)
+  values
+    (v_emp_jamie, v_org_id, v_site_id, 'Jamie Carter',  'EMP-001',
+     'Assembly Operative',   v_dept_assembly, 'active', 65, 'in_progress', 'partial', true),
+    (v_emp_aisha, v_org_id, v_site_id, 'Aisha Patel',   'EMP-002',
+     'QC Inspector',         v_dept_qc,       'active', 80, 'in_progress', 'complete', true),
+    (v_emp_morgan, v_org_id, v_site_id,'Morgan Lewis',  'EMP-003',
+     'Logistics Coordinator',v_dept_logistics,'active', 20, 'not_assessed', 'pending', true),
+    (v_emp_riley, v_org_id, v_site_id, 'Riley Evans',   'EMP-004',
+     'Assembly Apprentice',  v_dept_assembly, 'active', 0,  'not_assessed', 'pending', true)
+  on conflict (id) do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 6. TRAINING PATHWAY
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_training_pathways
+    (id, organisation_id, site_id, department_id, title, description,
+     required_for_roles, estimated_duration, status, safety_critical, is_demo)
+  values (
+    v_path_induction, v_org_id, v_site_id, v_dept_safety,
+    'New Starter Automotive Manufacturing Induction',
+    'Complete onboarding pathway for all new manufacturing employees. Covers site orientation, safety, quality control standards, and competency assessment.',
+    '["employee","apprentice"]', '8 hours', 'active', true, true
+  ) on conflict (id) do nothing;
+
+  -- ── Pathway assignments
+  insert into public.autoskill_pathway_assignments
+    (organisation_id, employee_id, pathway_id, status, progress_percent, is_demo)
+  values
+    (v_org_id, v_emp_jamie,  v_path_induction, 'active', 65, true),
+    (v_org_id, v_emp_aisha,  v_path_induction, 'active', 80, true),
+    (v_org_id, v_emp_morgan, v_path_induction, 'active', 20, true),
+    (v_org_id, v_emp_riley,  v_path_induction, 'active',  0, true)
+  on conflict (employee_id, pathway_id) do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 7. PROCESS MODULES
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_process_modules
+    (id, organisation_id, pathway_id, title, description, module_order,
+     estimated_duration, safety_critical, completion_required, is_demo)
+  values
+    (v_mod_1, v_org_id, v_path_induction,
+     'Module 1 — Site Orientation & Induction',
+     'Welcome to the site. Covers layout, emergency procedures, site rules, and your role.',
+     1, '2 hours', false, true, true),
+    (v_mod_2, v_org_id, v_path_induction,
+     'Module 2 — Quality Control & PPE',
+     'Health, safety, PPE requirements, defect recognition, and quality standards.',
+     2, '3 hours', true, true, true),
+    (v_mod_3, v_org_id, v_path_induction,
+     'Module 3 — Competency Assessment & Final Check',
+     'Final skill checks, supervisor sign-off readiness, and pathway completion.',
+     3, '3 hours', false, true, true)
+  on conflict (id) do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 8. PROCESS LESSONS (3 per module)
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_process_lessons
+    (id, organisation_id, module_id, pathway_id, title, summary,
+     lesson_order, lesson_type, safety_critical, is_demo)
+  values
+    -- Module 1 lessons
+    (v_les_m1_1, v_org_id, v_mod_1, v_path_induction,
+     'Welcome & Site Overview', 'Introduction to the site, your team, and your role.',
+     1, 'standard', false, true),
+    (v_les_m1_2, v_org_id, v_mod_1, v_path_induction,
+     'Emergency Procedures & Evacuation', 'Fire exits, muster points, and emergency contacts.',
+     2, 'safety', true, true),
+    (v_les_m1_3, v_org_id, v_mod_1, v_path_induction,
+     'Site Rules & Code of Conduct', 'Behaviour, reporting, and site access rules.',
+     3, 'standard', false, true),
+    -- Module 2 lessons
+    (v_les_m2_1, v_org_id, v_mod_2, v_path_induction,
+     'Health & Safety Fundamentals', 'Key workplace health and safety principles.',
+     1, 'safety', true, true),
+    (v_les_m2_2, v_org_id, v_mod_2, v_path_induction,
+     'PPE Readiness & Selection', 'Correct PPE for each work area and how to use it.',
+     2, 'safety', true, true),
+    (v_les_m2_3, v_org_id, v_mod_2, v_path_induction,
+     'Quality Control & Defect Reporting', 'Identifying defects and using QC reporting processes.',
+     3, 'checkpoint', false, true),
+    -- Module 3 lessons
+    (v_les_m3_1, v_org_id, v_mod_3, v_path_induction,
+     'Workstation Readiness Check', 'Pre-shift setup, tool check, and readiness confirmation.',
+     1, 'checkpoint', false, true),
+    (v_les_m3_2, v_org_id, v_mod_3, v_path_induction,
+     'Competency Self-Assessment', 'Review your training progress and self-assess readiness.',
+     2, 'acknowledgement', false, true),
+    (v_les_m3_3, v_org_id, v_mod_3, v_path_induction,
+     'Supervisor Sign-Off Readiness', 'Prepare for supervisor review and final sign-off.',
+     3, 'standard', false, true)
+  on conflict (id) do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 9. SKILL CHECKPOINTS
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_skill_checkpoints
+    (id, organisation_id, pathway_id, module_id, lesson_id, question,
+     checkpoint_type, options, correct_answer, safety_critical, pass_required,
+     feedback_text, is_demo)
+  values
+    (v_chk_1, v_org_id, v_path_induction, v_mod_1, v_les_m1_2,
+     'What should you do first when you hear the fire alarm?',
+     'multipleChoice',
+     '["Continue working until a supervisor tells you to leave","Evacuate immediately using the nearest fire exit","Call the fire brigade from your workstation","Look for the source of fire before leaving"]',
+     'Evacuate immediately using the nearest fire exit',
+     true, true,
+     'Always evacuate immediately on the fire alarm. Do not wait for confirmation. Your muster point is posted at each exit.', true),
+
+    (v_chk_2, v_org_id, v_path_induction, v_mod_2, v_les_m2_2,
+     'Which of the following PPE items is required at Assembly Station A?',
+     'multipleChoice',
+     '["Hard hat, high-vis vest, safety boots, gloves","Safety glasses only","No PPE required indoors","Hard hat only"]',
+     'Hard hat, high-vis vest, safety boots, gloves',
+     true, true,
+     'Assembly Station A is a safety-critical area. All four items of PPE are required at all times on the assembly floor.', true),
+
+    (v_chk_3, v_org_id, v_path_induction, v_mod_2, v_les_m2_3,
+     'When you identify a product defect on the line, what is the correct procedure?',
+     'multipleChoice',
+     '["Set it aside and continue production","Report it immediately using the defect reporting system","Attempt to fix it yourself without reporting","Ignore it if it looks minor"]',
+     'Report it immediately using the defect reporting system',
+     false, true,
+     'All defects must be reported immediately through the QC defect reporting system. Never attempt to fix a defect without authorisation.', true)
+  on conflict (id) do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 10. SAFETY ACKNOWLEDGEMENTS
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_safety_acknowledgements
+    (id, organisation_id, pathway_id, module_id, lesson_id, title, description,
+     acknowledgement_text, required_for_completion, legal_critical, safety_critical, is_demo)
+  values
+    (v_ack_ppe, v_org_id, v_path_induction, v_mod_2, v_les_m2_2,
+     'PPE Readiness Acknowledgement',
+     'Confirms the employee understands PPE requirements for their assigned workstation.',
+     'I confirm that I have read and understood the PPE requirements for my assigned workstation. I understand that correct PPE must be worn at all times in designated areas and that failure to do so may result in disciplinary action and/or personal injury.',
+     true, false, true, true),
+
+    (v_ack_hazard, v_org_id, v_path_induction, v_mod_2, v_les_m2_1,
+     'Site Hazard Awareness Acknowledgement',
+     'Confirms the employee is aware of key site hazards.',
+     'I confirm that I have been made aware of the key hazards present on this site, including moving machinery, electrical equipment, chemical storage areas, and designated pedestrian routes. I understand my responsibility to report new or unknown hazards immediately.',
+     true, false, true, true),
+
+    (v_ack_site, v_org_id, v_path_induction, v_mod_1, v_les_m1_3,
+     'Site Rules & Code of Conduct Acknowledgement',
+     'Confirms the employee has read and accepts the site rules.',
+     'I confirm that I have read and understood the site rules and code of conduct. I agree to abide by these rules throughout my employment at this site.',
+     true, false, false, true)
+  on conflict (id) do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 11. EMPLOYEE SAFETY ACKNOWLEDGEMENT COMPLETIONS
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- Jamie and Aisha have completed some acknowledgements.
+  insert into public.autoskill_employee_safety_acknowledgements
+    (organisation_id, employee_id, acknowledgement_id, pathway_id, module_id, lesson_id,
+     acknowledged_text, acknowledged_at, source, sync_status, is_demo)
+  values
+    -- Jamie: PPE + Site Rules
+    (v_org_id, v_emp_jamie, v_ack_ppe,    v_path_induction, v_mod_2, v_les_m2_2,
+     'I confirm that I have read and understood the PPE requirements.',
+     now() - interval '3 days', 'employee-pwa', 'synced', true),
+    (v_org_id, v_emp_jamie, v_ack_site,   v_path_induction, v_mod_1, v_les_m1_3,
+     'I confirm that I have read and understood the site rules.',
+     now() - interval '4 days', 'employee-pwa', 'synced', true),
+    -- Aisha: All 3
+    (v_org_id, v_emp_aisha, v_ack_ppe,    v_path_induction, v_mod_2, v_les_m2_2,
+     'I confirm that I have read and understood the PPE requirements.',
+     now() - interval '6 days', 'employee-pwa', 'synced', true),
+    (v_org_id, v_emp_aisha, v_ack_hazard, v_path_induction, v_mod_2, v_les_m2_1,
+     'I confirm that I am aware of the key site hazards.',
+     now() - interval '6 days', 'employee-pwa', 'synced', true),
+    (v_org_id, v_emp_aisha, v_ack_site,   v_path_induction, v_mod_1, v_les_m1_3,
+     'I confirm that I have read and understood the site rules.',
+     now() - interval '7 days', 'employee-pwa', 'synced', true)
+  on conflict (employee_id, acknowledgement_id) do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 12. PROGRESS RECORDS
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_progress_records
+    (organisation_id, employee_id, pathway_id, module_id, lesson_id,
+     status, progress_percent, source, sync_status, completed_at, is_demo)
+  values
+    -- Jamie: completed M1 lessons, partial M2
+    (v_org_id, v_emp_jamie, v_path_induction, v_mod_1, v_les_m1_1,
+     'completed', 100, 'employee-pwa', 'synced', now() - interval '4 days', true),
+    (v_org_id, v_emp_jamie, v_path_induction, v_mod_1, v_les_m1_2,
+     'completed', 100, 'employee-pwa', 'synced', now() - interval '4 days', true),
+    (v_org_id, v_emp_jamie, v_path_induction, v_mod_1, v_les_m1_3,
+     'completed', 100, 'employee-pwa', 'synced', now() - interval '3 days', true),
+    (v_org_id, v_emp_jamie, v_path_induction, v_mod_2, v_les_m2_1,
+     'completed', 100, 'employee-pwa', 'synced', now() - interval '2 days', true),
+    (v_org_id, v_emp_jamie, v_path_induction, v_mod_2, v_les_m2_2,
+     'in_progress', 50, 'employee-pwa', 'local', null, true),
+    -- Aisha: completed M1 + M2, partial M3
+    (v_org_id, v_emp_aisha, v_path_induction, v_mod_1, v_les_m1_1,
+     'completed', 100, 'employee-pwa', 'synced', now() - interval '7 days', true),
+    (v_org_id, v_emp_aisha, v_path_induction, v_mod_1, v_les_m1_2,
+     'completed', 100, 'employee-pwa', 'synced', now() - interval '7 days', true),
+    (v_org_id, v_emp_aisha, v_path_induction, v_mod_1, v_les_m1_3,
+     'completed', 100, 'employee-pwa', 'synced', now() - interval '6 days', true),
+    (v_org_id, v_emp_aisha, v_path_induction, v_mod_2, v_les_m2_1,
+     'completed', 100, 'employee-pwa', 'synced', now() - interval '6 days', true),
+    (v_org_id, v_emp_aisha, v_path_induction, v_mod_2, v_les_m2_2,
+     'completed', 100, 'employee-pwa', 'synced', now() - interval '5 days', true),
+    (v_org_id, v_emp_aisha, v_path_induction, v_mod_2, v_les_m2_3,
+     'completed', 100, 'employee-pwa', 'synced', now() - interval '5 days', true),
+    (v_org_id, v_emp_aisha, v_path_induction, v_mod_3, v_les_m3_1,
+     'in_progress', 60, 'employee-pwa', 'local', null, true),
+    -- Morgan: started M1 only
+    (v_org_id, v_emp_morgan, v_path_induction, v_mod_1, v_les_m1_1,
+     'completed', 100, 'employee-pwa', 'synced', now() - interval '1 day', true),
+    (v_org_id, v_emp_morgan, v_path_induction, v_mod_1, v_les_m1_2,
+     'in_progress', 30, 'employee-pwa', 'local', null, true)
+  on conflict do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 13. CHECKPOINT SUBMISSIONS
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_checkpoint_submissions
+    (organisation_id, employee_id, checkpoint_id, pathway_id, module_id, lesson_id,
+     answer, is_correct, status, submitted_at, source, sync_status, is_demo)
+  values
+    (v_org_id, v_emp_jamie, v_chk_1, v_path_induction, v_mod_1, v_les_m1_2,
+     '{"selected":"Evacuate immediately using the nearest fire exit"}',
+     true, 'completed', now() - interval '4 days', 'employee-pwa', 'synced', true),
+    (v_org_id, v_emp_jamie, v_chk_2, v_path_induction, v_mod_2, v_les_m2_2,
+     '{"selected":"Hard hat, high-vis vest, safety boots, gloves"}',
+     true, 'completed', now() - interval '3 days', 'employee-pwa', 'synced', true),
+    (v_org_id, v_emp_aisha, v_chk_1, v_path_induction, v_mod_1, v_les_m1_2,
+     '{"selected":"Evacuate immediately using the nearest fire exit"}',
+     true, 'completed', now() - interval '7 days', 'employee-pwa', 'synced', true),
+    (v_org_id, v_emp_aisha, v_chk_2, v_path_induction, v_mod_2, v_les_m2_2,
+     '{"selected":"Hard hat, high-vis vest, safety boots, gloves"}',
+     true, 'completed', now() - interval '6 days', 'employee-pwa', 'synced', true),
+    (v_org_id, v_emp_aisha, v_chk_3, v_path_induction, v_mod_2, v_les_m2_3,
+     '{"selected":"Report it immediately using the defect reporting system"}',
+     true, 'completed', now() - interval '5 days', 'employee-pwa', 'synced', true)
+  on conflict do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 14. COMPETENCIES
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_competencies
+    (id, organisation_id, department_id, title, description,
+     required_evidence, supervisor_signoff_required, status, is_demo)
+  values (
+    v_comp_assembly, v_org_id, v_dept_assembly,
+    'Assembly Line Operative — Core Competency',
+    'Demonstrated ability to perform basic assembly line tasks safely and to quality standard.',
+    '["safety_acknowledgement","checkpoint_pass","supervisor_observation"]',
+    true, 'active', true
+  ) on conflict (id) do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 15. SUPERVISOR REVIEWS
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_supervisor_reviews
+    (id, organisation_id, employee_id, pathway_id, status, notes,
+     evidence_count, is_demo)
+  values
+    (v_rev_jamie, v_org_id, v_emp_jamie, v_path_induction,
+     'pending',
+     'Jamie is progressing well through Module 2. Review requested after PPE checkpoint completion.',
+     2, true),
+    (v_rev_aisha, v_org_id, v_emp_aisha, v_path_induction,
+     'needs_more_evidence',
+     'Aisha has completed all Module 2 content. Awaiting Module 3 competency self-assessment before final review.',
+     3, true)
+  on conflict (id) do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 16. EVIDENCE RECORDS
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_evidence_records
+    (organisation_id, employee_id, pathway_id, module_id, lesson_id,
+     supervisor_review_id, evidence_type, title, description,
+     source, sync_status, metadata, is_demo)
+  values
+    (v_org_id, v_emp_jamie, v_path_induction, v_mod_2, v_les_m2_2,
+     v_rev_jamie, 'quiz_result',
+     'PPE Checkpoint Pass — Jamie Carter',
+     'Jamie passed the PPE Readiness checkpoint with a correct answer on first attempt.',
+     'employee-pwa', 'synced',
+     '{"score": 100, "attempts": 1, "checkpoint_id": "' || v_chk_2::text || '"}',
+     true),
+    (v_org_id, v_emp_aisha, v_path_induction, v_mod_2, v_les_m2_3,
+     v_rev_aisha, 'quiz_result',
+     'QC Defect Reporting Checkpoint Pass — Aisha Patel',
+     'Aisha passed the defect reporting checkpoint with correct identification of procedure.',
+     'employee-pwa', 'synced',
+     '{"score": 100, "attempts": 1, "checkpoint_id": "' || v_chk_3::text || '"}',
+     true)
+  on conflict do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 17. DASHBOARD ALERTS
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_dashboard_alerts
+    (organisation_id, alert_type, title, message, severity,
+     linked_employee_id, linked_pathway_id, resolved, is_demo)
+  values
+    (v_org_id, 'missing_safety_ack',
+     'Safety Ack Missing — Morgan Lewis',
+     'Morgan Lewis has not completed the Hazard Awareness acknowledgement. Module 2 requires completion.',
+     'warning', v_emp_morgan, v_path_induction, false, true),
+
+    (v_org_id, 'missing_safety_ack',
+     'Safety Ack Missing — Riley Evans',
+     'Riley Evans has not started the induction pathway or completed any acknowledgements.',
+     'critical', v_emp_riley, v_path_induction, false, true),
+
+    (v_org_id, 'review_required',
+     'Supervisor Review Requested — Jamie Carter',
+     'Jamie Carter has requested supervisor review after completing Module 2 checkpoints.',
+     'info', v_emp_jamie, v_path_induction, false, true)
+  on conflict do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 18. SYNC QUEUE SAMPLE (mirrors Run 7 PWA local queue shape)
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_sync_queue
+    (organisation_id, event_type, source, target, employee_id, pathway_id,
+     module_id, lesson_id, payload, status, priority, data_mode, is_demo,
+     local_device_id, provider)
+  values
+    (v_org_id, 'lesson_completed', 'employee-pwa', 'control-dashboard',
+     v_emp_morgan, v_path_induction, v_mod_1, v_les_m1_1,
+     '{"lessonTitle": "Welcome & Site Overview", "completedAt": "' || (now() - interval '1 day')::text || '", "xpAwarded": 25}',
+     'queued', 'normal', 'demo', true, 'pwa_demo_morgan', 'supabase'),
+
+    (v_org_id, 'safety_acknowledged', 'employee-pwa', 'control-dashboard',
+     v_emp_riley, v_path_induction, v_mod_2, v_les_m2_2,
+     '{"ackId": "' || v_ack_ppe::text || '", "ackTitle": "PPE Readiness", "acknowledgedAt": "' || now()::text || '"}',
+     'queued', 'safety_critical', 'demo', true, 'pwa_demo_riley', 'supabase')
+  on conflict do nothing;
+
+  -- ══════════════════════════════════════════════════════════════════════════
+  -- 19. APP SETTINGS
+  -- ══════════════════════════════════════════════════════════════════════════
+  insert into public.autoskill_app_settings
+    (organisation_id, setting_key, setting_value, public_safe)
+  values
+    (v_org_id, 'data_mode',
+     '{"mode": "demo", "label": "Demo Mode", "description": "Demo Mode shows the product. Live Mode runs the product."}',
+     true),
+    (v_org_id, 'app_identity',
+     '{"name": "AutoSkill OS™", "brand": "Powered by 4P3X Intelligent AI™ Created by Kyzel Kreates™", "version": "1.0.0"}',
+     true)
+  on conflict (organisation_id, setting_key) do nothing;
+
+end $$;
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- END OF 002_autoskill_seed_demo_live_data.sql
+-- All records above have is_demo = true.
+-- These records are for demonstration only and must not be treated as
+-- production training records, compliance records, or legal documents.
+--
+-- AutoSkill OS™ supports training awareness, supervisor review, and evidence
+-- capture. It does not replace workplace safety procedures, legal duties,
+-- qualified supervision, employer responsibility, or site-specific training.
+-- ════════════════════════════════════════════════════════════════════════════
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- SECTION 3 — Final Validation Patch (Run 12): Indexes + Views
+-- Source: 012_autoskill_final_validation_patch.sql
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- AutoSkill OS™ — Run 12: Final Validation Patch SQL
+-- Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
+-- ────────────────────────────────────────────────────────────────────────────
+-- Purpose : Performance indexes, convenience views, and RLS health checks
+--           for live dashboard reporting and Employee PWA sync validation.
+-- Safety  : Additive only — does NOT alter or drop any Run 9 schema objects.
+-- RLS     : ROW LEVEL SECURITY REMAINS ENABLED on all live tables.
+-- Run     : Execute in Supabase SQL Editor after 001_autoskill_full_backend_setup.sql
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- ── SECTION 1: PERFORMANCE INDEXES ──────────────────────────────────────────
+-- These are CREATE INDEX IF NOT EXISTS — safe to re-run.
+
+-- Sync queue: dashboard reads by status + employee
+CREATE INDEX IF NOT EXISTS idx_autoskill_sq_status
+  ON autoskill_sync_queue(status)
+  WHERE is_demo = false;
+
+CREATE INDEX IF NOT EXISTS idx_autoskill_sq_employee_status
+  ON autoskill_sync_queue(employee_id, status)
+  WHERE is_demo = false;
+
+CREATE INDEX IF NOT EXISTS idx_autoskill_sq_event_type
+  ON autoskill_sync_queue(event_type, created_at DESC)
+  WHERE is_demo = false;
+
+-- Progress records: employee training summary queries
+CREATE INDEX IF NOT EXISTS idx_autoskill_progress_employee
+  ON autoskill_progress_records(employee_id, status)
+  WHERE is_demo = false;
+
+CREATE INDEX IF NOT EXISTS idx_autoskill_progress_lesson
+  ON autoskill_progress_records(lesson_id, status)
+  WHERE is_demo = false;
+
+-- Safety acknowledgements: report queries
+CREATE INDEX IF NOT EXISTS idx_autoskill_safety_employee
+  ON autoskill_employee_safety_acknowledgements(employee_id)
+  WHERE is_demo = false;
+
+CREATE INDEX IF NOT EXISTS idx_autoskill_safety_ack_id
+  ON autoskill_employee_safety_acknowledgements(acknowledgement_id)
+  WHERE is_demo = false;
+
+-- Supervisor reviews: pending queue queries
+CREATE INDEX IF NOT EXISTS idx_autoskill_reviews_status
+  ON autoskill_supervisor_reviews(status, requested_at DESC)
+  WHERE is_demo = false;
+
+-- Checkpoint submissions: reporting queries
+CREATE INDEX IF NOT EXISTS idx_autoskill_checkpoints_employee
+  ON autoskill_checkpoint_submissions(employee_id, submitted_at DESC)
+  WHERE is_demo = false;
+
+-- Employees: active live employee queries
+CREATE INDEX IF NOT EXISTS idx_autoskill_employees_org_status
+  ON autoskill_employees(organisation_id, status)
+  WHERE is_demo = false;
+
+-- Dashboard alerts: unresolved alert queries
+CREATE INDEX IF NOT EXISTS idx_autoskill_alerts_unresolved
+  ON autoskill_dashboard_alerts(resolved, created_at DESC)
+  WHERE is_demo = false;
+
+
+-- ── SECTION 2: CONVENIENCE VIEWS FOR LIVE DASHBOARD REPORTING ───────────────
+-- Read-only views — respect RLS through the underlying tables.
+
+-- View: live employee training progress summary (for dashboard reports)
+CREATE OR REPLACE VIEW autoskill_live_employee_summary AS
+SELECT
+  e.id                       AS employee_id,
+  e.display_name             AS employee_name,
+  e.employee_number,
+  e.department_id,
+  e.role_title,
+  e.status                   AS employee_status,
+  e.progress_percent,
+  e.organisation_id,
+  COUNT(DISTINCT pr.lesson_id) FILTER (WHERE pr.status = 'completed')  AS completed_lessons,
+  COUNT(DISTINCT pr.id)        FILTER (WHERE pr.status ILIKE '%checkpoint%') AS checkpoint_attempts,
+  COUNT(DISTINCT esa.id)                                                AS safety_acks_done,
+  COUNT(DISTINCT sr.id)        FILTER (WHERE sr.status = 'pending')    AS pending_reviews,
+  MAX(pr.updated_at)                                                    AS last_activity_at,
+  e.created_at
+FROM autoskill_employees e
+LEFT JOIN autoskill_progress_records             pr  ON pr.employee_id = e.id  AND pr.is_demo = false
+LEFT JOIN autoskill_employee_safety_acknowledgements esa ON esa.employee_id = e.id AND esa.is_demo = false
+LEFT JOIN autoskill_supervisor_reviews           sr  ON sr.employee_id = e.id  AND sr.is_demo = false
+WHERE e.is_demo = false
+GROUP BY e.id, e.display_name, e.employee_number, e.department_id,
+         e.role_title, e.status, e.progress_percent, e.organisation_id, e.created_at;
+
+-- Note: This view inherits RLS from autoskill_employees.
+-- Non-admin users see only their own record. Managers see their org.
+
+-- View: live sync queue health (for dashboard sync health panel)
+CREATE OR REPLACE VIEW autoskill_live_sync_health AS
+SELECT
+  COUNT(*) FILTER (WHERE status = 'queued')         AS queued_count,
+  COUNT(*) FILTER (WHERE status = 'synced')         AS synced_count,
+  COUNT(*) FILTER (WHERE status = 'failed')         AS failed_count,
+  COUNT(*) FILTER (WHERE status = 'conflict')       AS conflict_count,
+  COUNT(*) FILTER (WHERE priority = 'safety-critical') AS safety_critical_count,
+  COUNT(*) FILTER (WHERE event_type = 'lesson_completed') AS lesson_completed_count,
+  COUNT(*) FILTER (WHERE event_type = 'safety_acknowledged') AS safety_acked_count,
+  COUNT(*) FILTER (WHERE event_type = 'supervisor_review_requested') AS review_requested_count,
+  MAX(created_at)                                   AS last_event_at,
+  MIN(created_at) FILTER (WHERE status = 'queued') AS oldest_queued_at
+FROM autoskill_sync_queue
+WHERE is_demo = false;
+
+-- View: safety acknowledgement completeness report
+CREATE OR REPLACE VIEW autoskill_safety_ack_report AS
+SELECT
+  sa.id                      AS acknowledgement_id,
+  sa.title,
+  sa.is_legal_critical,
+  sa.is_safety_critical,
+  COUNT(DISTINCT e.id)       AS total_live_employees,
+  COUNT(DISTINCT esa.employee_id) AS employees_acknowledged,
+  COUNT(DISTINCT e.id) - COUNT(DISTINCT esa.employee_id) AS employees_missing,
+  ROUND(
+    COUNT(DISTINCT esa.employee_id)::numeric /
+    NULLIF(COUNT(DISTINCT e.id), 0) * 100, 1
+  )                          AS completion_percent
+FROM autoskill_safety_acknowledgements sa
+CROSS JOIN autoskill_employees e
+LEFT JOIN autoskill_employee_safety_acknowledgements esa
+  ON esa.acknowledgement_id = sa.id AND esa.employee_id = e.id AND esa.is_demo = false
+WHERE sa.is_demo = false AND e.is_demo = false AND e.status = 'active'
+GROUP BY sa.id, sa.title, sa.is_legal_critical, sa.is_safety_critical;
+
+
+-- ── SECTION 3: RLS POLICY HEALTH CHECKS ─────────────────────────────────────
+-- Verify RLS is enabled. This is a verification query only — no changes.
+
+DO $$
+DECLARE
+  tbl TEXT;
+  rls_on BOOLEAN;
+  missing_rls TEXT[] := ARRAY[]::TEXT[];
+BEGIN
+  FOREACH tbl IN ARRAY ARRAY[
+    'autoskill_employees','autoskill_departments','autoskill_training_pathways',
+    'autoskill_process_modules','autoskill_process_lessons',
+    'autoskill_progress_records','autoskill_checkpoint_submissions',
+    'autoskill_employee_safety_acknowledgements','autoskill_supervisor_reviews',
+    'autoskill_evidence_records','autoskill_dashboard_alerts','autoskill_sync_queue',
+    'autoskill_app_settings'
+  ]
+  LOOP
+    SELECT relrowsecurity INTO rls_on
+    FROM pg_class
+    WHERE relname = tbl AND relnamespace = 'public'::regnamespace;
+
+    IF NOT FOUND THEN
+      RAISE NOTICE 'TABLE NOT FOUND: % — run 001_autoskill_full_backend_setup.sql first', tbl;
+    ELSIF NOT rls_on THEN
+      missing_rls := array_append(missing_rls, tbl);
+      RAISE WARNING 'RLS NOT ENABLED: % — enabling now', tbl;
+      EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY', tbl);
+    ELSE
+      RAISE NOTICE 'RLS OK: %', tbl;
+    END IF;
+  END LOOP;
+
+  IF array_length(missing_rls, 1) > 0 THEN
+    RAISE NOTICE 'RLS was missing on: %. RLS has been enabled. Review policies in Run 9 setup.', array_to_string(missing_rls, ', ');
+  ELSE
+    RAISE NOTICE 'All AutoSkill OS™ tables have RLS enabled. ✅';
+  END IF;
+END;
+$$;
+
+
+-- ── SECTION 4: SAFE APP SETTING UPSERT (OPTIONAL) ───────────────────────────
+-- Records that Run 12 final validation has been applied.
+-- Only inserts if autoskill_app_settings exists and has an organisation context.
+-- This is advisory only — the app works without it.
+
+-- INSERT INTO autoskill_app_settings (setting_key, setting_value, is_public, description)
+-- VALUES (
+--   'autoskill_run_12_applied',
+--   '{"applied": true, "runPhase": "Run 12 — Final Validation", "appliedAt": "2026-06-05"}',
+--   true,
+--   'Records that Run 12 final validation patch was applied.'
+-- )
+-- ON CONFLICT (organisation_id, setting_key) DO UPDATE
+--   SET setting_value = EXCLUDED.setting_value,
+--       updated_at    = now();
+-- (Uncomment after setting your organisation_id context)
+
+
+-- ── SECTION 5: VERIFICATION QUERIES ─────────────────────────────────────────
+-- Run these after applying this patch to confirm everything is healthy.
+
+-- 5a. Confirm indexes were created
+SELECT indexname, tablename
+FROM pg_indexes
+WHERE schemaname = 'public'
+  AND indexname LIKE 'idx_autoskill_%'
+ORDER BY tablename, indexname;
+
+-- 5b. Confirm views were created
+SELECT table_name AS view_name, table_type
+FROM information_schema.tables
+WHERE table_schema = 'public'
+  AND table_name LIKE 'autoskill_%summary%'
+   OR table_name IN ('autoskill_live_sync_health', 'autoskill_safety_ack_report')
+ORDER BY table_name;
+
+-- 5c. Confirm RLS is still enabled on all tables
+SELECT relname AS table_name, relrowsecurity AS rls_enabled
+FROM pg_class
+WHERE relname LIKE 'autoskill_%'
+  AND relkind = 'r'
+  AND relnamespace = 'public'::regnamespace
+ORDER BY relname;
+
+-- 5d. Live sync queue health check
+SELECT * FROM autoskill_live_sync_health;
+
+-- 5e. Safety acknowledgement completeness (requires live employee + ack records)
+-- SELECT * FROM autoskill_safety_ack_report ORDER BY is_legal_critical DESC, completion_percent ASC;
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- END OF RUN 12 FINAL VALIDATION PATCH
+-- ────────────────────────────────────────────────────────────────────────────
+-- RLS STATUS: ENABLED on all autoskill_* tables.
+-- SECURITY:   No service role key usage. Anon/public client only in frontend.
+-- NEXT STEPS: See README.md — Vercel deployment + auth/profile setup.
+-- ════════════════════════════════════════════════════════════════════════════
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- SECTION 4 — Verification Queries
+-- Source: 099_autoskill_verification_queries.sql
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- AutoSkill OS™ — Verification Queries
+-- 099_autoskill_verification_queries.sql
+-- ────────────────────────────────────────────────────────────────────────────
+-- Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
+-- ────────────────────────────────────────────────────────────────────────────
+-- Run these queries in the Supabase SQL Editor AFTER 001 (and optionally 002).
+-- They are READ-ONLY queries — safe to run at any time.
+-- ════════════════════════════════════════════════════════════════════════════
+
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- V1. TABLE EXISTENCE CHECK
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Expected result: 24 rows — one for each AutoSkill OS™ table.
+select
+  table_name,
+  table_type
+from information_schema.tables
+where table_schema = 'public'
+  and table_name   like 'autoskill_%'
+order by table_name;
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- V2. RLS ENABLED CHECK
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Expected result: ALL tables show rowsecurity = true.
+-- Any table with false = RLS NOT enabled = action required.
+select
+  schemaname,
+  tablename,
+  rowsecurity as rls_enabled
+from pg_tables
+where schemaname = 'public'
+  and tablename  like 'autoskill_%'
+order by tablename;
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- V3. RLS POLICIES CHECK
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Expected result: Multiple policies per table. All AutoSkill OS™ tables
+-- should have at least one policy.
+select
+  schemaname,
+  tablename,
+  policyname,
+  cmd           as applies_to_command,
+  permissive    as policy_type
+from pg_policies
+where schemaname = 'public'
+  and tablename  like 'autoskill_%'
+order by tablename, policyname;
+
+-- Count of policies per table (quick summary):
+select
+  tablename,
+  count(*) as policy_count
+from pg_policies
+where schemaname = 'public'
+  and tablename  like 'autoskill_%'
+group by tablename
+order by tablename;
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- V4. INDEXES CHECK
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Expected result: Multiple indexes per table.
+select
+  schemaname,
+  tablename,
+  indexname,
+  indexdef
+from pg_indexes
+where schemaname = 'public'
+  and tablename  like 'autoskill_%'
+order by tablename, indexname;
+
+-- Index count per table:
+select
+  tablename,
+  count(*) as index_count
+from pg_indexes
+where schemaname = 'public'
+  and tablename  like 'autoskill_%'
+group by tablename
+order by tablename;
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- V5. TRIGGERS CHECK
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Expected result: trg_updated_at trigger on all mutable tables.
+select
+  event_object_table as table_name,
+  trigger_name,
+  event_manipulation,
+  action_timing
+from information_schema.triggers
+where trigger_schema      = 'public'
+  and event_object_table like 'autoskill_%'
+order by event_object_table;
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- V6. FUNCTIONS CHECK
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Expected result: 7 AutoSkill OS™ helper functions present.
+select
+  routine_name,
+  routine_type,
+  security_type
+from information_schema.routines
+where routine_schema = 'public'
+  and (routine_name like '%autoskill%'
+    or routine_name in (
+      'touch_updated_at',
+      'user_organisation_id',
+      'is_org_admin_or_manager',
+      'is_supervisor_or_trainer',
+      'is_employee_self',
+      'calculate_employee_progress',
+      'create_dashboard_alert_fn'
+    ))
+order by routine_name;
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- V7. ENUM TYPES CHECK
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Expected result: 9 custom enum types for AutoSkill OS™.
+select
+  t.typname     as enum_name,
+  e.enumlabel   as enum_value
+from pg_type     t
+join pg_enum     e on t.oid = e.enumtypid
+where t.typname like 'autoskill_%'
+order by t.typname, e.enumsortorder;
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- V8. SYNC QUEUE TABLE STRUCTURE CHECK
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Confirms the sync queue table has all Run 7-compatible columns.
+select
+  column_name,
+  data_type,
+  is_nullable,
+  column_default
+from information_schema.columns
+where table_schema = 'public'
+  and table_name   = 'autoskill_sync_queue'
+order by ordinal_position;
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- V9. APP SETTINGS SECRET CHECK
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Confirms no forbidden secret keys are stored in app_settings.
+-- Expected result: 0 rows for all queries below.
+
+select count(*) as forbidden_settings_found
+from public.autoskill_app_settings
+where setting_key ilike any (array[
+  '%service_role%', '%service_role_key%',
+  '%jwt_secret%', '%private_key%',
+  '%database_url%', '%webhook_secret%',
+  '%admin_token%', '%openai%', '%stripe_secret%',
+  '%groq%', '%aws_secret%', '%client_secret%'
+]);
+-- Expected: 0
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- V10. DEMO SEED DATA CHECK (run only if 002 seed was applied)
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Expected: 1 demo org, 4 demo employees, 1 pathway, 3 modules, etc.
+
+select 'autoskill_organisations' as table_name, count(*) as total,
+  count(*) filter (where is_demo) as demo_count
+from public.autoskill_organisations
+
+union all
+
+select 'autoskill_employees', count(*), count(*) filter (where is_demo)
+from public.autoskill_employees
+
+union all
+
+select 'autoskill_training_pathways', count(*), count(*) filter (where is_demo)
+from public.autoskill_training_pathways
+
+union all
+
+select 'autoskill_process_modules', count(*), count(*) filter (where is_demo)
+from public.autoskill_process_modules
+
+union all
+
+select 'autoskill_process_lessons', count(*), count(*) filter (where is_demo)
+from public.autoskill_process_lessons
+
+union all
+
+select 'autoskill_skill_checkpoints', count(*), count(*) filter (where is_demo)
+from public.autoskill_skill_checkpoints
+
+union all
+
+select 'autoskill_safety_acknowledgements', count(*), count(*) filter (where is_demo)
+from public.autoskill_safety_acknowledgements
+
+union all
+
+select 'autoskill_progress_records', count(*), count(*) filter (where is_demo)
+from public.autoskill_progress_records
+
+union all
+
+select 'autoskill_sync_queue', count(*), count(*) filter (where is_demo)
+from public.autoskill_sync_queue
+
+union all
+
+select 'autoskill_supervisor_reviews', count(*), count(*) filter (where is_demo)
+from public.autoskill_supervisor_reviews
+
+union all
+
+select 'autoskill_dashboard_alerts', count(*), count(*) filter (where is_demo)
+from public.autoskill_dashboard_alerts
+
+union all
+
+select 'autoskill_app_settings', count(*), 0
+from public.autoskill_app_settings
+
+order by table_name;
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- V11. LIVE DATA ISOLATION CHECK
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Confirms no live records are mixed with demo records incorrectly.
+-- Expected: 0 live employees if only seed data was loaded.
+select
+  is_demo,
+  count(*) as record_count
+from public.autoskill_employees
+group by is_demo
+order by is_demo;
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- V12. COLUMN SECURITY CHECK (no secret-like column names)
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Expected: 0 rows — no secret columns should exist in any AutoSkill table.
+select
+  table_name,
+  column_name
+from information_schema.columns
+where table_schema = 'public'
+  and table_name   like 'autoskill_%'
+  and column_name  ilike any (array[
+    '%service_role%', '%jwt_secret%', '%private_key%',
+    '%database_password%', '%webhook_secret%', '%admin_token%',
+    '%stripe_secret%', '%openai_key%', '%groq_key%'
+  ])
+order by table_name;
+-- Expected: 0 rows
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- V13. CURRENT USER PROFILE LOOKUP
+-- ─────────────────────────────────────────────────────────────────────────────
+-- Run this as an authenticated user to confirm profile lookup works.
+-- (Will return no rows in SQL Editor if running as anon/service role)
+select
+  id,
+  display_name,
+  role,
+  organisation_id,
+  status
+from public.autoskill_profiles
+where id = auth.uid();
+
+-- Organisation ID helper function test:
+select public.user_organisation_id() as my_organisation_id;
+select public.is_org_admin_or_manager() as am_i_admin_or_manager;
+select public.is_supervisor_or_trainer() as am_i_supervisor_or_trainer;
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- END OF 099_autoskill_verification_queries.sql
+-- ════════════════════════════════════════════════════════════════════════════
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- SECTION 5 — Rollback Notes
+-- Source: 999_autoskill_rollback_notes.sql
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- AutoSkill OS™ — Rollback Notes
+-- 999_autoskill_rollback_notes.sql
+-- ────────────────────────────────────────────────────────────────────────────
+-- Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
+-- ────────────────────────────────────────────────════════════════════════════
+--
+-- ⛔ WARNING: ROLLBACK IS DESTRUCTIVE.
+--
+-- Dropping these tables permanently deletes ALL training records, progress,
+-- safety acknowledgements, sync queue items, supervisor reviews, and evidence
+-- records stored in this database.
+--
+-- ⚠  DO NOT run destructive rollback on a production database
+--    unless you have:
+--    1. Taken a full database backup (Supabase Dashboard → Settings → Backups)
+--    2. Exported all important records as CSV/JSON
+--    3. Confirmed with your training manager that loss is acceptable
+--    4. Clearly documented why rollback is necessary
+--
+-- ─────────────────────────────────────────────────────────────────────────
+-- SAFE USE CASE:
+--   Run this ONLY on a clean development/test Supabase project where
+--   no live training data exists and a rollback is needed to restart.
+-- ════════════════════════════════════════════════════════════════════════════
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- STEP 1: DROP POLICIES (must come before dropping tables)
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- ⛔ DEV ONLY — Remove RLS policies before dropping tables.
+-- If you get "policy does not exist" errors, the table may already be gone.
+
+/*
+drop policy if exists "org_members_read_own_org"             on public.autoskill_organisations;
+drop policy if exists "org_admins_update_own_org"            on public.autoskill_organisations;
+drop policy if exists "org_members_read_sites"               on public.autoskill_sites;
+drop policy if exists "org_admins_manage_sites"              on public.autoskill_sites;
+drop policy if exists "user_read_own_profile"                on public.autoskill_profiles;
+drop policy if exists "managers_read_org_profiles"           on public.autoskill_profiles;
+drop policy if exists "user_update_own_profile"              on public.autoskill_profiles;
+drop policy if exists "admins_manage_org_profiles"           on public.autoskill_profiles;
+drop policy if exists "profile_insert_on_signup"             on public.autoskill_profiles;
+drop policy if exists "org_members_read_depts"               on public.autoskill_departments;
+drop policy if exists "admins_manage_depts"                  on public.autoskill_departments;
+drop policy if exists "org_members_read_stations"            on public.autoskill_manufacturing_stations;
+drop policy if exists "admins_manage_stations"               on public.autoskill_manufacturing_stations;
+drop policy if exists "employee_read_own_record"             on public.autoskill_employees;
+drop policy if exists "supervisors_read_org_employees"       on public.autoskill_employees;
+drop policy if exists "admins_manage_org_employees"          on public.autoskill_employees;
+drop policy if exists "supervisors_read_org_trainers"        on public.autoskill_trainers_supervisors;
+drop policy if exists "admins_manage_org_trainers"           on public.autoskill_trainers_supervisors;
+drop policy if exists "org_users_read_active_pathways"       on public.autoskill_training_pathways;
+drop policy if exists "trainers_manage_pathways"             on public.autoskill_training_pathways;
+drop policy if exists "employee_read_own_assignments"        on public.autoskill_pathway_assignments;
+drop policy if exists "supervisors_read_org_assignments"     on public.autoskill_pathway_assignments;
+drop policy if exists "trainers_manage_assignments"          on public.autoskill_pathway_assignments;
+drop policy if exists "org_users_read_modules"               on public.autoskill_process_modules;
+drop policy if exists "trainers_manage_modules"              on public.autoskill_process_modules;
+drop policy if exists "org_users_read_lessons"               on public.autoskill_process_lessons;
+drop policy if exists "trainers_manage_lessons"              on public.autoskill_process_lessons;
+drop policy if exists "org_users_read_checkpoints"           on public.autoskill_skill_checkpoints;
+drop policy if exists "trainers_manage_checkpoints"          on public.autoskill_skill_checkpoints;
+drop policy if exists "org_users_read_safety_acks"           on public.autoskill_safety_acknowledgements;
+drop policy if exists "trainers_manage_safety_acks"          on public.autoskill_safety_acknowledgements;
+drop policy if exists "employee_insert_own_acks"             on public.autoskill_employee_safety_acknowledgements;
+drop policy if exists "employee_read_own_acks"               on public.autoskill_employee_safety_acknowledgements;
+drop policy if exists "supervisors_read_org_acks"            on public.autoskill_employee_safety_acknowledgements;
+drop policy if exists "supervisors_update_ack_sync_status"   on public.autoskill_employee_safety_acknowledgements;
+drop policy if exists "org_users_read_competencies"          on public.autoskill_competencies;
+drop policy if exists "trainers_manage_competencies"         on public.autoskill_competencies;
+drop policy if exists "org_users_read_comp_links"            on public.autoskill_competency_links;
+drop policy if exists "trainers_manage_comp_links"           on public.autoskill_competency_links;
+drop policy if exists "employee_insert_own_progress"         on public.autoskill_progress_records;
+drop policy if exists "employee_read_own_progress"           on public.autoskill_progress_records;
+drop policy if exists "employee_update_own_progress"         on public.autoskill_progress_records;
+drop policy if exists "supervisors_read_org_progress"        on public.autoskill_progress_records;
+drop policy if exists "supervisors_update_progress_status"   on public.autoskill_progress_records;
+drop policy if exists "employee_insert_own_submissions"      on public.autoskill_checkpoint_submissions;
+drop policy if exists "employee_read_own_submissions"        on public.autoskill_checkpoint_submissions;
+drop policy if exists "supervisors_read_org_submissions"     on public.autoskill_checkpoint_submissions;
+drop policy if exists "employee_read_own_review_status"      on public.autoskill_supervisor_reviews;
+drop policy if exists "supervisors_read_org_reviews"         on public.autoskill_supervisor_reviews;
+drop policy if exists "supervisors_create_reviews"           on public.autoskill_supervisor_reviews;
+drop policy if exists "employee_request_review"              on public.autoskill_supervisor_reviews;
+drop policy if exists "supervisors_update_reviews"           on public.autoskill_supervisor_reviews;
+drop policy if exists "employee_insert_own_evidence"         on public.autoskill_evidence_records;
+drop policy if exists "employee_read_own_evidence"           on public.autoskill_evidence_records;
+drop policy if exists "supervisors_read_org_evidence"        on public.autoskill_evidence_records;
+drop policy if exists "supervisors_manage_evidence"          on public.autoskill_evidence_records;
+drop policy if exists "supervisors_read_org_alerts"          on public.autoskill_dashboard_alerts;
+drop policy if exists "employee_read_own_linked_alerts"      on public.autoskill_dashboard_alerts;
+drop policy if exists "supervisors_manage_alerts"            on public.autoskill_dashboard_alerts;
+drop policy if exists "employee_insert_own_queue_items"      on public.autoskill_sync_queue;
+drop policy if exists "employee_read_own_queue_items"        on public.autoskill_sync_queue;
+drop policy if exists "supervisors_read_org_queue"           on public.autoskill_sync_queue;
+drop policy if exists "supervisors_process_org_queue"        on public.autoskill_sync_queue;
+drop policy if exists "admins_read_backend_events"           on public.autoskill_backend_events;
+drop policy if exists "system_insert_backend_events"         on public.autoskill_backend_events;
+drop policy if exists "org_users_read_public_settings"       on public.autoskill_app_settings;
+drop policy if exists "admins_manage_public_settings"        on public.autoskill_app_settings;
+*/
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- STEP 2: DROP TRIGGERS
+-- ════════════════════════════════════════════════════════════════════════════
+
+/*
+drop trigger if exists trg_updated_at on public.autoskill_organisations;
+drop trigger if exists trg_updated_at on public.autoskill_sites;
+drop trigger if exists trg_updated_at on public.autoskill_profiles;
+drop trigger if exists trg_updated_at on public.autoskill_departments;
+drop trigger if exists trg_updated_at on public.autoskill_manufacturing_stations;
+drop trigger if exists trg_updated_at on public.autoskill_employees;
+drop trigger if exists trg_updated_at on public.autoskill_trainers_supervisors;
+drop trigger if exists trg_updated_at on public.autoskill_training_pathways;
+drop trigger if exists trg_updated_at on public.autoskill_pathway_assignments;
+drop trigger if exists trg_updated_at on public.autoskill_process_modules;
+drop trigger if exists trg_updated_at on public.autoskill_process_lessons;
+drop trigger if exists trg_updated_at on public.autoskill_skill_checkpoints;
+drop trigger if exists trg_updated_at on public.autoskill_safety_acknowledgements;
+drop trigger if exists trg_updated_at on public.autoskill_employee_safety_acknowledgements;
+drop trigger if exists trg_updated_at on public.autoskill_competencies;
+drop trigger if exists trg_updated_at on public.autoskill_progress_records;
+drop trigger if exists trg_updated_at on public.autoskill_checkpoint_submissions;
+drop trigger if exists trg_updated_at on public.autoskill_supervisor_reviews;
+drop trigger if exists trg_updated_at on public.autoskill_evidence_records;
+drop trigger if exists trg_updated_at on public.autoskill_dashboard_alerts;
+drop trigger if exists trg_updated_at on public.autoskill_sync_queue;
+drop trigger if exists trg_updated_at on public.autoskill_app_settings;
+*/
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- STEP 3: DROP FUNCTIONS
+-- ════════════════════════════════════════════════════════════════════════════
+
+/*
+drop function if exists public.touch_updated_at() cascade;
+drop function if exists public.user_organisation_id() cascade;
+drop function if exists public.is_org_admin_or_manager() cascade;
+drop function if exists public.is_supervisor_or_trainer() cascade;
+drop function if exists public.is_employee_self(uuid) cascade;
+drop function if exists public.calculate_employee_progress(uuid) cascade;
+drop function if exists public.create_dashboard_alert_fn(uuid, text, text, text, autoskill_alert_severity, uuid, uuid, boolean) cascade;
+drop function if exists public._autoskill_make_updated_at_trigger(text) cascade;
+*/
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- STEP 4: DROP TABLES (reverse dependency order)
+-- ════════════════════════════════════════════════════════════════════════════
+-- Tables referencing other tables must be dropped FIRST.
+-- The order below is the safe reverse of the creation order.
+
+/*
+drop table if exists public.autoskill_app_settings                     cascade;
+drop table if exists public.autoskill_backend_events                   cascade;
+drop table if exists public.autoskill_sync_queue                       cascade;
+drop table if exists public.autoskill_dashboard_alerts                 cascade;
+drop table if exists public.autoskill_evidence_records                 cascade;
+drop table if exists public.autoskill_supervisor_reviews               cascade;
+drop table if exists public.autoskill_checkpoint_submissions           cascade;
+drop table if exists public.autoskill_progress_records                 cascade;
+drop table if exists public.autoskill_competency_links                 cascade;
+drop table if exists public.autoskill_competencies                     cascade;
+drop table if exists public.autoskill_employee_safety_acknowledgements cascade;
+drop table if exists public.autoskill_safety_acknowledgements          cascade;
+drop table if exists public.autoskill_skill_checkpoints                cascade;
+drop table if exists public.autoskill_process_lessons                  cascade;
+drop table if exists public.autoskill_process_modules                  cascade;
+drop table if exists public.autoskill_pathway_assignments              cascade;
+drop table if exists public.autoskill_training_pathways                cascade;
+drop table if exists public.autoskill_trainers_supervisors             cascade;
+drop table if exists public.autoskill_employees                        cascade;
+drop table if exists public.autoskill_manufacturing_stations           cascade;
+drop table if exists public.autoskill_departments                      cascade;
+drop table if exists public.autoskill_profiles                         cascade;
+drop table if exists public.autoskill_sites                            cascade;
+drop table if exists public.autoskill_organisations                    cascade;
+*/
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- STEP 5: DROP ENUM TYPES
+-- ════════════════════════════════════════════════════════════════════════════
+-- Enums can only be dropped after all tables using them are gone.
+
+/*
+drop type if exists autoskill_profile_role    cascade;
+drop type if exists autoskill_record_status   cascade;
+drop type if exists autoskill_progress_status cascade;
+drop type if exists autoskill_sync_status     cascade;
+drop type if exists autoskill_data_mode       cascade;
+drop type if exists autoskill_alert_severity  cascade;
+drop type if exists autoskill_review_status   cascade;
+drop type if exists autoskill_evidence_type   cascade;
+drop type if exists autoskill_checkpoint_type cascade;
+drop type if exists autoskill_sync_priority   cascade;
+*/
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- FULL DEV-ONLY QUICK ROLLBACK (all in one — use with extreme caution)
+-- Uncomment and run ONLY in a clean development Supabase project.
+-- ⛔ DO NOT run in production without a full database backup.
+-- ════════════════════════════════════════════════════════════════════════════
+
+/*
+-- ⛔ DEV ONLY — FULL AUTOSKILL OS™ SCHEMA TEARDOWN
+-- All AutoSkill OS™ tables, functions, triggers, policies, and types.
+
+drop table if exists public.autoskill_app_settings                     cascade;
+drop table if exists public.autoskill_backend_events                   cascade;
+drop table if exists public.autoskill_sync_queue                       cascade;
+drop table if exists public.autoskill_dashboard_alerts                 cascade;
+drop table if exists public.autoskill_evidence_records                 cascade;
+drop table if exists public.autoskill_supervisor_reviews               cascade;
+drop table if exists public.autoskill_checkpoint_submissions           cascade;
+drop table if exists public.autoskill_progress_records                 cascade;
+drop table if exists public.autoskill_competency_links                 cascade;
+drop table if exists public.autoskill_competencies                     cascade;
+drop table if exists public.autoskill_employee_safety_acknowledgements cascade;
+drop table if exists public.autoskill_safety_acknowledgements          cascade;
+drop table if exists public.autoskill_skill_checkpoints                cascade;
+drop table if exists public.autoskill_process_lessons                  cascade;
+drop table if exists public.autoskill_process_modules                  cascade;
+drop table if exists public.autoskill_pathway_assignments              cascade;
+drop table if exists public.autoskill_training_pathways                cascade;
+drop table if exists public.autoskill_trainers_supervisors             cascade;
+drop table if exists public.autoskill_employees                        cascade;
+drop table if exists public.autoskill_manufacturing_stations           cascade;
+drop table if exists public.autoskill_departments                      cascade;
+drop table if exists public.autoskill_profiles                         cascade;
+drop table if exists public.autoskill_sites                            cascade;
+drop table if exists public.autoskill_organisations                    cascade;
+
+drop function if exists public.touch_updated_at() cascade;
+drop function if exists public.user_organisation_id() cascade;
+drop function if exists public.is_org_admin_or_manager() cascade;
+drop function if exists public.is_supervisor_or_trainer() cascade;
+drop function if exists public.is_employee_self(uuid) cascade;
+drop function if exists public.calculate_employee_progress(uuid) cascade;
+drop function if exists public.create_dashboard_alert_fn cascade;
+drop function if exists public._autoskill_make_updated_at_trigger(text) cascade;
+
+drop type if exists autoskill_profile_role    cascade;
+drop type if exists autoskill_record_status   cascade;
+drop type if exists autoskill_progress_status cascade;
+drop type if exists autoskill_sync_status     cascade;
+drop type if exists autoskill_data_mode       cascade;
+drop type if exists autoskill_alert_severity  cascade;
+drop type if exists autoskill_review_status   cascade;
+drop type if exists autoskill_evidence_type   cascade;
+drop type if exists autoskill_checkpoint_type cascade;
+drop type if exists autoskill_sync_priority   cascade;
+*/
+
+
+-- ════════════════════════════════════════════════════════════════════════════
+-- END OF 999_autoskill_rollback_notes.sql
+-- ════════════════════════════════════════════════════════════════════════════
