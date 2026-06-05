@@ -1253,6 +1253,86 @@ function renderHome() {
   setTimeout(function(){if(window.asRefreshInstallUI)window.asRefreshInstallUI();},0);
 }
 
+
+// ── LESSON NAVIGATION HELPER ─────────────────────────────────────────────────
+// Returns the ID of the next lesson, or null if this is the last lesson.
+var LESSON_ORDER = ['m1l1','m1l2','m1l3','m1l4','m1l5',
+                    'm2l1','m2l2','m2l3','m2l4','m2l5',
+                    'm3l1','m3l2','m3l3','m3l4','m3l5'];
+var LAST_LESSON  = 'm3l5';
+
+function getNextLessonId(currentId) {
+  var idx = LESSON_ORDER.indexOf(currentId);
+  if (idx < 0 || idx >= LESSON_ORDER.length - 1) return null;
+  return LESSON_ORDER[idx + 1];
+}
+
+// Builds and injects/updates the "Next Lesson" button strip in the open panel.
+// Called after checkpoint answered correctly, and when re-opening a done lesson.
+function showNextLessonButton(currentLessonId) {
+  var nextId = getNextLessonId(currentLessonId);
+  if (!nextId) return; // last lesson — no next button
+  var panel = document.getElementById('lesson-detail-panel');
+  if (!panel) return;
+
+  // Remove existing strip if any (avoid duplicates)
+  var existing = document.getElementById('next-lesson-strip');
+  if (existing) existing.remove();
+
+  // Shift the complete-bar up so next-lesson-strip doesn't overlap it
+  var completeBar = document.getElementById('ld-complete-bar');
+  if (completeBar) completeBar.style.bottom = '84px';
+
+  var nextLc = typeof LESSON_CONTENT !== 'undefined' && LESSON_CONTENT[nextId];
+  var nextTitle = nextLc ? nextLc.title : 'Next Lesson';
+  var nextMod   = nextLc ? (nextLc.moduleTitle || '').split('—')[0].trim() : '';
+  var nextXp    = nextLc ? (nextLc.xp || 20) : 20;
+
+  var strip = document.createElement('div');
+  strip.id = 'next-lesson-strip';
+  strip.style.cssText = [
+    'position:fixed',
+    'bottom:0',
+    'left:0',
+    'right:0',
+    'z-index:210',
+    'padding:10px 16px 20px',
+    'background:linear-gradient(transparent, var(--bg) 28%)',
+    'pointer-events:none'
+  ].join(';');
+
+  strip.innerHTML =
+    '<div style="pointer-events:all">' +
+    // separator line
+    '<div style="height:1px;background:var(--border);margin-bottom:10px"></div>' +
+    // label
+    '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;' +
+    'letter-spacing:.06em;margin-bottom:6px">Up Next' + (nextMod ? ' · ' + nextMod : '') + '</div>' +
+    // button
+    '<button onclick="goToNextLesson('' + currentLessonId + '')" ' +
+    'style="width:100%;padding:13px 16px;background:var(--gold);color:#000;border:none;' +
+    'border-radius:var(--r);font-size:14px;font-weight:800;cursor:pointer;' +
+    'display:flex;align-items:center;justify-content:space-between;gap:8px">' +
+    '<span>&#x27A1;&#xFE0F; ' + nextTitle + '</span>' +
+    '<span style="font-size:12px;opacity:.7">+' + nextXp + ' XP</span>' +
+    '</button>' +
+    '</div>';
+
+  // Append inside the panel so it scrolls with it if needed,
+  // but position:fixed keeps it at the bottom of the viewport
+  panel.appendChild(strip);
+}
+
+function goToNextLesson(currentId) {
+  var nextId = getNextLessonId(currentId);
+  if (!nextId) return;
+  var nextLc = typeof LESSON_CONTENT !== 'undefined' && LESSON_CONTENT[nextId];
+  var xpVal  = nextLc ? (nextLc.xp || 20) : 20;
+  closeLessonDetail();
+  // Short delay so close animation completes before new panel opens
+  setTimeout(function() { openLesson(nextId, xpVal); }, 120);
+}
+
 // ── CHECK-IN ─────────────────────────────────────────────
 function renderCheckin() { /* preserved for compatibility — tab replaced in Run 4 */ }
 function buildCheckinHTML() { return ''; }
@@ -1375,6 +1455,15 @@ function openLesson(id, xpVal) {
 
   document.body.appendChild(panel);
   panel.scrollTop = 0;
+  // Re-opening: if checkpoint already answered correctly (or lesson done), show next lesson button
+  if (lc && lc.checkpoint) {
+    var _prevAns = sGet('ap3x_chk_ans_' + id, null);
+    var _wasCorrect = _prevAns && _prevAns.answer === lc.checkpoint.correctAnswer;
+    if (_wasCorrect || isDone) { setTimeout(function(){ showNextLessonButton(id); }, 80); }
+  } else if (isDone) {
+    // No checkpoint — show next lesson button for completed lessons anyway
+    setTimeout(function(){ showNextLessonButton(id); }, 80);
+  }
 }
 
 
@@ -1455,6 +1544,8 @@ function submitCheckpointAnswer(btn) {
     } else {
       chkOld.outerHTML = '<div class="chk-container">' + buildCheckpointHTML(lc.checkpoint, lessonId) + '</div>';
     }
+    // Show 'Next Lesson' button if answer was correct
+    if (isCorrect) showNextLessonButton(lessonId);
   }
 }
 
