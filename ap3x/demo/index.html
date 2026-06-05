@@ -2,254 +2,580 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-  <link rel="icon" type="image/x-icon"     href="../../icons/favicon.ico"/>
-  <link rel="icon" type="image/png" sizes="32x32"    href="../../icons/as-favicon-32.png"/>
-  <link rel="icon" type="image/png" sizes="192x192"  href="../../icons/as-192.png"/>
-  <link rel="icon" type="image/png" sizes="512x512"  href="../../icons/as-512.png"/>
-  <link rel="apple-touch-icon" sizes="180x180"       href="../../icons/as-apple-touch.png"/>
-  <link rel="apple-touch-icon" sizes="152x152"       href="../../icons/as-152.png"/>
-  <link rel="apple-touch-icon" sizes="144x144"       href="../../icons/as-144.png"/>
-  <meta name="apple-mobile-web-app-title"            content="AutoSkill OS™"/>
-  <meta name="msapplication-TileImage"               content="../../icons/as-144.png"/>
-  <meta name="msapplication-TileColor"               content="#0a0a0a"/>
-  <meta name="msapplication-square150x150logo"       content="../../icons/as-152.png"/>
-  <meta name="msapplication-square310x310logo"       content="../../icons/as-512.png"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="description" content="AutoSkill OS™ — Manufacturing Training Control Dashboard and Employee Learning PWA. Powered by 4P3X Intelligent AI™. Created by Kyzel Kreates™."/>
-<title>AutoSkill OS™</title>
+<meta name="description" content="AutoSkill OS™ — AI-Assisted Workforce Training & Employee Learning Platform. Powered by 4P3X Intelligent AI™. Created by Kyzel Kreates™."/>
+<link rel="icon" type="image/x-icon"    href="../../icons/favicon.ico"/>
+<link rel="icon" type="image/png" sizes="32x32"   href="../../icons/as-favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="../../icons/as-192.png"/>
+<link rel="icon" type="image/png" sizes="512x512" href="../../icons/as-512.png"/>
+<link rel="apple-touch-icon" sizes="180x180"      href="../../icons/as-apple-touch.png"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<title>AutoSkill OS™ — AI-Assisted Workforce Training Platform</title>
 <style>
 :root{
-  --bg:#0a0a0a;--surface:#111111;--surface2:#1a1a1a;--border:#2a2a2a;
-  --gold:#c9a84c;--gold-l:#e2c97e;--gold-d:#9a7a30;
+  --bg:#0a0a0a;--surface:#111;--surface2:#181818;--surface3:#1e1e1e;
+  --border:#252525;--border2:#2e2e2e;
+  --gold:#c9a84c;--gold-l:#e2c97e;--gold-d:#9a7a30;--gold-glow:rgba(201,168,76,.18);
   --silver:#b0b8c8;--silver-l:#d8e0ec;--silver-d:#8090a8;
   --green:#22c55e;--green-d:#16a34a;--green-xl:#052e16;
-  --purple:#a855f7;--purple-d:#7c3aed;--purple-xl:#2e1065;
-  --text:#f0f0f0;--muted:#888;--light:#555;
-  --r:14px;--rs:9px;--shadow:0 4px 24px rgba(201,168,76,.08);--t:.2s ease;
+  --purple:#a855f7;--purple-d:#7c3aed;--purple-xl:#180a2e;
+  --text:#f2f2f2;--muted:#888;--light:#555;
+  --r:14px;--rs:9px;--shadow:0 4px 28px rgba(0,0,0,.5);
+  --t:.22s ease;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
 
-/* ── Nav ── */
-.navbar{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;box-shadow:0 1px 8px rgba(0,0,0,.4)}
-.nav-logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:900;color:var(--gold);letter-spacing:-0.5px}
-.nav-logo-icon{font-size:22px;display:flex;align-items:center}
-.nav-logo .sub{color:var(--silver);font-size:12px;font-weight:500}
+/* ── NAVBAR ─────────────────────────────────────────────────────────── */
+.navbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 32px;
+  background:rgba(10,10,10,.92);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:0 1px 12px rgba(0,0,0,.6);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:default}
+.nav-logo-img{width:34px;height:34px;object-fit:contain;flex-shrink:0}
+.nav-logo-text{line-height:1.2}
+.nav-logo-name{font-size:16px;font-weight:900;color:var(--gold);letter-spacing:-.4px}
+.nav-logo-sub{font-size:11px;color:var(--silver-d);font-weight:500}
 .nav-links{display:flex;gap:8px;align-items:center}
-.nav-link{padding:8px 18px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;transition:all var(--t);border:none}
-.nav-link.outline{border:2px solid var(--border);background:transparent;color:var(--muted)}
-.nav-link.outline:hover{border-color:var(--gold);color:var(--gold)}
-.nav-link.employee-pwa{background:linear-gradient(135deg,var(--purple),var(--purple-d));color:#fff}
-.nav-link.employee-pwa:hover{opacity:.9}
-.nav-link.trainer{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#000}
-.nav-link.trainer:hover{opacity:.9}
+.nav-btn{
+  padding:8px 16px;border-radius:var(--rs);font-size:13px;font-weight:700;
+  cursor:pointer;border:none;transition:all var(--t);white-space:nowrap;
+}
+.nav-btn.outline{background:transparent;border:1.5px solid var(--border2);color:var(--muted)}
+.nav-btn.outline:hover{border-color:var(--gold);color:var(--gold)}
+.nav-btn.gold{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#000}
+.nav-btn.gold:hover{opacity:.9;transform:translateY(-1px)}
+.nav-btn.purple{background:linear-gradient(135deg,var(--purple-d),var(--purple));color:#fff}
+.nav-btn.purple:hover{opacity:.9;transform:translateY(-1px)}
 
-/* ── Hero ── */
-.hero{padding:90px 24px 70px;text-align:center;max-width:820px;margin:0 auto}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1.5px solid var(--gold-d);border-radius:99px;padding:6px 18px;font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:28px}
-.hero-eyebrow-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
-.hero-title{font-size:52px;font-weight:900;color:var(--text);line-height:1.06;margin-bottom:22px;letter-spacing:-2.5px}
-.hero-title .hl{color:var(--gold)}
-.hero-title .hl2{color:var(--purple)}
-.hero-sub{font-size:19px;color:var(--muted);max-width:600px;margin:0 auto 48px;line-height:1.65}
-.hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:52px}
-.cta-btn{padding:15px 30px;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;transition:all var(--t);border:none;display:inline-flex;align-items:center;gap:8px}
-.cta-btn.gold{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#000;box-shadow:0 6px 20px rgba(201,168,76,.3)}
-.cta-btn.gold:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(201,168,76,.4)}
-.cta-btn.purple{background:linear-gradient(135deg,var(--purple-d),var(--purple));color:#fff;box-shadow:0 6px 20px rgba(168,85,247,.3)}
-.cta-btn.purple:hover{transform:translateY(-2px)}
-.cta-btn.outline{background:transparent;border:2px solid var(--border);color:var(--muted)}
-.cta-btn.outline:hover{border-color:var(--silver);color:var(--silver)}
-.hero-note{font-size:12px;color:var(--light);margin-top:-36px;margin-bottom:52px}
-
-/* ── Stats strip ── */
-.stats-strip{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:28px 24px}
-.stats-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
-.stat-item .stat-num{font-size:36px;font-weight:900;letter-spacing:-1.5px;color:var(--gold)}
-.stat-item .stat-lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-top:2px}
-
-/* ── Demo buttons ── */
-.demo-section{max-width:980px;margin:0 auto;padding:64px 24px}
-.section-eyebrow{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
-.section-title-lg{font-size:34px;font-weight:900;letter-spacing:-1.2px;margin-bottom:10px;color:var(--text)}
-.section-sub-lg{font-size:16px;color:var(--muted);max-width:560px;line-height:1.65;margin-bottom:40px}
-.demo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:740px;margin:0 auto}
-.demo-card{border-radius:18px;overflow:hidden;box-shadow:var(--shadow);transition:all var(--t);text-decoration:none;display:flex;flex-direction:column;border:1px solid var(--border)}
-.demo-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(201,168,76,.15)}
-.dc-header{padding:28px 24px 22px;position:relative;overflow:hidden}
-.dc-header::after{content:'';position:absolute;bottom:-20px;right:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.06)}
-.dc-icon{font-size:36px;margin-bottom:10px;position:relative;z-index:1}
-.dc-title{font-size:18px;font-weight:800;color:#fff;position:relative;z-index:1}
-.dc-sub{font-size:12px;color:rgba(255,255,255,.75);margin-top:3px;position:relative;z-index:1}
-.dc-trainer .dc-header{background:linear-gradient(135deg,#3a2800,#c9a84c)}
-.dc-employee-pwa .dc-header{background:linear-gradient(135deg,var(--purple-xl),var(--purple-d))}
-.dc-body{padding:20px 22px;background:var(--surface);flex:1}
-.dc-features{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
-.dc-features li{font-size:13px;color:var(--muted);display:flex;align-items:flex-start;gap:8px}
-.dc-features li::before{content:"✓";font-weight:700;color:var(--green);flex-shrink:0;margin-top:1px}
-.dc-open-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:var(--rs);font-size:14px;font-weight:700;transition:all var(--t);border:none;cursor:pointer;width:100%}
-.dc-open-btn.supervisor-btn{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#000}
-.dc-open-btn.supervisor-btn:hover{opacity:.9}
-.dc-open-btn.employee-btn{background:linear-gradient(135deg,var(--purple-d),var(--purple));color:#fff}
-.dc-open-btn.employee-btn:hover{opacity:.9}
+/* ── HERO ─────────────────────────────────────────────────────────── */
+.hero{
+  padding:100px 24px 80px;text-align:center;
+  max-width:860px;margin:0 auto;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--surface2);border:1.5px solid var(--gold-d);
+  border-radius:99px;padding:6px 18px;
+  font-size:11px;font-weight:700;color:var(--gold);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:32px;
+}
+.hero-badge-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--green);
+  animation:blink 2s infinite;flex-shrink:0;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35;transform:scale(1.3)}}
+.hero-title{
+  font-size:58px;font-weight:900;line-height:1.04;
+  letter-spacing:-3px;margin-bottom:24px;color:var(--text);
+}
+.hl{color:var(--gold)}
+.hl2{color:var(--purple)}
+.hero-tagline{
+  font-size:18px;color:var(--muted);
+  max-width:560px;margin:0 auto 14px;line-height:1.7;
+}
+.hero-power{
+  font-size:13px;color:var(--silver-d);margin-bottom:52px;
+  display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;
+}
+.hero-power-dot{color:var(--gold)}
+.hero-cta{
+  display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;
+}
+.cta-btn{
+  padding:14px 28px;border-radius:var(--r);font-size:15px;font-weight:700;
+  cursor:pointer;border:none;transition:all var(--t);
+  display:inline-flex;align-items:center;gap:8px;
+}
+.cta-btn.gold{
+  background:linear-gradient(135deg,var(--gold-d),var(--gold));
+  color:#000;box-shadow:0 6px 24px rgba(201,168,76,.3);
+}
+.cta-btn.gold:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(201,168,76,.4)}
+.cta-btn.purple{
+  background:linear-gradient(135deg,var(--purple-d),var(--purple));
+  color:#fff;box-shadow:0 6px 24px rgba(168,85,247,.28);
+}
+.cta-btn.purple:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(168,85,247,.4)}
+.cta-btn.outline{
+  background:transparent;border:2px solid var(--border2);color:var(--muted);
+}
+.cta-btn.outline:hover{border-color:var(--silver-d);color:var(--silver)}
 .btn-arr{transition:transform var(--t)}
-.dc-open-btn:hover .btn-arr{transform:translateX(4px)}
+.cta-btn:hover .btn-arr{transform:translateX(3px)}
+.hero-note{font-size:12px;color:var(--light);margin-top:12px}
 
-/* ── Feature strip ── */
-.features-section{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:56px 24px}
-.features-inner{max-width:980px;margin:0 auto}
-.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:28px;margin-top:40px}
-.feature-item{text-align:center;padding:8px}
-.feature-icon{font-size:32px;margin-bottom:10px}
-.feature-name{font-size:14px;font-weight:700;color:var(--text)}
-.feature-desc{font-size:13px;color:var(--muted);line-height:1.5}
+/* ── STATS ─────────────────────────────────────────────────────────── */
+.stats-band{
+  background:var(--surface);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:30px 24px;
+}
+.stats-inner{
+  max-width:900px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center;
+}
+.stat-num{font-size:34px;font-weight:900;letter-spacing:-1.5px;color:var(--gold);line-height:1}
+.stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-top:4px}
 
-/* ── Safety disclaimer ── */
-.disclaimer-section{background:var(--purple-xl);border:1px solid var(--purple-d);border-radius:var(--r);max-width:900px;margin:0 auto 40px;padding:20px 28px}
-.disclaimer-section p{font-size:12px;color:var(--silver);line-height:1.7}
-.disclaimer-section strong{color:var(--gold)}
+/* ── SECTION WRAPPER ─────────────────────────────────────────────── */
+.section{padding:72px 24px;max-width:980px;margin:0 auto}
+.section-eyebrow{
+  font-size:11px;font-weight:700;color:var(--gold);
+  text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;
+}
+.section-h2{font-size:32px;font-weight:900;letter-spacing:-1px;margin-bottom:10px}
+.section-lead{
+  font-size:16px;color:var(--muted);max-width:580px;
+  line-height:1.7;margin-bottom:40px;
+}
+.section-full{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
 
-/* ── Footer ── */
-.site-footer{text-align:center;padding:32px 24px;border-top:1px solid var(--border);color:var(--light);font-size:12px}
+/* ── PORTAL CARDS ─────────────────────────────────────────────── */
+.portal-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:20px;max-width:780px;margin:0 auto;
+}
+.portal-card{
+  border-radius:18px;overflow:hidden;
+  border:1px solid var(--border);
+  display:flex;flex-direction:column;
+  box-shadow:var(--shadow);
+  transition:transform var(--t),box-shadow var(--t);
+  text-decoration:none;
+}
+.portal-card:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,.6)}
+.pc-head{padding:28px 24px 22px;position:relative;overflow:hidden}
+.pc-head::after{
+  content:'';position:absolute;bottom:-24px;right:-24px;
+  width:100px;height:100px;border-radius:50%;
+  background:rgba(255,255,255,.05);
+}
+.pc-icon{font-size:34px;margin-bottom:10px;position:relative;z-index:1}
+.pc-title{font-size:18px;font-weight:800;color:#fff;position:relative;z-index:1;line-height:1.2}
+.pc-sub{font-size:12px;color:rgba(255,255,255,.7);margin-top:4px;position:relative;z-index:1;line-height:1.5}
+.pc-gold .pc-head{background:linear-gradient(135deg,#2a1900,#b8820a,#e2c97e)}
+.pc-purple .pc-head{background:linear-gradient(135deg,var(--purple-xl),#3b1278,var(--purple-d))}
+.pc-body{padding:22px;background:var(--surface);flex:1;display:flex;flex-direction:column}
+.pc-features{list-style:none;display:flex;flex-direction:column;gap:8px;flex:1;margin-bottom:18px}
+.pc-features li{
+  font-size:13px;color:var(--muted);
+  display:flex;align-items:flex-start;gap:8px;
+  overflow-wrap:break-word;word-break:normal;line-height:1.5;
+}
+.pc-features li::before{
+  content:"✓";font-weight:700;color:var(--green);flex-shrink:0;margin-top:1px;
+}
+.pc-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px;border-radius:var(--rs);
+  font-size:14px;font-weight:700;
+  border:none;cursor:pointer;width:100%;
+  transition:all var(--t);
+}
+.pc-btn.gold{background:linear-gradient(135deg,var(--gold-d),var(--gold));color:#000}
+.pc-btn.gold:hover{opacity:.9}
+.pc-btn.purple{background:linear-gradient(135deg,var(--purple-d),var(--purple));color:#fff}
+.pc-btn.purple:hover{opacity:.9}
+.pc-btn:hover .btn-arr{transform:translateX(4px)}
+
+/* ── ARCHITECTURE SECTION ────────────────────────────────────────── */
+.arch-section{padding:72px 24px}
+.arch-inner{max-width:900px;margin:0 auto}
+.arch-card{
+  background:var(--surface2);
+  border:1.5px solid var(--border2);
+  border-radius:18px;padding:36px 40px;
+  position:relative;overflow:hidden;
+  margin-bottom:20px;
+}
+.arch-card::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,.07),transparent 70%);
+  pointer-events:none;
+}
+.arch-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(201,168,76,.1);
+  border:1px solid rgba(201,168,76,.3);
+  border-radius:99px;padding:4px 14px;
+  font-size:11px;font-weight:700;color:var(--gold);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;
+}
+.arch-title{font-size:22px;font-weight:900;color:var(--text);margin-bottom:14px;line-height:1.25;letter-spacing:-.4px}
+.arch-text{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:12px;overflow-wrap:break-word}
+.arch-text strong{color:var(--silver);font-weight:600}
+.arch-text em{color:var(--gold);font-style:normal;font-weight:600}
+
+.arch-mini{
+  background:linear-gradient(135deg,var(--purple-xl),#1a0a30);
+  border:1.5px solid rgba(168,85,247,.25);
+  border-radius:14px;padding:20px 24px;margin-top:16px;
+}
+.arch-mini-label{
+  font-size:11px;font-weight:700;color:var(--purple);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;
+}
+.arch-mini-text{font-size:14px;color:var(--silver);line-height:1.7}
+.arch-mini-text strong{color:var(--gold);font-weight:700}
+
+.arch-tags{
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;
+}
+.arch-tag{
+  padding:5px 12px;border-radius:99px;
+  font-size:12px;font-weight:600;
+  background:var(--surface3);
+  border:1px solid var(--border2);color:var(--muted);
+}
+.arch-tag.gold{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.25);color:var(--gold)}
+.arch-tag.purple{background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.2);color:var(--purple)}
+.arch-tag.green{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.2);color:var(--green)}
+
+/* ── SECTOR VARIANTS ─────────────────────────────────────────────── */
+.variant-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:12px;margin-top:24px;
+}
+.variant-item{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--rs);padding:14px 16px;
+  transition:border-color var(--t),background var(--t);
+}
+.variant-item:hover{border-color:var(--gold-d);background:var(--surface3)}
+.variant-icon{font-size:22px;margin-bottom:8px}
+.variant-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.3}
+.variant-desc{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* ── FEATURES ─────────────────────────────────────────────────── */
+.feat-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:24px;margin-top:40px;
+}
+.feat-item{text-align:center;padding:6px}
+.feat-icon{font-size:30px;margin-bottom:10px}
+.feat-name{font-size:14px;font-weight:700;margin-bottom:4px}
+.feat-desc{font-size:12px;color:var(--muted);line-height:1.55}
+
+/* ── PORTFOLIO BANNER ─────────────────────────────────────────── */
+.portfolio-band{
+  background:linear-gradient(135deg,#0f0800,#1a1000);
+  border-top:1px solid rgba(201,168,76,.2);
+  border-bottom:1px solid rgba(201,168,76,.2);
+  padding:40px 24px;
+}
+.portfolio-inner{max-width:900px;margin:0 auto;text-align:center}
+.portfolio-title{font-size:22px;font-weight:900;color:var(--gold);margin-bottom:10px;letter-spacing:-.5px}
+.portfolio-sub{font-size:14px;color:var(--muted);max-width:600px;margin:0 auto 20px;line-height:1.7}
+.portfolio-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px}
+.portfolio-chip{
+  padding:6px 14px;border-radius:99px;font-size:12px;font-weight:600;
+  background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);
+  color:var(--gold);
+}
+
+/* ── DISCLAIMER ─────────────────────────────────────────────────── */
+.disclaimer{
+  max-width:860px;margin:0 auto 0;padding:20px 32px;
+  background:rgba(30,10,46,.5);
+  border:1px solid rgba(168,85,247,.15);
+  border-radius:var(--r);font-size:12px;color:var(--silver-d);line-height:1.75;
+}
+.disclaimer strong{color:var(--gold)}
+
+/* ── FOOTER ─────────────────────────────────────────────────────── */
+.site-footer{
+  text-align:center;padding:36px 24px;
+  border-top:1px solid var(--border);
+  color:var(--light);font-size:12px;line-height:2;
+}
 .site-footer strong{color:var(--gold)}
+.site-footer a{color:var(--silver-d);text-decoration:none}
+.site-footer a:hover{color:var(--gold)}
 
-@media(max-width:680px){
-  .hero-title{font-size:34px}
+/* ── RESPONSIVE ─────────────────────────────────────────────────── */
+@media(max-width:760px){
+  .hero-title{font-size:38px;letter-spacing:-2px}
+  .hero-tagline{font-size:16px}
   .stats-inner{grid-template-columns:repeat(2,1fr)}
-  .demo-grid{grid-template-columns:1fr}
-  .navbar{padding:14px 16px}
+  .portal-grid{grid-template-columns:1fr}
+  .navbar{padding:12px 16px}
   .nav-links{gap:4px}
-  .nav-link{padding:7px 12px;font-size:12px}
+  .nav-btn{padding:7px 10px;font-size:12px}
+  .section{padding:52px 20px}
+  .arch-card{padding:24px 20px}
+  .hero{padding:72px 20px 60px}
+  .section-h2{font-size:26px}
+  .portfolio-band{padding:32px 20px}
+}
+@media(max-width:480px){
+  .hero-title{font-size:30px}
+  .hero-cta{flex-direction:column;align-items:center}
+  .cta-btn{width:100%;max-width:320px;justify-content:center}
+  .stat-num{font-size:28px}
+  .nav-logo-name{font-size:14px}
+  .nav-logo-sub{display:none}
 }
 </style>
 </head>
 <body>
 
-<!-- Nav -->
-<nav class="navbar">
+<!-- ── NAVBAR ──────────────────────────────────────────────────────── -->
+<nav class="navbar" aria-label="Main navigation">
   <div class="nav-logo">
-    <img src="../../icons/as-logo.png" alt="AutoSkill OS™" class="nav-logo-icon" style="width:36px;height:36px;object-fit:contain;flex-shrink:0"/>
-    <div>
-      <div>AutoSkill OS™</div>
-      <div class="sub">Powered by 4P3X Intelligent AI™</div>
+    <img src="../../icons/as-logo.png" alt="AutoSkill OS™ logo" class="nav-logo-img"/>
+    <div class="nav-logo-text">
+      <div class="nav-logo-name">AutoSkill OS™</div>
+      <div class="nav-logo-sub">Powered by 4P3X Intelligent AI™</div>
     </div>
   </div>
   <div class="nav-links">
-    <a href="clinician-demo.html" class="nav-link trainer">Control Dashboard</a>
-    <a href="/ap3x/employee-pwa/" class="nav-link employee-pwa">Employee Learning PWA</a>
+    <a href="clinician-demo.html" class="nav-btn gold" aria-label="Open Control Dashboard">🏭 Control Dashboard</a>
+    <a href="/ap3x/employee-pwa/" class="nav-btn purple" aria-label="Open Employee Learning PWA">📱 Employee PWA</a>
   </div>
 </nav>
 
-<!-- Hero -->
-<section class="hero">
-  <div class="hero-eyebrow">
-    <span class="hero-eyebrow-dot"></span>
-    Local-First · Offline-Capable · Manufacturing-Grade
+<!-- ── HERO ──────────────────────────────────────────────────────── -->
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="hero-badge" aria-label="Live demo indicator">
+    <span class="hero-badge-dot"></span>
+    Local-First &middot; Offline-Capable &middot; Manufacturing-Grade
   </div>
-  <h1 class="hero-title">
+  <h1 class="hero-title" id="hero-heading">
     <span class="hl">AutoSkill OS™</span><br/>
-    <span class="hl2">Training Control Dashboard™</span>
+    <span class="hl2">Workforce Training Platform</span>
   </h1>
-  <p class="hero-sub">Training Control Dashboard + Employee Learning PWA — track training check-ins, competency progress, process pathway completion, and supervisor flags from one powerful, local-first workspace.</p>
+  <p class="hero-tagline">
+    AI-Assisted Workforce Training &amp; Employee Learning Platform —
+    Control Dashboard + Employee PWA + AI Learning Coach. Local-first, offline-capable, and backend-ready.
+  </p>
+  <p class="hero-power">
+    <span class="hero-power-dot">✦</span>
+    Powered by 4P3X Intelligent AI™
+    <span class="hero-power-dot">·</span>
+    Created by Kyzel Kreates™
+    <span class="hero-power-dot">·</span>
+    Part of the 4P3X Verse™ ecosystem
+  </p>
   <div class="hero-cta">
-    <a href="clinician-demo.html" class="cta-btn gold">🏭 Open Control Dashboard <span class="btn-arr">→</span></a>
-    <a href="/ap3x/employee-pwa/" class="cta-btn purple">📱 Open Employee Learning PWA <span class="btn-arr">→</span></a>
+    <a href="clinician-demo.html" class="cta-btn gold" aria-label="Open training control dashboard">
+      🏭 Open Control Dashboard <span class="btn-arr">→</span>
+    </a>
+    <a href="/ap3x/employee-pwa/" class="cta-btn purple" aria-label="Open employee learning PWA">
+      📱 Open Employee Learning PWA <span class="btn-arr">→</span>
+    </a>
   </div>
-  <p class="hero-note">Created by Kyzel Kreates &middot; Powered by 4P3X Intelligent AI &middot; Local-first &middot; No data leaves your device</p>
+  <p class="hero-note">Demo Mode active &middot; All data is local to your device &middot; No data leaves without explicit sync</p>
 </section>
 
-<!-- Stats -->
-<div class="stats-strip">
+<!-- ── STATS ──────────────────────────────────────────────────────── -->
+<div class="stats-band" aria-label="Platform statistics">
   <div class="stats-inner">
-    <div class="stat-item"><div class="stat-num">10</div><div class="stat-lbl">Daily Check-In Questions</div></div>
-    <div class="stat-item"><div class="stat-num">3</div><div class="stat-lbl">Training Pathway Modules</div></div>
-    <div class="stat-item"><div class="stat-num">15</div><div class="stat-lbl">Guided Support Lessons</div></div>
-    <div class="stat-item"><div class="stat-num">100%</div><div class="stat-lbl">Local-First &amp; Private</div></div>
+    <div><div class="stat-num">3</div><div class="stat-lbl">Training Modules</div></div>
+    <div><div class="stat-num">15</div><div class="stat-lbl">Guided Lessons</div></div>
+    <div><div class="stat-num">10</div><div class="stat-lbl">Daily Check-In Questions</div></div>
+    <div><div class="stat-num">100%</div><div class="stat-lbl">Local-First &amp; Offline-Ready</div></div>
   </div>
 </div>
 
-<!-- Demo access -->
-<section class="demo-section">
-  <div class="section-eyebrow">Platform Access</div>
-  <h2 class="section-title-lg">Two Portals. One Workspace.</h2>
-  <p class="section-sub-lg">The Control Dashboard and Employee Learning PWA work together — all training data stays local to the device.</p>
+<!-- ── ARCHITECTURE EXPLANATION ────────────────────────────────────── -->
+<div class="arch-section" id="architecture" aria-labelledby="arch-heading">
+  <div class="arch-inner">
 
-  <div class="demo-grid">
-    <!-- Supervisor -->
-    <a href="clinician-demo.html" class="demo-card dc-trainer">
-      <div class="dc-header">
-        <div class="dc-icon">🏥</div>
-        <div class="dc-title">Control Dashboard</div>
-        <div class="dc-sub">Full monitoring &amp; employee progress management</div>
-      </div>
-      <div class="dc-body">
-        <ul class="dc-features">
-          <li>Employee competency metrics &amp; training flags</li>
-          <li>Daily check-in review &amp; trend analysis</li>
-          <li>Training pathway progress tracking</li>
-          <li>Supervisor notes &amp; follow-up actions</li>
-          <li>Analytics, timeline &amp; reporting</li>
-          <li>Demo mode ON/OFF toggle in Settings</li>
-        </ul>
-        <button class="dc-open-btn supervisor-btn">Open Control Dashboard <span class="btn-arr">→</span></button>
-      </div>
-    </a>
+    <div class="arch-card">
+      <div class="arch-badge">🧩 Architecture Overview</div>
+      <h2 class="arch-title" id="arch-heading">One Modular Architecture. Many Workforce Training Products.</h2>
+      <p class="arch-text">
+        <strong>AutoSkill OS™</strong> is built on a reusable modular software architecture designed by <em>Kyzel Kreates™</em>.
+        Instead of being a single fixed training app, it uses a flexible
+        <em>dashboard + PWA + AI guidance structure</em> that can be safely
+        <em>refactored</em> into many different workforce training, onboarding, compliance, learning,
+        coaching, and operational support platforms.
+      </p>
+      <p class="arch-text">
+        The same foundation supports different industries by changing the training content, role structure,
+        branding, workflows, data model, dashboard panels, and PWA experience —
+        while <strong>preserving the proven core architecture</strong>.
+        This means AutoSkill OS™ demonstrates more than one product — it demonstrates a
+        <em>scalable product system</em>.
+      </p>
+      <p class="arch-text">
+        <strong>Demo Mode</strong> shows the product using safe local demonstration data.
+        <strong>Live Mode</strong> is designed so the same system can be connected to a backend such as
+        Supabase, Firebase, or another suitable provider to support real users, authentication,
+        persistent records, progress syncing, reporting, dashboards, and live operational workflows.
+      </p>
+      <p class="arch-text">
+        This <em>modular base architecture</em> approach allows one strong base system to become many
+        <em>sector-specific variants</em> — including manufacturing training, employee onboarding,
+        compliance learning, safety training, care training, service induction, coaching pathways,
+        and internal company knowledge systems.
+      </p>
 
-    <!-- Employee Learning PWA -->
-    <a href="/ap3x/employee-pwa/" class="demo-card dc-employee-pwa">
-      <div class="dc-header">
-        <div class="dc-icon">🧘</div>
-        <div class="dc-title">Employee Learning PWA</div>
-        <div class="dc-sub">Installable manufacturing training companion</div>
+      <div class="arch-mini">
+        <div class="arch-mini-label">4P3X Verse™ Ecosystem</div>
+        <div class="arch-mini-text">
+          <strong>AutoSkill OS™</strong> is part of the <strong>4P3X Verse™</strong> ecosystem:
+          a reusable AI-assisted dashboard and PWA foundation that can be refactored into many branded,
+          sector-specific learning and operations platforms.
+          Company branding, colours, lesson content, employee pathways, onboarding stages, reporting panels,
+          and user roles can be configured for different use cases while preserving the core
+          <strong>4P3X Intelligent AI™</strong> architecture.
+          The required creator line — <strong>Powered by 4P3X Intelligent AI™ Created by Kyzel Kreates™</strong> — is preserved in all variants.
+        </div>
       </div>
-      <div class="dc-body">
-        <ul class="dc-features">
-          <li>Daily training check-in (10 questions)</li>
-          <li>Manufacturing Training Pathway modules</li>
-          <li>Competency and skills tracking</li>
-          <li>Skill practices &amp; process checkpoints</li>
-          <li>Progress summary &amp; streak tracking</li>
-          <li>Installable as a PWA on any device</li>
-        </ul>
-        <button class="dc-open-btn employee-btn">Open Employee Learning PWA <span class="btn-arr">→</span></button>
+
+      <div class="arch-tags">
+        <span class="arch-tag gold">Modular Base Architecture</span>
+        <span class="arch-tag gold">Sector-Specific Variants</span>
+        <span class="arch-tag purple">Dashboard + PWA Foundation</span>
+        <span class="arch-tag purple">AI-Assisted Learning</span>
+        <span class="arch-tag green">Demo / Live-Ready</span>
+        <span class="arch-tag green">Local-First / Offline</span>
+        <span class="arch-tag">Backend-Ready</span>
+        <span class="arch-tag">PWA-First Design</span>
+        <span class="arch-tag">Rapid Refactoring</span>
       </div>
-    </a>
+    </div>
+
+    <!-- Sector variants -->
+    <h3 style="font-size:18px;font-weight:800;margin:32px 0 8px;color:var(--text)">Possible Sector-Specific Variants</h3>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:4px">The same modular base — refactored for different industries and use cases:</p>
+    <div class="variant-grid">
+      <div class="variant-item"><div class="variant-icon">🏭</div><div class="variant-name">Manufacturing Training</div><div class="variant-desc">Process modules, quality control, site orientation, competency tracking</div></div>
+      <div class="variant-item"><div class="variant-icon">🛡️</div><div class="variant-name">Safety &amp; Compliance</div><div class="variant-desc">Mandatory safety acknowledgements, certification tracking, audit trails</div></div>
+      <div class="variant-item"><div class="variant-icon">🏥</div><div class="variant-name">Care &amp; Support Training</div><div class="variant-desc">Sector-specific care knowledge, policy awareness, skills development</div></div>
+      <div class="variant-item"><div class="variant-icon">🧑‍💼</div><div class="variant-name">Employee Onboarding</div><div class="variant-desc">Company induction, HR policy training, role-specific learning pathways</div></div>
+      <div class="variant-item"><div class="variant-icon">📚</div><div class="variant-name">Skills Development</div><div class="variant-desc">Continuous professional development, upskilling, knowledge verification</div></div>
+      <div class="variant-item"><div class="variant-icon">🚀</div><div class="variant-name">Custom Client Variant</div><div class="variant-desc">Branding, content, and workflows configured for any employer or training provider</div></div>
+    </div>
+
   </div>
-</section>
+</div>
 
-<!-- Features -->
-<section class="features-section">
-  <div class="features-inner">
-    <div class="section-eyebrow">Platform Capabilities</div>
-    <h2 class="section-title-lg" style="color:var(--text)">Built for Real Manufacturing Training Workflows</h2>
-    <div class="feature-grid">
-      <div class="feature-item"><div class="feature-icon">🔒</div><div class="feature-name">Local-First Privacy</div><div class="feature-desc">All data stored locally. Nothing leaves the device without explicit sync.</div></div>
-      <div class="feature-item"><div class="feature-icon">📊</div><div class="feature-name">Progress Tracking</div><div class="feature-desc">Automated training flags for low competency scores, missing safety checks, and overdue training.</div></div>
-      <div class="feature-item"><div class="feature-icon">📋</div><div class="feature-name">Training Check-Ins</div><div class="feature-desc">10-question employee training check-in with performance, readiness, and engagement and coping tracking.</div></div>
-      <div class="feature-item"><div class="feature-icon">🎓</div><div class="feature-name">Training Pathway</div><div class="feature-desc">Structured process training modules across 3 progressive pathways with completion tracking.</div></div>
-      <div class="feature-item"><div class="feature-icon">📱</div><div class="feature-name">Installable PWA</div><div class="feature-desc">Employee Learning PWA installs on iOS and Android as a standalone app — no app store required.</div></div>
-      <div class="feature-item"><div class="feature-icon">🎛️</div><div class="feature-name">Demo Mode</div><div class="feature-desc">Toggle demo data ON/OFF. Present with realistic sample data or use with real patients.</div></div>
+<!-- ── PORTAL ACCESS ────────────────────────────────────────────────── -->
+<div class="section-full" id="demo-access">
+  <div class="section" style="max-width:900px">
+    <div class="section-eyebrow">Platform Access</div>
+    <h2 class="section-h2">Two Portals. One Integrated Workspace.</h2>
+    <p class="section-lead">The Control Dashboard and Employee Learning PWA work together — all training data stays local to the device. Toggle to Live Mode when your backend is configured.</p>
+    <div class="portal-grid">
+
+      <!-- Control Dashboard -->
+      <a href="clinician-demo.html" class="portal-card pc-gold" aria-label="Open Training Control Dashboard">
+        <div class="pc-head">
+          <div class="pc-icon">🏭</div>
+          <div class="pc-title">Control Dashboard</div>
+          <div class="pc-sub">Full employee training monitoring &amp; progress management</div>
+        </div>
+        <div class="pc-body">
+          <ul class="pc-features" aria-label="Control Dashboard features">
+            <li>Employee competency metrics &amp; training flags</li>
+            <li>Daily check-in review &amp; trend analysis</li>
+            <li>Training pathway &amp; module progress tracking</li>
+            <li>Supervisor notes, reviews &amp; follow-up actions</li>
+            <li>Analytics, timeline, reports &amp; evidence records</li>
+            <li>Demo Mode ON/OFF toggle in Settings</li>
+            <li>Backend configuration (Supabase, Firebase, custom)</li>
+          </ul>
+          <button class="pc-btn gold" aria-label="Launch Control Dashboard">
+            Open Control Dashboard <span class="btn-arr">→</span>
+          </button>
+        </div>
+      </a>
+
+      <!-- Employee Learning PWA -->
+      <a href="/ap3x/employee-pwa/" class="portal-card pc-purple" aria-label="Open Employee Learning PWA">
+        <div class="pc-head">
+          <div class="pc-icon">📱</div>
+          <div class="pc-title">Employee Learning PWA</div>
+          <div class="pc-sub">Installable manufacturing training companion app</div>
+        </div>
+        <div class="pc-body">
+          <ul class="pc-features" aria-label="Employee PWA features">
+            <li>Daily training check-in (10 guided questions)</li>
+            <li>Manufacturing Training Pathway — 3 modules, 15 lessons</li>
+            <li>AI Learning Coach — guidance &amp; skill practices</li>
+            <li>Competency tracking &amp; progress dashboard</li>
+            <li>Safety acknowledgement &amp; evidence capture</li>
+            <li>Installable as a PWA — works fully offline</li>
+          </ul>
+          <button class="pc-btn purple" aria-label="Launch Employee Learning PWA">
+            Open Employee Learning PWA <span class="btn-arr">→</span>
+          </button>
+        </div>
+      </a>
+
     </div>
   </div>
+</div>
+
+<!-- ── FEATURES ────────────────────────────────────────────────────── -->
+<section class="section" aria-labelledby="features-heading">
+  <div class="section-eyebrow">Platform Capabilities</div>
+  <h2 class="section-h2" id="features-heading">Built for Real Workforce Training Workflows</h2>
+  <div class="feat-grid">
+    <div class="feat-item"><div class="feat-icon">🔒</div><div class="feat-name">Local-First Privacy</div><div class="feat-desc">All data stored locally. Nothing leaves the device without explicit sync configuration.</div></div>
+    <div class="feat-item"><div class="feat-icon">📶</div><div class="feat-name">Offline-Capable PWA</div><div class="feat-desc">Service worker caching enables full use without an internet connection.</div></div>
+    <div class="feat-item"><div class="feat-icon">🤖</div><div class="feat-name">AI Learning Coach</div><div class="feat-desc">4P3X Intelligent AI™ provides personalised guidance and training nudges.</div></div>
+    <div class="feat-item"><div class="feat-icon">📊</div><div class="feat-name">Progress Tracking</div><div class="feat-desc">Real-time competency metrics, streak tracking, XP, and pathway completion.</div></div>
+    <div class="feat-item"><div class="feat-icon">🔄</div><div class="feat-name">Demo / Live Mode</div><div class="feat-desc">Switch between safe demo data and live backend instantly in Settings.</div></div>
+    <div class="feat-item"><div class="feat-icon">🧩</div><div class="feat-name">Modular Architecture</div><div class="feat-desc">Refactorable base for manufacturing, compliance, onboarding, and more.</div></div>
+  </div>
 </section>
 
-<!-- Safety disclaimer -->
-<div style="padding:0 24px 0">
-  <div class="disclaimer-section">
-    <p><strong>⚠️ Platform Notice:</strong> AutoSkill OS™ supports manufacturing workforce training, competency tracking, and supervisor-guided progress monitoring. It does not provide emergency safety response or a replacement for site-specific safety protocols. All competency indicators are informational only and must be reviewed by a qualified supervisor or training manager. <strong>For on-site emergencies, follow your site emergency procedure immediately.</strong></p>
+<!-- ── PORTFOLIO BAND ───────────────────────────────────────────────── -->
+<div class="portfolio-band" aria-labelledby="portfolio-heading">
+  <div class="portfolio-inner">
+    <h2 class="portfolio-title" id="portfolio-heading">Portfolio &amp; Investor-Ready</h2>
+    <p class="portfolio-sub">
+      AutoSkill OS™ is a working demo/live-ready product demonstrating reusable architecture,
+      rapid refactoring, PWA-first design, dashboard control, employee learning flow,
+      demo/live switching, and backend-ready planning.
+      It can be branded and configured for different employers, training providers, departments, and sectors.
+    </p>
+    <div class="portfolio-chips">
+      <span class="portfolio-chip">Working Demo</span>
+      <span class="portfolio-chip">Backend-Ready</span>
+      <span class="portfolio-chip">PWA-First Design</span>
+      <span class="portfolio-chip">Reusable Architecture</span>
+      <span class="portfolio-chip">Rapid Refactoring</span>
+      <span class="portfolio-chip">Client-Brandable</span>
+      <span class="portfolio-chip">4P3X Verse™ Ecosystem</span>
+    </div>
   </div>
 </div>
 
-<!-- Footer -->
-<footer class="site-footer">
-  <strong>AutoSkill OS™</strong> &middot; Employee Learning PWA + Training Control Dashboard<br/>
-  Powered by 4P3X Intelligent AI™ &middot; Created by Kyzel Kreates™ &middot; Local-first architecture &middot; Demo Mode shows the product. Live Mode runs the product.
+<!-- ── DISCLAIMER ──────────────────────────────────────────────────── -->
+<div style="padding:32px 24px">
+  <div class="disclaimer" role="note" aria-label="Platform notice">
+    <p>
+      <strong>AutoSkill OS™ Notice:</strong>
+      AutoSkill OS™ supports training awareness, competency tracking, supervisor review, and evidence capture.
+      It does not replace workplace safety procedures, legal compliance duties, qualified supervision, or employer responsibility.
+      Demo Mode displays illustrative sample data only. No live backend is active by default.
+      Live Mode requires explicit backend configuration by the account holder.
+    </p>
+  </div>
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────── -->
+<footer class="site-footer" aria-label="Site footer">
+  <div><strong>AutoSkill OS™</strong> — AI-Assisted Workforce Training &amp; Employee Learning Platform</div>
+  <div>Powered by <strong>4P3X Intelligent AI™</strong> &middot; Created by <strong>Kyzel Kreates™</strong> &middot; Part of the <strong>4P3X Verse™</strong> ecosystem</div>
+  <div style="margin-top:6px;color:var(--light)">Local-first &middot; Offline-capable &middot; Backend-ready &middot; Modular base architecture</div>
 </footer>
 
-<script>window.scrollTo(0,0);</script>
 </body>
 </html>

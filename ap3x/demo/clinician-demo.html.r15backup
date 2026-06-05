@@ -318,76 +318,6 @@ tr:hover td{background:var(--surface2)}
   .tc-table th,.tc-table td{padding:8px 8px}
   .hide-mobile{display:none!important}
 }
-
-/* ── Run 15: Global Polish ─────────────────────────────────────── */
-/* Text overflow protection */
-.view-title,.view-sub,.section-title,.section-sub,.topbar-title,.sb-name{
-  overflow-wrap:break-word;word-break:normal;
-}
-/* Card consistent sizing */
-.card,.ac-card,.rpt-card,.note-card,.sq-item,.employee-grid .pc{
-  height:auto;min-height:0;overflow-wrap:break-word;word-break:normal;
-}
-/* Responsive stat row */
-@media(max-width:900px){
-  .stats-row{grid-template-columns:repeat(3,1fr)}
-}
-@media(max-width:600px){
-  .stats-row{grid-template-columns:repeat(2,1fr)}
-  .analytics-row{grid-template-columns:1fr}
-  .view-header{flex-direction:column;align-items:flex-start;gap:10px}
-  .topbar-right .topbar-search{display:none}
-}
-/* Prevent horizontal overflow on main area */
-.main-area,.view-body,.view{max-width:100%;overflow-x:hidden}
-/* Employee grid responsive */
-.employee-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
-/* Button text protection */
-button,.nav-item,.btn-primary,.btn-secondary{
-  overflow-wrap:break-word;word-break:normal;white-space:normal;
-}
-/* Table mobile */
-@media(max-width:760px){
-  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  table{min-width:600px}
-}
-/* Note card readability */
-.note-card{padding:14px;line-height:1.7;overflow-wrap:break-word}
-.nc-text{overflow-wrap:break-word;word-break:normal;white-space:normal}
-/* Settings form on mobile */
-@media(max-width:600px){
-  .setting-row{flex-direction:column;align-items:flex-start;gap:6px}
-  .setting-row input,.setting-row select{width:100%!important}
-}
-/* Sidebar responsive */
-@media(max-width:880px){
-  .sidebar{position:fixed;left:-260px;top:0;bottom:0;z-index:1000;transition:left .25s ease;box-shadow:none}
-  .sidebar.open{left:0;box-shadow:4px 0 32px rgba(0,0,0,.6)}
-  .overlay.visible{display:block}
-  .hamburger{display:flex!important}
-  .main-area{width:100%}
-}
-@media(min-width:881px){.hamburger{display:none!important}}
-/* View body padding */
-.view-body{padding:20px 28px 40px;flex:1;overflow-y:auto}
-@media(max-width:600px){.view-body{padding:16px 14px 32px}}
-/* Detail panel */
-.detail-grid{overflow-wrap:break-word}
-/* Empty state */
-.empty-state-block{
-  text-align:center;padding:40px 20px;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--r);overflow-wrap:break-word;
-}
-.es-title{font-size:16px;font-weight:700;margin-bottom:8px;overflow-wrap:break-word}
-/* Ensure long employee names don't break layout */
-.pc-name,.nc-employee,.detail-name{overflow-wrap:break-word;word-break:normal}
-/* Donut wrap on small screens */
-@media(max-width:480px){
-  .donut-wrap{flex-direction:column}
-}
-/* Modal/detail panel scrolls from top */
-.detail-panel{scroll-behavior:auto}
 </style>
 </head>
 <body>
@@ -463,30 +393,6 @@ button,.nav-item,.btn-primary,.btn-secondary{
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn-secondary" onclick="showView('checkins')">📋 Check-Ins</button>
         <button class="btn-primary" onclick="showView('alerts')">🔔 Training Flags</button>
-      </div>
-    </div>
-
-    <!-- Architecture Info Panel -->
-    <div id="archInfoPanel" style="background:linear-gradient(135deg,#0f0800,#1a1000);border:1.5px solid rgba(201,168,76,.2);border-radius:14px;padding:18px 22px;margin-bottom:20px;position:relative;overflow:hidden">
-      <div style="position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.06),transparent 70%);pointer-events:none"></div>
-      <div style="display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap">
-        <div style="flex:1;min-width:220px">
-          <div style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">🧩 AutoSkill OS™ — Modular Base Architecture</div>
-          <div style="font-size:13px;color:var(--silver);line-height:1.7;overflow-wrap:break-word">
-            Built on a reusable <strong style="color:var(--gold)">dashboard + PWA + AI guidance foundation</strong> designed by <strong style="color:var(--gold)">Kyzel Kreates™</strong>.
-            This architecture can be safely <strong style="color:var(--gold)">refactored</strong> into sector-specific variants including manufacturing training,
-            employee onboarding, compliance learning, safety training, and more —
-            preserving the proven <strong style="color:var(--gold)">4P3X Intelligent AI™</strong> core.
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
-          <div style="display:flex;flex-wrap:wrap;gap:6px">
-            <span style="padding:4px 10px;border-radius:99px;font-size:11px;font-weight:600;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);color:var(--gold)">Demo / Live-Ready</span>
-            <span style="padding:4px 10px;border-radius:99px;font-size:11px;font-weight:600;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);color:#a855f7">4P3X Verse™</span>
-            <span style="padding:4px 10px;border-radius:99px;font-size:11px;font-weight:600;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:#22c55e">Backend-Ready</span>
-          </div>
-          <button onclick="document.getElementById('archInfoPanel').style.display='none'" style="padding:5px 12px;background:transparent;border:1px solid rgba(255,255,255,.1);color:var(--muted);border-radius:99px;font-size:11px;cursor:pointer;align-self:flex-end" aria-label="Dismiss architecture info">Dismiss</button>
-        </div>
       </div>
     </div>
     <div class="stats-row" id="statsRow"></div>
@@ -604,11 +510,11 @@ button,.nav-item,.btn-primary,.btn-secondary{
       <button class="btn-save-settings" onclick="saveProfileSettings()">Save Profile</button>
     </div>
     <div class="settings-section">
-      <div class="settings-title">🔔 Wellbeing &amp; Supervisor Support Configuration</div>
+      <div class="settings-title">🆘 Crisis Support Configuration</div>
       <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">Configure emergency contact information shown to employees. This does not replace emergency services.</div>
-      <div class="setting-row"><div><div class="setting-label">Support Line Name</div></div><input id="crisisName" type="text" class="crisis-field" style="width:200px" placeholder="e.g. Samaritans"/></div>
-      <div class="setting-row"><div><div class="setting-label">Support Line Number / URL</div></div><input id="crisisContact" type="text" class="crisis-field" style="width:200px" placeholder="e.g. 116 123"/></div>
-      <button class="btn-save-settings" onclick="saveCrisisSettings()">Save Support Settings</button>
+      <div class="setting-row"><div><div class="setting-label">Crisis Line Name</div></div><input id="crisisName" type="text" class="crisis-field" style="width:200px" placeholder="e.g. Samaritans"/></div>
+      <div class="setting-row"><div><div class="setting-label">Crisis Line Number / URL</div></div><input id="crisisContact" type="text" class="crisis-field" style="width:200px" placeholder="e.g. 116 123"/></div>
+      <button class="btn-save-settings" onclick="saveCrisisSettings()">Save Crisis Settings</button>
     </div>
     <!-- Run 14: AI Learning Coach Global Settings -->
     <div class="settings-section" id="ai-coach-settings-section">
@@ -1275,7 +1181,7 @@ function renderPatientsTable(search=''){
   tbody.querySelectorAll('tr').forEach(row=>row.addEventListener('click',()=>openDetail(row.dataset.pid)));
 }
 
-function renderHighRisk(){const hrs=PATIENTS.filter(p=>['CRITICAL','HIGH','MISSING','MISSING_DATA'].includes(p.risk));const el=document.getElementById('highRiskContent');if(!hrs.length){el.innerHTML='<p class="empty-state">✅ No employees with active training support flags.</p>';return;}el.innerHTML=`<div class="employee-grid">${hrs.map(p=>patCard(p)).join('')}</div>`;el.querySelectorAll('.pc').forEach(c=>c.addEventListener('click',()=>openDetail(c.dataset.pid)));}
+function renderHighRisk(){const hrs=PATIENTS.filter(p=>['CRITICAL','HIGH','MISSING','MISSING_DATA'].includes(p.risk));const el=document.getElementById('highRiskContent');if(!hrs.length){el.innerHTML='<p class="empty-state">✅ No patients with active support flags.</p>';return;}el.innerHTML=`<div class="employee-grid">${hrs.map(p=>patCard(p)).join('')}</div>`;el.querySelectorAll('.pc').forEach(c=>c.addEventListener('click',()=>openDetail(c.dataset.pid)));}
 
 function renderCheckins(){
   const f=(document.getElementById('ciFilter')||{}).value||'all';let cis=[...ALL_CHECKINS];
@@ -1324,7 +1230,7 @@ function renderAllNotes(){
   const all=PATIENTS.flatMap(p=>p.notes.map(n=>({...n,patient:p}))).sort((a,b)=>b.date-a.date);
   const el=document.getElementById('notesList');
   if(!all.length){el.innerHTML='<p class="empty-state">No supervisor notes yet.</p>';return;}
-  el.innerHTML=all.slice(0,30).map(n=>`<div class="note-card"><div class="nc-employee">📝 ${n.patient.name} <span style="color:var(--muted);font-weight:400">— ${n.patient.department||n.patient.condition||''}</span></div><div class="nc-text">${n.text}</div><div class="nc-meta">${new Date(n.date).toLocaleString()} · ${n.by} ${n.followUp?`· <strong>${n.followUp}</strong>`:''}</div></div>`).join('');
+  el.innerHTML=all.slice(0,30).map(n=>`<div class="note-card"><div class="nc-employee">📝 ${n.patient.name} <span style="color:var(--muted);font-weight:400">— ${n.patient.condition}</span></div><div class="nc-text">${n.text}</div><div class="nc-meta">${new Date(n.date).toLocaleString()} · ${n.by} ${n.followUp?`· <strong>${n.followUp}</strong>`:''}</div></div>`).join('');
 }
 
 function globalSearch(q){if(!q)return;const p=PATIENTS.find(x=>x.name.toLowerCase().includes(q.toLowerCase())||x.id.toLowerCase().includes(q.toLowerCase()));if(p)openDetail(p.id);}
@@ -3000,7 +2906,7 @@ function saveProfileSettings(){
   therapistRole=document.getElementById('settingRole').value.trim()||'Training Manager';
   sSet('4p3x_therapist_name',therapistName);sSet('4p3x_therapist_role',therapistRole);updateTherapistProfile();showToast('Profile saved ✓');
 }
-function saveCrisisSettings(){sSet('4p3x_crisis_name',document.getElementById('crisisName').value.trim());sSet('4p3x_crisis_contact',document.getElementById('crisisContact').value.trim());showToast('Support settings saved ✓');}
+function saveCrisisSettings(){sSet('4p3x_crisis_name',document.getElementById('crisisName').value.trim());sSet('4p3x_crisis_contact',document.getElementById('crisisContact').value.trim());showToast('Crisis settings saved ✓');}
 
 // ════════════════════════════════════════════════════════════════════════════
 // Run 14: AI Coach Dashboard Settings Handlers
