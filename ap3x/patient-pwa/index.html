@@ -20,7 +20,7 @@
 
 <title>AutoSkill OS™ — My Training</title>
 <link rel="manifest" href="./manifest.json"/>
-<link rel="stylesheet" href="./patient.css"/>
+<link rel="stylesheet" href="./patient.css"/><!-- AutoSkill OS™ employee styles (filename preserved for deployment) -->
 </head>
 <body class="theme-dark">
 
@@ -46,7 +46,7 @@
 // ── Service Worker Registration ──────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./ap3x-sw.js?v=11', { scope: '/ap3x/patient-pwa/' })
+    navigator.serviceWorker.register('./ap3x-sw.js?v=13', { scope: '/' })
       .then(reg => console.log('[AutoSkill SW v7] Registered:', reg.scope))
       .catch(err => console.warn('[AutoSkill SW] Registration failed:', err));
   });

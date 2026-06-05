@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<!-- Control Dashboard is not a PWA — no manifest. Employee Learning PWA: /ap3x/patient-pwa/ -->
+<!-- AutoSkill OS™ Control Dashboard. Employee Learning PWA: /ap3x/employee-pwa/ (alias: /ap3x/patient-pwa/) -->
 <title>AutoSkill OS™ — Control Dashboard</title>
 <style>
 :root{
@@ -828,7 +828,7 @@ const DEMO_PATIENTS = [
    checkins:[
      {date:Date.now()-3600000*5,score:7,rest:5,priority:'HIGH',triggers:['Defect Classification'],note:'Unsure how to classify a borderline defect today.',coping:[]},
      {date:Date.now()-86400000,score:5,rest:7,priority:'MEDIUM',triggers:['Reporting Process'],note:'Completed defect report with supervisor assistance.',coping:['Supervisor Guidance']},
-     {date:Date.now()-86400000*2,score:4,rest:8,priority:'LOW',triggers:[],note:'Good session. Quiz passed 100%.',coping:['Checklist Review']}
+     {date:Date.now()-86400000*2,score:4,rest:8,priority:'LOW',triggers:[],note:'Good training session. Quiz passed 100%.',coping:['Checklist Review']}
    ],isDemo:true},
   {id:'P003',name:'Riley Evans',age:22,condition:'Logistics Trainee',avatar:'#10b981',initials:'RE',
    scores:[3,2,3,3,2,3,2],sleep:[8,7,8,7,8,8,7],streak:21,
@@ -1133,7 +1133,7 @@ function renderPatientsTable(search=''){
   else if(sortF==='name')pts.sort((a,b)=>a.name.localeCompare(b.name));
   else if(sortF==='score')pts.sort((a,b)=>(b.scores[b.scores.length-1]||0)-(a.scores[a.scores.length-1]||0));
   else pts.sort((a,b)=>(b.checkins[0]?.date||0)-(a.checkins[0]?.date||0));
-  document.getElementById('patientCount').textContent=!demoMode&&PATIENTS.length===0?'No patients added yet':`${pts.length} of ${PATIENTS.length} patients`;
+  document.getElementById('patientCount').textContent=!demoMode&&PATIENTS.length===0?'No employees added yet':`${pts.length} of ${PATIENTS.length} employees`;
   const tbody=document.getElementById('patientsTableBody');
   if(!demoMode&&PATIENTS.length===0){tbody.innerHTML='<tr><td colspan="9"><div class="empty-state-block"><div class="es-icon">👥</div><div class="es-title">No patients have been added yet.</div><div class="es-sub">Demo Mode is off. Add real patients or connect a backend to start monitoring.</div></div></td></tr>';return;}
   if(!pts.length){tbody.innerHTML='<tr><td colspan="9" class="empty-state">No employees match.</td></tr>';return;}
@@ -1179,14 +1179,14 @@ function renderTimeline(){
 function renderAlerts(){
   const el=document.getElementById('alertsList');
   if(!ALERTS.length){el.innerHTML='<p class="empty-state">No alerts.</p>';return;}
-  el.innerHTML=ALERTS.map(a=>`<div class="alert-card ${a.risk} ${a.acked?'acked':''}" id="alert-${a.id}"><div class="alert-icon">${a.risk==='CRITICAL'?'🚨':a.risk==='MISSING'?'❓':'⚠️'}</div><div class="alert-body"><div class="alert-title">${a.title}</div><div class="alert-sub">${a.sub}</div><div class="alert-time">${tAgo(a.time)}</div><div class="alert-actions"><button class="btn-ack" onclick="ackAlert('${a.id}')">✓ Acknowledge</button><button class="btn-primary sm" onclick="openDetail('${a.pid}')">Review Patient</button></div></div></div>`).join('');
+  el.innerHTML=ALERTS.map(a=>`<div class="alert-card ${a.risk} ${a.acked?'acked':''}" id="alert-${a.id}"><div class="alert-icon">${a.risk==='CRITICAL'?'🚨':a.risk==='MISSING'?'❓':'⚠️'}</div><div class="alert-body"><div class="alert-title">${a.title}</div><div class="alert-sub">${a.sub}</div><div class="alert-time">${tAgo(a.time)}</div><div class="alert-actions"><button class="btn-ack" onclick="ackAlert('${a.id}')">✓ Acknowledge</button><button class="btn-primary sm" onclick="openDetail('${a.pid}')">Review Employee</button></div></div></div>`).join('');
   const u=ALERTS.filter(a=>!a.acked).length;document.getElementById('alertBadge').textContent=u||'';document.getElementById('notifCount').textContent=u||'';
 }
 function ackAlert(id){const a=ALERTS.find(x=>x.id===id);if(a)a.acked=true;renderAlerts();showToast('Alert acknowledged');}
 function ackAll(){ALERTS.forEach(a=>a.acked=true);renderAlerts();showToast('All alerts acknowledged ✓');}
 
 function renderAllNotes(){
-  if(!demoMode&&PATIENTS.length===0){const el=document.getElementById('notesList');if(el)el.innerHTML='<div class="empty-state-block"><div class="es-icon">📝</div><div class="es-title">No live training progress has been recorded yet.</div><div class="es-sub">Demo Mode is off. Patient notes and progress will appear here when real patients are active.</div></div>';return;}
+  if(!demoMode&&PATIENTS.length===0){const el=document.getElementById('notesList');if(el)el.innerHTML='<div class="empty-state-block"><div class="es-icon">📝</div><div class="es-title">No live training progress has been recorded yet.</div><div class="es-sub">Demo Mode is off. Employee training notes and progress will appear here when live employee data is active.</div></div>';return;}
   const all=PATIENTS.flatMap(p=>p.notes.map(n=>({...n,patient:p}))).sort((a,b)=>b.date-a.date);
   const el=document.getElementById('notesList');
   if(!all.length){el.innerHTML='<p class="empty-state">No supervisor notes yet.</p>';return;}
@@ -2780,7 +2780,7 @@ function updateSyncUI(){
 function getPwaUrl(){
   // EMPLOYEE_PWA_ROUTE — canonical path, absolute from domain root
   // Always resolves to the Employee Learning PWA regardless of dashboard URL
-  const EMPLOYEE_PWA_ROUTE = '/ap3x/patient-pwa/';
+  const EMPLOYEE_PWA_ROUTE = '/ap3x/employee-pwa/'; // canonical — /ap3x/patient-pwa/ still serves (backward compat)
   return window.location.origin + EMPLOYEE_PWA_ROUTE;
 }
 

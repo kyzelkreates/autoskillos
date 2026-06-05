@@ -1,8 +1,8 @@
 {
-  "name": "AutoSkill OS™",
-  "short_name": "AutoSkill",
-  "description": "Manufacturing training dashboard and employee learning PWA.",
-  "start_url": "/ap3x/patient-pwa/",
+  "name": "AutoSkill OS\u2122 Employee Training",
+  "short_name": "AutoSkill OS\u2122",
+  "description": "AutoSkill OS\u2122 Employee Learning PWA \u2014 Manufacturing Training Portal. Powered by 4P3X Intelligent AI\u2122. Created by Kyzel Kreates\u2122.",
+  "start_url": "/ap3x/employee-pwa/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#0a0a0a",
@@ -78,7 +78,7 @@
       "name": "Training Check-In",
       "short_name": "Check-In",
       "description": "Complete today's training check-in",
-      "url": "/ap3x/patient-pwa/index.html?tab=checkin",
+      "url": "/ap3x/employee-pwa/index.html?tab=checkin",
       "icons": [
         {
           "src": "/icons/as-96.png",
@@ -90,7 +90,7 @@
       "name": "Training Pathway",
       "short_name": "Pathway",
       "description": "Continue your assigned training pathway",
-      "url": "/ap3x/patient-pwa/index.html?tab=lessons",
+      "url": "/ap3x/employee-pwa/index.html?tab=lessons",
       "icons": [
         {
           "src": "/icons/as-96.png",
@@ -102,7 +102,7 @@
       "name": "My Progress",
       "short_name": "Progress",
       "description": "View your competency progress",
-      "url": "/ap3x/patient-pwa/index.html?tab=progress",
+      "url": "/ap3x/employee-pwa/index.html?tab=progress",
       "icons": [
         {
           "src": "/icons/as-96.png",
@@ -111,5 +111,5 @@
       ]
     }
   ],
-  "scope": "/ap3x/patient-pwa/"
+  "scope": "/ap3x/employee-pwa/"
 }

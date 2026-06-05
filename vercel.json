@@ -13,6 +13,37 @@
       "dest": "/index.html"
     },
     {
+      "src": "/ap3x/employee-pwa(.*)",
+      "dest": "/ap3x/patient-pwa$1",
+      "headers": {
+        "X-AutoSkill-Route": "employee-pwa"
+      }
+    },
+    {
+      "src": "/employee-pwa(.*)",
+      "dest": "/ap3x/patient-pwa$1"
+    },
+    {
+      "src": "/ap3x/patient-app(.*)",
+      "dest": "/ap3x/patient-pwa$1"
+    },
+    {
+      "src": "/ap3x/patient/(.*)",
+      "dest": "/ap3x/patient-pwa/$1"
+    },
+    {
+      "src": "/ap3x/clinical-dashboard(.*)",
+      "dest": "/ap3x/demo/clinician-demo.html"
+    },
+    {
+      "src": "/ap3x/therapist-dashboard(.*)",
+      "dest": "/ap3x/demo/clinician-demo.html"
+    },
+    {
+      "src": "/ap3x/control-dashboard(.*)",
+      "dest": "/ap3x/demo/clinician-demo.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/$1"
     }

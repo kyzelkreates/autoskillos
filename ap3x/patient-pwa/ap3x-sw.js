@@ -3,17 +3,20 @@
 // Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
 // v7 — Cleanup run: contamination fix + beforeinstallprompt install handler added
 
-const CACHE_NAME   = 'autoskill-employee-v11';
+const CACHE_NAME   = 'autoskill-employee-v13';
 const PWA_SCOPE    = '/ap3x/patient-pwa/';
+const PWA_SCOPE_NEW = '/ap3x/employee-pwa/'; // canonical alias — served via Vercel rewrite
 const OFFLINE_PAGE = '/ap3x/patient-pwa/index.html';
 
 const PRECACHE_ASSETS = [
   '/ap3x/patient-pwa/index.html',
   '/ap3x/patient-pwa/patient.css',
-  '/ap3x/patient-pwa/patient-app.js?v=11',
+  '/ap3x/patient-pwa/patient-app.js?v=13',
   '/ap3x/patient-pwa/manifest.json',
   '/ap3x/patient-pwa/ap3x-sw.js',
   '/ap3x/patient-pwa/chart.js',
+  '/ap3x/employee-pwa/',
+  '/ap3x/employee-pwa/index.html',
   '/icons/as-logo.png',
   '/icons/as-192.png',
   '/icons/as-512.png',
@@ -101,4 +104,5 @@ self.addEventListener('fetch', event => {
 });
 
 // AutoSkill OS™ — Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
-// SW scope: /ap3x/patient-pwa/ — does NOT intercept dashboard routes
+// SW scope: /ap3x/patient-pwa/ — canonical route alias: /ap3x/employee-pwa/ (Vercel rewrite)
+// Does NOT intercept dashboard routes

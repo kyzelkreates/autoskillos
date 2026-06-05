@@ -1,7 +1,7 @@
 {
-  "name": "AutoSkill OS™ — Trainer Dashboard",
+  "name": "AutoSkill OS\u2122 \u2014 Trainer Dashboard",
   "short_name": "AS Trainer",
-  "description": "AutoSkill OS™ Training Control Dashboard. Powered by 4P3X Intelligent AI™. Created by Kyzel Kreates™.",
+  "description": "AutoSkill OS\u2122 Training Control Dashboard. Powered by 4P3X Intelligent AI\u2122. Created by Kyzel Kreates\u2122.",
   "start_url": "./clinician-demo.html",
   "display": "browser",
   "orientation": "portrait-primary",
@@ -70,7 +70,7 @@
       "name": "Employee Learning PWA",
       "short_name": "Learner",
       "description": "Open Employee Training Portal",
-      "url": "../patient-pwa/index.html",
+      "url": "/ap3x/employee-pwa/index.html",
       "icons": [
         {
           "src": "../../icons/as-96.png",

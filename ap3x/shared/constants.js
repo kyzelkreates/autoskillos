@@ -4,10 +4,18 @@
 // Powered by 4P3X Intelligent AI™ — Created by Kyzel Kreates™
 
 // ── Roles ─────────────────────────────────────────────────────────
+// ── Route constants ──────────────────────────────────────────────────────────
+export const ROUTES = {
+  EMPLOYEE_PWA:        '/ap3x/employee-pwa/',            // canonical public route
+  EMPLOYEE_PWA_LEGACY: '/ap3x/patient-pwa/',             // physical path (Vercel rewrite target)
+  CONTROL_DASHBOARD:   '/ap3x/demo/clinician-demo.html', // Control Dashboard
+  DEMO_HOME:           '/ap3x/demo/',                    // Demo landing
+};
+
 export const AP3X_ROLES = {
   EMPLOYEE:  'patient',      // internal key preserved for localStorage backward compat
   TRAINER:   'therapist',    // internal key preserved for localStorage backward compat
-  CLINICIAN: 'therapist'     // alias — backward compat
+  CLINICIAN: 'supervisor'    // AutoSkill: supervisor / training manager (internal alias)
 };
 
 // ── SSOT storage keys (ap3x_ prefix to avoid BCO collisions) ──────
@@ -23,7 +31,7 @@ export const AP3X_KEYS = {
   STREAK:             'ap3x_streak',
   SYNC_QUEUE:         'ap3x_sync_queue',
   TRAINER_NOTES:      'ap3x_clinician_notes',     // → supervisor/trainer notes (key preserved)
-  CLINICIAN_NOTES:    'ap3x_clinician_notes',     // alias — backward compat
+  CLINICIAN_NOTES:    'ap3x_clinician_notes',     // storage key preserved for backward compat
   LESSON_PROGRESS:    'ap3x_lesson_progress',
   CHECKINS:           'ap3x_patient_checkins',    // → training check-ins (key preserved)
   XP:                 'ap3x_xp',
