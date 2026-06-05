@@ -1,9 +1,9 @@
 // AutoSkill OS™ — Control Dashboard Service Worker
 // Caches the dashboard shell only — NOT a PWA install SW
 // The installable Employee Learning PWA SW is at: /ap3x/patient-pwa/ap3x-sw.js
-// v8 — Run 13: clinical terminology cleanup, employee-pwa route, updated cache list
+// v8 — Run 14: clinical terminology cleanup, employee-pwa route, updated cache list
 
-const CACHE_NAME = 'autoskill-dashboard-v8';
+const CACHE_NAME = 'autoskill-dashboard-v9';
 const PRECACHE_ASSETS = [
   './index.html',
   './clinician-demo.html',

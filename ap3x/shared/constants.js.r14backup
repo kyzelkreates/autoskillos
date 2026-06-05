@@ -191,26 +191,3 @@ export const CONNECTION_STATUS = {
   CONNECTED:      'connected',
   FAILED:         'failed'
 };
-
-// ── Run 14: AI Learning Coach — SSOT keys and config defaults ────────────────
-// These keys extend the existing ap3x_dm_* namespace.
-// Do NOT rename — backward compat with stored data.
-export const AI_COACH_KEYS = {
-  GLOBAL_CONFIG:  'ap3x_dm_ai_coach_config',  // admin/global config
-  EMPLOYEE_PREF:  'ap3x_ai_coach_pref',        // per-employee preference
-};
-
-export const AI_COACH_DEFAULTS = {
-  globalEnabled:           true,
-  mode:                    'demo',          // 'demo' | 'live'
-  provider:                'local-demo',    // 'local-demo' | 'openai' | 'groq' | 'custom'
-  endpoint:                '',             // set by admin — never hardcoded
-  model:                   '',
-  allowMotivationMessages: true,
-  allowLessonExplanations: true,
-  allowRevisionQuiz:       true
-};
-
-export const AI_COACH_EMPLOYEE_DEFAULTS = {
-  aiLearningCoachEnabled: true             // employee PWA preference — default ON
-};

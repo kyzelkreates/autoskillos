@@ -516,45 +516,6 @@ tr:hover td{background:var(--surface2)}
       <div class="setting-row"><div><div class="setting-label">Crisis Line Number / URL</div></div><input id="crisisContact" type="text" class="crisis-field" style="width:200px" placeholder="e.g. 116 123"/></div>
       <button class="btn-save-settings" onclick="saveCrisisSettings()">Save Crisis Settings</button>
     </div>
-    <!-- Run 14: AI Learning Coach Global Settings -->
-    <div class="settings-section" id="ai-coach-settings-section">
-      <div class="settings-title">🤖 AI Learning Coach</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">
-        Control whether the optional AI Learning Coach is available in the Employee Learning PWA.
-        Individual employees can also turn it off for their own experience inside the PWA.
-      </div>
-      <div class="setting-row">
-        <div>
-          <div class="setting-label">AI Learning Coach — Global Enable</div>
-          <div class="setting-desc">When OFF, the coach is hidden for all employees in the PWA. Does not affect lessons, progress, or PWA installability.</div>
-        </div>
-        <div class="toggle-wrap" onclick="aiCoachDashToggleGlobal()">
-          <span class="toggle-state" id="aiCoachGlobalLabel">ON</span>
-          <button class="toggle on" id="aiCoachGlobalToggle" aria-label="AI Coach global toggle"></button>
-        </div>
-      </div>
-      <div class="setting-row" style="margin-top:10px">
-        <div>
-          <div class="setting-label">Coach Mode</div>
-          <div class="setting-desc" id="aiCoachModeDesc">Demo — local response engine active. No AI provider required.</div>
-        </div>
-        <span class="risk-badge LOW" id="aiCoachModeBadge">Demo Mode</span>
-      </div>
-      <div class="setting-row" style="margin-top:10px">
-        <div><div class="setting-label">AI Provider Endpoint (optional)</div>
-        <div class="setting-desc">For live AI: enter your API endpoint URL. Leave blank to use Demo Mode. Never paste API keys here — configure them securely server-side.</div></div>
-        <input id="aiCoachEndpoint" type="text" class="crisis-field" style="width:220px" placeholder="https://api.example.com/v1/chat/completions"/>
-      </div>
-      <div class="setting-row" style="margin-top:10px">
-        <div><div class="setting-label">Model Name (optional)</div></div>
-        <input id="aiCoachModel" type="text" class="crisis-field" style="width:160px" placeholder="e.g. gpt-4o-mini"/>
-      </div>
-      <button class="btn-save-settings" onclick="aiCoachDashSaveConfig()" style="margin-top:14px">Save AI Coach Settings</button>
-      <div style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5">
-        ⚠️ API keys must never be stored here. Configure authentication securely in your backend/edge function.
-        This is a global setting shared via localStorage — for production use, move to your backend configuration.
-      </div>
-    </div>
     <div class="settings-section">
       <div class="settings-title">⚠️ Safety Notice</div>
       <div style="font-size:12px;color:var(--muted);line-height:1.7;padding:8px;background:var(--surface2);border-radius:var(--rs)">AutoSkill OS™ supports manufacturing workforce training, competency tracking, and supervisor-guided progress monitoring. It does not provide emergency support, medical diagnosis, or a replacement for professional care. All competency indicators are informational only and must be reviewed by a qualified supervisor or training manager.</div>
@@ -1046,7 +1007,6 @@ function showView(v){
   document.getElementById('view-'+v).classList.remove('hidden');
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
   const nb=document.getElementById('nav-'+v);if(nb)nb.classList.add('active');
-  if(v==='settings' && typeof aiCoachDashRefreshSettingsUI === 'function') aiCoachDashRefreshSettingsUI();
   const titles={overview:'Training Control Dashboard',alerts:'Training Flags',patients:'All Employees',highrisk:'Employees Requiring Attention',checkins:'Training Check-Ins',analytics:'Analytics',timeline:'Activity Timeline',notes:'Supervisor Notes',settings:'Settings',pathways:'Training Pathways',departments:'Departments & Stations',safety:'Safety Checks',reviews:'Supervisor Reviews',evidence:'Training Evidence',demolive:'Demo / Live Status'};
   document.getElementById('topbarTitle').textContent=titles[v]||'Dashboard';
   if(v==='settings'){loadBackendConfigUI();loadShareUI();updateSyncUI();}
@@ -2907,77 +2867,6 @@ function saveProfileSettings(){
   sSet('4p3x_therapist_name',therapistName);sSet('4p3x_therapist_role',therapistRole);updateTherapistProfile();showToast('Profile saved ✓');
 }
 function saveCrisisSettings(){sSet('4p3x_crisis_name',document.getElementById('crisisName').value.trim());sSet('4p3x_crisis_contact',document.getElementById('crisisContact').value.trim());showToast('Crisis settings saved ✓');}
-
-// ════════════════════════════════════════════════════════════════════════════
-// Run 14: AI Coach Dashboard Settings Handlers
-// ════════════════════════════════════════════════════════════════════════════
-var AI_COACH_GLOBAL_KEY = 'ap3x_dm_ai_coach_config';
-
-function _aiCoachGetConfig() {
-  try {
-    var v = localStorage.getItem(AI_COACH_GLOBAL_KEY);
-    var stored = v ? JSON.parse(v) : {};
-    return {
-      globalEnabled:           stored.globalEnabled           !== undefined ? stored.globalEnabled : true,
-      mode:                    stored.mode                    || 'demo',
-      provider:                stored.provider                || 'local-demo',
-      endpoint:                stored.endpoint                || '',
-      model:                   stored.model                   || '',
-      allowMotivationMessages: stored.allowMotivationMessages !== undefined ? stored.allowMotivationMessages : true,
-      allowLessonExplanations: stored.allowLessonExplanations !== undefined ? stored.allowLessonExplanations : true,
-      allowRevisionQuiz:       stored.allowRevisionQuiz       !== undefined ? stored.allowRevisionQuiz : true
-    };
-  } catch(e) { return { globalEnabled: true, mode: 'demo', provider: 'local-demo', endpoint: '', model: '' }; }
-}
-
-function _aiCoachSaveConfig(cfg) {
-  try { localStorage.setItem(AI_COACH_GLOBAL_KEY, JSON.stringify(cfg)); } catch(e) {}
-}
-
-function aiCoachDashToggleGlobal() {
-  var cfg = _aiCoachGetConfig();
-  cfg.globalEnabled = !cfg.globalEnabled;
-  _aiCoachSaveConfig(cfg);
-  aiCoachDashRefreshSettingsUI();
-  showToast(cfg.globalEnabled ? '✅ AI Learning Coach enabled for all employees.' : '⏸ AI Learning Coach disabled globally.');
-}
-
-function aiCoachDashSaveConfig() {
-  var cfg      = _aiCoachGetConfig();
-  var endpoint = (document.getElementById('aiCoachEndpoint') || {}).value || '';
-  var model    = (document.getElementById('aiCoachModel') || {}).value || '';
-  cfg.endpoint = endpoint.trim();
-  cfg.model    = model.trim();
-  cfg.mode     = (cfg.endpoint && cfg.endpoint.startsWith('http')) ? 'live' : 'demo';
-  cfg.provider = cfg.mode === 'live' ? 'custom' : 'local-demo';
-  _aiCoachSaveConfig(cfg);
-  aiCoachDashRefreshSettingsUI();
-  showToast('✅ AI Coach settings saved.');
-}
-
-function aiCoachDashRefreshSettingsUI() {
-  var cfg = _aiCoachGetConfig();
-  var lbl = document.getElementById('aiCoachGlobalLabel');
-  var tog = document.getElementById('aiCoachGlobalToggle');
-  var modeDesc  = document.getElementById('aiCoachModeDesc');
-  var modeBadge = document.getElementById('aiCoachModeBadge');
-  var epInput   = document.getElementById('aiCoachEndpoint');
-  var mdInput   = document.getElementById('aiCoachModel');
-
-  if (lbl) lbl.textContent = cfg.globalEnabled ? 'ON' : 'OFF';
-  if (tog) { tog.className = 'toggle' + (cfg.globalEnabled ? ' on' : ' off'); }
-  if (modeDesc)  modeDesc.textContent  = cfg.mode === 'live'
-    ? 'Live — external AI provider configured.'
-    : 'Demo — local response engine active. No AI provider required.';
-  if (modeBadge) {
-    modeBadge.textContent  = cfg.mode === 'live' ? 'Live AI' : 'Demo Mode';
-    modeBadge.className    = 'risk-badge ' + (cfg.mode === 'live' ? 'LOW' : 'MEDIUM');
-  }
-  if (epInput && !epInput.value) epInput.value = cfg.endpoint || '';
-  if (mdInput && !mdInput.value) mdInput.value = cfg.model    || '';
-}
-// ── End of Run 14 Dashboard JS ──────────────────────────────────────────────
-
 function loadCrisisSettings(){document.getElementById('crisisName').value=sGet('4p3x_crisis_name','');document.getElementById('crisisContact').value=sGet('4p3x_crisis_contact','');}
 
 function drawLine(canvas,labels,data,color,fill,maxY){
