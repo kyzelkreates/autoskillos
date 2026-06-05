@@ -954,19 +954,42 @@ function freshCIData() {
 }
 
 // ── Boot ──────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('loading-screen').style.display = 'none';
-  if (!profile) {
-    buildOnboarding();
-    document.getElementById('onboarding').style.display = 'block';
-  } else {
-    buildPortal();
-    document.getElementById('portal-root').style.display = 'block';
-    renderAll();
-    // Show install banner if beforeinstallprompt already fired
-    setTimeout(function(){if(window.asRefreshInstallUI)window.asRefreshInstallUI();},300);
+// WhatsApp / WebView fix: DOMContentLoaded may have already fired by
+// the time this script loads. Use asBootApp() defined in index.html
+// which handles the guard. Call it now if DOM is ready, else queue it.
+(function() {
+  function _runBoot() {
+    // If index.html defined asBootApp (normal flow) — delegate to it
+    if (typeof window.asBootApp === 'function' && !window._asBootReady) {
+      window.asBootApp();
+      return;
+    }
+    // Fallback: boot directly (e.g. local dev without index.html wrapper)
+    if (window._asBootReady) return;
+    window._asBootReady = true;
+    var ls = document.getElementById('loading-screen');
+    if (ls) ls.style.display = 'none';
+    if (!profile) {
+      buildOnboarding();
+      document.getElementById('onboarding').style.display = 'block';
+    } else {
+      buildPortal();
+      document.getElementById('portal-root').style.display = 'block';
+      renderAll();
+      setTimeout(function(){if(window.asRefreshInstallUI)window.asRefreshInstallUI();},300);
+    }
   }
-});
+  // Run immediately if DOM already ready (handles WhatsApp WebView timing)
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setTimeout(_runBoot, 0); // defer one tick so all sync code above has run
+  } else {
+    document.addEventListener('DOMContentLoaded', _runBoot);
+  }
+  // Belt-and-suspenders: also wire to window load as final fallback
+  window.addEventListener('load', function() {
+    setTimeout(_runBoot, 50);
+  });
+})();
 
 function applyTheme() {
   document.body.className = dark ? 'theme-dark' : 'theme-light';
@@ -1309,7 +1332,8 @@ function showNextLessonButton(currentLessonId) {
     '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;' +
     'letter-spacing:.06em;margin-bottom:6px">Up Next' + (nextMod ? ' · ' + nextMod : '') + '</div>' +
     // button
-    '<button onclick="goToNextLesson('' + currentLessonId + '')" ' +
+    '<button data-next-lesson="' + currentLessonId + '" ' +
+    'onclick="var el=this;goToNextLesson(el.getAttribute(\'data-next-lesson\'))" ' +
     'style="width:100%;padding:13px 16px;background:var(--gold);color:#000;border:none;' +
     'border-radius:var(--r);font-size:14px;font-weight:800;cursor:pointer;' +
     'display:flex;align-items:center;justify-content:space-between;gap:8px">' +
@@ -2707,3 +2731,21 @@ function getFinalPwaReadinessSummary() {
 // End of Run 12 PWA Final Validation
 // AutoSkill OS™ supports training awareness — does not replace safety procedures.
 // ════════════════════════════════════════════════════════════════════════════
+
+
+// ════════════════════════════════════════════════════════════════════════════
+// AutoSkill OS™ — Final Boot Trigger
+// WhatsApp / in-app browser fix: Explicitly trigger asBootApp() here at
+// script end. By this point all functions are defined and the DOM is ready.
+// If DOMContentLoaded already fired (common in WhatsApp WebView), the
+// event listener in the boot IIFE above won't fire — this catches it.
+// The _asBootReady guard in asBootApp() prevents any double execution.
+// ════════════════════════════════════════════════════════════════════════════
+(function() {
+  // Give one tick for any synchronous post-script work to complete
+  setTimeout(function() {
+    if (typeof window.asBootApp === 'function') {
+      window.asBootApp();
+    }
+  }, 0);
+})();

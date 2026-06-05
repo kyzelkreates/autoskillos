@@ -46,7 +46,7 @@
 // ── Service Worker Registration ──────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./ap3x-sw.js?v=8', { scope: '/ap3x/patient-pwa/' })
+    navigator.serviceWorker.register('./ap3x-sw.js?v=9', { scope: '/ap3x/patient-pwa/' })
       .then(reg => console.log('[AutoSkill SW v7] Registered:', reg.scope))
       .catch(err => console.warn('[AutoSkill SW] Registration failed:', err));
   });
@@ -126,6 +126,67 @@ window.asRefreshInstallUI = function() {
   }
 };
 </script>
-<script src="./patient-app.js?v=8"></script>
+<script>
+// ── Boot Guard — survives WhatsApp in-app browser + WebView quirks ───────────
+// Problem: WhatsApp's in-app browser often fires DOMContentLoaded BEFORE
+// patient-app.js has finished loading. The listener inside patient-app.js
+// never fires → infinite loading screen.
+// Fix: patient-app.js calls window.asBootApp() instead of DOMContentLoaded.
+// We call it here if the script has already loaded (readyState check),
+// otherwise patient-app.js calls it itself at script end.
+
+window._asBootReady = false;
+
+// Called by patient-app.js at the very end of the file
+window.asBootApp = function() {
+  if (window._asBootReady) return; // guard against double-call
+  window._asBootReady = true;
+  clearTimeout(window._asBootTimeout);
+  var ls = document.getElementById('loading-screen');
+  if (ls) ls.style.display = 'none';
+
+  var profile = null;
+  try { profile = JSON.parse(localStorage.getItem('ap3x_profile') || 'null'); } catch(e) {}
+
+  if (!profile) {
+    if (typeof buildOnboarding === 'function') {
+      buildOnboarding();
+      var ob = document.getElementById('onboarding');
+      if (ob) ob.style.display = 'block';
+    }
+  } else {
+    if (typeof buildPortal === 'function') {
+      buildPortal();
+      var pr = document.getElementById('portal-root');
+      if (pr) pr.style.display = 'block';
+      if (typeof renderAll === 'function') renderAll();
+      setTimeout(function(){ if(window.asRefreshInstallUI) window.asRefreshInstallUI(); }, 300);
+    }
+  }
+};
+
+// ── Failsafe timeout — if app hasn't booted in 8s, show retry ───────────────
+window._asBootTimeout = setTimeout(function() {
+  if (window._asBootReady) return;
+  var ls = document.getElementById('loading-screen');
+  if (!ls) return;
+  ls.innerHTML =
+    '<img src="../../icons/as-logo.png" alt="AutoSkill OS™" style="width:88px;height:88px;object-fit:contain;filter:drop-shadow(0 0 16px rgba(201,168,76,0.3));margin-bottom:16px"/>' +
+    '<div style="font-size:18px;font-weight:800;color:#c9a84c;margin-bottom:8px">AutoSkill OS™</div>' +
+    '<div style="font-size:13px;color:#888;margin-bottom:20px">Taking longer than expected…</div>' +
+    '<button onclick="window.location.reload()" ' +
+    'style="padding:12px 28px;background:#c9a84c;color:#000;border:none;border-radius:10px;' +
+    'font-size:14px;font-weight:800;cursor:pointer">↺ Tap to reload</button>' +
+    '<div style="font-size:11px;color:#555;margin-top:16px">Powered by 4P3X Intelligent AI™ · Created by Kyzel Kreates™</div>';
+}, 8000);
+</script>
+
+<script id="pwa-script" src="./patient-app.js?v=9"
+  onerror="clearTimeout(window._asBootTimeout);
+           var ls=document.getElementById('loading-screen');
+           if(ls){ ls.innerHTML='<div style=\'font-size:18px;font-weight:800;color:#c9a84c;margin-bottom:8px\'>AutoSkill OS™</div>'+
+           '<div style=\'font-size:13px;color:#888;margin-bottom:20px\'>Could not load training app.<br>Check your connection.</div>'+
+           '<button onclick=\'window.location.reload()\' style=\'padding:12px 28px;background:#c9a84c;color:#000;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer\'>↺ Tap to reload</button>'; }">
+</script>
 </body>
 </html>
