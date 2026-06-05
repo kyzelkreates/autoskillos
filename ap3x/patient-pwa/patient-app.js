@@ -1249,10 +1249,18 @@ function renderHome() {
       '</div>' +
     '</div>' +
     '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">' + '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Quick Access</div>' + '<span style="font-size:10px;padding:2px 8px;border-radius:99px;font-weight:700;background:' + (demoOn?'rgba(201,168,76,.15)':'rgba(34,197,94,.12)') + ';color:' + (demoOn?'var(--gold)':'var(--green)') + ';border:1px solid ' + (demoOn?'rgba(201,168,76,.3)':'rgba(34,197,94,.25)') + '">' + (demoOn ? '\ud83c\udfad Demo' : '\ud83d\udfe2 Live') + '</span></div>' + '<div class="quick-grid">' +
-      '<button class="qa-btn" onclick="switchTab(\'pathway\')" aria-label="View Training Pathway">' +
-        '<div class="qa-icon">&#x1F5FA;</div><div class="qa-label">My Training</div>' +
-        '<div class="qa-desc">' + (firstPath ? firstPath.title.substring(0,32) + (firstPath.title.length>32?'...':'') : 'No pathway assigned') + '</div>' +
-      '</button>' +
+      (function() {
+        var pathRec = sGet('ap3x_pathway_completed', null);
+        var doneL = Object.values(lessonDone).filter(Boolean).length;
+        var btnDesc = pathRec
+          ? '\u2705 Pathway Complete!'
+          : (doneL > 0 ? doneL + '/15 lessons done' : (firstPath ? firstPath.title.substring(0,28) + (firstPath.title.length>28?'...':'') : 'No pathway assigned'));
+        var btnBorder = pathRec ? '2px solid var(--green)' : '';
+        return '<button class="qa-btn" onclick="switchTab(\'pathway\')" aria-label="View Training Pathway" style="border:' + btnBorder + '">' +
+          '<div class="qa-icon">&#x1F5FA;</div><div class="qa-label">My Training</div>' +
+          '<div class="qa-desc" style="color:' + (pathRec ? 'var(--green)' : '') + '">' + btnDesc + '</div>' +
+          '</button>';
+      })() +
       '<button class="qa-btn" onclick="switchTab(\'lessons\')" aria-label="Open Lessons">' +
         '<div class="qa-icon">&#x1F393;</div><div class="qa-label">Lessons</div>' +
         '<div class="qa-desc">' + totalLessons + '/15 lessons complete</div>' +
@@ -1266,6 +1274,20 @@ function renderHome() {
         '<div class="qa-desc">' + pathPct + '% pathway complete</div>' +
       '</button>' +
     '</div>' +
+    // Pathway completion banner on home screen
+    (function() {
+      var pathRec = sGet('ap3x_pathway_completed', null);
+      if (!pathRec) return '';
+      var dateStr = pathRec.completedAt ? new Date(pathRec.completedAt).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' }) : '';
+      return '<div style="background:rgba(34,197,94,.08);border:1.5px solid rgba(34,197,94,.35);border-radius:var(--r);padding:14px;margin-bottom:12px">' +
+        '<div style="font-size:13px;font-weight:800;color:var(--green);margin-bottom:4px">\u2705 New Starter Manufacturing Training Pathway — Complete</div>' +
+        (dateStr ? '<div style="font-size:11px;color:var(--muted);margin-bottom:10px">Completed ' + dateStr + '</div>' : '') +
+        '<div style="display:flex;gap:8px">' +
+          '<button onclick="switchTab(\'lessons\')" style="flex:1;padding:9px 8px;background:transparent;border:1px solid var(--green);color:var(--green);border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer">Revisit Lessons</button>' +
+          '<button onclick="switchTab(\'progress\')" style="flex:1;padding:9px 8px;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:var(--rs);font-size:12px;font-weight:700;cursor:pointer">View Progress</button>' +
+        '</div>' +
+      '</div>';
+    })() +
     '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin:12px 0">' +
       '<div style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">&#x1F4A1; Training Tip</div>' +
       '<div style="font-size:13px;color:var(--text);line-height:1.6">' + insight + '</div>' +
@@ -1422,7 +1444,25 @@ function renderLessons() {
             + '</div>'
           ).join('')
         + '</div>';
-    }).join('')}`;
+    }).join('')}
+    ${(function() {
+      var pathRec  = sGet('ap3x_pathway_completed', null);
+      var totalDone = Object.values(lessonDone).filter(Boolean).length;
+      if (totalDone < 15 && !pathRec) return '';
+      var dateStr = pathRec && pathRec.completedAt
+        ? new Date(pathRec.completedAt).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })
+        : '';
+      return '<div style="background:rgba(34,197,94,.08);border:1.5px solid rgba(34,197,94,.35);border-radius:var(--r);padding:18px 16px;margin:12px 0;text-align:center">' +
+        '<div style="font-size:36px;margin-bottom:8px">\u2705</div>' +
+        '<div style="font-size:16px;font-weight:800;color:var(--green);margin-bottom:4px">All Lessons Complete!</div>' +
+        '<div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">New Starter Manufacturing Training Pathway</div>' +
+        (dateStr ? '<div style="font-size:11px;color:var(--muted);margin-bottom:12px">Completed ' + dateStr + '</div>' : '<div style="margin-bottom:12px"></div>') +
+        '<div style="display:flex;gap:10px;max-width:360px;margin:0 auto">' +
+          '<button onclick="switchTab(\'home\')" style="flex:1;padding:11px;background:var(--green);color:#000;border:none;border-radius:var(--r);font-size:13px;font-weight:800;cursor:pointer">\u2302 Home</button>' +
+          '<button onclick="switchTab(\'progress\')" style="flex:1;padding:11px;background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer">My Progress</button>' +
+        '</div>' +
+      '</div>';
+    })()}`;
 }
 
 function toggleLesson(id, xpVal) {
@@ -1613,6 +1653,81 @@ function completeLessonFromDetail(id, xpVal) {
   var btn = document.getElementById('ld-complete-btn');
   var lc = LESSON_CONTENT[id];
   if (btn && lc) { btn.textContent = '\u2713 ' + lc.completionLabel; btn.style.background = 'var(--green)'; }
+  renderLessons();
+  // ── Pathway completion detection ─────────────────────────────────────────────
+  if (id === LAST_LESSON) {
+    var allLessonsDone = LESSON_ORDER.every(function(lid) { return !!lessonDone[lid]; });
+    if (allLessonsDone) { triggerPathwayCompletion(); }
+  }
+}
+
+// ── PATHWAY COMPLETION ─────────────────────────────────────────────────────────────────────────
+function triggerPathwayCompletion() {
+  var existing = sGet('ap3x_pathway_completed', null);
+  if (!existing) {
+    var completionRecord = {
+      pathwayId: 'new-starter-manufacturing',
+      pathwayName: 'New Starter Manufacturing Training Pathway',
+      completedAt: new Date().toISOString(),
+      totalLessons: LESSON_ORDER.length,
+      lessonsCompleted: LESSON_ORDER.length,
+      percentComplete: 100,
+      xpTotal: xp
+    };
+    sSet('ap3x_pathway_completed', completionRecord);
+    tlEnqueueSync('pathway_completed', completionRecord);
+  }
+  var panel = document.getElementById('lesson-detail-panel');
+  if (panel) panel.remove();
+  showPathwayCompletionModal();
+}
+
+function showPathwayCompletionModal() {
+  var existing = document.getElementById('pathway-completion-modal');
+  if (existing) existing.remove();
+  var rec = sGet('ap3x_pathway_completed', {});
+  var dateStr = rec.completedAt ? new Date(rec.completedAt).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' }) : 'Today';
+
+  var overlay = document.createElement('div');
+  overlay.id = 'pathway-completion-modal';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.innerHTML =
+    '<div style="background:var(--surface);border:2px solid var(--gold);border-radius:16px;padding:28px 22px;max-width:400px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(201,168,76,.25)">' +
+      '<div style="font-size:56px;margin-bottom:10px">✅</div>' +
+      '<div style="font-size:21px;font-weight:800;color:var(--gold);margin-bottom:6px">Pathway Complete!</div>' +
+      '<div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px">New Starter Manufacturing Training Pathway</div>' +
+      '<div style="font-size:12px;color:var(--muted);margin-bottom:14px">Completed ' + dateStr + '</div>' +
+      '<div style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:12px 14px;margin-bottom:14px;text-align:left">' +
+        '<div style="font-size:12px;font-weight:800;color:var(--green);margin-bottom:4px">✓ 15/15 Lessons Completed</div>' +
+        '<div style="font-size:12px;font-weight:800;color:var(--green);margin-bottom:4px">✓ Training milestone saved locally</div>' +
+        '<div style="font-size:12px;font-weight:800;color:var(--green)">✓ Queued for supervisor review</div>' +
+      '</div>' +
+      '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:18px;font-size:12px;color:var(--muted);line-height:1.6">' +
+        'Skills Readiness: Training complete. Supervisor sign-off required for full workplace competency sign-off.' +
+      '</div>' +
+      '<button onclick="dismissPathwayCompletionModal()" ' +
+        'style="width:100%;padding:14px;background:var(--gold);color:#000;border:none;border-radius:var(--r);font-size:15px;font-weight:800;cursor:pointer;margin-bottom:10px">' +
+        'Go to My Training Home →' +
+      '</button>' +
+      '<button onclick="dismissToRevisit()" ' +
+        'style="width:100%;padding:11px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer">' +
+        'Revisit Training Lessons' +
+      '</button>' +
+    '</div>';
+  document.body.appendChild(overlay);
+}
+
+function dismissPathwayCompletionModal() {
+  var modal = document.getElementById('pathway-completion-modal');
+  if (modal) modal.remove();
+  switchTab('home');
+  renderHome();
+}
+
+function dismissToRevisit() {
+  var modal = document.getElementById('pathway-completion-modal');
+  if (modal) modal.remove();
+  switchTab('lessons');
   renderLessons();
 }
 
@@ -1871,7 +1986,7 @@ function renderProgress() {
       '<span>Data source:</span>' +
       '<span style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:1px 8px;font-size:11px">' + r10label + '</span>' +
       (r10mode !== 'demo' ? '<span style="color:var(--muted)"> — Employee PWA live write-sync: Run 11</span>' : '') +
-    '</div>' + +
+    '</div>' +
     '<div class="section-sub">Your personal training journey at a glance</div>' +
     '<div class="prog-grid">' +
       '<div class="prog-stat"><div class="prog-val">' + totalL + '/15</div><div class="prog-lbl">Lessons Done</div></div>' +
@@ -1885,6 +2000,85 @@ function renderProgress() {
       '<div class="prog-stat"><div class="prog-val" style="font-size:20px">' + streak + '</div><div class="prog-lbl">Day Streak</div></div>' +
       '<div class="prog-stat"><div class="prog-val" style="font-size:20px">' + syncQ + '</div><div class="prog-lbl">Queued Updates</div></div>' +
     '</div>' +
+    // ── Pathway Completion Card ────────────────────────────────────────────────
+    (function() {
+      var pathRec  = sGet('ap3x_pathway_completed', null);
+      var doneCount = Object.values(lessonDone).filter(Boolean).length;
+      var statusLabel, statusColor, statusBg;
+      if (pathRec && pathRec.percentComplete === 100) {
+        statusLabel = '\u2705 Completed'; statusColor = 'var(--green)'; statusBg = 'rgba(34,197,94,.1)';
+      } else if (doneCount > 0) {
+        statusLabel = '\u23F3 In Progress'; statusColor = 'var(--gold)'; statusBg = 'rgba(201,168,76,.1)';
+      } else {
+        statusLabel = '\u25CB Not Started'; statusColor = 'var(--muted)'; statusBg = 'var(--surface2)';
+      }
+      var completedDate = pathRec && pathRec.completedAt
+        ? new Date(pathRec.completedAt).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })
+        : null;
+      var pct = doneCount === 0 ? 0 : (pathRec && pathRec.percentComplete === 100 ? 100 : Math.round((doneCount / 15) * 100));
+
+      var completedIds = LESSON_ORDER.filter(function(lid) { return !!lessonDone[lid]; });
+      var remainingIds = LESSON_ORDER.filter(function(lid) { return !lessonDone[lid]; });
+
+      var completedListHtml = completedIds.length === 0
+        ? '<div style="font-size:12px;color:var(--muted);padding:6px 0">No lessons completed yet.</div>'
+        : completedIds.map(function(lid) {
+            var lc = LESSON_CONTENT[lid];
+            var doneTs = lessonDone[lid];
+            var doneDate = doneTs ? new Date(doneTs).toLocaleDateString('en-GB', { day:'numeric', month:'short' }) : '';
+            return '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);gap:8px">' +
+              '<div style="font-size:13px;color:var(--text)">' +
+                '<span style="color:var(--green);margin-right:6px">\u2713</span>' +
+                (lc ? lc.title : lid) +
+              '</div>' +
+              (doneDate ? '<div style="font-size:11px;color:var(--muted);white-space:nowrap">' + doneDate + '</div>' : '') +
+            '</div>';
+          }).join('');
+
+      var remainingListHtml = remainingIds.length === 0
+        ? '<div style="font-size:12px;color:var(--green);padding:6px 0">\u2713 All lessons complete!</div>'
+        : remainingIds.map(function(lid) {
+            var lc = LESSON_CONTENT[lid];
+            return '<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)">' +
+              '<div style="font-size:13px;color:var(--muted)">' +
+                '<span style="margin-right:6px">\u25CB</span>' +
+                (lc ? lc.title : lid) +
+              '</div>' +
+            '</div>';
+          }).join('');
+
+      return (
+        '<div style="background:var(--surface);border:1.5px solid ' + (pathRec ? 'var(--gold)' : 'var(--border)') + ';border-radius:var(--r);padding:16px;margin-bottom:16px">' +
+          '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">\u1F4CB Training Pathway Status</div>' +
+          '<div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px">New Starter Manufacturing Training Pathway</div>' +
+          '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">' +
+            '<span style="font-size:12px;font-weight:700;background:' + statusBg + ';color:' + statusColor + ';border-radius:99px;padding:3px 12px;border:1px solid ' + statusColor + '">' + statusLabel + '</span>' +
+            '<span style="font-size:12px;color:var(--muted)">' + doneCount + '/15 lessons</span>' +
+            '<span style="font-size:12px;font-weight:700;color:' + statusColor + '">' + pct + '%</span>' +
+          '</div>' +
+          '<div style="height:8px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-bottom:8px">' +
+            '<div style="height:100%;width:' + pct + '%;background:' + (pct === 100 ? 'var(--green)' : 'var(--gold)') + ';border-radius:99px;transition:width .4s"></div>' +
+          '</div>' +
+          (completedDate ? '<div style="font-size:12px;color:var(--green);margin-bottom:8px">\u2713 Completed: ' + completedDate + '</div>' : '') +
+          (pathRec ? '<div style="font-size:12px;color:var(--muted);background:var(--surface2);border-radius:var(--rs);padding:8px 10px;margin-bottom:8px">Skills Readiness: Training pathway complete. Supervisor sign-off confirms full workplace competency.</div>' : '') +
+          '<button onclick="switchTab(\'lessons\')" style="width:100%;padding:10px;background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;margin-bottom:0">' +
+            (pathRec ? 'Revisit Training Lessons \u2192' : 'Continue Training \u2192') +
+          '</button>' +
+        '</div>' +
+        '<div style="font-size:14px;font-weight:700;margin:4px 0 10px">\u2705 Completed Lessons (' + completedIds.length + '/15)</div>' +
+        '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:16px">' +
+          (doneCount === 0
+            ? '<div style="font-size:13px;color:var(--muted);text-align:center;padding:16px 0">No training progress has been recorded yet.<br>Start your first lesson to begin tracking progress.</div>'
+            : completedListHtml
+          ) +
+        '</div>' +
+        (remainingIds.length > 0
+          ? '<div style="font-size:14px;font-weight:700;margin:4px 0 10px">\u25CB Remaining Lessons (' + remainingIds.length + ')</div>' +
+            '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:16px">' + remainingListHtml + '</div>'
+          : ''
+        )
+      );
+    })() +
     '<div style="font-size:14px;font-weight:700;margin:16px 0 10px">&#x1F4DA; Lesson Progress</div>' +
     '<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:14px">' +
     [1,2,3].map(function(mId) {

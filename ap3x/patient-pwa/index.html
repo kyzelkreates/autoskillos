@@ -46,7 +46,7 @@
 // ── Service Worker Registration ──────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./ap3x-sw.js?v=10', { scope: '/ap3x/patient-pwa/' })
+    navigator.serviceWorker.register('./ap3x-sw.js?v=11', { scope: '/ap3x/patient-pwa/' })
       .then(reg => console.log('[AutoSkill SW v7] Registered:', reg.scope))
       .catch(err => console.warn('[AutoSkill SW] Registration failed:', err));
   });
@@ -181,7 +181,7 @@ window._asBootTimeout = setTimeout(function() {
 }, 8000);
 </script>
 
-<script id="pwa-script" src="./patient-app.js?v=10"
+<script id="pwa-script" src="./patient-app.js?v=11"
   onerror="clearTimeout(window._asBootTimeout);
            var ls=document.getElementById('loading-screen');
            if(ls){ ls.innerHTML='<div style=\'font-size:18px;font-weight:800;color:#c9a84c;margin-bottom:8px\'>AutoSkill OS™</div>'+
