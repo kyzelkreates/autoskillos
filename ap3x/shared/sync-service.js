@@ -1,4 +1,4 @@
-// AP3X AnxietyCore — Sync Service
+// AP3X AutoSkill OS™ — Sync Service
 // ─────────────────────────────────────────────────────────────────
 // Manages the local-first → backend sync flow.
 // Architecture contract: data writes go local first (SSOT via BCO
@@ -68,7 +68,7 @@ export async function flushQueue() {
   }
 
   storage.set(AP3X_KEYS.SYNC_QUEUE, remaining);
-  rawLog("AP3X_SYNC_FLUSH", { flushed, failed }, "ANXIETYCORE");
+  rawLog("AP3X_SYNC_FLUSH", { flushed, failed }, "AUTOSKILL");
   return { flushed, failed };
 }
 
@@ -81,7 +81,7 @@ export async function flushQueue() {
 export function attachNetworkListener() {
   if (typeof window === "undefined") return;
   window.addEventListener("online", () => {
-    rawLog("AP3X_NETWORK_ONLINE", {}, "ANXIETYCORE");
+    rawLog("AP3X_NETWORK_ONLINE", {}, "AUTOSKILL");
     flushQueue().then(({ flushed }) => {
       if (flushed > 0) console.log(`[AP3X Sync] Flushed ${flushed} records on reconnect.`);
     });

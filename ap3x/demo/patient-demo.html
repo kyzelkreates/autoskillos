@@ -423,15 +423,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;b
         </div>
         <div class="btn-row"><button class="btn-secondary" onclick="ciBack(1)">Back</button><button class="btn-primary" onclick="ciNext(1)">Next →</button></div>
       </div>
-      <!-- Q2 Anxiety -->
+      <!-- Q2 Training Score -->
       <div class="checkin-step hidden" id="ci-step-2">
-        <div class="ci-question">2. How would you rate your anxiety or stress today?</div>
-        <div class="ci-sub">0 = No anxiety at all · 10 = Extreme anxiety</div>
+        <div class="ci-question">2. How would you rate your confidence and readiness today?</div>
+        <div class="ci-sub">0 = Not confident at all · 10 = Fully confident and ready</div>
         <div class="scale-wrap">
           <div class="scale-labels"><span>None</span><span>Moderate</span><span>Extreme</span></div>
-          <div class="scale-track" id="anxiety-scale"></div>
-          <div class="score-display" id="anxiety-display">—</div>
-          <div class="score-label" id="anxiety-label"></div>
+          <div class="scale-track" id="score-scale"></div>
+          <div class="score-display" id="score-display">—</div>
+          <div class="score-label" id="score-label"></div>
         </div>
         <div class="btn-row"><button class="btn-secondary" onclick="ciBack(2)">Back</button><button class="btn-primary" onclick="ciNext(2)">Next →</button></div>
       </div>
@@ -602,13 +602,13 @@ const CURRICULUM=[
 ];
 
 const COPING_STRATEGIES=[
-  {id:'breathing',icon:'🌬️',name:'4-7-8 Breathing',desc:'Inhale for 4 counts, hold for 7, exhale for 8. Activates your parasympathetic nervous system to reduce anxiety quickly.',cat:'Anxiety Relief'},
+  {id:'breathing',icon:'🌬️',name:'4-7-8 Focus Reset',desc:'Inhale for 4 counts, hold for 7, exhale for 8. Helps clear mental load and reset focus before a task or assessment.',cat:'Focus Reset'},
   {id:'grounding',icon:'🌿',name:'5-4-3-2-1 Grounding',desc:'Name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste. Anchors you in the present moment.',cat:'Grounding'},
   {id:'journaling',icon:'✍️',name:'Reflective Journaling',desc:'Write freely for 5–10 minutes without editing. Getting thoughts onto paper reduces their emotional intensity.',cat:'Emotional Processing'},
-  {id:'box',icon:'📦',name:'Box Breathing',desc:'Breathe in for 4, hold for 4, out for 4, hold for 4. Used by trainers to regulate the nervous system under stress.',cat:'Anxiety Relief'},
+  {id:'box',icon:'📦',name:'Box Breathing',desc:'Breathe in for 4, hold for 4, out for 4, hold for 4. Used by trainers to reset focus under pressure before practical assessments.',cat:'Focus Reset'},
   {id:'movement',icon:'🏃',name:'Movement Break',desc:'Even a 5-minute walk or light stretching can significantly shift mood. Physical movement processes stress hormones.',cat:'Mood Lifting'},
   {id:'self_comp',icon:'💛',name:'Self-Compassion Pause',desc:'Place a hand on your heart, acknowledge your pain, remind yourself this is a shared human experience. Be kind to yourself.',cat:'Emotional Processing'},
-  {id:'mindful',icon:'🧘',name:'Mindful Observation',desc:'Choose one object and observe it for 2 minutes — colour, texture, shape, weight. Breaks cycles of anxious thinking.',cat:'Grounding'},
+  {id:'mindful',icon:'🧘',name:'Focused Observation',desc:'Choose one process step or tool and observe it for 2 minutes — steps, tolerances, function. Resets distracted thinking.',cat:'Focus Reset'},
   {id:'music',icon:'🎵',name:'Music & Movement',desc:'Put on a song that matches or lifts your mood. Music engages emotional processing centres of the brain rapidly.',cat:'Mood Lifting'},
   {id:'cold',icon:'❄️',name:'Cold Water Reset',desc:'Splash cold water on your face or hold an ice cube. Activates the dive reflex and calms the nervous system quickly.',cat:'Crisis Tool'},
   {id:'talk',icon:'💬',name:'Talk to Your Supervisor',desc:'Reach out to your team leader or supervisor if you are unsure about a process step. Asking is a powerful buffer against distress.',cat:'Connection'},
@@ -638,7 +638,7 @@ let lastCheckinDate=sGet('4p3x_last_checkin_date',null);
 let dark=sGet('4p3x_patient_theme','dark')==='dark';
 
 // Check-in state
-let ciData={mood:null,anxiety:null,sleep:null,energy:null,coping:null,copingList:[],overwhelmed:null,conc:null,conn:null,note:'',support:null};
+let ciData={mood:null,score:null,sleep:null,energy:null,coping:null,copingList:[],overwhelmed:null,conc:null,conn:null,note:'',support:null};
 
 // ── Boot ─────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded',()=>{
@@ -717,7 +717,7 @@ function switchTab(name){
 
 // ── Check-In ─────────────────────────────────────────────────────
 let ciStep=1;
-function buildScales(){buildScale('anxiety-scale','anxiety-display','anxiety-label',true);buildScale('sleep-scale','sleep-display','sleep-label',false);buildScale('energy-scale','energy-display',null,false);}
+function buildScales(){buildScale('score-scale','score-display','score-label',true);buildScale('sleep-scale','sleep-display','sleep-label',false);buildScale('energy-scale','energy-display',null,false);}
 function buildScale(wrId,displayId,labelId,inverted){
   const wr=document.getElementById(wrId);if(!wr)return;
   for(let i=0;i<=10;i++){const b=document.createElement('button');b.className='scale-btn';b.dataset.v=i;b.textContent=i;b.onclick=()=>onScale(wrId,displayId,labelId,i,inverted,b);wr.appendChild(b);}
@@ -726,7 +726,7 @@ function onScale(wrId,displayId,labelId,val,inverted,btn){
   document.querySelectorAll('#'+wrId+' .scale-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');
   document.getElementById(displayId).textContent=val;
   if(labelId){const labels=inverted?{0:'None',1:'Very Mild',2:'Mild',3:'Mild',4:'Moderate',5:'Moderate',6:'Elevated',7:'Elevated',8:'High',9:'Very High',10:'Extreme'}:{0:'Very Poor',3:'Poor',5:'Fair',7:'Good',9:'Very Good',10:'Excellent'};document.getElementById(labelId).textContent=labels[val]||'';}
-  if(wrId==='anxiety-scale')ciData.anxiety=val;else if(wrId==='sleep-scale')ciData.sleep=val;else if(wrId==='energy-scale')ciData.energy=val;
+  if(wrId==='score-scale')ciData.score=val;else if(wrId==='sleep-scale')ciData.sleep=val;else if(wrId==='energy-scale')ciData.energy=val;
 }
 function buildCiDots(){const wr=document.getElementById('ci-dots');for(let i=1;i<=10;i++){const d=document.createElement('div');d.className='step-dot';d.id='ci-dot-'+i;wr.appendChild(d);}}
 function updateCiProgress(step){document.getElementById('ci-progress-bar').style.width=((step/10)*100)+'%';for(let i=1;i<=10;i++){const d=document.getElementById('ci-dot-'+i);d.className='step-dot'+(i<step?' done':i===step?' active':'');}}
@@ -744,7 +744,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 function ciNext(step){
   if(step===1&&ciData.mood===null)return showToast('Please select your mood');
-  if(step===2&&ciData.anxiety===null)return showToast('Please select an anxiety score');
+  if(step===2&&ciData.score===null)return showToast('Please select a confidence score');
   if(step===3&&ciData.sleep===null)return showToast('Please select a sleep score');
   if(step===4&&ciData.energy===null)return showToast('Please select an energy score');
   document.getElementById('ci-step-'+step).classList.add('hidden');
@@ -771,9 +771,9 @@ function submitCheckin(){
 }
 
 function _calcRisk(d){
-  if(d.anxiety>=8||d.mood<=2||d.support==='yes')return'CRITICAL';
-  if(d.anxiety>=6||d.mood<=4||(d.overwhelmed==='yes'&&d.sleep<=4))return'HIGH';
-  if(d.anxiety>=4||d.overwhelmed==='yes')return'MEDIUM';
+  if(d.score>=8||d.mood<=2||d.support==='yes')return'CRITICAL';
+  if(d.score>=6||d.mood<=4||(d.overwhelmed==='yes'&&d.sleep<=4))return'HIGH';
+  if(d.score>=4||d.overwhelmed==='yes')return'MEDIUM';
   return'LOW';
 }
 
@@ -782,11 +782,11 @@ function showCheckinResult(record,risk){
   document.getElementById('checkin-done-view').style.display='block';
   const tips={LOW:['Well done on completing your training check-in today.','Keep practising the process skills that are working for you.','Consistency is key — every check-in adds to your competency development.'],MEDIUM:['You showed real self-awareness by completing your check-in.','Consider reviewing a process checkpoint or talking to your team leader if a step feels unclear.','Reach out to your supervisor or team leader today if you need support.'],HIGH:['Thank you for completing your check-in honestly. That shows professional awareness.','Try stepping away from the workstation briefly, then review the process steps carefully.','If the issue persists or feels unsafe, contact your supervisor or site safety officer immediately.'],CRITICAL:['Your check-in suggests you may be finding things very difficult right now.','Please reach out to your supervisor or training manager as soon as possible.','If there is an on-site emergency, follow your site emergency procedure immediately.']};
   const riskColors={LOW:'var(--green)',MEDIUM:'var(--warn)',HIGH:'var(--high)',CRITICAL:'var(--critical)'};
-  document.getElementById('checkin-feedback').innerHTML=`<div class="feedback-card risk-${risk.toLowerCase()}"><div style="margin-bottom:8px"><span class="risk-badge ${risk}">${{LOW:'✅ Low',MEDIUM:'⚡ Medium',HIGH:'⚠️ High',CRITICAL:'🚨 Needs Review'}[risk]}</span></div><div class="fcard-title">Check-In Recorded</div><div class="fcard-sub">Score: ${record.mood}/10 · Difficulty: ${record.anxiety}/10 · Readiness: ${record.sleep}/10</div><div class="fcard-tips">${(tips[risk]||tips.LOW).map(t=>`<div class="fcard-tip">${t}</div>`).join('')}</div>${risk==='CRITICAL'||risk==='HIGH'?`<button class="btn-emergency" onclick="showToast('Contact your supervisor or site safety officer immediately')">🆘 Access Crisis Support</button>`:''}</div>`;
+  document.getElementById('checkin-feedback').innerHTML=`<div class="feedback-card risk-${risk.toLowerCase()}"><div style="margin-bottom:8px"><span class="risk-badge ${risk}">${{LOW:'✅ Low',MEDIUM:'⚡ Medium',HIGH:'⚠️ High',CRITICAL:'🚨 Needs Review'}[risk]}</span></div><div class="fcard-title">Check-In Recorded</div><div class="fcard-sub">Readiness: ${record.mood}/10 · Confidence: ${record.score}/10 · Rest: ${record.sleep}/10</div><div class="fcard-tips">${(tips[risk]||tips.LOW).map(t=>`<div class="fcard-tip">${t}</div>`).join('')}</div>${risk==='CRITICAL'||risk==='HIGH'?`<button class="btn-emergency" onclick="showToast('Contact your supervisor or site safety officer immediately')">🆘 Access Crisis Support</button>`:''}</div>`;
 }
 
 function resetCheckin(){
-  ciData={mood:null,anxiety:null,sleep:null,energy:null,coping:null,copingList:[],overwhelmed:null,conc:null,conn:null,note:'',support:null};
+  ciData={mood:null,score:null,sleep:null,energy:null,coping:null,copingList:[],overwhelmed:null,conc:null,conn:null,note:'',support:null};
   document.getElementById('checkin-form-view').style.display='block';document.getElementById('checkin-done-view').style.display='none';
   document.querySelectorAll('.checkin-step').forEach((s,i)=>{s.classList[i===0?'remove':'add']('hidden');});
   document.querySelectorAll('.mood-btn,.yn-btn,.scale-btn,.tag').forEach(b=>b.classList.remove('selected','active'));
@@ -837,9 +837,9 @@ const LESSON_CONTENT = {
     ],
     sections: [
       { heading: 'What mood means', body: 'Mood is your general emotional state. It can include feeling low, calm, hopeful, numb, irritable, motivated, tired, or unsettled. Mood can change throughout the day and may be affected by sleep, relationships, thoughts, health, work, and life events.' },
-      { heading: 'What anxiety can feel like', body: 'Anxiety can include worry, fear, tension, racing thoughts, restlessness, avoidance, or physical sensations such as a tight chest, fast heartbeat, sweating, or stomach discomfort. Anxiety is not a personal failure. It is a signal that your mind or body may be responding to perceived threat or pressure.' },
+      { heading: 'What low confidence can feel like', body: 'Low confidence can include hesitation, second-guessing steps, avoidance, or physical sensations such as a tight chest, fast heartbeat, sweating, or stomach discomfort. Feeling uncertain is not a personal failure. It is a signal that more practice or guidance may be needed in this area.' },
       { heading: 'What stress can feel like', body: 'Stress often appears when demands feel greater than your current capacity. It can affect concentration, patience, sleep, energy, motivation, and physical tension. Stress can build slowly, so noticing early signs is important.' },
-      { heading: 'Why rating helps', body: 'Rating mood, anxiety, or stress from 1–10 can make invisible experiences easier to track. A number is not the whole story, but it can help show patterns over time.' },
+      { heading: 'Why rating helps', body: 'Rating readiness, confidence, or energy from 1–10 can make invisible patterns easier to track. A number is not the whole story, but it can help show patterns over time.' },
       { heading: 'Talking about your experience', body: 'You do not need perfect words to describe how you feel. Simple descriptions like "heavy," "wired," "flat," "overwhelmed," or "on edge" can be useful starting points.' }
     ],
     reflectionPrompt: 'What aspect of the assembly process feels most challenging for you?',
@@ -889,14 +889,14 @@ const LESSON_CONTENT = {
     ],
     sections: [
       { heading: 'Why patterns matter', body: 'Training progress can feel uneven, but patterns often appear over time. You may notice that process errors increase when preparation is rushed, performance improves after clear briefing, or confidence builds after routine practice, connection, or rest.' },
-      { heading: 'What can be tracked', body: 'Useful areas include mood, anxiety, stress, sleep, energy, appetite, concentration, coping strategies, social connection, symptoms, triggers, and notes for your supervisor.' },
+      { heading: 'What can be tracked', body: 'Useful areas include readiness, confidence, energy, rest quality, concentration, coping strategies, social connection, symptoms, triggers, and notes for your supervisor.' },
       { heading: 'Tracking should not become punishment', body: 'Tracking is not about judging yourself or getting a perfect score. It is about gathering information. Missing a check-in does not mean failure. It may itself be useful information.' },
-      { heading: 'Look for trends, not single days', body: 'One difficult day does not define your recovery. Patterns become clearer when you look across several days or weeks. Your supervisor can help interpret what the data might mean.' },
+      { heading: 'Look for trends, not single days', body: 'One difficult day does not define your progress. Patterns become clearer when you look across several days or weeks. Your supervisor can help interpret what the data might mean.' },
       { heading: 'Keep it simple', body: 'A short check-in is enough. You do not need long explanations every day. Even a mood score, sleep rating, and one sentence can be useful.' }
     ],
     reflectionPrompt: 'What training pattern would be useful for you and your supervisor to understand better?',
     learnerTask: 'Complete today\'s check-in and add one short note about what may have affected your performance.',
-    supervisorNote: 'Encourage patients to use tracking as information, not performance. Watch for perfectionism or anxiety around recording data.',
+    supervisorNote: 'Encourage employees to use tracking as information, not performance. Watch for perfectionism or pressure around recording data.',
     platformNote: 'This training module is for learning and reflection only. It does not replace site-specific safety protocols, supervisor guidance, or emergency procedures. For on-site emergencies, follow your site emergency procedure immediately.',
     completionLabel: 'I understand how to track patterns safely'
   },
@@ -914,8 +914,8 @@ const LESSON_CONTENT = {
       'Understand crisis boundaries.'
     ],
     sections: [
-      { heading: 'Support is part of recovery', body: 'Asking for help does not mean you have failed. Support can help you feel less alone, organise your thoughts, make safer choices, and access the right help at the right time.' },
-      { heading: 'Signs you may need support', body: 'You may need extra support if you feel overwhelmed, unsafe, unable to cope, unusually withdrawn, highly anxious, very low, unable to sleep, unable to complete basic tasks, or unsure how to manage your thoughts or feelings.' },
+      { heading: 'Support is part of progress', body: 'Asking for help does not mean you have failed. Support can help you feel less alone, organise your thoughts, make safer choices, and access the right help at the right time.' },
+      { heading: 'Signs you may need training support', body: 'You may need extra support if you feel stuck on a process step, unable to cope, unusually withdrawn, under high pressure, frequently fatigued, unable to complete basic tasks, or unsure how to progress in your training.' },
       { heading: 'Different levels of support', body: 'Support can include self-care, contacting a trusted person, messaging your supervisor if appropriate, using a support plan, contacting a GP or healthcare professional, or contacting emergency/crisis services if there is immediate risk.' },
       { heading: 'How to ask clearly', body: 'Simple phrases can help: "I am struggling today," "I need someone to check in," "I do not feel safe," "I need help making a plan," or "Can we talk about this in my next session?"' },
       { heading: 'Immediate risk', body: 'If you feel at immediate risk or unable to stay safe, do not wait for an app response. Contact local emergency services or a crisis support line immediately.' }
@@ -934,7 +934,7 @@ const LESSON_CONTENT = {
     moduleTitle: 'Module 2 — Quality Control and Process Standards',
     title: 'Quality Control and Defect Reporting',
     estimatedTime: '10–12 minutes',
-    summary: 'Breathing and grounding techniques can help calm the body when stress or anxiety rises. This lesson introduces simple tools that can be practised gently and used when helpful.',
+    summary: 'Focus reset techniques can help clear mental load when pressure or stress rises. This lesson introduces simple tools that can be practised gently and used when helpful.',
     learningGoals: [
       'Understand how breathing can affect the body.',
       'Learn simple grounding techniques.',
@@ -960,7 +960,7 @@ const LESSON_CONTENT = {
     moduleTitle: 'Module 2 — Quality Control and Process Standards',
     title: 'Production Workflow and Handover',
     estimatedTime: '10–12 minutes',
-    summary: 'A training routine does not need to be complicated. Small, repeatable actions can support stability, recovery, and self-awareness. This lesson helps you build a simple routine that fits your real life.',
+    summary: 'A training routine does not need to be complicated. Small, repeatable actions can support consistency, competency growth, and self-awareness. This lesson helps you build a simple routine that fits your real life.',
     learningGoals: [
       'Understand why routine can support performance.',
       'Choose small daily actions.',
@@ -994,7 +994,7 @@ const LESSON_CONTENT = {
       'Identify one helpful response.'
     ],
     sections: [
-      { heading: 'Thoughts can feel convincing', body: 'When you are stressed, low, or anxious, thoughts may become more intense. You might notice "what if" thoughts, self-critical thoughts, hopeless thoughts, or pressure-filled thoughts.' },
+      { heading: 'Thoughts can feel convincing', body: 'When you are under pressure or fatigued, thoughts about your performance may become more intense. You might notice "what if" thoughts, self-critical thoughts, hopeless thoughts, or pressure-filled thoughts.' },
       { heading: 'Thoughts are mental events', body: 'A thought is something your mind produces. It may contain useful information, but it is not automatically true. Learning to notice thoughts can reduce their control.' },
       { heading: 'Name the thought', body: 'Try saying: "I am having the thought that…" before the thought. For example: "I am having the thought that I cannot cope." This can create a small amount of distance.' },
       { heading: 'Look for a balanced response', body: 'Instead of forcing positivity, try a balanced response: "This feels hard right now, and I can take one small step," or "I do not have to solve everything today."' },
@@ -1015,7 +1015,7 @@ const LESSON_CONTENT = {
     summary: 'Daily workstation safety checks are a critical part of manufacturing operations. This module helps you understand which checks to perform, when to perform them, and why they matter.',
     learningGoals: [
       'Understand the connection between sleep and performance.',
-      'Notice how rest affects mood and anxiety.',
+      'Notice how rest affects your energy and performance.',
       'Learn simple sleep-supportive habits.',
       'Identify one realistic rest goal.'
     ],
@@ -1047,7 +1047,7 @@ const LESSON_CONTENT = {
     ],
     sections: [
       { heading: 'What is a support plan?', body: 'A support plan is a clear list of actions and contacts that can help when your performance drops or distress rises. It is easier to follow a plan when it is written before things feel overwhelming.' },
-      { heading: 'Warning signs', body: 'Warning signs may include withdrawal, poor sleep, racing thoughts, feeling numb, irritability, avoiding responsibilities, increased anxiety, low mood, or feeling unable to cope.' },
+      { heading: 'Warning signs', body: 'Warning signs may include disengagement, low energy, missed check-ins, difficulty concentrating, irritability, avoiding responsibilities, declining performance scores, or feeling unable to keep pace with training.' },
       { heading: 'Coping actions', body: 'Helpful actions might include grounding, breathing, stepping outside, drinking water, eating something, reducing stimulation, writing thoughts down, using a routine, or contacting someone supportive.' },
       { heading: 'Support contacts', body: 'Include people or services you can contact. This may include your team leader, your supervisor, your site safety officer or healthcare provider, community support, crisis lines, or emergency services where appropriate.' },
       { heading: 'Emergency step', body: 'If there is an on-site emergency, follow your site emergency procedure immediately. Do not wait for a digital response — act immediately according to your site protocol.' }
@@ -1077,7 +1077,7 @@ const LESSON_CONTENT = {
       { heading: 'Progress can be subtle', body: 'Progress may look like completing a process step more accurately, spotting an error sooner, asking a supervisor for guidance, finishing a module, or practising a skill consistently across multiple shifts. These all count more kindly.' },
       { heading: 'Progress is not perfection', body: 'You can be making progress and still have difficult days. Progress does not require constant improvement. It often involves learning how to respond differently when difficulties appear.' },
       { heading: 'Look at evidence', body: 'Use check-ins, lesson completion, mood trends, notes, and coping strategy use as evidence. This can help you see change more clearly over time.' },
-      { heading: 'Name strengths', body: 'Strengths might include persistence, honesty, courage, awareness, patience, creativity, care for others, or willingness to try. These strengths can support recovery.' },
+      { heading: 'Name strengths', body: 'Strengths might include persistence, attention to detail, willingness to learn, awareness, patience, creativity, care for others, or willingness to try. These strengths can support your training progress.' },
       { heading: 'Bring progress to your check-in', body: 'Progress reflections can help your supervisor understand what is changing and what still needs support.' }
     ],
     reflectionPrompt: 'What is one small sign of progress you have noticed recently?',
@@ -1153,7 +1153,7 @@ const LESSON_CONTENT = {
     ],
     sections: [
       { heading: 'Why preparation helps', body: 'When emotions are high or time is limited, it can be hard to remember everything you wanted to say. Preparing notes can help you feel more organised and supported.' },
-      { heading: 'Review recent check-ins', body: 'Look at mood, anxiety, stress, sleep, coping strategy use, and support flags. Notice anything that changed or repeated.' },
+      { heading: 'Review recent check-ins', body: 'Look at readiness, confidence scores, energy, rest quality, skill actions used, and support flags. Notice anything that changed or repeated.' },
       { heading: 'Choose key topics', body: 'You might discuss triggers, difficult moments, progress, questions, coping strategies, medication concerns if relevant to your healthcare provider, relationship issues, work stress, or support needs.' },
       { heading: 'Share what feels hard to say', body: 'If something feels difficult to say aloud, writing it down can help. You might show your supervisor your notes or use them as a starting point.' },
       { heading: 'End with next steps', body: 'After your supervisor check-in, record one or two next steps so you know what to focus on before your next shift or review.' }
@@ -1333,7 +1333,7 @@ function markCoping(id){
 function renderProgress(){
   const el=document.getElementById('progress-content');
   const totalLessons=Object.values(lessonProgress).filter(Boolean).length;
-  const avgAnx=checkins.length?(checkins.slice(0,7).reduce((a,c)=>a+(c.anxiety||0),0)/Math.min(checkins.length,7)).toFixed(1):'—';
+  const avgScore=checkins.length?(checkins.slice(0,7).reduce((a,c)=>a+(c.score||0),0)/Math.min(checkins.length,7)).toFixed(1):'—';
   const avgMood=checkins.length?(checkins.slice(0,7).reduce((a,c)=>a+(c.mood||0),0)/Math.min(checkins.length,7)).toFixed(1):'—';
   el.innerHTML=`
     <div class="prog-stat-grid">
@@ -1343,12 +1343,12 @@ function renderProgress(){
       <div class="prog-stat"><div class="prog-stat-val">${xp}</div><div class="prog-stat-lbl">Total XP</div></div>
     </div>
     <div class="prog-stat-grid">
-      <div class="prog-stat"><div class="prog-stat-val" style="font-size:20px">${avgAnx}</div><div class="prog-stat-lbl">Avg Anxiety (7d)</div></div>
+      <div class="prog-stat"><div class="prog-stat-val" style="font-size:20px">${avgScore}</div><div class="prog-stat-lbl">Avg Score (7d)</div></div>
       <div class="prog-stat"><div class="prog-stat-val" style="font-size:20px">${avgMood}</div><div class="prog-stat-lbl">Avg Mood (7d)</div></div>
     </div>
     <div style="font-size:14px;font-weight:700;margin:16px 0 10px">Recent Check-Ins</div>
     ${checkins.length===0?'<p style="color:var(--muted);font-size:13px;padding:20px 0;text-align:center">No check-ins yet. Complete your first check-in to see your progress here.</p>':
-    checkins.slice(0,10).map(c=>{const sc=c.anxiety<=3?'sl':c.anxiety<=5?'sm':c.anxiety<=7?'sh':'sc';return`<div class="history-item"><div class="hi-score pc-score ${sc}">${c.anxiety}</div><div class="hi-info"><div style="font-size:13px;font-weight:600">${new Date(c.date).toLocaleDateString()} <span class="risk-badge ${c.risk}" style="font-size:10px;padding:2px 8px">${c.risk}</span></div><div class="hi-date">Mood: ${c.mood}/10 · Sleep: ${c.sleep}/10 · Energy: ${c.energy}/10</div>${c.note?`<div class="hi-note" style="color:var(--muted)">📝 ${c.note}</div>`:''}</div></div>`;}).join('')}
+    checkins.slice(0,10).map(c=>{const sc=c.score<=3?'sl':c.score<=5?'sm':c.score<=7?'sh':'sc';return`<div class="history-item"><div class="hi-score pc-score ${sc}">${c.score}</div><div class="hi-info"><div style="font-size:13px;font-weight:600">${new Date(c.date).toLocaleDateString()} <span class="risk-badge ${c.priority}" style="font-size:10px;padding:2px 8px">${c.priority}</span></div><div class="hi-date">Readiness: ${c.mood}/10 · Rest: ${c.sleep}/10 · Energy: ${c.energy}/10</div>${c.note?`<div class="hi-note" style="color:var(--muted)">📝 ${c.note}</div>`:''}</div></div>`;}).join('')}
     <div class="safety-notice" style="margin-top:20px">
       <h4>⚠️ Progress Support Notice</h4>
       <p>AutoSkill OS™ supports manufacturing workforce training and competency tracking. It does not replace site-specific safety protocols or emergency proal care. If you feel at immediate risk or in crisis, contact local emergency services or a crisis support line immediately.</p>

@@ -426,7 +426,7 @@ tr:hover td{background:var(--surface2)}
           </div>
         </div>
       </div>
-      <div class="view-header" style="margin-bottom:12px"><div style="font-size:15px;font-weight:700">⚠️ Employees Needing Attention</div><button class="btn-secondary" onclick="showView('patients')">View All →</button></div>
+      <div class="view-header" style="margin-bottom:12px"><div style="font-size:15px;font-weight:700">⚠️ Employees Requiring Training Support</div><button class="btn-secondary" onclick="showView('patients')">View All →</button></div>
     <div class="employee-grid" id="urgentGrid"></div>
   </div>
 
@@ -804,74 +804,74 @@ const DEMO_PATIENTS = [
    scores:[6,7,8,5,7,6,8],sleep:[5,6,5,7,5,6,5],streak:5,
    triggers:['Workstation Setup','Assembly Step Clarity','Time Pressure'],
    coping:['Process Review','Supervisor Check-In'],
-   flags:['HIGH_ANXIETY_SCORE','MISSED_CHECK_INS'],risk:'CRITICAL',
+   flags:['LOW_ASSESSMENT_SCORE','MISSED_MODULES'],priority:'CRITICAL',
    pathway:'Module 2 — Quality Control and Process Standards',pathwayPct:30,
    notes:[
      {text:'Jamie reports difficulty following assembly steps under time pressure. Recommended supervisor walkthrough.',date:Date.now()-86400000*2,by:'M. Torres'},
      {text:'Follow-up check-in — Jamie more confident after step-by-step walkthrough. Continue current plan.',date:Date.now()-86400000*5,by:'M. Torres'}
    ],
    checkins:[
-     {date:Date.now()-3600000*2,anxiety:9,sleep:4,risk:'CRITICAL',triggers:['Workstation Setup','Assembly Step Clarity'],note:'Missed two steps on the line this morning.',coping:[]},
-     {date:Date.now()-86400000,anxiety:7,sleep:5,risk:'HIGH',triggers:['Time Pressure'],note:'Production pace felt too fast today.',coping:['Process Review']},
-     {date:Date.now()-86400000*2,anxiety:6,sleep:6,risk:'MEDIUM',triggers:['Team Communication'],note:'Better shift. Asked supervisor twice.',coping:['Supervisor Check-In']},
-     {date:Date.now()-86400000*3,anxiety:5,sleep:7,risk:'MEDIUM',triggers:[],note:'Good day overall.',coping:['Process Review']}
+     {date:Date.now()-3600000*2,score:9,rest:4,priority:'CRITICAL',triggers:['Workstation Setup','Assembly Step Clarity'],note:'Missed two steps on the line this morning.',coping:[]},
+     {date:Date.now()-86400000,score:7,rest:5,priority:'HIGH',triggers:['Time Pressure'],note:'Production pace felt too fast today.',coping:['Process Review']},
+     {date:Date.now()-86400000*2,score:6,rest:6,priority:'MEDIUM',triggers:['Team Communication'],note:'Better shift. Asked supervisor twice.',coping:['Supervisor Check-In']},
+     {date:Date.now()-86400000*3,score:5,rest:7,priority:'MEDIUM',triggers:[],note:'Good day overall.',coping:['Process Review']}
    ],isDemo:true},
   {id:'P002',name:'Aisha Patel',age:28,condition:'Quality Control Trainee',avatar:'#f59e0b',initials:'AP',
    scores:[4,5,3,5,5,4,6],sleep:[7,6,8,5,7,7,5],streak:12,
    triggers:['Defect Classification','Reporting Process'],
    coping:['Checklist Review','Supervisor Guidance'],
-   flags:['TRENDING_UP'],risk:'HIGH',
+   flags:['TRENDING_UP'],priority:'HIGH',
    pathway:'Module 2 — Quality Control and Process Standards',pathwayPct:60,
    notes:[
      {text:'Aisha showing strong progress with QC procedures. Defect recognition scores trending upward.',date:Date.now()-86400000*3,by:'M. Torres'}
    ],
    checkins:[
-     {date:Date.now()-3600000*5,anxiety:7,sleep:5,risk:'HIGH',triggers:['Defect Classification'],note:'Unsure how to classify a borderline defect today.',coping:[]},
-     {date:Date.now()-86400000,anxiety:5,sleep:7,risk:'MEDIUM',triggers:['Reporting Process'],note:'Completed defect report with supervisor assistance.',coping:['Supervisor Guidance']},
-     {date:Date.now()-86400000*2,anxiety:4,sleep:8,risk:'LOW',triggers:[],note:'Good session. Quiz passed 100%.',coping:['Checklist Review']}
+     {date:Date.now()-3600000*5,score:7,rest:5,priority:'HIGH',triggers:['Defect Classification'],note:'Unsure how to classify a borderline defect today.',coping:[]},
+     {date:Date.now()-86400000,score:5,rest:7,priority:'MEDIUM',triggers:['Reporting Process'],note:'Completed defect report with supervisor assistance.',coping:['Supervisor Guidance']},
+     {date:Date.now()-86400000*2,score:4,rest:8,priority:'LOW',triggers:[],note:'Good session. Quiz passed 100%.',coping:['Checklist Review']}
    ],isDemo:true},
   {id:'P003',name:'Riley Evans',age:22,condition:'Logistics Trainee',avatar:'#10b981',initials:'RE',
    scores:[3,2,3,3,2,3,2],sleep:[8,7,8,7,8,8,7],streak:21,
    triggers:['Handover Documentation'],
    coping:['Process Checklist','Peer Support'],
-   flags:[],risk:'LOW',
+   flags:[],priority:'LOW',
    pathway:'Module 3 — Competency Assessment and Development',pathwayPct:80,
    notes:[
      {text:'Excellent engagement. 21-day check-in streak. PPE competency signed off. Handover module in progress.',date:Date.now()-86400000*4,by:'M. Torres'}
    ],
    checkins:[
-     {date:Date.now()-3600000*1,anxiety:2,sleep:8,risk:'LOW',triggers:['Handover Documentation'],note:'Handover went smoothly today.',coping:['Process Checklist']},
-     {date:Date.now()-86400000,anxiety:3,sleep:7,risk:'LOW',triggers:[],note:'Feeling confident this week.',coping:['Peer Support']}
+     {date:Date.now()-3600000*1,score:2,rest:8,priority:'LOW',triggers:['Handover Documentation'],note:'Handover went smoothly today.',coping:['Process Checklist']},
+     {date:Date.now()-86400000,score:3,rest:7,priority:'LOW',triggers:[],note:'Feeling confident this week.',coping:['Peer Support']}
    ],isDemo:true},
   {id:'P004',name:'Morgan Lewis',age:31,condition:'New Starter',avatar:'#7c3aed',initials:'ML',
    scores:[6,7,5,8,6,7,8],sleep:[5,4,6,4,5,5,4],streak:3,
    triggers:['PPE Requirements','Site Orientation'],
    coping:['Checklist Review','Supervisor Guidance'],
-   flags:['HIGH_ANXIETY_SCORE','SAFETY_ACK_MISSING'],risk:'HIGH',
+   flags:['LOW_ASSESSMENT_SCORE','SAFETY_ACK_MISSING'],priority:'HIGH',
    pathway:'Module 1 — Manufacturing Site Orientation',pathwayPct:10,
    notes:[
      {text:'Morgan has not yet completed the PPE acknowledgement. Cannot enter production area until resolved.',date:Date.now()-86400000,by:'M. Torres'}
    ],
    checkins:[
-     {date:Date.now()-3600000*3,anxiety:8,sleep:4,risk:'HIGH',triggers:['PPE Requirements'],note:'Unsure about correct PPE for each station.',coping:['Supervisor Guidance']},
-     {date:Date.now()-86400000,anxiety:7,sleep:5,risk:'HIGH',triggers:['Site Orientation'],note:'Site layout still confusing.',coping:[]}
+     {date:Date.now()-3600000*3,score:8,rest:4,priority:'HIGH',triggers:['PPE Requirements'],note:'Unsure about correct PPE for each station.',coping:['Supervisor Guidance']},
+     {date:Date.now()-86400000,score:7,rest:5,priority:'HIGH',triggers:['Site Orientation'],note:'Site layout still confusing.',coping:[]}
    ],isDemo:true},
   {id:'P005',name:'Sam Kowalski',age:35,condition:'Assembly Trainee',avatar:'#2563eb',initials:'SK',
    scores:[5,4,5,4,5,4,4],sleep:[6,7,6,7,6,7,7],streak:9,
    triggers:['Tool Calibration','Step Sequence Errors'],
    coping:['Process Review','Deep Focus'],
-   flags:[],risk:'MEDIUM',
+   flags:[],priority:'MEDIUM',
    pathway:'Module 2 — Quality Control and Process Standards',pathwayPct:70,
    notes:[
      {text:'Sam progressing steadily. Tool handling signed off. Working through quality checkpoint modules.',date:Date.now()-86400000*6,by:'M. Torres'}
    ],
    checkins:[
-     {date:Date.now()-3600000*4,anxiety:4,sleep:7,risk:'MEDIUM',triggers:['Tool Calibration'],note:'Tool felt off-spec — reported to supervisor.',coping:['Process Review']},
-     {date:Date.now()-86400000,anxiety:5,sleep:6,risk:'MEDIUM',triggers:[],note:'Average shift.',coping:['Deep Focus']}
+     {date:Date.now()-3600000*4,score:4,rest:7,priority:'MEDIUM',triggers:['Tool Calibration'],note:'Tool felt off-spec — reported to supervisor.',coping:['Process Review']},
+     {date:Date.now()-86400000,score:5,rest:6,priority:'MEDIUM',triggers:[],note:'Average shift.',coping:['Deep Focus']}
    ],isDemo:true},
   {id:'P006',name:'Dana Webb',age:22,condition:'Assembly Trainee',avatar:'#64748b',initials:'DW',
    scores:[],sleep:[],streak:0,triggers:[],coping:[],
-   flags:['NO_CHECK_IN_5_DAYS'],risk:'MISSING',
+   flags:['NO_CHECK_IN_5_DAYS'],priority:'MISSING',
    pathway:'Module 1 — Manufacturing Site Orientation',pathwayPct:10,
    notes:[
      {text:'No check-in for 5 days. Attempted contact — no response. Follow-up may be needed.',date:Date.now()-86400000,by:'M. Torres'}
@@ -881,31 +881,31 @@ const DEMO_PATIENTS = [
    scores:[3,3,2,4,3,2,3],sleep:[7,8,7,8,7,8,8],streak:15,
    triggers:['Measurement Tolerance'],
    coping:['Checklist Review','Mentor Session'],
-   flags:[],risk:'LOW',
+   flags:[],priority:'LOW',
    pathway:'Module 3 — Competency Assessment and Development',pathwayPct:65,
    notes:[],
    checkins:[
-     {date:Date.now()-3600000*6,anxiety:3,sleep:8,risk:'LOW',triggers:['Measurement Tolerance'],note:'Used go/no-go gauge correctly on all parts today.',coping:['Checklist Review']}
+     {date:Date.now()-3600000*6,score:3,rest:8,priority:'LOW',triggers:['Measurement Tolerance'],note:'Used go/no-go gauge correctly on all parts today.',coping:['Checklist Review']}
    ],isDemo:true},
   {id:'P008',name:'Taylor Nguyen',age:41,condition:'Assembly Trainee',avatar:'#dc2626',initials:'TN',
    scores:[6,5,7,6,5,6,7],sleep:[5,6,5,6,6,5,5],streak:7,
    triggers:['Production Targets','Shift Handover'],
    coping:['Process Review','Team Discussion'],
-   flags:['TRENDING_UP'],risk:'MEDIUM',
+   flags:['TRENDING_UP'],priority:'MEDIUM',
    pathway:'Module 2 — Quality Control and Process Standards',pathwayPct:40,
    notes:[
      {text:'Taylor under pressure from production targets. Supporting with additional process walkthroughs.',date:Date.now()-86400000*2,by:'M. Torres'}
    ],
    checkins:[
-     {date:Date.now()-3600000*1,anxiety:7,sleep:5,risk:'HIGH',triggers:['Production Targets'],note:'Target not met today — felt anxious about it.',coping:[]},
-     {date:Date.now()-86400000,anxiety:6,sleep:6,risk:'MEDIUM',triggers:['Shift Handover'],note:'Handover documentation took longer than expected.',coping:['Process Review']}
+     {date:Date.now()-3600000*1,score:7,rest:5,priority:'HIGH',triggers:['Production Targets'],note:'Target not met today — felt anxious about it.',coping:[]},
+     {date:Date.now()-86400000,score:6,rest:6,priority:'MEDIUM',triggers:['Shift Handover'],note:'Handover documentation took longer than expected.',coping:['Process Review']}
    ],isDemo:true}
 ];
 
 let ALERTS=[
-  {id:'a1',pid:'P001',title:'Critical competency flag — Jordan M.',sub:'Employee scored 9/10 on difficulty rating. Supervisor review recommended.',time:Date.now()-3600000*2,risk:'CRITICAL',acked:false},
+  {id:'a1',pid:'P001',title:'Critical competency flag — Jordan M.',sub:'Employee scored 9/10 on difficulty rating. Supervisor review recommended.',time:Date.now()-3600000*2,priority:'CRITICAL',acked:false},
   {id:'a2',pid:'P006',title:'No check-in for 5 days — Dana W.',sub:'Employee has not completed a training check-in. Follow-up may be needed.',time:Date.now()-86400000,risk:'MISSING',acked:false},
-  {id:'a3',pid:'P008',title:'Anxiety trend increasing — Taylor N.',sub:'Anxiety scores have risen for 3 consecutive check-ins.',time:Date.now()-3600000,risk:'HIGH',acked:false}
+  {id:'a3',pid:'P008',title:'Declining training scores — Taylor N.',sub:'Assessment scores have dropped for 3 consecutive check-ins. Supervisor follow-up recommended.',time:Date.now()-3600000,risk:'HIGH',acked:false}
 ];
 
 let PATIENTS=[],ALL_CHECKINS=[],currentPatient=null,dark=true,demoMode=true,therapistName='M. Torres',therapistRole='Training Manager';
@@ -1048,7 +1048,7 @@ function updateTherapistProfile(){
   const n=document.getElementById('clinicianName');const i=document.getElementById('clinicianInitials');const r=document.getElementById('clinicianRole');
   if(n)n.textContent=therapistName;if(r)r.textContent=therapistRole;
   const initials=therapistName.split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();
-  if(i)i.textContent=initials||'DR';
+  if(i)i.textContent=initials||'MT';
 }
 
 function renderStats(){
@@ -1146,10 +1146,10 @@ function renderHighRisk(){const hrs=PATIENTS.filter(p=>['CRITICAL','HIGH','MISSI
 function renderCheckins(){
   const f=(document.getElementById('ciFilter')||{}).value||'all';let cis=[...ALL_CHECKINS];
   const today=new Date();today.setHours(0,0,0,0);
-  if(f==='today')cis=cis.filter(c=>new Date(c.date)>=today);else if(f==='HIGH')cis=cis.filter(c=>c.risk==='HIGH');else if(f==='CRITICAL')cis=cis.filter(c=>c.risk==='CRITICAL');
+  if(f==='today')cis=cis.filter(c=>new Date(c.date)>=today);else if(f==='HIGH')cis=cis.filter(c=>c.priority==='HIGH');else if(f==='CRITICAL')cis=cis.filter(c=>c.priority==='CRITICAL');
   const tbody=document.getElementById('checkinsTableBody');
   if(!cis.length){tbody.innerHTML='<tr><td colspan="8" class="empty-state">No check-ins match.</td></tr>';return;}
-  tbody.innerHTML=cis.slice(0,50).map(c=>`<tr><td><strong>${c.patient.name}</strong></td><td>${tAgo(c.date)}</td><td>${c.anxiety}/10</td><td>${c.sleep}h</td><td><span class="risk-badge ${c.risk}">${rLbl(c.risk)}</span></td><td>${(c.triggers||[]).join(', ')||'None'}</td><td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c.note||''}">${c.note||'—'}</td><td><button class="btn-view" onclick="openDetail('${c.patient.id}')">View →</button></td></tr>`).join('');
+  tbody.innerHTML=cis.slice(0,50).map(c=>`<tr><td><strong>${c.patient.name}</strong></td><td>${tAgo(c.date)}</td><td>${c.score}/10</td><td>${c.rest}h</td><td><span class="risk-badge ${c.priority}">${rLbl(c.priority)}</span></td><td>${(c.triggers||[]).join(', ')||'None'}</td><td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c.note||''}">${c.note||'—'}</td><td><button class="btn-view" onclick="openDetail('${c.patient.id}')">View →</button></td></tr>`).join('');
 }
 
 function renderAnalytics(){
@@ -1171,7 +1171,7 @@ function renderTimeline(){
   events.sort((a,b)=>b.date-a.date);
   if(!events.length){el.innerHTML='<p class="empty-state">No activity yet.</p>';return;}
   el.innerHTML=events.slice(0,40).map(ev=>{
-    if(ev.type==='checkin')return`<div class="note-card" style="border-left-color:${ev.risk==='CRITICAL'?'var(--critical)':ev.risk==='HIGH'?'var(--high)':ev.risk==='MEDIUM'?'var(--warn)':'var(--green)'}"><div class="nc-employee">📋 Check-In — ${ev.patient.name}</div><div class="nc-text">Anxiety: ${ev.anxiety}/10 · Sleep: ${ev.sleep}h · ${ev.note||'No note'}</div><div class="nc-meta">${new Date(ev.date).toLocaleString()} · <span class="risk-badge ${ev.risk}">${rLbl(ev.risk)}</span></div></div>`;
+    if(ev.type==='checkin')return`<div class="note-card" style="border-left-color:${ev.priority==='CRITICAL'?'var(--critical)':ev.priority==='HIGH'?'var(--high)':ev.priority==='MEDIUM'?'var(--warn)':'var(--green)'}"><div class="nc-employee">📋 Check-In — ${ev.patient.name}</div><div class="nc-text">Score: ${ev.score}/10 · Rest: ${ev.rest}h · ${ev.note||'No note'}</div><div class="nc-meta">${new Date(ev.date).toLocaleString()} · <span class="risk-badge ${ev.priority}">${rLbl(ev.priority)}</span></div></div>`;
     return`<div class="note-card"><div class="nc-employee">📝 Supervisor Note — ${ev.patient.name}</div><div class="nc-text">${ev.text}</div><div class="nc-meta">${new Date(ev.date).toLocaleString()} · ${ev.by}</div></div>`;
   }).join('');
 }
@@ -2842,9 +2842,9 @@ function openDetail(id){
   const b=document.getElementById('detailRiskBadge');b.className=`risk-badge ${p.risk}`;b.textContent=rLbl(p.risk);
   document.getElementById('detailLastSeen').textContent=p.checkins[0]?`Last check-in: ${tAgo(p.checkins[0].date)}`:'No check-in data';
   setTimeout(()=>drawLine(document.getElementById('detailChart'),p.scores.map((_,i)=>`Day ${i+1}`),p.scores,'#c9a84c',false,10),50);
-  document.getElementById('detailMetrics').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="pc-metric"><div class="pcm-val">${p.streak}d</div><div class="pcm-lbl">Streak</div></div><div class="pc-metric"><div class="pcm-val">${p.pathwayPct||0}%</div><div class="pcm-lbl">Pathway</div></div><div class="pc-metric"><div class="pcm-val">${p.checkins.length}</div><div class="pcm-lbl">Check-Ins</div></div></div><div style="font-size:12px;color:var(--muted);margin-top:8px">Recovery Pathway: <strong style="color:var(--text)">${p.pathway||'Not started'}</strong></div>`;
+  document.getElementById('detailMetrics').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="pc-metric"><div class="pcm-val">${p.streak}d</div><div class="pcm-lbl">Streak</div></div><div class="pc-metric"><div class="pcm-val">${p.pathwayPct||0}%</div><div class="pcm-lbl">Pathway</div></div><div class="pc-metric"><div class="pcm-val">${p.checkins.length}</div><div class="pcm-lbl">Check-Ins</div></div></div><div style="font-size:12px;color:var(--muted);margin-top:8px">Training Pathway: <strong style="color:var(--text)">${p.pathway||'Not started'}</strong></div>`;
   const ml=document.getElementById('detailMoodList'),nc=p.checkins.filter(c=>c.note).slice(0,5);
-  ml.innerHTML=nc.length?nc.map(c=>`<div class="detail-note"><div class="note-by">${tAgo(c.date)} · Anxiety: ${c.anxiety}/10</div><div>${c.note}</div></div>`).join(''):'<p class="empty-state">No notes.</p>';
+  ml.innerHTML=nc.length?nc.map(c=>`<div class="detail-note"><div class="note-by">${tAgo(c.date)} · Score: ${c.score}/10</div><div>${c.note}</div></div>`).join(''):'<p class="empty-state">No notes.</p>';
   const fl=document.getElementById('detailFlags');fl.innerHTML=p.flags.length?p.flags.map(f=>`<span class="pc-flag warn">${f.replace(/_/g,' ')}</span>`).join(''):'<span style="font-size:12px;color:var(--muted)">No active flags</span>';
   document.getElementById('detailCoping').innerHTML=p.coping.length?p.coping.map(c=>`<span class="pc-flag info">${c}</span>`).join(''):'<span style="font-size:12px;color:var(--muted)">None recorded</span>';
   document.getElementById('detailNotesList').innerHTML=p.notes.map(n=>`<div class="detail-note"><span class="note-by">${n.by}</span> <span class="note-date">· ${new Date(n.date).toLocaleDateString()}</span><div style="margin-top:4px">${n.text}</div></div>`).join('');

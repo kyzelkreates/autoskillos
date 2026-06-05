@@ -1,8 +1,8 @@
-// AP3X AnxietyCore — Rules Engine
+// AP3X — Training Rules Engine (module path: anxietycore/engine — preserved for deployment)
 // ─────────────────────────────────────────────────────────────────
 // Lightweight, pure-function rule evaluator.
 // Plugs into BCO's existing rule system via module registration
-// (see anxietycore.module.js) AND can be called directly from the
+// (see autoskill module system) AND can be called directly from the
 // Employee Learning PWA for instant local feedback.
 //
 // Architecture contract (BCO Run 2):
@@ -123,7 +123,7 @@ const RISK_ORDER = [
 
 /**
  * resolveAggregateRisk(...results)
- * Returns the highest risk level from multiple rule results.
+ * Returns the highest training priority level from multiple rule results.
  */
 export function resolveAggregateRisk(...results) {
   let highest = RISK_LEVELS.LOW;

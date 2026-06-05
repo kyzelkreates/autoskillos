@@ -1,4 +1,4 @@
-// AP3X AnxietyCore — Streak Tracker
+// AP3X — Training Streak Tracker (module path: anxietycore/module — preserved for deployment)
 // ─────────────────────────────────────────────────────────────────
 // Pure-function streak logic. Reads/writes through BCO storage.
 // Architecture: no direct localStorage calls — uses storage adapter.

@@ -128,7 +128,7 @@ const LESSON_CONTENT = {
       'Understand crisis boundaries.'
     ],
     sections: [
-      { heading: 'Support is part of recovery', body: 'Needing support does not mean you have failed. Support can help you feel less alone, organise your thoughts, make safer choices, and access the right help at the right time.' },
+      { heading: 'Support is part of progress', body: 'Needing support does not mean you have failed. Support from your supervisor or training team can help you close skill gaps, stay on track, and build the right habits at the right time.' },
       { heading: 'Signs you may need support', body: 'You may need extra support if you feel uncertain about task procedures, overwhelmed, unsafe, unable to cope, unusually withdrawn, highly uncertain, very low, unable to sleep, unable to complete basic tasks, or unsure how to manage your thoughts or feelings.' },
       { heading: 'Different levels of support', body: 'Support can include self-care, contacting a trusted person, messaging your supervisor if appropriate, using a support plan, contacting a GP or healthcare professional, or contacting emergency/crisis services if there is immediate risk.' },
       { heading: 'How to ask clearly', body: 'Simple phrases can help: "I am struggling today," "I need someone to check in," "I do not feel safe," "I need help making a plan," or "Can we talk about this in my next session?"' },
@@ -174,7 +174,7 @@ const LESSON_CONTENT = {
     moduleTitle: 'Module 2 — Quality Control and Process Standards',
     title: 'Production Workflow and Handover',
     estimatedTime: '10–12 minutes',
-    summary: 'A training routine does not need to be complicated. Small, repeatable actions can support stability, recovery, and self-awareness. This lesson helps you build a simple routine that fits your real life.',
+    summary: 'A training routine does not need to be complicated. Small, repeatable actions can support consistency, competency growth, and self-awareness. This lesson helps you build a simple routine that fits your real life.',
     learningGoals: [
       'Understand why a consistent routine supports training performance.',
       'Choose small daily actions.',
